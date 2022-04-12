@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MusixMatchAPI</name>
+    </assembly>
+    <members>
+        <member name="T:MusixMatch_API.MusixMatchApi">
+            <summary>
+                This class handles all requests you can make to the MusixMatch API.
+            </summary>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.#ctor(System.String)">
+            <summary>
+                Initialize an API connector with your API key.
+            </summary>
+            <param name="apiKey">Your API Key.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.Dispose">
+            <summary>
+                Dispose Connector.
+            </summary>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.TrackingUrlGet(MusixMatch_API.APIMethods.Tracking.TrackingUrlGet,System.Action{System.String},System.Action{System.String})">
+            <summary>
+                Get the base url for the tracking script
+                With this api you’ll be able to get the base url for the tracking script you need to insert in your page to
+                legalize your existent lyrics library.
+                Read more here: https://developer.musixmatch.com/documentation/rights-clearance-on-your-existing-catalog
+                In case you’re fetching the lyrics by the musiXmatch api called track.lyrics.get you don’t need to implement this
+                API call.
+            </summary>
+            <param name="get">The TrackingUrlGet object which contains the domain to return a tracking url for.</param>
+            <param name="succes">When the call to the API succeeds, return a string with the tracking url.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.CatalogueDumpGet(System.Action{MusixMatch_API.ReturnTypes.ReturnedCatalogue.Catalogue},System.Action{System.String})">
+            <summary>
+                Get the list of our tracks with the lyrics last updated information.
+                Important: This method is only available for commercial plans.
+            </summary>
+            <param name="succes">When the call to the API succeeds, return the catalogues.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.ChartArtistsGet(MusixMatch_API.APIMethods.Chart.ArtistsGet,System.Action{System.Collections.Generic.List{MusixMatch_API.ReturnTypes.ReturnedArtists.ArtistList}},System.Action{System.String})">
+            <summary>
+                Get top artists of a given country.
+            </summary>
+            <param name="get">The ArtistsGet object which contains the filters to get the right artists.</param>
+            <param name="succes">When the call to the API succeeds, return the list with artists.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.ChartTracksGet(MusixMatch_API.APIMethods.Chart.TracksGet,System.Action{System.Collections.Generic.List{MusixMatch_API.ReturnTypes.TrackList}},System.Action{System.String})">
+            <summary>
+                Get a song chart of the top in a country.
+            </summary>
+            <param name="get">The TracksGet object which contains the filters to get the right chart.</param>
+            <param name="succes">When the call to the API succeeds, return the list with tracks.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.TrackSearch(MusixMatch_API.APIMethods.Track.TrackSearch,System.Action{System.Collections.Generic.List{MusixMatch_API.ReturnTypes.TrackList}},System.Action{System.String})">
+            <summary>
+                Search for a track in the database.
+            </summary>
+            <param name="get">The Search object with the filters to use for the request.</param>
+            <param name="succes">Action to run when getting the track succeeds, returns a tracklist.</param>
+            <param name="fail">Action to run when getting the tracklist failed, returns an error.</param>
+            <returns>A list with all the tracks that are returned based on your filters.</returns>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.TrackGet(MusixMatch_API.APIMethods.Track.TrackGet,System.Action{MusixMatch_API.ReturnTypes.Track},System.Action{System.String})">
+            <summary>
+                Get a track info from our database: title, artist, instrumental flag and cover art.
+            </summary>
+            <param name="get">The Get object with the filters to use for the request.</param>
+            <param name="succes">Action to run when getting the track succeeds, returns a track.</param>
+            <param name="fail">Action to run when getting the track failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.TrackSubtitleGet(MusixMatch_API.APIMethods.Track.TrackSubtitleGet,System.Action{MusixMatch_API.ReturnTypes.ReturnedSubtitle.Subtitle},System.Action{System.String})">
+            <summary>
+                Retreive the subtitle of a track. Needs Commercial Plan.
+            </summary>
+            <param name="get">The SubtitleGet object which contains the filters to get the right song subtitles.</param>
+            <param name="succes">When the call to the API succeeds, return the subtitle object.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.TrackLyricsGet(MusixMatch_API.APIMethods.Track.TrackLyricsGet,System.Action{MusixMatch_API.ReturnTypes.ReturnedLyrics.Lyrics},System.Action{System.String})">
+            <summary>
+                Get lyrics with a track id.
+            </summary>
+            <param name="get">The LyricsGet object which contains the filters to get the right song lyrics.</param>
+            <param name="succes">When the call to the API succeeds, return the Lyrics object.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.TrackSnippetGet(MusixMatch_API.APIMethods.Track.TrackSnippetGet,System.Action{MusixMatch_API.ReturnTypes.ReturnedSnippet.Snippet},System.Action{System.String})">
+            <summary>
+                Get the snippet for a given track.
+                A lyrics snippet is a very short representation of a song lyrics.It’s usually twenty to a hundred characters long
+                and it’s calculated extracting a sequence of words from the lyrics.
+            </summary>
+            <param name="get">The SnippetGet object which contains the filters to get the right song snippet.</param>
+            <param name="succes">When the call to the API succeeds, return the Snippet object.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.TrackLyricsPost(MusixMatch_API.APIMethods.Track.TrackLyricsPost,System.Action{System.String},System.Action{System.String})">
+            <summary>
+                Submit a lyrics to our database.
+                It may happen we don’t have the lyrics for a song, you can ask your users to help us sending the missing
+                lyrics.We’ll validate every submission and in case, make it available through our api.
+                Please take all the necessary precautions to avoid users or automatic software to use your website/app to use this
+                commands, a captcha solution like http://www.google.com/recaptcha or an equivalent one has to be implemented in
+                every user interaction that ends in a POST operation on the musixmatch api.
+            </summary>
+            <param name="post">The LyricsPost object containing the song id and the lyrics you want to upload.</param>
+            <param name="succes">
+                When the call to the API succeeds, returns the lyrics uploaded (or nothing, this is not shown on
+                the musixmatch doc page...)
+            </param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.TrackLyricsFeedbackPost(MusixMatch_API.APIMethods.Track.TrackLyricsFeedbackPost,System.Action{System.String},System.Action{System.String})">
+            <summary>
+                This API method provides you the opportunity to help us improving our catalogue. We aim to provide you with the
+                best quality service imaginable, so we are especially interested in your detailed feedback to help us to
+                continually improve it.
+                Please take all the necessary precautions to avoid users or automatic software to use your website/app to use this
+                commands, a captcha solution like http://www.google.com/recaptcha or an equivalent one has to be implemented in
+                every user interaction that ends in a POST operation on the musixmatch api.
+            </summary>
+            <param name="get">
+                The LyricsFeedbackPost object which contains the filters to post the feedback for the correct lyrics
+                and song.
+            </param>
+            <param name="succes">
+                When the call to the API succeeds, returns the uploaded feedback (or nothing, this is not shown on
+                the musixmatch doc page...)
+            </param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.MatcherLyricsGet(MusixMatch_API.APIMethods.Matcher.MatcherLyricsGet,System.Action{MusixMatch_API.ReturnTypes.ReturnedLyrics.Lyrics},System.Action{System.String})">
+            <summary>
+                Get the lyrics for track based on title and artist
+            </summary>
+            <param name="get">The MatcherLyricsGet object which contains the filters to get the right song lyrics.</param>
+            <param name="succes">When the call to the API succeeds, return the Lyrics object.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.MatcherTrackGet(MusixMatch_API.APIMethods.Matcher.MatcherTrackGet,System.Action{MusixMatch_API.ReturnTypes.Track},System.Action{System.String})">
+            <summary>
+                Match your song against our database.
+                In some cases you already have some informations about the track title, artist name, album etc.
+                A possible strategy to get the corresponding lyrics could be:
+                - search our catalogue with a perfect match,
+                - maybe try using the fuzzy search,
+                - maybe try again using artist aliases, and so on.
+                The matcher.track.get method does all the job for you in a single call. This way you dont’t need to worry about the
+                details, and you’ll get instant benefits for your application without changing a row in your code, while we take
+                care of improving the implementation behind. Cool, uh?
+            </summary>
+            <param name="get">The MatcherTrackGet object which contains the filters to get the right track.</param>
+            <param name="succes">When the call to the API succeeds, return the Track object.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.MatcherSubtitleGet(MusixMatch_API.APIMethods.Matcher.MatcherSubtitleGet,System.Action{MusixMatch_API.ReturnTypes.ReturnedSubtitle.Subtitle},System.Action{System.String})">
+            <summary>
+                Get the subtitles for a song given his title, artist and duration. Needs Commercial Plan.
+            </summary>
+            <param name="get">The MatcherSubtitleGet object which contains the filters to get the right subtitle.</param>
+            <param name="succes">When the call to the API succeeds, return the Subtitle object.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.ArtistGet(MusixMatch_API.APIMethods.Artist.ArtistGet,System.Action{MusixMatch_API.ReturnTypes.ReturnedArtist.Artist},System.Action{System.String})">
+            <summary>
+                Get the artist data from our database.
+            </summary>
+            <param name="get">The ArtistGet object which contains the filters to get the right Artist.</param>
+            <param name="succes">When the call to the API succeeds, return the Artist object.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.ArtistSearch(MusixMatch_API.APIMethods.Artist.ArtistSearch,System.Action{System.Collections.Generic.List{MusixMatch_API.ReturnTypes.ReturnedArtists.ArtistList}},System.Action{System.String})">
+            <summary>
+                Search for artists in our database.
+            </summary>
+            <param name="get">The ArtistSearch object which contains the filters to get the right Artists.</param>
+            <param name="succes">When the call to the API succeeds, return the ArtistList object with artists.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.ArtistAlbumsGet(MusixMatch_API.APIMethods.Artist.ArtistAlbumsGet,System.Action{System.Collections.Generic.List{MusixMatch_API.ReturnTypes.ReturnedAlbums.AlbumList}},System.Action{System.String})">
+            <summary>
+                Get the album discography of an artist.
+            </summary>
+            <param name="get">The ArtistAlbumsGet object which contains the filters to get the right Albums.</param>
+            <param name="succes">When the call to the API succeeds, return the AlbumList object with albums.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.ArtistRelatedGet(MusixMatch_API.APIMethods.Artist.ArtistRelatedGet,System.Action{System.Collections.Generic.List{MusixMatch_API.ReturnTypes.ReturnedArtists.ArtistList}},System.Action{System.String})">
+            <summary>
+                Get a list of artists somehow related to a given one.
+            </summary>
+            <param name="get">The ArtistRelatedGet object which contains the filters to get the related artists.</param>
+            <param name="succes">When the call to the API succeeds, return the AlbumList object with albums.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.AlbumGet(MusixMatch_API.APIMethods.Album.AlbumGet,System.Action{MusixMatch_API.ReturnTypes.Album},System.Action{System.String})">
+            <summary>
+                Get an album from our database: name, release_date, release_type, cover art.
+            </summary>
+            <param name="get">The AlbumGet object which contains the filters to get the album.</param>
+            <param name="succes">When the call to the API succeeds, return the Album object.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+        <member name="M:MusixMatch_API.MusixMatchApi.AlbumTracksGet(MusixMatch_API.APIMethods.Album.AlbumTracksGet,System.Action{System.Collections.Generic.List{MusixMatch_API.ReturnTypes.TrackList}},System.Action{System.String})">
+            <summary>
+                This api provides you the list of the songs of an album.
+            </summary>
+            <param name="get">The AlbumTracksGet object which contains the filters to get the tracks.</param>
+            <param name="succes">When the call to the API succeeds, return the List with tracks.</param>
+            <param name="fail">Action to run when the call failed, returns an error.</param>
+        </member>
+    </members>
+</doc>

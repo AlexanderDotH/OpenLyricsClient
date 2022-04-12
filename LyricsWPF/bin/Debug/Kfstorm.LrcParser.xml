@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Kfstorm.LrcParser</name>
+    </assembly>
+    <members>
+        <member name="T:Kfstorm.LrcParser.ILrcFile">
+            <summary>
+            Represents an LRC format lyrics file.
+            </summary>
+            <remarks>
+            Duplicate timestamps is not supported due to Before, BeforeOrAt, After, AfterOrAt method.
+            </remarks>
+        </member>
+        <member name="M:Kfstorm.LrcParser.ILrcFile.Before(System.TimeSpan)">
+            <summary>
+            Gets the <see cref="T:Kfstorm.LrcParser.IOneLineLyric"/> before the specified timestamp.
+            </summary>
+            <param name="timestamp">The timestamp.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kfstorm.LrcParser.ILrcFile.BeforeOrAt(System.TimeSpan)">
+            <summary>
+            Gets the <see cref="T:Kfstorm.LrcParser.IOneLineLyric"/> before or at the specified timestamp.
+            </summary>
+            <param name="timestamp">The timestamp.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kfstorm.LrcParser.ILrcFile.After(System.TimeSpan)">
+            <summary>
+            Gets the <see cref="T:Kfstorm.LrcParser.IOneLineLyric"/> after the specified timestamp.
+            </summary>
+            <param name="timestamp">The timestamp.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kfstorm.LrcParser.ILrcFile.AfterOrAt(System.TimeSpan)">
+            <summary>
+            Gets the <see cref="T:Kfstorm.LrcParser.IOneLineLyric"/> after or at the specified timestamp.
+            </summary>
+            <param name="timestamp">The timestamp.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Kfstorm.LrcParser.ILrcFile.Metadata">
+            <summary>
+            Gets the metadata.
+            </summary>
+            <value>
+            The metadata.
+            </value>
+        </member>
+        <member name="P:Kfstorm.LrcParser.ILrcFile.Lyrics">
+            <summary>
+            Gets the lyrics.
+            </summary>
+            <value>
+            The lyrics.
+            </value>
+        </member>
+        <member name="P:Kfstorm.LrcParser.ILrcFile.Item(System.TimeSpan)">
+            <summary>
+            Gets the one line lyric content with the specified timestamp.
+            </summary>
+            <value>
+            The one line lyric content.
+            </value>
+            <param name="timestamp">The timestamp.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Kfstorm.LrcParser.ILrcFile.Item(System.Int32)">
+            <summary>
+            Gets the <see cref="T:Kfstorm.LrcParser.IOneLineLyric"/> at the specified index.
+            </summary>
+            <value>
+            The <see cref="T:Kfstorm.LrcParser.IOneLineLyric"/>.
+            </value>
+            <param name="index">The index.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Kfstorm.LrcParser.ILrcMetadata">
+            <summary>
+            Represents the metadata of an LRC format lyrics file.
+            </summary>
+        </member>
+        <member name="P:Kfstorm.LrcParser.ILrcMetadata.Title">
+            <summary>
+            Gets the title.
+            </summary>
+            <value>
+            The title.
+            </value>
+        </member>
+        <member name="P:Kfstorm.LrcParser.ILrcMetadata.Artist">
+            <summary>
+            Gets the artist.
+            </summary>
+            <value>
+            The artist.
+            </value>
+        </member>
+        <member name="P:Kfstorm.LrcParser.ILrcMetadata.Album">
+            <summary>
+            Gets the album.
+            </summary>
+            <value>
+            The album.
+            </value>
+        </member>
+        <member name="P:Kfstorm.LrcParser.ILrcMetadata.Maker">
+            <summary>
+            Gets the lyrics maker.
+            </summary>
+            <value>
+            The lyrics maker.
+            </value>
+        </member>
+        <member name="P:Kfstorm.LrcParser.ILrcMetadata.Offset">
+            <summary>
+            Gets the offset.
+            </summary>
+            <value>
+            The offset.
+            </value>
+        </member>
+        <member name="T:Kfstorm.LrcParser.IOneLineLyric">
+            <summary>
+            Represents an one line lyric.
+            </summary>
+        </member>
+        <member name="P:Kfstorm.LrcParser.IOneLineLyric.Timestamp">
+            <summary>
+            Gets the timestamp.
+            </summary>
+            <value>
+            The timestamp.
+            </value>
+        </member>
+        <member name="P:Kfstorm.LrcParser.IOneLineLyric.Content">
+            <summary>
+            Gets the content.
+            </summary>
+            <value>
+            The content.
+            </value>
+        </member>
+        <member name="T:Kfstorm.LrcParser.LrcFile">
+            <summary>
+            Represents an LRC format lyrics file.
+            </summary>
+            <remarks>
+            Duplicate timestamps is not supported due to Before, BeforeOrAt, After, AfterOrAt method.
+            </remarks>
+        </member>
+        <member name="M:Kfstorm.LrcParser.LrcFile.Before(System.TimeSpan)">
+            <summary>
+            Gets the <see cref="T:Kfstorm.LrcParser.IOneLineLyric"/> before the specified timestamp.
+            </summary>
+            <param name="timestamp">The timestamp.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kfstorm.LrcParser.LrcFile.BeforeOrAt(System.TimeSpan)">
+            <summary>
+            Gets the <see cref="T:Kfstorm.LrcParser.IOneLineLyric"/> before or at the specified timestamp.
+            </summary>
+            <param name="timestamp">The timestamp.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kfstorm.LrcParser.LrcFile.After(System.TimeSpan)">
+            <summary>
+            Gets the <see cref="T:Kfstorm.LrcParser.IOneLineLyric"/> after the specified timestamp.
+            </summary>
+            <param name="timestamp">The timestamp.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kfstorm.LrcParser.LrcFile.AfterOrAt(System.TimeSpan)">
+            <summary>
+            Gets the <see cref="T:Kfstorm.LrcParser.IOneLineLyric"/> after or at the specified timestamp.
+            </summary>
+            <param name="timestamp">The timestamp.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kfstorm.LrcParser.LrcFile.#ctor(Kfstorm.LrcParser.ILrcMetadata,System.Collections.Generic.IEnumerable{Kfstorm.LrcParser.IOneLineLyric},System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Kfstorm.LrcParser.LrcFile"/> class.
+            </summary>
+            <param name="metadata">The metadata.</param>
+            <param name="lyrics">The lyrics.</param>
+            <param name="applyOffset">if set to <c>true</c> apply the offset in metadata, otherwise ignore the offset.</param>
+        </member>
+        <member name="M:Kfstorm.LrcParser.LrcFile.FromText(System.String)">
+            <summary>
+            Create a new new instance of the <see cref="T:Kfstorm.LrcParser.ILrcFile"/> interface with the specified LRC text.
+            </summary>
+            <param name="lrcText">The LRC text.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Kfstorm.LrcParser.LrcFile.Metadata">
+            <summary>
+            Gets the metadata.
+            </summary>
+            <value>
+            The metadata.
+            </value>
+        </member>
+        <member name="P:Kfstorm.LrcParser.LrcFile.Lyrics">
+            <summary>
+            Gets the lyrics.
+            </summary>
+            <value>
+            The lyrics.
+            </value>
+        </member>
+        <member name="P:Kfstorm.LrcParser.LrcFile.Item(System.TimeSpan)">
+            <summary>
+            Gets the one line lyric content with the specified timestamp.
+            </summary>
+            <value>
+            The one line lyric content.
+            </value>
+            <param name="timestamp">The timestamp.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Kfstorm.LrcParser.LrcFile.Item(System.Int32)">
+            <summary>
+            Gets the <see cref="T:Kfstorm.LrcParser.IOneLineLyric"/> at the specified index.
+            </summary>
+            <value>
+            The <see cref="T:Kfstorm.LrcParser.IOneLineLyric"/>.
+            </value>
+            <param name="index">The index.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Kfstorm.LrcParser.LrcMetadata">
+            <summary>
+            Represents the metadata of an LRC format lyrics file.
+            </summary>
+        </member>
+        <member name="P:Kfstorm.LrcParser.LrcMetadata.Title">
+            <summary>
+            Gets the title.
+            </summary>
+            <value>
+            The title.
+            </value>
+        </member>
+        <member name="P:Kfstorm.LrcParser.LrcMetadata.Artist">
+            <summary>
+            Gets the artist.
+            </summary>
+            <value>
+            The artist.
+            </value>
+        </member>
+        <member name="P:Kfstorm.LrcParser.LrcMetadata.Album">
+            <summary>
+            Gets the album.
+            </summary>
+            <value>
+            The album.
+            </value>
+        </member>
+        <member name="P:Kfstorm.LrcParser.LrcMetadata.Maker">
+            <summary>
+            Gets the lyrics maker.
+            </summary>
+            <value>
+            The lyrics maker.
+            </value>
+        </member>
+        <member name="P:Kfstorm.LrcParser.LrcMetadata.Offset">
+            <summary>
+            Gets the offset.
+            </summary>
+            <value>
+            The offset.
+            </value>
+        </member>
+        <member name="T:Kfstorm.LrcParser.OneLineLyric">
+            <summary>
+            Represents an one line lyric.
+            </summary>
+        </member>
+        <member name="M:Kfstorm.LrcParser.OneLineLyric.#ctor(System.TimeSpan,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Kfstorm.LrcParser.OneLineLyric"/> class.
+            </summary>
+            <param name="timestamp">The timestamp.</param>
+            <param name="content">The content.</param>
+        </member>
+        <member name="P:Kfstorm.LrcParser.OneLineLyric.Timestamp">
+            <summary>
+            Gets the timestamp.
+            </summary>
+            <value>
+            The timestamp.
+            </value>
+        </member>
+        <member name="P:Kfstorm.LrcParser.OneLineLyric.Content">
+            <summary>
+            Gets the content.
+            </summary>
+            <value>
+            The content.
+            </value>
+        </member>
+    </members>
+</doc>
