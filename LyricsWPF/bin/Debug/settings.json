@@ -1,11 +1,11 @@
 {
   "BearerAccess": {
     "refresh_token": "AQBzkEZQKuQw_Pfza93dqcsXxXI429C7XOHb7FnJhXdK7rbnqkKMIDZaRCK3iWQ1w1q1rReASyR47A6qxLd9pikzLWJU6kpgP-uPsUDks3eoMjTDv6HlzLdcofdL26cAuyI",
-    "access_token": "BQAniMfUhKF3NM7bwka2WaPURoM3q05zN9ZtUE1Tj0agMuHy0h6tD2tQHL2zC-TKEcQkdVhJkA7ghW71gNAjQdJE1dr-TpfmI54AltLspaZvYBRMImgRPHE5T6jRSVlUY1BDwJ77O8bjv0bdTwN8_XrsbNcteWLOmUYDTEz1KZL5o8qpx6AMTxdZut6v3wRLFBbT4Wi-pBa-",
+    "access_token": "BQCtzo2j2p3OPBPqrp7Tz1q9wxeEsKRbi3cnTMSCkOO5m4wOAXtSSoMXTfQqVBOz01xG327aCdsC2mc53W6RQtfUZkVpmFRgaYHGyz1_HU61gpXaQwwWwmblqcyhsZunBr_8hHa0XVpdwzS4_2e4GXY4HmjyPGphsJPRUMtsEIeTKZMCVPwJ151vVcr0KJ351xTKru86LtkJ",
     "expires_in": 3600,
     "scope": "playlist-read-private playlist-read-collaborative streaming user-modify-playback-state user-library-read user-follow-read user-read-playback-state user-read-currently-playing user-read-recently-played user-read-private",
     "Expires": null
   },
-  "SpotifyExpireTime": "2022-04-12T16:05:26.4637613Z",
+  "SpotifyExpireTime": "2022-04-12T22:08:05.9146422Z",
   "IsSpotifyConnected": true
 }

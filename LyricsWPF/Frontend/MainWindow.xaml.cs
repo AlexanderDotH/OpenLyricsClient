@@ -18,6 +18,7 @@ using LyricsWPF.Backend;
 using LyricsWPF.Backend.Collector;
 using LyricsWPF.Backend.Deserializer;
 using LyricsWPF.Backend.Handler.Song;
+using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Utils;
 
 namespace LyricsWPF
@@ -47,10 +48,36 @@ namespace LyricsWPF
 
                     if (DataValidator.ValidateSong(song))
                     {
-                        this.currentLine.Dispatcher.Invoke(() =>
+                        LyricsRoll lyricsRoll = core.SongHandler.CurrentSong.GetLyricsRoll();
+
+                        if (DataValidator.ValidateData(lyricsRoll.PartOne))
                         {
-                            this.currentLine.Text = song.CurrentLyricPart.Part;
-                        }, DispatcherPriority.Normal);
+                            this.firstLine.Dispatcher.Invoke(() =>
+                            {
+                                this.firstLine.Text = lyricsRoll.PartOne.Part;
+                            }, DispatcherPriority.Normal);
+                        }
+
+                        if (DataValidator.ValidateData(lyricsRoll.PartTwo))
+                        {
+                            this.secondLine.Dispatcher.Invoke(() =>
+                            {
+                                this.secondLine.Text = lyricsRoll.PartTwo.Part;
+                            }, DispatcherPriority.Normal);
+                        }
+
+                        if (DataValidator.ValidateData(lyricsRoll.PartThree))
+                        {
+                            this.thirdLine.Dispatcher.Invoke(() =>
+                            {
+                                this.thirdLine.Text = lyricsRoll.PartThree.Part;
+                            }, DispatcherPriority.Normal);
+                        }
+
+                        //this.currentLine.Dispatcher.Invoke(() =>
+                        //{
+                        //    this.currentLine.Text = song.CurrentLyricPart.Part;
+                        //}, DispatcherPriority.Normal);
 
                         this.currentTitle.Dispatcher.Invoke(() =>
                         {

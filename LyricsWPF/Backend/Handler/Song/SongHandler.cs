@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Lyrics;
+using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Utils;
 using SpotifyApi.NetCore;
 
@@ -127,7 +128,7 @@ namespace LyricsWPF.Backend.Handler.Song
                                 //Processing song data/edit
                                 if (DataValidator.ValidateData(this._currentSong, currentTrack, currentTrack.Item))
                                 {
-                                    this._currentSong.Title = currentTrack.Item.Name;
+                                    //this._currentSong.Title = currentTrack.Item.Name;
                                     this._currentSong.Artists = DataConverter.SpotifyArtistsToStrings(currentTrack.Item.Artists);
                                     this._currentSong.MaxTime = currentTrack.Item.DurationMs;
                                     this._currentSong.Paused = !currentTrack.IsPlaying;
