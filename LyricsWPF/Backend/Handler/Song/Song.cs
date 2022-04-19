@@ -45,6 +45,10 @@ namespace LyricsWPF.Backend.Handler.Song
             }
         }
 
+        //Garbage Collector cries, when calling this
+        // Solutions:
+        // Find issue and make it more performant
+        // Add thread.sleep before calling this(less fun)
         public void UpdateLyricsToTime()
         {
             //await Task.Run(() =>
@@ -62,6 +66,8 @@ namespace LyricsWPF.Backend.Handler.Song
                         {
                             LyricPart nextPart = this._lyrics.LyricParts[i + 1];
 
+                            // I thing this is the issue
+                            // What did I do?: nothing, cause I don´t now how to fix it
                             if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, this._time + LYRIC_OFFSET))
                             {
                                 this._currentLyricPart = currentPart;

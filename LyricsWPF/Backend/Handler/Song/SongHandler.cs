@@ -24,6 +24,7 @@ namespace LyricsWPF.Backend.Handler.Song
 
         private Task _manageSongTask;
         private Task _manageLyricsTask;
+        private Task _manageTimeSyncTask;
         private Task _debugTask;
 
         private bool _disposed;
@@ -49,12 +50,25 @@ namespace LyricsWPF.Backend.Handler.Song
                     PrintSongState(this._currentSong);
                 }
             });
+            this._manageTimeSyncTask = new Task(() => ManageTimeSync());
 
             this._manageSongTask.Start();
             this._manageLyricsTask.Start();
             this._debugTask.Start();
+            this._manageTimeSyncTask.Start();
 
             //this._currentSong = new Song("Never Gonna Give You Up", new string[] { "Rick Astley" });
+        }
+
+        private async Task ManageTimeSync()
+        {
+            while (!this._disposed)
+            {
+                if (DataValidator.ValidateData(this._currentSong))
+                {
+                    this._currentSong.SyncTime();
+                }
+            }
         }
 
         private async Task ManageLyrics()
@@ -84,7 +98,6 @@ namespace LyricsWPF.Backend.Handler.Song
                         }
                     }
 
-                    this._currentSong.SyncTime();
                     this._currentSong.UpdateLyricsToTime();
                 }
             }
@@ -92,6 +105,7 @@ namespace LyricsWPF.Backend.Handler.Song
 
         public async Task ManageCurrentSong()
         {
+            HttpClient httpClient = new HttpClient();
             while (!this._disposed)
             {
                 Thread.Sleep(100);
@@ -100,7 +114,7 @@ namespace LyricsWPF.Backend.Handler.Song
                 {
                     try
                     {
-                        var playerApi = new SpotifyApi.NetCore.PlayerApi(new HttpClient(),
+                        var playerApi = new SpotifyApi.NetCore.PlayerApi(httpClient,
                             Core.INSTANCE.Settings.BearerAccess.AccessToken);
                         var currentTrack = await playerApi.GetCurrentlyPlayingTrack<CurrentTrackPlaybackContext>();
 
