@@ -41,7 +41,15 @@ namespace LyricsWPF.Backend.Handler.Song
             if (DataValidator.ValidateData(this._timeStamp, this._paused))
             {
                 if (!this._paused)
-                    this._time = DateTimeOffset.Now.ToUnixTimeMilliseconds() - this._timeStamp;
+                {
+                    long diff = DateTimeOffset.Now.ToUnixTimeMilliseconds() - this._timeStamp;
+
+
+                    if (diff > 0)
+                    {
+                        this._time = diff;
+                    }
+                }
             }
         }
 
@@ -53,34 +61,34 @@ namespace LyricsWPF.Backend.Handler.Song
         {
             //await Task.Run(() =>
             //{
-                if (DataValidator.ValidateData(this._lyrics) &&
-                    DataValidator.ValidateData(this._time) &&
-                    DataValidator.ValidateData(this._lyrics.LyricParts) &&
-                    this._hasLyrics)
+            if (DataValidator.ValidateData(this._lyrics) &&
+                DataValidator.ValidateData(this._time) &&
+                DataValidator.ValidateData(this._lyrics.LyricParts) &&
+                this._hasLyrics)
+            {
+                for (int i = 0; i < this._lyrics.LyricParts.Length; i++)
                 {
-                    for (int i = 0; i < this._lyrics.LyricParts.Length; i++)
+                    LyricPart currentPart = this._lyrics.LyricParts[i];
+
+                    if (i + 1 < this._lyrics.LyricParts.Length)
                     {
-                        LyricPart currentPart = this._lyrics.LyricParts[i];
+                        LyricPart nextPart = this._lyrics.LyricParts[i + 1];
 
-                        if (i + 1 < this._lyrics.LyricParts.Length)
+                        // I thing this is the issue
+                        // What did I do?: nothing, cause I don´t now how to fix it
+                        if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, this._time + LYRIC_OFFSET))
                         {
-                            LyricPart nextPart = this._lyrics.LyricParts[i + 1];
-
-                            // I thing this is the issue
-                            // What did I do?: nothing, cause I don´t now how to fix it
-                            if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, this._time + LYRIC_OFFSET))
-                            {
-                                this._currentLyricPart = currentPart;
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            this._currentLyricPart = this._lyrics.LyricParts[this._lyrics.LyricParts.Length - 1];
+                            this._currentLyricPart = currentPart;
                             return;
                         }
                     }
+                    else
+                    {
+                        this._currentLyricPart = this._lyrics.LyricParts[this._lyrics.LyricParts.Length - 1];
+                        return;
+                    }
                 }
+            }
             //});
         }
 
@@ -118,13 +126,15 @@ namespace LyricsWPF.Backend.Handler.Song
 
         public void Dispose()
         {
-
         }
 
         public string Title
         {
             get { return this._title; }
-            set { this._title = value; }
+            set
+            {
+                this._title = value;
+            }
         }
 
         public string[] Artists
@@ -136,10 +146,7 @@ namespace LyricsWPF.Backend.Handler.Song
         public long Time
         {
             get { return this._time; }
-            set
-            {
-                this._time = value;
-            }
+            set { this._time = value; }
         }
 
         public long MaxTime
@@ -160,7 +167,7 @@ namespace LyricsWPF.Backend.Handler.Song
             set
             {
                 this._hasLyrics = true;
-                this._lyrics = value; 
+                this._lyrics = value;
             }
         }
 
@@ -184,7 +191,7 @@ namespace LyricsWPF.Backend.Handler.Song
                 {
                     return new LyricPart(0, "Error");
                 }
-                
+
                 return this._currentLyricPart;
             }
         }
