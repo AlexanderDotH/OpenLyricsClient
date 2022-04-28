@@ -1,7 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\LyricsWPF",
+    "\\LyricsWPF\\Backend",
+    "\\LyricsWPF\\Backend\\Handler",
+    "\\LyricsWPF\\Backend\\Handler\\Song"
   ],
-  "SelectedNode": "\\LyricsWPF.sln",
+  "SelectedNode": "\\LyricsWPF\\Backend\\Handler\\Song\\SongHandler.cs",
   "PreviewInSolutionExplorer": false
 }
