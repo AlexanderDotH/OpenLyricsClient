@@ -129,7 +129,7 @@ namespace LyricsWPF.Backend.Handler.Song
                                 {
                                     this._currentSong = new Song(currentTrack.Item.Name, DataConverter.SpotifyArtistsToStrings(currentTrack.Item.Artists))
                                     {
-                                        Time = currentTrack.ProgressMs.Value,
+                                        ProgressMs = currentTrack.ProgressMs.Value,
                                         TimeStamp = currentTrack.Timestamp,
                                         MaxTime = currentTrack.Item.DurationMs
                                     };
@@ -149,8 +149,8 @@ namespace LyricsWPF.Backend.Handler.Song
 
                                     if (currentTrack.ProgressMs.HasValue && currentTrack.IsPlaying)
                                     {
-                                        this._currentSong.Time = currentTrack.ProgressMs.Value;
                                         this._currentSong.TimeStamp = currentTrack.Timestamp;
+                                        this._currentSong.ProgressMs = currentTrack.ProgressMs.Value;
                                     }
                                 }
                             }

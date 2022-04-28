@@ -20,6 +20,7 @@ namespace LyricsWPF.Backend.Handler.Song
         private LyricPart _currentLyricPart;
 
         private long _timeStamp;
+        private long _progressMS;
         private bool _paused;
 
         private Debugger<Song> _debugger;
@@ -38,17 +39,21 @@ namespace LyricsWPF.Backend.Handler.Song
 
         public void SyncTime()
         {
-            if (DataValidator.ValidateData(this._timeStamp, this._paused))
+            if (DataValidator.ValidateData(this._timeStamp, this._paused, this._progressMS))
             {
                 if (!this._paused)
                 {
-                    long diff = DateTimeOffset.Now.ToUnixTimeMilliseconds() - this._timeStamp;
+                    long current_time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
+                    long diff = 0;
 
-                    if (diff > 0)
+                    if (this._timeStamp != 0)
                     {
-                        this._time = diff;
+                        diff = (current_time - _timeStamp);
                     }
+
+                    this._time = _progressMS + diff;
+                    this._timeStamp = 0;
                 }
             }
         }
@@ -94,7 +99,7 @@ namespace LyricsWPF.Backend.Handler.Song
 
         public LyricsRoll GetLyricsRoll()
         {
-            if (DataValidator.ValidateData(this._lyrics, this._currentLyricPart) && this._hasLyrics)
+            if (DataValidator.ValidateData(this._lyrics, this._currentLyricPart, this._lyrics.LyricParts) && this._hasLyrics)
             {
                 for (int i = 0; i < this._lyrics.LyricParts.Length; i++)
                 {
@@ -181,6 +186,12 @@ namespace LyricsWPF.Backend.Handler.Song
         {
             get => _timeStamp;
             set => _timeStamp = value;
+        }
+
+        public long ProgressMs
+        {
+            get => _progressMS;
+            set => _progressMS = value;
         }
 
         public LyricPart CurrentLyricPart
