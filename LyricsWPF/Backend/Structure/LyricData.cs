@@ -15,20 +15,8 @@ namespace LyricsWPF.Backend.Structure
 
         public LyricData(LyricReturnCode lyricReturnCode, LyricPart[] lyricParts)
         {
-            _lyricReturnCode = lyricReturnCode;
-            _lyricParts = lyricParts;
-        }
-
-        public LyricReturnCode LyricReturnCode
-        {
-            get => _lyricReturnCode;
-            set => _lyricReturnCode = value;
-        }
-
-        public LyricPart[] LyricParts
-        {
-            get => _lyricParts;
-            set => _lyricParts = value;
+            this._lyricReturnCode = lyricReturnCode;
+            this._lyricParts = lyricParts;
         }
 
         public static LyricData ConvertToData(Lyrics<Line> lyrics)
@@ -47,6 +35,18 @@ namespace LyricsWPF.Backend.Structure
             }
 
             return new LyricData(LyricReturnCode.Success, lyricParts);
+        }
+
+        public LyricReturnCode LyricReturnCode
+        {
+            get => this._lyricReturnCode;
+            set => this._lyricReturnCode = value;
+        }
+
+        public LyricPart[] LyricParts
+        {
+            get => this._lyricParts;
+            set => this._lyricParts = value;
         }
     }
 }
