@@ -50,29 +50,34 @@ namespace LyricsWPF
                     {
                         LyricsRoll lyricsRoll = core.SongHandler.CurrentSong.GetLyricsRoll();
 
-                        if (DataValidator.ValidateData(lyricsRoll.PartOne))
+                        if (DataValidator.ValidateData(lyricsRoll))
                         {
-                            this.firstLine.Dispatcher.Invoke(() =>
+
+                            if (DataValidator.ValidateData(lyricsRoll.PartOne))
                             {
-                                this.firstLine.Text = lyricsRoll.PartOne.Part;
-                            }, DispatcherPriority.Normal);
+                                this.firstLine.Dispatcher.Invoke(() =>
+                                {
+                                    this.firstLine.Text = lyricsRoll.PartOne.Part;
+                                }, DispatcherPriority.Normal);
+                            }
+
+                            if (DataValidator.ValidateData(lyricsRoll.PartTwo))
+                            {
+                                this.secondLine.Dispatcher.Invoke(() =>
+                                {
+                                    this.secondLine.Text = lyricsRoll.PartTwo.Part;
+                                }, DispatcherPriority.Normal);
+                            }
+
+                            if (DataValidator.ValidateData(lyricsRoll.PartThree))
+                            {
+                                this.thirdLine.Dispatcher.Invoke(() =>
+                                {
+                                    this.thirdLine.Text = lyricsRoll.PartThree.Part;
+                                }, DispatcherPriority.Normal);
+                            }
                         }
 
-                        if (DataValidator.ValidateData(lyricsRoll.PartTwo))
-                        {
-                            this.secondLine.Dispatcher.Invoke(() =>
-                            {
-                                this.secondLine.Text = lyricsRoll.PartTwo.Part;
-                            }, DispatcherPriority.Normal);
-                        }
-
-                        if (DataValidator.ValidateData(lyricsRoll.PartThree))
-                        {
-                            this.thirdLine.Dispatcher.Invoke(() =>
-                            {
-                                this.thirdLine.Text = lyricsRoll.PartThree.Part;
-                            }, DispatcherPriority.Normal);
-                        }
 
                         //this.currentLine.Dispatcher.Invoke(() =>
                         //{

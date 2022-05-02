@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using LyricsWPF.Backend.Debug;
@@ -67,7 +68,6 @@ namespace LyricsWPF.Backend.Handler.Song
                 if (DataValidator.ValidateData(this._currentSong))
                 {
                     this._currentSong.SyncTime();
-                    this._currentSong.UpdateLyricsToTime();
                 }
             }
         }
@@ -76,11 +76,10 @@ namespace LyricsWPF.Backend.Handler.Song
         {
             while (!this._disposed)
             {
-                if (DataValidator.ValidateData(this._currentSong) && DataValidator.ValidateData( 
-                        this._currentSong.Title, 
-                        this._currentSong.Artists,
-                        this._currentSong.MaxTime,
-                        this._lyricHandler))
+                if (DataValidator.ValidateData(this._currentSong) &&
+                    DataValidator.ValidateData(this._currentSong.Title, this._currentSong.Artists, this._currentSong.MaxTime) &&
+                    DataValidator.ValidateData(this._lyricHandler) &&
+                    DataValidator.ValidateData(this._songStageChange))
                 {
                     if (this._songStageChange.HasSongChanged(this._currentSong))
                     {
@@ -88,16 +87,22 @@ namespace LyricsWPF.Backend.Handler.Song
                         {
                             Stopwatch stopwatch = new Stopwatch();
                             stopwatch.Start();
-                            await this._lyricHandler.GetLyrics(new SongRequestObject(this._currentSong.Title, this._currentSong.Artists, this._currentSong.MaxTime));
+
+                            await this._lyricHandler.GetLyrics(
+                                new SongRequestObject(
+                                    this._currentSong.Title, 
+                                    this._currentSong.Artists, 
+                                    this._currentSong.MaxTime));
+                            
                             stopwatch.Stop();
 
                             this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
 
-                            if (DataValidator.ValidateData(
-                                    this._lyricHandler, 
-                                    this._lyricHandler.FullLyrics))
+                            if (DataValidator.ValidateData(this._lyricHandler) &&
+                                DataValidator.ValidateData(this._lyricHandler.FullLyrics))
                             {
                                 this._currentSong.Lyrics = this._lyricHandler.FullLyrics;
+                                this._currentSong.HasLyrics = true;
                             }
 
                             this._debugger.Write("Song changed!", DebugType.INFO);
@@ -107,6 +112,9 @@ namespace LyricsWPF.Backend.Handler.Song
                             this._debugger.Write(e.Message, DebugType.ERROR);
                         }
                     }
+
+                    this._currentSong.UpdateLyricsToTime();
+
                 }
             }
         }
@@ -126,9 +134,11 @@ namespace LyricsWPF.Backend.Handler.Song
                             Core.INSTANCE.Settings.BearerAccess.AccessToken);
                         var currentTrack = await playerApi.GetCurrentlyPlayingTrack<CurrentTrackPlaybackContext>();
 
-                        if (DataValidator.ValidateData(currentTrack))
+                        if (DataValidator.ValidateData(currentTrack) &&
+                            DataValidator.ValidateData(this._songStageChange) && 
+                            DataValidator.ValidateData(this._songs))
                         {
-                            if (!DataValidator.ValidateData(this._currentSong) || 
+                            if (!DataValidator.ValidateData(this._currentSong) ||
                                 this._songStageChange.HasSongChanged(this._currentSong))
                             {
                                 //Song changed
@@ -153,15 +163,11 @@ namespace LyricsWPF.Backend.Handler.Song
 
         private void PrintSongState(Song song)
         {
-
-            if (DataValidator.ValidateData(song) && DataValidator.ValidateData(
-                    song.Title, 
-                    song.Time, 
-                    song.MaxTime))
+            if (DataValidator.ValidateData(song) && 
+                DataValidator.ValidateData(song.Title, song.Time))
             {
                 this._debugger.Write("Title: " + song.Title, DebugType.INFO);
                 this._debugger.Write("Time: " + song.Time, DebugType.INFO);
-                this._debugger.Write("MaxTime: " + song.MaxTime, DebugType.INFO);
 
                 if (DataValidator.ValidateData(song.CurrentLyricPart))
                 {
