@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using LyricsWPF.Backend.Handler.Song;
@@ -39,43 +40,48 @@ namespace LyricsWPF.Backend.Utils
         //    return value != null && value1 != null && value2 != null && value3 != null;
         //}
 
+
+        public static bool ValidateData(object baseObject, params object[] values)
+        {
+            if (baseObject != null)
+            {
+                return ValidateData(values);
+            }
+
+            return false;
+        }
+
         public static bool ValidateData(params object[] values)
         {
             if (values != null)
             {
-                if (values.Length == 0)
+                try
                 {
-                    return DataValidator.ValidateData(values[0]);
-                }
-
-                if (DataValidator.ValidateData(values.Length))
-                {
-                    if (values[0] == null)
+                    if (ValidateData(values.Length))
                     {
-                        return false;
-                    }
-
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        if (values[i] is null)
+                        if (values[0] == null)
                         {
                             return false;
                         }
-                    }
 
-                    return true;
+                        for (int i = 0; i < values.Length; i++)
+                        {
+                            if (values[i] == null)
+                            {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    }
                 }
+                catch (Exception e) { }
 
                 return false;
             }
 
             return false;
         }
-
-        //public static bool ValidateData(object[] values)
-        //{
-        //    return values != null && values.Length > 0;
-        //}
 
         public static bool ValidateData(object value)
         {

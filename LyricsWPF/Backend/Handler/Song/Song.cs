@@ -68,11 +68,9 @@ namespace LyricsWPF.Backend.Handler.Song
         {
             //await Task.Run(() =>
             //{
-            if (DataValidator.ValidateData(
-                    this._time, 
-                    this._lyrics,
-                    this._lyrics.LyricParts) 
-                &&
+            if (DataValidator.ValidateData(this._lyrics) && 
+                DataValidator.ValidateData(this._lyrics.LyricParts) &&
+                DataValidator.ValidateData(this._time) &&
                 this._hasLyrics)
             {
                 for (int i = 0; i < this._lyrics.LyricParts.Length; i++)
@@ -85,13 +83,10 @@ namespace LyricsWPF.Backend.Handler.Song
 
                         // I thing this is the issue
                         // What did I do?: nothing, cause I don´t now how to fix it
-                        if (DataValidator.ValidateData(
-                                currentPart, 
-                                currentPart.Part, 
-                                currentPart.Time, 
-                                nextPart,
-                                nextPart.Part, 
-                                nextPart.Time))
+                        if (DataValidator.ValidateData(currentPart) && 
+                            DataValidator.ValidateData(currentPart.Part, currentPart.Time) &&
+                            DataValidator.ValidateData(nextPart) && 
+                            DataValidator.ValidateData(nextPart.Part, nextPart.Time))
                         {
                             if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, this._time + LYRIC_OFFSET))
                             {
@@ -107,41 +102,14 @@ namespace LyricsWPF.Backend.Handler.Song
                     }
                 }
             }
-
-            //if (DataValidator.ValidateData(this._lyrics) &&
-            //    DataValidator.ValidateData(this._time) &&
-            //    DataValidator.ValidateData(this._lyrics.LyricParts) &&
-            //    this._hasLyrics)
-            //{
-            //    for (int i = 0; i < this._lyrics.LyricParts.Length; i++)
-            //    {
-            //        LyricPart currentPart = this._lyrics.LyricParts[i];
-
-            //        if (i + 1 < this._lyrics.LyricParts.Length)
-            //        {
-            //            LyricPart nextPart = this._lyrics.LyricParts[i + 1];
-
-            //            // I thing this is the issue
-            //            // What did I do?: nothing, cause I don´t now how to fix it
-            //            if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, this._time + LYRIC_OFFSET))
-            //            {
-            //                this._currentLyricPart = currentPart;
-            //                return;
-            //            }
-            //        }
-            //        else
-            //        {
-            //            this._currentLyricPart = this._lyrics.LyricParts[this._lyrics.LyricParts.Length - 1];
-            //            return;
-            //        }
-            //    }
-            //}
-            //});
         }
 
         public LyricsRoll GetLyricsRoll()
         {
-            if (DataValidator.ValidateData(this._lyrics, this._currentLyricPart, this._lyrics.LyricParts) && this._hasLyrics)
+            if (DataValidator.ValidateData(this._lyrics) &&
+                DataValidator.ValidateData(this._currentLyricPart) &&
+                DataValidator.ValidateData(this._lyrics.LyricParts) &&
+                this._hasLyrics)
             {
                 for (int i = 0; i < this._lyrics.LyricParts.Length; i++)
                 {
@@ -167,51 +135,44 @@ namespace LyricsWPF.Backend.Handler.Song
                     }
                 }
             }
-
+            
             return null;
         }
 
         public string Title
         {
-            get { return this._title; }
-            set
-            {
-                this._title = value;
-            }
+            get => _title;
+            set => _title = value;
         }
 
         public string[] Artists
         {
-            get { return this._artists; }
-            set { this._artists = value; }
+            get => _artists;
+            set => _artists = value;
         }
 
         public long Time
         {
-            get { return this._time; }
-            set { this._time = value; }
+            get => _time;
+            set => _time = value;
         }
 
         public long MaxTime
         {
-            get { return this._maxTime; }
-            set { this._maxTime = value; }
+            get => _maxTime;
+            set => _maxTime = value;
         }
 
         public bool HasLyrics
         {
-            get { return this._hasLyrics; }
-            set { this._hasLyrics = value; }
+            get => _hasLyrics;
+            set => _hasLyrics = value;
         }
 
         public LyricData Lyrics
         {
-            get { return this._lyrics; }
-            set
-            {
-                this._hasLyrics = true;
-                this._lyrics = value;
-            }
+            get => _lyrics;
+            set => _lyrics = value;
         }
 
         public bool Paused

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using LyricsWPF.Backend.Utils;
 using Opportunity.LrcParser;
@@ -36,6 +37,28 @@ namespace LyricsWPF.Backend.Structure
 
             return new LyricData(LyricReturnCode.Success, lyricParts);
         }
+
+        private static LyricPart[] ImproveData(LyricPart[] lyricParts)
+        {
+            if (DataValidator.ValidateData(lyricParts))
+            {
+                List<LyricPart> lyricPartsList = new List<LyricPart>();
+
+                LyricPart[] lyrics = null;
+
+                for (int i = 0; i < lyricParts.Length; i++)
+                {
+                    LyricPart lyricPart = lyricParts[i];
+
+                    //Match
+
+                    //if (lyricPart.Part.Contains())
+                }
+            }
+
+            return null;
+        }
+
 
         public LyricReturnCode LyricReturnCode
         {
