@@ -13,20 +13,22 @@ namespace LyricsWPF.Backend.Utils
     {
         public static Song ValidateUpdateAndMerge(Song song, CurrentTrackPlaybackContext currentTrack)
         {
-            if (DataValidator.ValidateData(
-                    song,
+            if (DataValidator.ValidateData(song) &&
+                DataValidator.ValidateData(
                     song.Paused,
                     song.TimeStamp,
                     song.ProgressMs,
-                    song.Artists))
+                    song.Artists,
+                    song.Album))
             {
-                if (DataValidator.ValidateData(
-                        currentTrack,
+                if (DataValidator.ValidateData(currentTrack) &&
+                    DataValidator.ValidateData(
                         currentTrack.IsPlaying,
                         currentTrack.Timestamp,
                         currentTrack.ProgressMs,
                         currentTrack.Item,
-                        currentTrack.Item.Artists))
+                        currentTrack.Item.Artists, 
+                        currentTrack.Item.Album))
                 {
                     return UpdateAndMerge(song, currentTrack);
                 }
@@ -51,8 +53,8 @@ namespace LyricsWPF.Backend.Utils
 
         public static Song ValidateConvertAndMerge(CurrentTrackPlaybackContext currentTrack)
         {
-            if (DataValidator.ValidateData(
-                    currentTrack,
+            if (DataValidator.ValidateData(currentTrack) &&
+                DataValidator.ValidateData(
                     currentTrack.Item,
                     currentTrack.Item.Name,
                     currentTrack.Item.Artists,
@@ -73,7 +75,7 @@ namespace LyricsWPF.Backend.Utils
                 currentTrack.Item.Name,
                 DataConverter.SpotifyArtistsToStrings(currentTrack.Item.Artists),
                 currentTrack.Item.DurationMs);
-
+            song.Album = currentTrack.Item.Album.Name;
             return UpdateAndMerge(song, currentTrack);
         }
     }

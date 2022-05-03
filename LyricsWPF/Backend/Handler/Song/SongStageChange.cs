@@ -22,6 +22,12 @@ namespace LyricsWPF.Backend.Handler.Song
                     return true;
                 }
 
+                if (this._lastSong != currentSong)
+                {
+                    this._lastSong = currentSong;
+                    return true;
+                }
+
                 if (currentSong.Title != this._lastSong.Title)
                 {
                     this._lastSong = currentSong;

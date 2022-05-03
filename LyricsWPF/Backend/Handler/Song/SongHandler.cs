@@ -92,7 +92,8 @@ namespace LyricsWPF.Backend.Handler.Song
                                 new SongRequestObject(
                                     this._currentSong.Title, 
                                     this._currentSong.Artists, 
-                                    this._currentSong.MaxTime));
+                                    this._currentSong.MaxTime, 
+                                    this._currentSong.Album));
                             
                             stopwatch.Stop();
 
@@ -114,7 +115,6 @@ namespace LyricsWPF.Backend.Handler.Song
                     }
 
                     this._currentSong.UpdateLyricsToTime();
-
                 }
             }
         }

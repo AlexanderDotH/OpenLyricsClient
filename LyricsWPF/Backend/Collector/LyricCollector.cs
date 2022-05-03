@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using LyricsWPF.Backend.Collector.Providers.NetEase;
+using LyricsWPF.Backend.Collector.Providers.NetEaseV2;
 using LyricsWPF.Backend.Exceptions;
 using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Structure;
@@ -20,6 +21,7 @@ namespace LyricsWPF.Backend.Collector
         {
             this._lyricCollectors = new List<ICollector>();
             this._lyricCollectors.Add(new NetEaseCollector());
+            this._lyricCollectors.Add(new NetEaseV2Collector());
         }
 
         public LyricData CollectLyrics(SongRequestObject songRequestObject, string collectorName)

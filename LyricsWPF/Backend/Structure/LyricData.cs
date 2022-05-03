@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DevBase.Generic;
+using DevBaseFormat.Structure;
 using LyricsWPF.Backend.Utils;
-using Opportunity.LrcParser;
 
 namespace LyricsWPF.Backend.Structure
 {
@@ -20,45 +21,20 @@ namespace LyricsWPF.Backend.Structure
             this._lyricParts = lyricParts;
         }
 
-        public static LyricData ConvertToData(Lyrics<Line> lyrics)
+        public static LyricData ConvertToData(GenericList<LyricElement> lyrics)
         {
-            if (lyrics == null || lyrics.Lines == null)
+            if (lyrics == null || lyrics.Count == 0)
                 return new LyricData(LyricReturnCode.Failed, null);
 
-            LyricPart[] lyricParts = new LyricPart[lyrics.Lines.Count];
+            LyricPart[] lyricParts = new LyricPart[lyrics.Count];
 
-            for (int i = 0; i < lyrics.Lines.Count; i++)
+            for (int i = 0; i < lyrics.Count; i++)
             {
-                Line line = lyrics.Lines[i];
-
-                lyricParts[i] = new LyricPart(
-                    (long)line.Timestamp.TotalMilliseconds, line.Content);
+                lyricParts[i] = new LyricPart(lyrics[i].TimeStamp, lyrics[i].Line);
             }
 
             return new LyricData(LyricReturnCode.Success, lyricParts);
         }
-
-        private static LyricPart[] ImproveData(LyricPart[] lyricParts)
-        {
-            if (DataValidator.ValidateData(lyricParts))
-            {
-                List<LyricPart> lyricPartsList = new List<LyricPart>();
-
-                LyricPart[] lyrics = null;
-
-                for (int i = 0; i < lyricParts.Length; i++)
-                {
-                    LyricPart lyricPart = lyricParts[i];
-
-                    //Match
-
-                    //if (lyricPart.Part.Contains())
-                }
-            }
-
-            return null;
-        }
-
 
         public LyricReturnCode LyricReturnCode
         {

@@ -11,18 +11,20 @@ namespace LyricsWPF.Backend.Handler.Song
     {
         private string _songName;
         private string[] _artists;
+        private string _album;
         private long _songDuration;
 
-        public SongRequestObject(string songName, string[] artists, long songDuration)
+        public SongRequestObject(string songName, string[] artists, long songDuration, string album)
         {
             _songName = songName;
             _artists = artists;
             _songDuration = songDuration;
+            _album = album;
         }
 
-        public SongRequestObject(string songName) : this(songName, new string[] { }, 0) {}
+        public SongRequestObject(string songName) : this(songName, new string[] { }, 0, null) {}
 
-        public SongRequestObject(string songName, string[] artists) : this(songName, artists, 0) { }
+        public SongRequestObject(string songName, string[] artists) : this(songName, artists, 0, null) { }
 
         public string SongName
         {
@@ -37,6 +39,12 @@ namespace LyricsWPF.Backend.Handler.Song
         public long SongDuration
         {
             get => _songDuration;
+        }
+
+        public string Album
+        {
+            get => _album;
+            set => _album = value;
         }
 
         public string GetArtistsSplit()

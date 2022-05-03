@@ -16,10 +16,11 @@ namespace LyricsWPF.Backend.Handler.Lyrics
             this._disposed = false;
         }
 
+        // ALle provider sollen nach nen song suchen und am ende wird verglichen, welcher song am besten ist, basierend an der provider qualität
         public async Task GetLyrics(SongRequestObject songRequestObject)
         {
             this._lyricCollector = new LyricCollector();
-            this._lyricData = this._lyricCollector.CollectLyrics(songRequestObject, "NetEase");
+            this._lyricData = this._lyricCollector.CollectLyrics(songRequestObject, "NetEaseV2");
         }
 
         public LyricData FullLyrics

@@ -44,6 +44,9 @@
     <Reference Include="DevBase">
       <HintPath>F:\Coding\Active Projects\DevBase\DevBase\bin\Debug\DevBase.dll</HintPath>
     </Reference>
+    <Reference Include="DevBaseFormat">
+      <HintPath>F:\Coding\Active Projects\DevBase\DevBaseFormat\bin\Release\DevBaseFormat.dll</HintPath>
+    </Reference>
     <Reference Include="Kfstorm.LrcParser, Version=1.0.3.12, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kfstorm.LrcParser.1.0.3\lib\portable-net40+sl50+win+wpa81+wp80\Kfstorm.LrcParser.dll</HintPath>
     </Reference>
@@ -293,6 +296,18 @@
     </ApplicationDefinition>
     <Compile Include="Backend\Collector\ICollector.cs" />
     <Compile Include="Backend\Collector\LyricCollector.cs" />
+    <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2AlbumResponse.cs" />
+    <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2ArtistResponse.cs" />
+    <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2KlyricResponse.cs" />
+    <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2LrcResponse.cs" />
+    <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2LyricResponse.cs" />
+    <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2LyricUserResponse.cs" />
+    <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2SearchResponse.cs" />
+    <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2SongResponse.cs" />
+    <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2ResultResponse.cs" />
+    <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2TlyricResponse.cs" />
+    <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2TransUserResponse.cs" />
+    <Compile Include="Backend\Collector\Providers\NetEaseV2\NetEaseV2Collector.cs" />
     <Compile Include="Backend\Collector\Providers\NetEase\Json\NetEaseAlbumResponse.cs" />
     <Compile Include="Backend\Collector\Providers\NetEase\Json\NetEaseArtistResponse.cs" />
     <Compile Include="Backend\Collector\Providers\NetEase\Json\NetEaseDefaultResponse.cs" />

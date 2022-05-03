@@ -13,6 +13,7 @@ namespace LyricsWPF.Backend.Handler.Song
 
         private string _title;
         private string[] _artists;
+        private string _album;
         private long _time;
         private long _maxTime;
         private bool _hasLyrics;
@@ -191,6 +192,12 @@ namespace LyricsWPF.Backend.Handler.Song
         {
             get => _progressMS;
             set => _progressMS = value;
+        }
+        
+        public string Album
+        {
+            get => _album;
+            set => _album = value;
         }
 
         public LyricPart CurrentLyricPart

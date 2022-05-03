@@ -258,3 +258,5 @@ C:\Users\Alex\source\repos\EinfachEinAlex\LyricsWPF\LyricsWPF\obj\Debug\LyricsWP
 C:\Users\Alex\source\repos\EinfachEinAlex\LyricsWPF\LyricsWPF\obj\Debug\LyricsWPF.csproj.CopyComplete
 C:\Users\Alex\source\repos\EinfachEinAlex\LyricsWPF\LyricsWPF\obj\Debug\LyricsWPF.exe
 C:\Users\Alex\source\repos\EinfachEinAlex\LyricsWPF\LyricsWPF\obj\Debug\LyricsWPF.pdb
+C:\Users\Alex\source\repos\EinfachEinAlex\LyricsWPF\LyricsWPF\bin\Debug\DevBaseFormat.dll
+C:\Users\Alex\source\repos\EinfachEinAlex\LyricsWPF\LyricsWPF\bin\Debug\DevBaseFormat.pdb
