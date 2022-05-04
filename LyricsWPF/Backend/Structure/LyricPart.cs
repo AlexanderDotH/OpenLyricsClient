@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LyricsWPF.Backend.Structure
 {
-    class LyricPart
+    public class LyricPart
     {
         private long _time;
         private string _part;

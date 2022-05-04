@@ -78,16 +78,15 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                                                         if (lyricResponse.Lrc.Lyric != null &&
                                                             lyricResponse.Lrc.Version != 0)
                                                         {
-
-                                                            FileFormatParser<LyricElement> fileFormatParser =
-                                                                new FileFormatParser<LyricElement>(
-                                                                    new LrcParser<LyricElement>());
+                                                            FileFormatParser<LrcObject> fileFormatParser =
+                                                                new FileFormatParser<LrcObject>(
+                                                                    new LrcParser<LrcObject>());
 
                                                             if (DataValidator.ValidateData(fileFormatParser))
                                                             {
                                                                 GenericList<LyricElement> lyricElements =
                                                                     fileFormatParser.FormatFromString(lyricResponse.Lrc
-                                                                        .Lyric);
+                                                                        .Lyric).Lyrics;
 
                                                                 if (DataValidator.ValidateData(lyricElements))
                                                                 {

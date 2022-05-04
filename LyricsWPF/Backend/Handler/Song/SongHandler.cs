@@ -6,6 +6,9 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using LyricsWPF.Backend.Debug;
+using LyricsWPF.Backend.Events;
+using LyricsWPF.Backend.Events.EventArgs;
+using LyricsWPF.Backend.Events.EventHandler;
 using LyricsWPF.Backend.Handler.Lyrics;
 using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Utils;
@@ -15,7 +18,6 @@ namespace LyricsWPF.Backend.Handler.Song
 {
     class SongHandler : IHandler
     {
-        private List<Song> _songs;
         private Song _currentSong = null;
         private SongStageChange _songStageChange;
 
@@ -26,15 +28,17 @@ namespace LyricsWPF.Backend.Handler.Song
         private Task _manageSongTask;
         private Task _manageLyricsTask;
         private Task _manageTimeSyncTask;
+        private Task _manageCurrentProgressTask;
         private Task _debugTask;
 
         private bool _disposed;
 
+
         public SongHandler()
         {
             this._debugger = new Debugger<SongHandler>(this);
+            this._disposed = false;
 
-            this._songs = new List<Song>();
             this._songStageChange = new SongStageChange();
 
             this._lyricHandler = new LyricHandler();
@@ -52,11 +56,13 @@ namespace LyricsWPF.Backend.Handler.Song
                 }
             });
             this._manageTimeSyncTask = new Task(() => ManageTimeSync());
+            this._manageCurrentProgressTask = new Task(() => ManageCurrentProgress());
 
             this._manageSongTask.Start();
             this._manageLyricsTask.Start();
             this._debugTask.Start();
             this._manageTimeSyncTask.Start();
+            this._manageCurrentProgressTask.Start();
 
             //this._currentSong = new Song("Never Gonna Give You Up", new string[] { "Rick Astley" });
         }
@@ -119,6 +125,24 @@ namespace LyricsWPF.Backend.Handler.Song
             }
         }
 
+        public async Task ManageCurrentProgress()
+        {
+            HttpClient httpClient = new HttpClient();
+            while (!this._disposed)
+            {
+                var playerApi = new SpotifyApi.NetCore.PlayerApi(httpClient,
+                    Core.INSTANCE.Settings.BearerAccess.AccessToken);
+                var currentPlaybackContext = await playerApi.GetCurrentlyPlayingTrack<CurrentPlaybackContext>();
+
+                if (DataValidator.ValidateData(this._currentSong) &&
+                    DataValidator.ValidateData(currentPlaybackContext) && 
+                    DataValidator.ValidateData(currentPlaybackContext.ProgressMs, currentPlaybackContext.Timestamp, currentPlaybackContext.IsPlaying))
+                {
+                    this._currentSong = DataMerger.ValidateUpdatePlayBack(this._currentSong, currentPlaybackContext);
+                }
+            }
+        }
+
         public async Task ManageCurrentSong()
         {
             HttpClient httpClient = new HttpClient();
@@ -133,17 +157,15 @@ namespace LyricsWPF.Backend.Handler.Song
                         var playerApi = new SpotifyApi.NetCore.PlayerApi(httpClient,
                             Core.INSTANCE.Settings.BearerAccess.AccessToken);
                         var currentTrack = await playerApi.GetCurrentlyPlayingTrack<CurrentTrackPlaybackContext>();
-
                         if (DataValidator.ValidateData(currentTrack) &&
-                            DataValidator.ValidateData(this._songStageChange) && 
-                            DataValidator.ValidateData(this._songs))
+                            DataValidator.ValidateData(this._songStageChange))
                         {
                             if (!DataValidator.ValidateData(this._currentSong) ||
                                 this._songStageChange.HasSongChanged(this._currentSong))
                             {
                                 //Song changed
                                 this._currentSong = DataMerger.ValidateConvertAndMerge(currentTrack);
-                                this._songs.Add(this._currentSong);
+                                OnSongChanged(new SongChangedEventArgs());
                             }
                             else
                             {
@@ -160,6 +182,14 @@ namespace LyricsWPF.Backend.Handler.Song
                 }
             }
         }
+
+        protected virtual void OnSongChanged(SongChangedEventArgs songChangedEventArgs)
+        {
+            SongChangedEventHandler songChangedEventHandler = SongChanged;
+            songChangedEventHandler?.Invoke(this, songChangedEventArgs);
+        }
+
+        public event SongChangedEventHandler SongChanged;
 
         private void PrintSongState(Song song)
         {

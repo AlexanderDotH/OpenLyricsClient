@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LyricsWPF.Backend.Structure
+namespace LyricsWPF.Backend.Handler.Song.SongProvider
 {
-    public enum LyricReturnCode
+    enum EnumSongProvider
     {
-        Success, Failed
+        SPOTIFY
     }
 }

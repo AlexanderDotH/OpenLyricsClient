@@ -10,7 +10,7 @@ using LyricsWPF.Backend.Utils;
 
 namespace LyricsWPF.Backend.Structure
 {
-    class LyricData
+    public class LyricData
     {
         private LyricReturnCode _lyricReturnCode;
         private LyricPart[] _lyricParts;

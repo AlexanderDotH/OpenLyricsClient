@@ -90,14 +90,14 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
                                                             lyricResponse.NetEaseTransUserResponse, lyricResponse.Qfy,
                                                             lyricResponse.Sfy, lyricResponse.Sgc))
                                                     {
-                                                        FileFormatParser<LyricElement> fileFormatParser =
-                                                            new FileFormatParser<LyricElement>(
-                                                                new LrcParser<LyricElement>());
+                                                        FileFormatParser<LrcObject> fileFormatParser =
+                                                            new FileFormatParser<LrcObject>(
+                                                                new LrcParser<LrcObject>());
 
                                                         if (DataValidator.ValidateData(fileFormatParser))
                                                         {
                                                             GenericList<LyricElement> lyrics =
-                                                                fileFormatParser.FormatFromString(lyricResponse.NetEaseLrcResponse.Lyric);
+                                                                fileFormatParser.FormatFromString(lyricResponse.NetEaseLrcResponse.Lyric).Lyrics;
 
                                                             if (DataValidator.ValidateData(lyrics) && lyrics.Count > 0)
                                                             {

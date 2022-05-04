@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LyricsWPF.Backend.Structure
 {
-    class LyricsRoll
+    public class LyricsRoll
     {
         private LyricPart _partOne;
         private LyricPart _partTwo;

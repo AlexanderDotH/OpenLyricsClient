@@ -7,7 +7,7 @@ using LyricsWPF.Backend.Utils;
 
 namespace LyricsWPF.Backend.Handler.Song
 {
-    class Song
+    public class Song
     {
         private const int LYRIC_OFFSET = 0;
 

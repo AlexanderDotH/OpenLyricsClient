@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LyricsWPF.Backend.Handler.Song;
+using LyricsWPF.Backend.Utils;
 using SpotifyApi.NetCore;
 
-namespace LyricsWPF.Backend.Utils
+namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 {
-    class DataMerger
+    class SpotifyDataMerger
     {
         public static Song ValidateUpdatePlayBack(Song song, CurrentPlaybackContext playbackContext)
         {
