@@ -3,3 +3,7 @@
 ################################################################################
 
 /.vs/LyricsWPF/FileContentIndex/*
+/.vs
+/packages
+/LyricsWPF/bin/Debug/*
+/LyricsWPF/bin/Release/*
