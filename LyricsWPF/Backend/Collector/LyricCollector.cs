@@ -24,10 +24,10 @@ namespace LyricsWPF.Backend.Collector
             this._lyricCollectors.Add(new NetEaseV2Collector());
         }
 
-        public LyricData CollectLyrics(SongRequestObject songRequestObject, string collectorName)
+        public async Task<LyricData> CollectLyrics(SongRequestObject songRequestObject, string collectorName)
         {
             ICollector collector = GetCollectorByName(collectorName);
-            return collector.GetLyrics(songRequestObject);
+            return await collector.GetLyrics(songRequestObject);
         }
 
         public ICollector GetCollectorByName(string collectorName)

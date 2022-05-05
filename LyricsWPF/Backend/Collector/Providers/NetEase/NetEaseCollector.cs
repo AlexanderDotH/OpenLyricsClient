@@ -40,13 +40,13 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
             _debugger = new Debugger<NetEaseCollector>(this);
         }
 
-        public LyricData GetLyrics(SongRequestObject songRequestObject)
+        public async Task<LyricData> GetLyrics(SongRequestObject songRequestObject)
         {
             if (DataValidator.ValidateData(songRequestObject) &&
                 DataValidator.ValidateData(songRequestObject.Artists, songRequestObject.SongDuration,
                     songRequestObject.SongName, songRequestObject.Album))
             {
-                NetEaseSearchResponse response = SearchTrack(songRequestObject);
+                NetEaseSearchResponse response = await SearchTrack(songRequestObject);
 
                 if (DataValidator.ValidateData(response) &&
                     DataValidator.ValidateData(response.Code, response.NetEaseResultDataResponse))
@@ -79,7 +79,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
                                                 if (MatchArtists(songResponse, songRequestObject.Artists, 100))
                                                 {
                                                     int songId = songResponse.Id;
-                                                    NetEaseLyricResponse lyricResponse = GetLyricsFromEndpoint(songId);
+                                                    NetEaseLyricResponse lyricResponse = await GetLyricsFromEndpoint(songId);
 
                                                     if (DataValidator.ValidateData(lyricResponse) &&
                                                         DataValidator.ValidateData(lyricResponse.Code,
@@ -160,7 +160,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
             return artistsMatch >= minArtistCount;
         }
 
-        private NetEaseSearchResponse SearchTrack(SongRequestObject songRequestObject)
+        private async Task<NetEaseSearchResponse> SearchTrack(SongRequestObject songRequestObject)
         {
             string requestUrl = Uri.EscapeUriString(string.Format(
                 "{0}/search/get?s={1}+{2}&type=1&offset=0&sub=false&limit=25",
@@ -169,7 +169,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
             this._debugger.Write("Full track search URL: " + requestUrl, DebugType.DEBUG);
 
             DevBase.Web.Request request = new Request(requestUrl);
-            ResponseData responseData = request.GetResponse();
+            ResponseData responseData = await request.GetResponseAsync();
 
             this._debugger.Write(responseData.GetContentAsString(), DebugType.DEBUG);
 
@@ -182,14 +182,14 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
             return null;
         }
 
-        private NetEaseLyricResponse GetLyricsFromEndpoint(int songId)
+        private async Task<NetEaseLyricResponse> GetLyricsFromEndpoint(int songId)
         {
             string requestURL = Uri.EscapeUriString(string.Format("{0}/song/lyric?tv=-1&kv=-1&lv=-1&os=pc&id={1}", this._baseUrl, songId));
 
             this._debugger.Write("Full lyric fetch URL: " + requestURL, DebugType.DEBUG);
 
             DevBase.Web.Request request = new Request(requestURL);
-            ResponseData responseData = request.GetResponse();
+            ResponseData responseData = await request.GetResponseAsync();
 
             this._debugger.Write(responseData.GetContentAsString(), DebugType.DEBUG);
 

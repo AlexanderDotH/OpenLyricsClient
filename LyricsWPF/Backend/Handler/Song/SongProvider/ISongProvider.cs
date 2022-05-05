@@ -10,7 +10,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
     {
         Song GetCurrentSong();
         EnumSongProvider GetEnum();
-
+        Task<Song> UpdateCurrentPlaybackTrack();
         void Dispose();
     }
 }

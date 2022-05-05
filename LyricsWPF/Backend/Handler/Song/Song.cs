@@ -42,23 +42,23 @@ namespace LyricsWPF.Backend.Handler.Song
 
         public void SyncTime()
         {
-            if (DataValidator.ValidateData(this._timeStamp, this._paused, this._progressMS))
-            {
-                if (!this._paused)
-                {
-                    long current_time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            //if (DataValidator.ValidateData(this._timeStamp, this._paused, this._progressMS))
+            //{
+            //    if (!this._paused)
+            //    {
+            //        long current_time = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
-                    long diff = 0;
+            //        long diff = 0;
 
-                    if (this._timeStamp > 0)
-                    {
-                        diff = (current_time - _timeStamp);
-                    }
+            //        if (this._timeStamp > 0)
+            //        {
+            //            diff = (current_time - _timeStamp);
+            //        }
 
-                    this._time = _progressMS + diff;
-                    this._timeStamp = 0;
-                }
-            }
+            //        this._time = _progressMS + diff;
+            //        this._timeStamp = 0;
+            //    }
+            //}
         }
 
         //Garbage Collector cries, when calling this
@@ -69,40 +69,40 @@ namespace LyricsWPF.Backend.Handler.Song
         {
             //await Task.Run(() =>
             //{
-            if (DataValidator.ValidateData(this._lyrics) && 
-                DataValidator.ValidateData(this._lyrics.LyricParts) &&
-                DataValidator.ValidateData(this._time) &&
-                this._hasLyrics)
-            {
-                for (int i = 0; i < this._lyrics.LyricParts.Length; i++)
-                {
-                    LyricPart currentPart = this._lyrics.LyricParts[i];
+            //if (DataValidator.ValidateData(this._lyrics) && 
+            //    DataValidator.ValidateData(this._lyrics.LyricParts) &&
+            //    DataValidator.ValidateData(this._time) &&
+            //    this._hasLyrics)
+            //{
+            //    for (int i = 0; i < this._lyrics.LyricParts.Length; i++)
+            //    {
+            //        LyricPart currentPart = this._lyrics.LyricParts[i];
 
-                    if (i + 1 < this._lyrics.LyricParts.Length)
-                    {
-                        LyricPart nextPart = this._lyrics.LyricParts[i + 1];
+            //        if (i + 1 < this._lyrics.LyricParts.Length)
+            //        {
+            //            LyricPart nextPart = this._lyrics.LyricParts[i + 1];
 
-                        // I thing this is the issue
-                        // What did I do?: nothing, cause I don´t now how to fix it
-                        if (DataValidator.ValidateData(currentPart) && 
-                            DataValidator.ValidateData(currentPart.Part, currentPart.Time) &&
-                            DataValidator.ValidateData(nextPart) && 
-                            DataValidator.ValidateData(nextPart.Part, nextPart.Time))
-                        {
-                            if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, this._time + LYRIC_OFFSET))
-                            {
-                                this._currentLyricPart = currentPart;
-                                return;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        this._currentLyricPart = this._lyrics.LyricParts[this._lyrics.LyricParts.Length - 1];
-                        return;
-                    }
-                }
-            }
+            //            // I thing this is the issue
+            //            // What did I do?: nothing, cause I don´t now how to fix it
+            //            if (DataValidator.ValidateData(currentPart) && 
+            //                DataValidator.ValidateData(currentPart.Part, currentPart.Time) &&
+            //                DataValidator.ValidateData(nextPart) && 
+            //                DataValidator.ValidateData(nextPart.Part, nextPart.Time))
+            //            {
+            //                if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, this._time + LYRIC_OFFSET))
+            //                {
+            //                    this._currentLyricPart = currentPart;
+            //                    return;
+            //                }
+            //            }
+            //        }
+            //        else
+            //        {
+            //            this._currentLyricPart = this._lyrics.LyricParts[this._lyrics.LyricParts.Length - 1];
+            //            return;
+            //        }
+            //    }
+            //}
         }
 
         public LyricsRoll GetLyricsRoll()
@@ -173,7 +173,12 @@ namespace LyricsWPF.Backend.Handler.Song
         public LyricData Lyrics
         {
             get => _lyrics;
-            set => _lyrics = value;
+
+            set
+            {
+                _hasLyrics = true;
+                _lyrics = value;
+            }
         }
 
         public bool Paused
@@ -210,6 +215,10 @@ namespace LyricsWPF.Backend.Handler.Song
                 }
 
                 return this._currentLyricPart;
+            }
+            set
+            {
+                this._currentLyricPart = value;
             }
         }
     }

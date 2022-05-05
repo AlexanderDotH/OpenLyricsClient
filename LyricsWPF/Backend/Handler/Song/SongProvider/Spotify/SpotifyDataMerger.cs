@@ -95,7 +95,9 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                 DataConverter.SpotifyArtistsToStrings(currentTrack.Item.Artists),
                 currentTrack.Item.DurationMs);
             song.Album = currentTrack.Item.Album.Name;
-            return UpdateAndMerge(song, currentTrack);
+            song.ProgressMs = currentTrack.ProgressMs.Value;
+            song.TimeStamp = currentTrack.Timestamp;
+            return song;
         }
     }
 }

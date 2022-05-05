@@ -30,7 +30,7 @@ namespace LyricsWPF.Backend
         private Settings.Settings _settings;
 
         private ServiceHandler _serviceHandler;
-        private NewSongHandler _songHandler;
+        private SongHandler _songHandler;
         private LyricHandler _lyricHandler;
 
         private static bool _disposed;
@@ -45,7 +45,7 @@ namespace LyricsWPF.Backend
             SetupInternals();
 
             this._serviceHandler = new ServiceHandler();
-            this._songHandler = new NewSongHandler();
+            this._songHandler = new SongHandler();
             this._lyricHandler = new LyricHandler(this._songHandler);
         }
 
@@ -120,7 +120,7 @@ namespace LyricsWPF.Backend
             get { return this._serviceHandler; }
         }
 
-        public NewSongHandler SongHandler
+        public SongHandler SongHandler
         {
             get { return this._songHandler; }
         }

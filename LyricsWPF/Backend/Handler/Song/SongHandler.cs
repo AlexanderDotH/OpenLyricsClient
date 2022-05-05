@@ -1,199 +1,95 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net.Http;
-using System.Runtime.InteropServices;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DevBase.Async;
+using DevBase.Generic;
 using LyricsWPF.Backend.Debug;
-using LyricsWPF.Backend.Events;
 using LyricsWPF.Backend.Events.EventArgs;
 using LyricsWPF.Backend.Events.EventHandler;
 using LyricsWPF.Backend.Handler.Lyrics;
-using LyricsWPF.Backend.Structure;
+using LyricsWPF.Backend.Handler.Song.SongProvider;
+using LyricsWPF.Backend.Handler.Song.SongProvider.Spotify;
 using LyricsWPF.Backend.Utils;
-using SpotifyApi.NetCore;
 
 namespace LyricsWPF.Backend.Handler.Song
 {
     class SongHandler : IHandler
     {
-        private Song _currentSong = null;
         private SongStageChange _songStageChange;
 
-        private LyricHandler _lyricHandler;
+        private GenericList<Tuple<ISongProvider, EnumSongProvider>> _songProviders;
+        private SongProviderChooser _songProviderChooser;
+
+        private Task _manageCurrentSongTask;
+        private Thread _manageCurrentSongUpdateThread;
+        private Thread _songInformationThread;
+        private bool _disposed;
 
         private Debugger<SongHandler> _debugger;
 
-        private Task _manageSongTask;
-        private Task _manageLyricsTask;
-        private Task _manageTimeSyncTask;
-        private Task _manageCurrentProgressTask;
-        private Task _debugTask;
-
-        private bool _disposed;
-
+        public event SongChangedEventHandler SongChanged;
 
         public SongHandler()
         {
             this._debugger = new Debugger<SongHandler>(this);
-            this._disposed = false;
+
+            this._songProviders = new GenericList<Tuple<ISongProvider, EnumSongProvider>>();
+            this._songProviders.Add(new Tuple<ISongProvider, EnumSongProvider>(new SpotifySongProvider(this), EnumSongProvider.SPOTIFY));
+
+            this._songProviderChooser = new SongProviderChooser();
 
             this._songStageChange = new SongStageChange();
 
-            this._lyricHandler = new LyricHandler();
+            this._manageCurrentSongTask = new Task(() => ManageCurrentSong());
+            this._manageCurrentSongTask.Start();
 
-            this._manageSongTask = new Task(() => ManageCurrentSong());
-            this._manageLyricsTask = new Task(() => ManageLyricsCollection());
-            this._debugTask = new Task(() =>
-            {
-                while (!this._disposed)
-                {
-                    if (this._disposed)
-                        break;
+            //this._manageCurrentSongUpdateThread = new Thread(ManageCurrentSongUpdate);
+            //this._manageCurrentSongUpdateThread.Start();
 
-                    PrintSongState(this._currentSong);
-                }
-            });
-            this._manageTimeSyncTask = new Task(() => ManageTimeSync());
-            this._manageCurrentProgressTask = new Task(() => ManageCurrentProgress());
+            this._songInformationThread = new Thread(SongInformation);
+            this._songInformationThread.Start();
 
-            this._manageSongTask.Start();
-            this._manageLyricsTask.Start();
-            this._debugTask.Start();
-            this._manageTimeSyncTask.Start();
-            this._manageCurrentProgressTask.Start();
+            this._disposed = false;
 
-            //this._currentSong = new Song("Never Gonna Give You Up", new string[] { "Rick Astley" });
+
         }
 
-        private async Task ManageTimeSync()
+        private async Task ManageCurrentSong()
         {
             while (!this._disposed)
             {
-                if (DataValidator.ValidateData(this._currentSong))
+                if (DataValidator.ValidateData(this._songStageChange) && 
+                    DataValidator.ValidateData(this._songProviderChooser))
                 {
-                    this._currentSong.SyncTime();
-                }
-            }
-        }
-
-        private async Task ManageLyricsCollection()
-        {
-            while (!this._disposed)
-            {
-                if (DataValidator.ValidateData(this._currentSong) &&
-                    DataValidator.ValidateData(this._currentSong.Title, this._currentSong.Artists, this._currentSong.MaxTime) &&
-                    DataValidator.ValidateData(this._lyricHandler) &&
-                    DataValidator.ValidateData(this._songStageChange))
-                {
-                    if (this._songStageChange.HasSongChanged(this._currentSong))
+                    if (this._songStageChange.HasSongChanged(GetCurrentSong()))
                     {
-                        try
+                        ISongProvider songProvider = GetSongProvider(this._songProviderChooser.GetSongProvider());
+                        Song song = await songProvider.UpdateCurrentPlaybackTrack();
+
+                        //Idk why but it works
+                        if (DataValidator.ValidateData(song) && this._songStageChange.HasSongChanged(song))
                         {
-                            Stopwatch stopwatch = new Stopwatch();
-                            stopwatch.Start();
-
-                            await this._lyricHandler.GetLyrics(
-                                new SongRequestObject(
-                                    this._currentSong.Title, 
-                                    this._currentSong.Artists, 
-                                    this._currentSong.MaxTime, 
-                                    this._currentSong.Album));
-                            
-                            stopwatch.Stop();
-
-                            this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
-
-                            if (DataValidator.ValidateData(this._lyricHandler) &&
-                                DataValidator.ValidateData(this._lyricHandler.FullLyrics))
-                            {
-                                this._currentSong.Lyrics = this._lyricHandler.FullLyrics;
-                                this._currentSong.HasLyrics = true;
-                            }
-
-                            this._debugger.Write("Song changed!", DebugType.INFO);
-                        }
-                        catch (Exception e)
-                        {
-                            this._debugger.Write(e.Message, DebugType.ERROR);
+                            OnSongChanged(new SongChangedEventArgs(song));
                         }
                     }
-
-                    this._currentSong.UpdateLyricsToTime();
                 }
             }
         }
 
-        public async Task ManageCurrentProgress()
+        private void SongInformation()
         {
-            HttpClient httpClient = new HttpClient();
             while (!this._disposed)
             {
-                var playerApi = new SpotifyApi.NetCore.PlayerApi(httpClient,
-                    Core.INSTANCE.Settings.BearerAccess.AccessToken);
-                var currentPlaybackContext = await playerApi.GetCurrentlyPlayingTrack<CurrentPlaybackContext>();
-
-                if (DataValidator.ValidateData(this._currentSong) &&
-                    DataValidator.ValidateData(currentPlaybackContext) && 
-                    DataValidator.ValidateData(currentPlaybackContext.ProgressMs, currentPlaybackContext.Timestamp, currentPlaybackContext.IsPlaying))
-                {
-                    this._currentSong = DataMerger.ValidateUpdatePlayBack(this._currentSong, currentPlaybackContext);
-                }
+                PrintSongState(GetCurrentSong());
             }
         }
-
-        public async Task ManageCurrentSong()
-        {
-            HttpClient httpClient = new HttpClient();
-            while (!this._disposed)
-            {
-                Thread.Sleep(100);
-
-                if (Core.INSTANCE.Settings.IsSpotifyConnected)
-                {
-                    try
-                    {
-                        var playerApi = new SpotifyApi.NetCore.PlayerApi(httpClient,
-                            Core.INSTANCE.Settings.BearerAccess.AccessToken);
-                        var currentTrack = await playerApi.GetCurrentlyPlayingTrack<CurrentTrackPlaybackContext>();
-                        if (DataValidator.ValidateData(currentTrack) &&
-                            DataValidator.ValidateData(this._songStageChange))
-                        {
-                            if (!DataValidator.ValidateData(this._currentSong) ||
-                                this._songStageChange.HasSongChanged(this._currentSong))
-                            {
-                                //Song changed
-                                this._currentSong = DataMerger.ValidateConvertAndMerge(currentTrack);
-                                OnSongChanged(new SongChangedEventArgs());
-                            }
-                            else
-                            {
-                                //Update song stats 
-                                // Time etc
-                                this._currentSong = DataMerger.ValidateUpdateAndMerge(this._currentSong, currentTrack);
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        this._debugger.Write(e.Message, DebugType.ERROR);    
-                    }
-                }
-            }
-        }
-
-        protected virtual void OnSongChanged(SongChangedEventArgs songChangedEventArgs)
-        {
-            SongChangedEventHandler songChangedEventHandler = SongChanged;
-            songChangedEventHandler?.Invoke(this, songChangedEventArgs);
-        }
-
-        public event SongChangedEventHandler SongChanged;
 
         private void PrintSongState(Song song)
         {
-            if (DataValidator.ValidateData(song) && 
+            if (DataValidator.ValidateData(song) &&
                 DataValidator.ValidateData(song.Title, song.Time))
             {
                 this._debugger.Write("Title: " + song.Title, DebugType.INFO);
@@ -206,28 +102,47 @@ namespace LyricsWPF.Backend.Handler.Song
             }
         }
 
+        private ISongProvider GetSongProvider(EnumSongProvider enumSongProvider)
+        {
+            foreach (Tuple<ISongProvider, EnumSongProvider> item in _songProviders)
+            {
+                if (item.Item2.Equals(enumSongProvider))
+                {
+                    return item.Item1;
+                }
+            }
+
+            return null;
+        }
+
+        private Song GetCurrentSong()
+        {
+            if (DataValidator.ValidateData(this._songProviderChooser))
+            {
+                ISongProvider songProvider = GetSongProvider(this._songProviderChooser.GetSongProvider());
+                if (DataValidator.ValidateData(songProvider))
+                {
+                    return songProvider.GetCurrentSong();
+                }
+            }
+
+            return null;
+        }
+
+        protected virtual void OnSongChanged(SongChangedEventArgs songChangedEventArgs)
+        {
+            SongChangedEventHandler songChangedEventHandler = SongChanged;
+            songChangedEventHandler?.Invoke(this, songChangedEventArgs);
+        }
+
         public Song CurrentSong
         {
-            get { return _currentSong; }
-            set { _currentSong = value; }
+            get => GetCurrentSong();
         }
 
         public void Dispose()
         {
             this._disposed = true;
-
-            try
-            {
-                this._manageSongTask.Wait(0);
-                this._manageLyricsTask.Wait(0);
-
-                this._manageSongTask.Dispose();
-                this._manageLyricsTask.Dispose();
-            }
-            catch (Exception e)
-            {
-                this._debugger.Write(e);
-            }
         }
     }
 }

@@ -41,8 +41,9 @@
     <StartupObject>LyricsWPF.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevBase">
-      <HintPath>F:\Coding\Active Projects\DevBase\DevBase\bin\Debug\DevBase.dll</HintPath>
+    <Reference Include="DevBase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>F:\Coding\Active Projects\DevBase\DevBaseFormat\bin\Release\DevBase.dll</HintPath>
     </Reference>
     <Reference Include="DevBaseFormat">
       <HintPath>F:\Coding\Active Projects\DevBase\DevBaseFormat\bin\Release\DevBaseFormat.dll</HintPath>
@@ -332,7 +333,8 @@
     <Compile Include="Backend\Exceptions\LyricNotDeserializableException.cs" />
     <Compile Include="Backend\Handler\IHandler.cs" />
     <Compile Include="Backend\Collector\SelectionMode.cs" />
-    <Compile Include="Backend\Handler\Song\NewSongHandler.cs" />
+    <Compile Include="Backend\Handler\Lyrics\LyricStageChange.cs" />
+    <Compile Include="Backend\Handler\Song\SongHandler.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\EnumSongProvider.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\ISongProvider.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\SongProviderChooser.cs" />
@@ -346,7 +348,6 @@
     <Compile Include="Backend\Handler\Services\Services\Spotify\SpotifyService.cs" />
     <Compile Include="Backend\Settings\Settings.cs" />
     <Compile Include="Backend\Handler\Song\Song.cs" />
-    <Compile Include="Backend\Handler\Song\SongHandler.cs" />
     <Compile Include="Backend\Handler\Song\SongStageChange.cs" />
     <Compile Include="Backend\Structure\LyricData.cs" />
     <Compile Include="Backend\Structure\LyricPart.cs" />

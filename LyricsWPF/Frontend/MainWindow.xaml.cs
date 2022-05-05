@@ -143,11 +143,11 @@ namespace LyricsWPF
             //    Console.WriteLine(s.Part + " : " + s.Time);
             //}
 
-            var col = new LyricCollector();
-            foreach (var s in col.CollectLyrics(new SongRequestObject(Core.INSTANCE.SongHandler.CurrentSong.Title, Core.INSTANCE.SongHandler.CurrentSong.Artists), "NetEase").LyricParts)
-            {
-                Console.WriteLine(s.Part + " : " + s.Time);
-            }
+            //var col = new LyricCollector();
+            //foreach (var s in col.CollectLyrics(new SongRequestObject(Core.INSTANCE.SongHandler.CurrentSong.Title, Core.INSTANCE.SongHandler.CurrentSong.Artists), "NetEase").LyricParts)
+            //{
+            //    Console.WriteLine(s.Part + " : " + s.Time);
+            //}
             //var _lyricCollector = new LyricCollector("Heros");
             //var _lyricDeserializer = new LyricDeserializer(_lyricCollector.CollectLyrics());
             //var _jsonFullLyrics = _lyricDeserializer.deserialize();

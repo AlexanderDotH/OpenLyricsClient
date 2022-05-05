@@ -28,13 +28,16 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
         private Task _updateSongDataTask;
         private Task _updateSongPlaybackTask;
 
+        private Task _updateNewSongTask;
+
         private bool _disposed;
 
-        public SpotifySongProvider(NewSongHandler songHandler) 
+        public SpotifySongProvider(SongHandler songHandler) 
         {
             this._debugger = new Debugger<SpotifySongProvider>(this);
+            this._disposed = false;
 
-            songHandler.SongChanged += OnSongChanged;
+            //songHandler.SongChanged += OnSongChanged;
 
             this._playerApi = new PlayerApi(new HttpClient(), Core.INSTANCE.Settings.BearerAccess.AccessToken);
             this._accessToken = Core.INSTANCE.Settings.BearerAccess.AccessToken;
@@ -51,7 +54,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
             this._timeSyncThread = new Thread(TimeSync);
             this._timeSyncThread.Start();
 
-            this._disposed = false;
         }
 
         //Song info time sync -> always
@@ -86,9 +88,10 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
         {
             while (!this._disposed)
             {
-                Thread.Sleep(50);
+                Thread.Sleep(1000);
 
-                if (DataValidator.ValidateData(this._playerApi))
+                if (DataValidator.ValidateData(this._playerApi) &&
+                    DataValidator.ValidateData(this._currentSong))
                 {
                     CurrentPlaybackContext currentPlayback =
                         await this._playerApi.GetCurrentlyPlayingTrack<CurrentPlaybackContext>();
@@ -97,7 +100,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                     {
                         this._currentSong =
                             SpotifyDataMerger.ValidateUpdatePlayBack(this._currentSong, currentPlayback);
-
                     }
                 }
             }
@@ -110,7 +112,8 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
             {
                 Thread.Sleep(100);
 
-                if (DataValidator.ValidateData(this._playerApi))
+                if (DataValidator.ValidateData(this._playerApi) && 
+                    DataValidator.ValidateData(this._currentSong))
                 {
                     CurrentTrackPlaybackContext currentTrack = 
                         await this._playerApi.GetCurrentlyPlayingTrack<CurrentTrackPlaybackContext>();
@@ -125,7 +128,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
         }
 
         //Song changed -> get new song
-        private async Task UpdateCurrentPlaybackTrack()
+        public async Task<Song> UpdateCurrentPlaybackTrack()
         {
             if (DataValidator.ValidateData(this._playerApi))
             {
@@ -134,9 +137,14 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 
                 if (DataValidator.ValidateData(currentTrack))
                 {
-                    this._currentSong = SpotifyDataMerger.ValidateConvertAndMerge(currentTrack);
+                    Song song = SpotifyDataMerger.ValidateConvertAndMerge(currentTrack);
+                    this._currentSong = song;
+                    this._debugger.Write("Song has been changed", DebugType.INFO);
+                    return song;
                 }
             }
+
+            return null;
         }
 
         //Kinda useless idk
@@ -152,11 +160,14 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
             }
         }
 
-        public void OnSongChanged(Object sender, SongChangedEventArgs songChangedEventArgs)
-        {
-            Task task = new Task(() => UpdateCurrentPlaybackTrack());
-            task.Start();
-        }
+        //public void OnSongChanged(Object sender, SongChangedEventArgs songChangedEventArgs)
+        //{
+        //    if (!DataValidator.ValidateData(this._updateNewSongTask) || this._updateNewSongTask.IsCompleted)
+        //    {
+        //        this._updateNewSongTask = new Task(() => UpdateCurrentPlaybackTrack());
+        //        this._updateNewSongTask.Start();
+        //    }
+        //}
 
         public void Dispose()
         {

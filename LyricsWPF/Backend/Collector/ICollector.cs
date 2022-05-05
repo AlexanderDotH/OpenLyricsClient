@@ -11,7 +11,7 @@ namespace LyricsWPF.Backend.Collector
 {
     interface ICollector
     {
-        LyricData GetLyrics(SongRequestObject songRequestObject);
+        Task<LyricData> GetLyrics(SongRequestObject songRequestObject);
         string CollectorName();
         int ProviderQuality();
     }

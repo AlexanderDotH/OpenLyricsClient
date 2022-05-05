@@ -35,12 +35,12 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
             this._baseUrl = "https://music.xianqiao.wang/neteaseapiv2";
         }
 
-        public LyricData GetLyrics(SongRequestObject songRequestObject)
+        public async Task<LyricData> GetLyrics(SongRequestObject songRequestObject)
         {
             if (DataValidator.ValidateData(songRequestObject) &&
                 DataValidator.ValidateData(songRequestObject.Artists, songRequestObject.SongDuration, songRequestObject.SongName, songRequestObject.Album))
             {
-                NetEaseV2SearchResponse response = SearchTrack(songRequestObject);
+                NetEaseV2SearchResponse response = await SearchTrack(songRequestObject);
 
                 if (DataValidator.ValidateData(response) &&
                     DataValidator.ValidateData(response.Code, response.Result))
@@ -65,7 +65,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                                             if (MatchArtists(songResponse, songRequestObject.Artists, 70))
                                             {
                                                 int songId = songResponse.Id;
-                                                NetEaseV2LyricResponse lyricResponse = GetLyricsFromEndpoint(songId);
+                                                NetEaseV2LyricResponse lyricResponse = await GetLyricsFromEndpoint(songId);
 
                                                 if (DataValidator.ValidateData(lyricResponse) &&
                                                     DataValidator.ValidateData(lyricResponse.Code, lyricResponse.Klyric,
@@ -111,7 +111,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
             return null;
         }
 
-        private NetEaseV2SearchResponse SearchTrack(SongRequestObject songRequestObject)
+        private async Task<NetEaseV2SearchResponse> SearchTrack(SongRequestObject songRequestObject)
         {
             string requestUrl = Uri.UnescapeDataString(string.Format("{0}/search?limit=100&type=1&keywords={2} + {1}",
                 this._baseUrl,
@@ -120,7 +120,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
             this._debugger.Write("Full track search URL: " + requestUrl, DebugType.DEBUG);
 
             DevBase.Web.Request request = new Request(requestUrl);
-            ResponseData responseData = request.GetResponse();
+            ResponseData responseData = await request.GetResponseAsync();
 
             if (responseData.StatusCode == HttpStatusCode.OK)
             {
@@ -130,14 +130,14 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
             return null;
         }
 
-        private NetEaseV2LyricResponse GetLyricsFromEndpoint(int songId)
+        private async Task<NetEaseV2LyricResponse> GetLyricsFromEndpoint(int songId)
         {
             string requestURL = Uri.EscapeUriString(string.Format("{0}/lyric?id={1}", this._baseUrl, songId));
 
             this._debugger.Write("Full lyric fetch URL: " + requestURL, DebugType.DEBUG);
 
             DevBase.Web.Request request = new Request(requestURL);
-            ResponseData responseData = request.GetResponse();
+            ResponseData responseData = await request.GetResponseAsync();
 
             this._debugger.Write(responseData.GetContentAsString(), DebugType.DEBUG);
 
