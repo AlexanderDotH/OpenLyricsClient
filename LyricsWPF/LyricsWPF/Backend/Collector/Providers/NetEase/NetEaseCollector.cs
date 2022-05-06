@@ -20,7 +20,6 @@ using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Utils;
 using Newtonsoft.Json;
-using Opportunity.LrcParser;
 
 namespace LyricsWPF.Backend.Collector.Providers.NetEase
 {

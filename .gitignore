@@ -1,5 +1,6 @@
 /.vs/LyricsWPF/FileContentIndex/*
 /.vs
-/packages
-/LyricsWPF/bin/Debug/*
-/LyricsWPF/bin/Release/*
+
+/LyricsWPF/LyricsWPF/bin/Debug
+/LyricsWPF/LyricsWPF/bin/Release
+/LyricsWPF/packages
