@@ -160,15 +160,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
             }
         }
 
-        //public void OnSongChanged(Object sender, SongChangedEventArgs songChangedEventArgs)
-        //{
-        //    if (!DataValidator.ValidateData(this._updateNewSongTask) || this._updateNewSongTask.IsCompleted)
-        //    {
-        //        this._updateNewSongTask = new Task(() => UpdateCurrentPlaybackTrack());
-        //        this._updateNewSongTask.Start();
-        //    }
-        //}
-
         public void Dispose()
         {
             this._disposed = true;

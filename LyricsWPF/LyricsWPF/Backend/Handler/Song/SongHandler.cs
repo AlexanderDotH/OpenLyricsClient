@@ -69,7 +69,7 @@ namespace LyricsWPF.Backend.Handler.Song
                         ISongProvider songProvider = GetSongProvider(this._songProviderChooser.GetSongProvider());
                         Song song = await songProvider.UpdateCurrentPlaybackTrack();
 
-                        //Idk why but it works
+                        //                                      Idk why but it works
                         if (DataValidator.ValidateData(song) && this._songStageChange.HasSongChanged(song))
                         {
                             OnSongChanged(new SongChangedEventArgs(song));

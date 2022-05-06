@@ -319,8 +319,6 @@
     <Compile Include="Backend\Core.cs" />
     <Compile Include="Backend\Debug\Debugger.cs" />
     <Compile Include="Backend\Debug\DebugType.cs" />
-    <Compile Include="Backend\Deserializer\JsonStructures\JsonLyricPart.cs" />
-    <Compile Include="Backend\Deserializer\LyricDeserializer.cs" />
     <Compile Include="Backend\Events\EventHandler\SongChangedEventHandler.cs" />
     <Compile Include="Backend\Events\EventArgs\SongChangedEventArgs.cs" />
     <Compile Include="Backend\Exceptions\LyricNotCollectableException.cs" />
@@ -348,8 +346,6 @@
     <Compile Include="Backend\Structure\LyricReturnCode.cs" />
     <Compile Include="Backend\Structure\LyricsRoll.cs" />
     <Compile Include="Backend\Utils\DataConverter.cs" />
-    <Compile Include="Backend\Utils\DataMerger.cs" />
-    <Compile Include="Backend\Utils\DateConverter.cs" />
     <Compile Include="Backend\Utils\DataValidator.cs" />
     <Compile Include="Backend\Utils\MathUtils.cs" />
     <Compile Include="Frontend\Settings.xaml.cs">

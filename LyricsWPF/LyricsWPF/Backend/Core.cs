@@ -80,6 +80,8 @@ namespace LyricsWPF.Backend
             bearerRefreshAccess.RefreshToken = "empty";
             bearerRefreshAccess.AccessToken = "empty";
             bearerRefreshAccess.ExpiresIn = 0;
+
+            // TODO: Remove unnecessary permissions
             bearerRefreshAccess.Scope = "playlist-read-private,playlist-read-collaborative,streaming,user-follow-read,user-library-read,user-read-private,user-read-playback-state,user-modify-playback-state,user-read-currently-playing,user-read-recently-played";
             settings.BearerAccess = bearerRefreshAccess;
 
