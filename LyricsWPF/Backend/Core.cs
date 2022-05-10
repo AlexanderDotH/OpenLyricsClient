@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Lyrics;
 using LyricsWPF.Backend.Handler.Services;
@@ -35,18 +36,22 @@ namespace LyricsWPF.Backend
 
         private static bool _disposed;
 
+        private CancellationTokenSource _cancellationTokenSource;
+
         public Core()
         {
             INSTANCE = this;
             this._debugger = new Debugger<Core>(this);
 
             _disposed = false;
+            this._cancellationTokenSource = new CancellationTokenSource();
 
             SetupInternals();
 
             this._serviceHandler = new ServiceHandler();
             this._songHandler = new SongHandler();
             this._lyricHandler = new LyricHandler(this._songHandler);
+
         }
 
         public void SetupInternals()
@@ -100,6 +105,7 @@ namespace LyricsWPF.Backend
         public void DisposeEverything()
         {
             _disposed = true;
+            _cancellationTokenSource.Cancel();
 
             this._songHandler.Dispose();
             this._lyricHandler.Dispose();
@@ -123,6 +129,11 @@ namespace LyricsWPF.Backend
         public SongHandler SongHandler
         {
             get { return this._songHandler; }
+        }
+
+        public CancellationTokenSource CancellationTokenSource
+        {
+            get { return this._cancellationTokenSource; }
         }
 
         public static bool IsDisposed()

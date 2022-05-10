@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace LyricsWPF.Backend.Debug
 {
@@ -18,6 +19,9 @@ namespace LyricsWPF.Backend.Debug
 
         public void Write(string message, DebugType debugType)
         {
+            if (!Environment.GetCommandLineArgs().Contains("--enable-command-output"))
+                return;
+
             switch (debugType)
             {
                 case DebugType.INFO:
@@ -42,7 +46,7 @@ namespace LyricsWPF.Backend.Debug
 
         private void Print(string message, DebugType debugType)
         {
-            Console.WriteLine(string.Format("{0} : {2} : {1}", this._type.GetType().Name , message, debugType.ToString()));
+            Console.WriteLine((string.Format("{0} : {2} : {1}", this._type.GetType().Name , message, debugType.ToString())));
         }
     }
 }

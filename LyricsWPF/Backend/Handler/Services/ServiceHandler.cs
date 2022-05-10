@@ -11,8 +11,6 @@ namespace LyricsWPF.Backend.Handler.Services
     {
         private List<IService> _services;
         private Debugger<ServiceHandler> _debugger;
-        private Thread _thread;
-        private bool _disposed;
 
         public ServiceHandler()
         {
@@ -20,36 +18,8 @@ namespace LyricsWPF.Backend.Handler.Services
 
             this._services = new List<IService>();
             this._services.Add(new SpotifyService());
-
-            this._thread = new Thread(ManageRefresh);
-            this._thread.Start();
-
-            this._disposed = false;
         }
-
-        private void ManageRefresh()
-        {
-            while (!this._disposed)
-            {
-                Thread.Sleep(5000);
-
-                if (Core.INSTANCE.Settings.IsSpotifyConnected)
-                {
-                    if (Core.INSTANCE.Settings.BearerAccess != null)
-                    {
-                        DateTime? expire = Core.INSTANCE.Settings.SpotifyExpireTime;
-                        DateTime expiresTime = expire.Value.AddMinutes(Core.INSTANCE.Settings.BearerAccess.ExpiresIn / 60);
-
-                        if (DateTime.Now > expiresTime)
-                        {
-                            GetServiceByName("Spotify").RefreshToken();
-                            this._debugger.Write("Refreshed Spotify", DebugType.DEBUG);
-                        }
-                    }
-                }
-            }
-        }
-
+        
         public bool IsConnected(string serviceName)
         {
             return GetServiceByName(serviceName).IsConnected();
@@ -95,14 +65,15 @@ namespace LyricsWPF.Backend.Handler.Services
         {
             try
             {
-                this._thread.Abort();
+                for (int i = 0; i < this._services.Count; i++)
+                {
+                    this._services[i].Dispose();
+                }
             }
             catch (Exception e)
             {
                 this._debugger.Write(e);
             }
-
-            this._disposed = true;
         }
     }
 }

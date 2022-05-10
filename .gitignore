@@ -1,9 +1,6 @@
-﻿################################################################################
-# Diese .gitignore-Datei wurde von Microsoft(R) Visual Studio automatisch erstellt.
-################################################################################
-
-/.vs/LyricsWPF/FileContentIndex/*
+﻿/.vs/LyricsWPF/FileContentIndex/*
 /.vs
 /packages
 /LyricsWPF/bin/Debug/*
 /LyricsWPF/bin/Release/*
+/LyricsWPF/bin/x64 Release

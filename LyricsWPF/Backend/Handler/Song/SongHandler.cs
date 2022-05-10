@@ -24,8 +24,7 @@ namespace LyricsWPF.Backend.Handler.Song
         private SongProviderChooser _songProviderChooser;
 
         private Task _manageCurrentSongTask;
-        private Thread _manageCurrentSongUpdateThread;
-        private Thread _songInformationThread;
+        private Task _songInformationTask;
         private bool _disposed;
 
         private Debugger<SongHandler> _debugger;
@@ -43,18 +42,16 @@ namespace LyricsWPF.Backend.Handler.Song
 
             this._songStageChange = new SongStageChange();
 
-            this._manageCurrentSongTask = new Task(() => ManageCurrentSong());
+            this._manageCurrentSongTask = new Task(async() => await ManageCurrentSong(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
             this._manageCurrentSongTask.Start();
 
-            //this._manageCurrentSongUpdateThread = new Thread(ManageCurrentSongUpdate);
-            //this._manageCurrentSongUpdateThread.Start();
-
-            this._songInformationThread = new Thread(SongInformation);
-            this._songInformationThread.Start();
+            if (Environment.GetCommandLineArgs().Contains("--enable-command-output"))
+            {
+                this._songInformationTask = new Task(async () => SongInformation(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
+                this._songInformationTask.Start();
+            }
 
             this._disposed = false;
-
-
         }
 
         private async Task ManageCurrentSong()
@@ -95,7 +92,8 @@ namespace LyricsWPF.Backend.Handler.Song
                 this._debugger.Write("Title: " + song.Title, DebugType.INFO);
                 this._debugger.Write("Time: " + song.Time, DebugType.INFO);
 
-                if (DataValidator.ValidateData(song.CurrentLyricPart))
+                if (DataValidator.ValidateData(song.CurrentLyricPart) &&
+                    DataValidator.ValidateData(song.CurrentLyricPart.Part, song.CurrentLyricPart.Time))
                 {
                     this._debugger.Write("LyricPart: " + song.CurrentLyricPart.Part, DebugType.INFO);
                 }
@@ -104,8 +102,9 @@ namespace LyricsWPF.Backend.Handler.Song
 
         private ISongProvider GetSongProvider(EnumSongProvider enumSongProvider)
         {
-            foreach (Tuple<ISongProvider, EnumSongProvider> item in _songProviders)
+            for (int i = 0; i < this._songProviders.Count; i++)
             {
+                Tuple<ISongProvider, EnumSongProvider> item = this._songProviders[i];
                 if (item.Item2.Equals(enumSongProvider))
                 {
                     return item.Item1;
@@ -143,6 +142,18 @@ namespace LyricsWPF.Backend.Handler.Song
         public void Dispose()
         {
             this._disposed = true;
+
+            try
+            {
+                for (int i = 0; i < this._songProviders.Count; i++)
+                {
+                    this._songProviders[i].Item1.Dispose();
+                }
+            }
+            catch (Exception e)
+            {
+                this._debugger.Write(e);
+            }
         }
     }
 }

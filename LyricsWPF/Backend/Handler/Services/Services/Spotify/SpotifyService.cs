@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using LyricsWPF.Backend.Debug;
 using Microsoft.Extensions.Configuration;
 using SpotifyApi.NetCore.Authorization;
 
@@ -12,8 +14,16 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
         private UserAccountsService _userAccountsService;
         private ConfigurationManager _configurationManager;
 
+        private Task _refeshTokenTask;
+
+        private Debugger<SpotifyService> _debugger;
+        private bool _disposed;
+
         public SpotifyService()
         {
+            this._debugger = new Debugger<SpotifyService>(this);
+            this._disposed = false;
+
             ConfigurationManager configurationManager = new ConfigurationManager();
             configurationManager["SpotifyApiClientId"] = "d77eb56257c44acd8e1a123eabd2390c";
             configurationManager["SpotifyApiClientSecret"] = "48f5fc414d264247b87502daa0c68668";
@@ -22,6 +32,32 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
 
             HttpClient httpClient = new HttpClient();
             this._userAccountsService = new UserAccountsService(httpClient, _configurationManager);
+
+            this._refeshTokenTask = new Task(async () => await RefreshToken(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.None);
+            this._refeshTokenTask.Start();
+        }
+
+        private async Task RefreshToken()
+        {
+            while (!this._disposed)
+            {
+                await Task.Delay(1000);
+
+                if (Core.INSTANCE.Settings.IsSpotifyConnected)
+                {
+                    if (Core.INSTANCE.Settings.BearerAccess != null)
+                    {
+                        DateTime? expire = Core.INSTANCE.Settings.SpotifyExpireTime;
+                        DateTime expiresTime = expire.Value.AddMinutes(Core.INSTANCE.Settings.BearerAccess.ExpiresIn / 60);
+
+                        if (DateTime.Now > expiresTime)
+                        {
+                            await RefreshTokenRequest();
+                            this._debugger.Write("Refreshed Spotify Token", DebugType.DEBUG);
+                        }
+                    }
+                }
+            }
         }
 
         public bool IsConnected()
@@ -29,18 +65,18 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
             return Core.INSTANCE.Settings.IsSpotifyConnected && Core.INSTANCE.Settings.BearerAccess.AccessToken != null;
         }
 
-        public async Task RefreshToken()
+        public string GetAccessToken()
+        {
+            RefreshTokenRequest();
+            return Core.INSTANCE.Settings.BearerAccess.AccessToken;
+        }
+
+        private async Task RefreshTokenRequest()
         {
             BearerAccessToken bearerAccess = await _userAccountsService.RefreshUserAccessToken(Core.INSTANCE.Settings.BearerAccess.RefreshToken);
             Core.INSTANCE.Settings.SpotifyExpireTime = bearerAccess.Expires;
             Core.INSTANCE.Settings.BearerAccess.AccessToken = bearerAccess.AccessToken;
             Core.INSTANCE.WriteSettings();
-        }
-
-        public string GetAccessToken()
-        {
-            RefreshToken();
-            return Core.INSTANCE.Settings.BearerAccess.AccessToken;
         }
 
         public async Task StartAuthorization()
@@ -78,6 +114,11 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
         string IService.ServiceName()
         {
             return "Spotify";
+        }
+
+        public void Dispose()
+        {
+            this._disposed = true;
         }
     }
 }

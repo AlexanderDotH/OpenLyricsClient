@@ -23,7 +23,7 @@ namespace LyricsWPF.Backend.Listener
             this._lookFor = lookFor;
             this._suffix = suffix;
 
-            Task task = new Task(() => StartListener());
+            Task task = new Task(async () => await StartListener(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.None);
             task.Start();
         }
 

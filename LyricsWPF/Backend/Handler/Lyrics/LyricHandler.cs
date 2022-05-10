@@ -20,12 +20,9 @@ namespace LyricsWPF.Backend.Handler.Lyrics
         private Debugger<LyricHandler> _debugger;
 
         private LyricCollector _lyricCollector;
-        private LyricData _lyricData;
-        private LyricStageChange _lyricStageChange;
 
         private SongHandler _songHandler;
-        private Thread _manageLyricsThread;
-        private Task _collectLyricsTask;
+        private Task _manageLyricsTask;
 
         private bool _disposed;
 
@@ -39,24 +36,20 @@ namespace LyricsWPF.Backend.Handler.Lyrics
             songHandler.SongChanged += OnSongChanged;
 
             this._lyricCollector = new LyricCollector();
-            this._lyricStageChange = new LyricStageChange();
 
-            this._manageLyricsThread = new Thread(ManageLyrics);
-            this._manageLyricsThread.Start();
-
-            //this._collectLyricsTask = new Task(() => CollectLyrics());
+            this._manageLyricsTask = new Task(async () => await ManageLyrics(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
+            this._manageLyricsTask.Start();
 
             this._disposed = false;
         }
 
-        private void ManageLyrics()
+        private async Task ManageLyrics()
         {
             while (!this._disposed)
             {
                 if (DataValidator.ValidateData(this._songHandler))
                 {
                     Song.Song currentSong = this._songHandler.CurrentSong;
-
 
                     if (DataValidator.ValidateData(currentSong) &&
                         DataValidator.ValidateData(currentSong.Time) &&
@@ -82,7 +75,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                                     if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, currentSong.Time + LYRIC_OFFSET))
                                     {
                                         currentSong.CurrentLyricPart = currentPart;
-                                        return;
+                                        break;
                                     }
                                 }
                             }
@@ -90,7 +83,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                             {
                                 currentSong.CurrentLyricPart =
                                     currentSong.Lyrics.LyricParts[currentSong.Lyrics.LyricParts.Length - 1];
-                                return;
+                                break;
                             }
                         }
                     }
@@ -103,9 +96,10 @@ namespace LyricsWPF.Backend.Handler.Lyrics
             Task.Factory.StartNew(async () =>
             {
                 if (DataValidator.ValidateData(songChangedEventArgs.Song) &&
-                    DataValidator.ValidateData(songChangedEventArgs.Song) &&
                     DataValidator.ValidateData(songChangedEventArgs.Song.Title,
-                        songChangedEventArgs.Song.Artists, songChangedEventArgs.Song.MaxTime))
+                        songChangedEventArgs.Song.Artists, songChangedEventArgs.Song.MaxTime, songChangedEventArgs.Song.Album) &&
+                    DataValidator.ValidateData(this._songHandler) && 
+                    DataValidator.ValidateData(this._songHandler.CurrentSong))
                 {
                     Stopwatch stopwatch = new Stopwatch();
                     stopwatch.Start();
@@ -131,6 +125,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                         }
                     }
                 }
+
             });
         }
 

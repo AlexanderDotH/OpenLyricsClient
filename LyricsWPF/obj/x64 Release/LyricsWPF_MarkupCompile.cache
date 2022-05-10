@@ -4,15 +4,15 @@
 winexe
 C#
 .cs
-C:\Users\Alex\source\repos\EinfachEinAlex\LyricsWPF\LyricsWPF\obj\Debug\
+C:\Users\Alex\source\repos\EinfachEinAlex\LyricsWPF\LyricsWPF\obj\x64 Release\
 LyricsWPF
 none
 false
-DEBUG;TRACE
+TRACE
 C:\Users\Alex\source\repos\EinfachEinAlex\LyricsWPF\LyricsWPF\App.xaml
 2-1372614701
 
-681863775348
+691929835796
 156-1940137353
 Frontend\MainWindow.xaml;Frontend\Settings.xaml;
 

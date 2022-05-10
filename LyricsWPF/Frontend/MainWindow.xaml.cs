@@ -90,7 +90,7 @@ namespace LyricsWPF
                         }, DispatcherPriority.Normal);
                     }
                 }
-            });
+            }, Core.INSTANCE.CancellationTokenSource.Token);
 
             //Thread trd = new Thread(t =>
             //{

@@ -6,9 +6,10 @@ namespace LyricsWPF.Backend.Handler.Services.Services
     {
         string ServiceName();
         Task StartAuthorization();
-        Task RefreshToken();
 
         string GetAccessToken();
         bool IsConnected();
+
+        void Dispose();
     }
 }
