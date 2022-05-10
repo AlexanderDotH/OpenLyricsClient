@@ -4,3 +4,6 @@
 /LyricsWPF/bin/Debug/*
 /LyricsWPF/bin/Release/*
 /LyricsWPF/bin/x64 Release
+/LyricsWPF/LyricsWPF/bin/Debug
+/LyricsWPF/packages
+/LyricsWPF/.vs/LyricsWPF/FileContentIndex

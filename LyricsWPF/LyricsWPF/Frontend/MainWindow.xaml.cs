@@ -16,7 +16,6 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using LyricsWPF.Backend;
 using LyricsWPF.Backend.Collector;
-using LyricsWPF.Backend.Deserializer;
 using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Utils;

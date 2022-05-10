@@ -59,9 +59,6 @@
     <Reference Include="DevBaseFormat">
       <HintPath>F:\Coding\Active Projects\DevBase\DevBaseFormat\bin\Release\DevBaseFormat.dll</HintPath>
     </Reference>
-    <Reference Include="Kfstorm.LrcParser, Version=1.0.3.12, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Kfstorm.LrcParser.1.0.3\lib\portable-net40+sl50+win+wpa81+wp80\Kfstorm.LrcParser.dll</HintPath>
-    </Reference>
     <Reference Include="MaterialDesignColors, Version=2.0.4.3, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.2.0.4\lib\net452\MaterialDesignColors.dll</HintPath>
     </Reference>
@@ -126,9 +123,6 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Opportunity.LrcParser, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Appleneko2001.LrcParser.1.0.4\lib\netstandard2.0\Opportunity.LrcParser.dll</HintPath>
     </Reference>
     <Reference Include="SpotifyApi.NetCore, Version=3.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SpotifyApi.NetCore.3.5.0\lib\netstandard2.0\SpotifyApi.NetCore.dll</HintPath>
@@ -336,8 +330,6 @@
     <Compile Include="Backend\Core.cs" />
     <Compile Include="Backend\Debug\Debugger.cs" />
     <Compile Include="Backend\Debug\DebugType.cs" />
-    <Compile Include="Backend\Deserializer\JsonStructures\JsonLyricPart.cs" />
-    <Compile Include="Backend\Deserializer\LyricDeserializer.cs" />
     <Compile Include="Backend\Events\EventHandler\SongChangedEventHandler.cs" />
     <Compile Include="Backend\Events\EventArgs\SongChangedEventArgs.cs" />
     <Compile Include="Backend\Exceptions\LyricNotCollectableException.cs" />
@@ -365,7 +357,6 @@
     <Compile Include="Backend\Structure\LyricReturnCode.cs" />
     <Compile Include="Backend\Structure\LyricsRoll.cs" />
     <Compile Include="Backend\Utils\DataConverter.cs" />
-    <Compile Include="Backend\Utils\DateConverter.cs" />
     <Compile Include="Backend\Utils\DataValidator.cs" />
     <Compile Include="Backend\Utils\MathUtils.cs" />
     <Compile Include="Frontend\Settings.xaml.cs">

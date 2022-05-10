@@ -60,7 +60,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
         {
             while (!this._disposed)
             {
-
                 if (!this._service.IsConnected())
                     break;
 
@@ -121,7 +120,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                 if (!this._service.IsConnected())
                     break;
 
-                await Task.Delay(100);
+                await Task.Delay(500);
 
                 if (DataValidator.ValidateData(this._playerApi) && 
                     DataValidator.ValidateData(this._currentSong))
@@ -169,12 +168,9 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                 this._accessToken = Core.INSTANCE.Settings.BearerAccess.AccessToken;
             }
 
-<<<<<<< HEAD:LyricsWPF/Backend/Handler/Song/SongProvider/Spotify/SpotifySongProvider.cs
             return this._playerApi;
         }
 
-=======
->>>>>>> 6a50083e8ebc00e1ecfe9b78ecdb02b8db328041:LyricsWPF/LyricsWPF/Backend/Handler/Song/SongProvider/Spotify/SpotifySongProvider.cs
         public void Dispose()
         {
             this._disposed = true;
