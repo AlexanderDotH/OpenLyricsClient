@@ -36,7 +36,7 @@ namespace LyricsWPF.Backend.Handler.Song
             this._debugger = new Debugger<SongHandler>(this);
 
             this._songProviders = new GenericList<Tuple<ISongProvider, EnumSongProvider>>();
-            this._songProviders.Add(new Tuple<ISongProvider, EnumSongProvider>(new SpotifySongProvider(this), EnumSongProvider.SPOTIFY));
+            this._songProviders.Add(new Tuple<ISongProvider, EnumSongProvider>(new SpotifySongProvider(), EnumSongProvider.SPOTIFY));
 
             this._songProviderChooser = new SongProviderChooser();
 

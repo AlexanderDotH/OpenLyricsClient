@@ -33,7 +33,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 
         private bool _disposed;
 
-        public SpotifySongProvider(SongHandler songHandler) 
+        public SpotifySongProvider() 
         {
             this._debugger = new Debugger<SpotifySongProvider>(this);
             this._disposed = false;
@@ -100,13 +100,20 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                 if (DataValidator.ValidateData(this._playerApi) &&
                     DataValidator.ValidateData(this._currentSong))
                 {
-                    CurrentPlaybackContext currentPlayback =
-                        await this.GetPlayerApi().GetCurrentPlaybackInfo();
-
-                    if (DataValidator.ValidateData(currentPlayback))
+                    try
                     {
-                        this._currentSong =
-                            SpotifyDataMerger.ValidateUpdatePlayBack(this._currentSong, currentPlayback);
+                        CurrentPlaybackContext currentPlayback =
+                            await this.GetPlayerApi().GetCurrentPlaybackInfo();
+
+                        if (DataValidator.ValidateData(currentPlayback))
+                        {
+                            this._currentSong =
+                                SpotifyDataMerger.ValidateUpdatePlayBack(this._currentSong, currentPlayback);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        this._debugger.Write(e);
                     }
                 }
             }
@@ -125,13 +132,21 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                 if (DataValidator.ValidateData(this._playerApi) && 
                     DataValidator.ValidateData(this._currentSong))
                 {
-                    CurrentTrackPlaybackContext currentTrack = 
-                        await this.GetPlayerApi().GetCurrentlyPlayingTrack<CurrentTrackPlaybackContext>();
 
-                    if (DataValidator.ValidateData(currentTrack))
+                    try
                     {
-                        this._currentSong =
-                            SpotifyDataMerger.ValidateUpdateAndMerge(this._currentSong, currentTrack);
+                        CurrentTrackPlaybackContext currentTrack =
+                            await this.GetPlayerApi().GetCurrentlyPlayingTrack<CurrentTrackPlaybackContext>();
+
+                        if (DataValidator.ValidateData(currentTrack))
+                        {
+                            this._currentSong =
+                                SpotifyDataMerger.ValidateUpdateAndMerge(this._currentSong, currentTrack);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        this._debugger.Write(e);
                     }
                 }
             }
@@ -145,15 +160,22 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 
             if (DataValidator.ValidateData(this._playerApi))
             {
-                CurrentTrackPlaybackContext currentTrack =
-                    await this.GetPlayerApi().GetCurrentlyPlayingTrack<CurrentTrackPlaybackContext>();
-
-                if (DataValidator.ValidateData(currentTrack))
+                try
                 {
-                    Song song = SpotifyDataMerger.ValidateConvertAndMerge(currentTrack);
-                    this._currentSong = song;
-                    this._debugger.Write("Song has been changed", DebugType.INFO);
-                    return song;
+                    CurrentTrackPlaybackContext currentTrack =
+                        await this.GetPlayerApi().GetCurrentlyPlayingTrack<CurrentTrackPlaybackContext>();
+
+                    if (DataValidator.ValidateData(currentTrack))
+                    {
+                        Song song = SpotifyDataMerger.ValidateConvertAndMerge(currentTrack);
+                        this._currentSong = song;
+                        this._debugger.Write("Song has been changed", DebugType.INFO);
+                        return song;
+                    }
+                }
+                catch (Exception e)
+                {
+                    this._debugger.Write(e);
                 }
             }
 

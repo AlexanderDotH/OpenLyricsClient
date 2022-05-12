@@ -105,12 +105,12 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                     stopwatch.Start();
 
                     SongRequestObject songRequestObject = new SongRequestObject(
-                        songChangedEventArgs.Song.Title,
+                        SongFormatter.FormatSongName(songChangedEventArgs.Song.Title),
                         songChangedEventArgs.Song.Artists,
                         songChangedEventArgs.Song.MaxTime,
                         songChangedEventArgs.Song.Album);
 
-                    LyricData lyricData = await this._lyricCollector.CollectLyrics(songRequestObject, "NetEaseV2");
+                    LyricData lyricData = await this._lyricCollector.CollectLyrics(songRequestObject, SelectionMode.QUALITY);
 
                     stopwatch.Stop();
 
@@ -126,7 +126,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                     }
                 }
 
-            });
+            }, Core.INSTANCE.CancellationTokenSource.Token);
         }
 
         public void Dispose()

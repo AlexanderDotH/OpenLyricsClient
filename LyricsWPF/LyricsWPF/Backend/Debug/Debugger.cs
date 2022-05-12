@@ -46,7 +46,7 @@ namespace LyricsWPF.Backend.Debug
 
         private void Print(string message, DebugType debugType)
         {
-            Console.WriteLine((string.Format("{0} : {2} : {1}", this._type.GetType().Name , message, debugType.ToString())));
+            Console.WriteLine(string.Format("{0} : {2} : {1}", this._type.GetType().Name , message, debugType.ToString()));
         }
     }
 }

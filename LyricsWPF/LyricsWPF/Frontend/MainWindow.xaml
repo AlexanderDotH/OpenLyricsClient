@@ -13,7 +13,9 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" WindowStartupLocation="CenterScreen" Closing="Window_Closing_1">
+        FontFamily="{DynamicResource MaterialDesignFont}" WindowStartupLocation="CenterScreen" Closing="Window_Closing_1"
+        
+>
 
     <Grid>
         <Grid.ColumnDefinitions>

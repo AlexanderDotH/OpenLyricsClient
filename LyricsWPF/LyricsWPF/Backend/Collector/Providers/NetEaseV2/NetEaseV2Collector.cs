@@ -52,7 +52,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                         {
                             if (response.Result.Songs.Count > 0)
                             {
-                                int retryPercentage = 5;
+                                double retryPercentage = 5;
 
                                 for (int i = 0; i < RETRIES; i++)
                                 {
@@ -60,37 +60,41 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                                     {
                                         NetEaseV2SongResponse songResponse = response.Result.Songs[j];
 
-                                        if (MatchDuration(songResponse, songRequestObject.SongDuration, retryPercentage))
+                                        if (DataTransformer.CapitalizeFirstLetter(songRequestObject.Album) ==
+                                            DataTransformer.CapitalizeFirstLetter(songResponse.Album.Name))
                                         {
-                                            if (MatchArtists(songResponse, songRequestObject.Artists, 70))
+                                            if (MatchDuration(songResponse, songRequestObject.SongDuration, retryPercentage))
                                             {
-                                                int songId = songResponse.Id;
-                                                NetEaseV2LyricResponse lyricResponse = await GetLyricsFromEndpoint(songId);
-
-                                                if (DataValidator.ValidateData(lyricResponse) &&
-                                                    DataValidator.ValidateData(lyricResponse.Code, lyricResponse.Klyric,
-                                                        lyricResponse.Lrc, lyricResponse.LyricUser, lyricResponse.Qfy,
-                                                        lyricResponse.Sfy, lyricResponse.Sgc, lyricResponse.Tlyric,
-                                                        lyricResponse.TransUser))
+                                                if (MatchArtists(songResponse, songRequestObject.Artists, 70))
                                                 {
-                                                    if (lyricResponse.Code == 200)
+                                                    int songId = songResponse.Id;
+                                                    NetEaseV2LyricResponse lyricResponse = await GetLyricsFromEndpoint(songId);
+
+                                                    if (DataValidator.ValidateData(lyricResponse) &&
+                                                        DataValidator.ValidateData(lyricResponse.Code, lyricResponse.Klyric,
+                                                            lyricResponse.Lrc, lyricResponse.LyricUser, lyricResponse.Qfy,
+                                                            lyricResponse.Sfy, lyricResponse.Sgc, lyricResponse.Tlyric,
+                                                            lyricResponse.TransUser))
                                                     {
-                                                        if (lyricResponse.Lrc.Lyric != null &&
-                                                            lyricResponse.Lrc.Version != 0)
+                                                        if (lyricResponse.Code == 200)
                                                         {
-                                                            FileFormatParser<LrcObject> fileFormatParser =
-                                                                new FileFormatParser<LrcObject>(
-                                                                    new LrcParser<LrcObject>());
-
-                                                            if (DataValidator.ValidateData(fileFormatParser))
+                                                            if (lyricResponse.Lrc.Lyric != null &&
+                                                                lyricResponse.Lrc.Version != 0)
                                                             {
-                                                                GenericList<LyricElement> lyricElements =
-                                                                    fileFormatParser.FormatFromString(lyricResponse.Lrc
-                                                                        .Lyric).Lyrics;
+                                                                FileFormatParser<LrcObject> fileFormatParser =
+                                                                    new FileFormatParser<LrcObject>(
+                                                                        new LrcParser<LrcObject>());
 
-                                                                if (DataValidator.ValidateData(lyricElements))
+                                                                if (DataValidator.ValidateData(fileFormatParser))
                                                                 {
-                                                                    return LyricData.ConvertToData(lyricElements);
+                                                                    GenericList<LyricElement> lyricElements =
+                                                                        fileFormatParser.FormatFromString(lyricResponse.Lrc
+                                                                            .Lyric).Lyrics;
+
+                                                                    if (DataValidator.ValidateData(lyricElements))
+                                                                    {
+                                                                        return LyricData.ConvertToData(lyricElements);
+                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -113,7 +117,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 
         private async Task<NetEaseV2SearchResponse> SearchTrack(SongRequestObject songRequestObject)
         {
-            string requestUrl = Uri.UnescapeDataString(string.Format("{0}/search?limit=100&type=1&keywords={2} + {1}",
+            string requestUrl = Uri.UnescapeDataString(string.Format("{0}/search?limit=10&type=1&keywords={2} + {1}",
                 this._baseUrl,
                 songRequestObject.GetArtistsSplit(), songRequestObject.SongName));
 
@@ -150,7 +154,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
             return null;
         }
 
-        private bool MatchDuration(NetEaseV2SongResponse netEaseSongResponse, long duration, int percentage)
+        private bool MatchDuration(NetEaseV2SongResponse netEaseSongResponse, long duration, double percentage)
         {
             long songDurationThreshold = (long)((duration * 0.01) * percentage);
             return MathUtils.IsInRange(duration - songDurationThreshold, duration + songDurationThreshold, netEaseSongResponse.Duration);
@@ -191,7 +195,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 
         public string CollectorName()
         {
-            return "NetEaseV2Collector";
+            return "NetEaseV2";
         }
 
         public int ProviderQuality()

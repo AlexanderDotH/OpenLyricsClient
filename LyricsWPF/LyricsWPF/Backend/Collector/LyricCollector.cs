@@ -5,29 +5,88 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using DevBase.Generic;
 using LyricsWPF.Backend.Collector.Providers.NetEase;
 using LyricsWPF.Backend.Collector.Providers.NetEaseV2;
 using LyricsWPF.Backend.Exceptions;
 using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Structure;
+using LyricsWPF.Backend.Utils;
 
 namespace LyricsWPF.Backend.Collector
 {
     class LyricCollector
     {
-        private List<ICollector> _lyricCollectors;
+        private GenericList<ICollector> _lyricCollectors;
 
         public LyricCollector()
         {
-            this._lyricCollectors = new List<ICollector>();
+            this._lyricCollectors = new GenericList<ICollector>();
             this._lyricCollectors.Add(new NetEaseCollector());
             this._lyricCollectors.Add(new NetEaseV2Collector());
+
+            this._lyricCollectors.Sort(new CollectorComparer());
         }
 
-        public async Task<LyricData> CollectLyrics(SongRequestObject songRequestObject, string collectorName)
+        public async Task<LyricData> CollectLyrics(SongRequestObject songRequestObject, SelectionMode selectionMode)
         {
-            ICollector collector = GetCollectorByName(collectorName);
-            return await collector.GetLyrics(songRequestObject);
+            if (selectionMode == SelectionMode.QUALITY)
+            {
+                GenericList<Tuple<ICollector, LyricData>> lyrics = new GenericList<Tuple<ICollector, LyricData>>();
+
+                for (int i = 0; i < this._lyricCollectors.Count; i++)
+                {
+                    ICollector collector = this._lyricCollectors[i];
+                    LyricData lyricData = await collector.GetLyrics(songRequestObject);
+
+                    lyrics.Add(new Tuple<ICollector, LyricData>(collector, lyricData));
+                }
+
+                lyrics.Sort(new LyricsCollectorComparer());
+
+                for (int i = 0; i < lyrics.Count; i++)
+                {
+                    Tuple<ICollector, LyricData> lyricData = lyrics[i];
+                    if (lyricData.Item2 != null)
+                    {
+                        return lyricData.Item2;
+                    }
+                }
+            }
+            else if (selectionMode == SelectionMode.PERFORMANCE)
+            {
+                for (int i = 0; i < this._lyricCollectors.Count; i++)
+                {
+                    ICollector collector = this._lyricCollectors[i];
+                    LyricData lyricData = null;
+
+                    while ((lyricData = await collector.GetLyrics(songRequestObject)) == null)
+                    {
+                        if (i + 1 < this._lyricCollectors.Count)
+                        {
+                            collector = this._lyricCollectors[i++];
+                        }
+                    }
+
+                    return lyricData;
+                }
+            }
+
+            GC.Collect();
+            return null;
+        }
+
+        public ICollector GetCollector()
+        {
+            for (int i = 0; i < this._lyricCollectors.Count; i++)
+            {
+                ICollector collector = this._lyricCollectors[i];
+
+                if (collector != null)
+                    return collector;
+            }
+
+            return this._lyricCollectors[0];
         }
 
         public ICollector GetCollectorByName(string collectorName)

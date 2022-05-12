@@ -41,6 +41,7 @@ namespace LyricsWPF.Backend
         public Core()
         {
             INSTANCE = this;
+
             this._debugger = new Debugger<Core>(this);
 
             _disposed = false;
@@ -51,7 +52,6 @@ namespace LyricsWPF.Backend
             this._serviceHandler = new ServiceHandler();
             this._songHandler = new SongHandler();
             this._lyricHandler = new LyricHandler(this._songHandler);
-
         }
 
         public void SetupInternals()

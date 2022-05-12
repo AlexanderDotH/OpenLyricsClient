@@ -300,8 +300,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Backend\Collector\CollectorComparer.cs" />
     <Compile Include="Backend\Collector\ICollector.cs" />
     <Compile Include="Backend\Collector\LyricCollector.cs" />
+    <Compile Include="Backend\Collector\LyricsCollectorComparer.cs" />
     <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2AlbumResponse.cs" />
     <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2ArtistResponse.cs" />
     <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2KlyricResponse.cs" />
@@ -337,6 +339,7 @@
     <Compile Include="Backend\Handler\IHandler.cs" />
     <Compile Include="Backend\Collector\SelectionMode.cs" />
     <Compile Include="Backend\Handler\Lyrics\LyricStageChange.cs" />
+    <Compile Include="Backend\Handler\Song\SongFormatter.cs" />
     <Compile Include="Backend\Handler\Song\SongHandler.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\EnumSongProvider.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\ISongProvider.cs" />
@@ -357,6 +360,7 @@
     <Compile Include="Backend\Structure\LyricReturnCode.cs" />
     <Compile Include="Backend\Structure\LyricsRoll.cs" />
     <Compile Include="Backend\Utils\DataConverter.cs" />
+    <Compile Include="Backend\Utils\DataTransformer.cs" />
     <Compile Include="Backend\Utils\DataValidator.cs" />
     <Compile Include="Backend\Utils\MathUtils.cs" />
     <Compile Include="Frontend\Settings.xaml.cs">

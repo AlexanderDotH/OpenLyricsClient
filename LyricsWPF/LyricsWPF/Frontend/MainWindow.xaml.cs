@@ -32,61 +32,71 @@ namespace LyricsWPF
             InitializeComponent();
 
             this.fullLyricText.Text = @"";
-            Core core = new Core();
 
             //BindText(currentLine, "Line");
 
 
-            var t = new TaskFactory().StartNew(() =>
+            var t = new TaskFactory().StartNew(async () =>
             {
                 while (!Core.IsDisposed())
                 {
-                    Thread.Sleep(250);
+                    await Task.Delay(233);
 
-                    Song song = core.SongHandler.CurrentSong;
+                    Song song = Core.INSTANCE.SongHandler.CurrentSong;
 
                     if (DataValidator.ValidateSong(song))
                     {
-                        LyricsRoll lyricsRoll = core.SongHandler.CurrentSong.GetLyricsRoll();
+                        LyricsRoll lyricsRoll = Core.INSTANCE.SongHandler.CurrentSong.GetLyricsRoll();
 
                         if (DataValidator.ValidateData(lyricsRoll))
                         {
-
-                            if (DataValidator.ValidateData(lyricsRoll.PartOne))
+                            this.Dispatcher.Invoke(() =>
                             {
-                                this.firstLine.Dispatcher.Invoke(() =>
+                                if (DataValidator.ValidateData(lyricsRoll.PartOne) &&
+                                    DataValidator.ValidateData(lyricsRoll.PartOne.Part))
                                 {
                                     this.firstLine.Text = lyricsRoll.PartOne.Part;
-                                }, DispatcherPriority.Normal);
-                            }
+                                }
+                                else
+                                {
+                                    this.firstLine.Text = "";
+                                }
 
-                            if (DataValidator.ValidateData(lyricsRoll.PartTwo))
-                            {
-                                this.secondLine.Dispatcher.Invoke(() =>
+                                if (DataValidator.ValidateData(lyricsRoll.PartTwo) &&
+                                    DataValidator.ValidateData(lyricsRoll.PartTwo.Part))
                                 {
                                     this.secondLine.Text = lyricsRoll.PartTwo.Part;
-                                }, DispatcherPriority.Normal);
-                            }
+                                }
+                                else
+                                {
+                                    this.secondLine.Text = "";
+                                }
 
-                            if (DataValidator.ValidateData(lyricsRoll.PartThree))
-                            {
-                                this.thirdLine.Dispatcher.Invoke(() =>
+                                if (DataValidator.ValidateData(lyricsRoll.PartThree) &&
+                                    DataValidator.ValidateData(lyricsRoll.PartThree.Part))
                                 {
                                     this.thirdLine.Text = lyricsRoll.PartThree.Part;
-                                }, DispatcherPriority.Normal);
-                            }
+                                } 
+                                else
+                                {
+                                    this.thirdLine.Text = "";
+                                }
+                            });
+                        }
+                        else
+                        {
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                this.firstLine.Text = "";
+                                this.secondLine.Text = "";
+                                this.thirdLine.Text = "";
+                            });
                         }
 
-
-                        //this.currentLine.Dispatcher.Invoke(() =>
-                        //{
-                        //    this.currentLine.Text = song.CurrentLyricPart.Part;
-                        //}, DispatcherPriority.Normal);
-
-                        this.currentTitle.Dispatcher.Invoke(() =>
+                        this.Dispatcher.Invoke(() =>
                         {
                             this.currentTitle.Text = song.Title;
-                        }, DispatcherPriority.Normal);
+                        });
                     }
                 }
             }, Core.INSTANCE.CancellationTokenSource.Token);

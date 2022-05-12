@@ -73,10 +73,17 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
 
         private async Task RefreshTokenRequest()
         {
-            BearerAccessToken bearerAccess = await _userAccountsService.RefreshUserAccessToken(Core.INSTANCE.Settings.BearerAccess.RefreshToken);
-            Core.INSTANCE.Settings.SpotifyExpireTime = bearerAccess.Expires;
-            Core.INSTANCE.Settings.BearerAccess.AccessToken = bearerAccess.AccessToken;
-            Core.INSTANCE.WriteSettings();
+            try
+            {
+                BearerAccessToken bearerAccess = await _userAccountsService.RefreshUserAccessToken(Core.INSTANCE.Settings.BearerAccess.RefreshToken);
+                Core.INSTANCE.Settings.SpotifyExpireTime = bearerAccess.Expires;
+                Core.INSTANCE.Settings.BearerAccess.AccessToken = bearerAccess.AccessToken;
+                Core.INSTANCE.WriteSettings();
+            }
+            catch (Exception e)
+            {
+                this._debugger.Write(e);
+            }
         }
 
         public async Task StartAuthorization()
