@@ -7,4 +7,6 @@
 /LyricsWPF/LyricsWPF/bin/Debug
 /LyricsWPF/packages
 /LyricsWPF/.vs/LyricsWPF/FileContentIndex
-/LyricsWPF/.vs/*
+/LyricsWPF/.vs/
+/LyricsWPF/.vs/LyricsWPF/v17/*
+*.suo
