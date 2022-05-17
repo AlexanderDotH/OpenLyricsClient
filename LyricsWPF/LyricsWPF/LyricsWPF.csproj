@@ -54,10 +54,10 @@
   <ItemGroup>
     <Reference Include="DevBase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>F:\Coding\Active Projects\DevBase\DevBaseFormat\bin\Release\DevBase.dll</HintPath>
+      <HintPath>..\..\..\..\New\EinfachEinAlex\LyricsWPF\LyricsWPF\Libraries\DevBase.dll</HintPath>
     </Reference>
     <Reference Include="DevBaseFormat">
-      <HintPath>F:\Coding\Active Projects\DevBase\DevBaseFormat\bin\Release\DevBaseFormat.dll</HintPath>
+      <HintPath>..\..\..\..\New\EinfachEinAlex\LyricsWPF\LyricsWPF\Libraries\DevBaseFormat.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignColors, Version=2.0.4.3, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.2.0.4\lib\net452\MaterialDesignColors.dll</HintPath>
@@ -363,6 +363,7 @@
     <Compile Include="Backend\Utils\DataTransformer.cs" />
     <Compile Include="Backend\Utils\DataValidator.cs" />
     <Compile Include="Backend\Utils\MathUtils.cs" />
+    <Compile Include="Backend\Utils\TaskUtils.cs" />
     <Compile Include="Frontend\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>

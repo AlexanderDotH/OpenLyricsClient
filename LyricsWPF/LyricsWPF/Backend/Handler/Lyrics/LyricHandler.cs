@@ -68,9 +68,11 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                                 // I thing this is the issue
                                 // What did I do?: nothing, cause I don´t now how to fix it
                                 if (DataValidator.ValidateData(currentPart) &&
-                                    DataValidator.ValidateData(currentPart.Part, currentPart.Time) &&
+                                    DataValidator.ValidateData(currentPart.Part) && 
+                                    DataValidator.ValidateData(currentPart.Time) &&
                                     DataValidator.ValidateData(nextPart) &&
-                                    DataValidator.ValidateData(nextPart.Part, nextPart.Time))
+                                    DataValidator.ValidateData(nextPart.Part) &&
+                                    DataValidator.ValidateData(nextPart.Time))
                                 {
                                     if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, currentSong.Time + LYRIC_OFFSET))
                                     {
@@ -99,7 +101,8 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                     DataValidator.ValidateData(songChangedEventArgs.Song.Title,
                         songChangedEventArgs.Song.Artists, songChangedEventArgs.Song.MaxTime, songChangedEventArgs.Song.Album) &&
                     DataValidator.ValidateData(this._songHandler) && 
-                    DataValidator.ValidateData(this._songHandler.CurrentSong))
+                    DataValidator.ValidateData(this._songHandler.CurrentSong) &&
+                    this._songHandler.CurrentSong.Lyrics == null)
                 {
                     Stopwatch stopwatch = new Stopwatch();
                     stopwatch.Start();
@@ -108,12 +111,11 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                         SongFormatter.FormatSongName(songChangedEventArgs.Song.Title),
                         songChangedEventArgs.Song.Artists,
                         songChangedEventArgs.Song.MaxTime,
-                        songChangedEventArgs.Song.Album);
+                        songChangedEventArgs.Song.Album, SelectionMode.PERFORMANCE);
 
-                    LyricData lyricData = await this._lyricCollector.CollectLyrics(songRequestObject, SelectionMode.QUALITY);
-
-                    stopwatch.Stop();
-
+                    LyricData lyricData =
+                        await this._lyricCollector.CollectLyrics(songRequestObject);
+                    
                     this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
 
                     if (DataValidator.ValidateData(lyricData) &&

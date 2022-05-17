@@ -28,9 +28,9 @@ namespace LyricsWPF.Backend.Collector
             this._lyricCollectors.Sort(new CollectorComparer());
         }
 
-        public async Task<LyricData> CollectLyrics(SongRequestObject songRequestObject, SelectionMode selectionMode)
+        public async Task<LyricData> CollectLyrics(SongRequestObject songRequestObject)
         {
-            if (selectionMode == SelectionMode.QUALITY)
+            if (songRequestObject.SelectioMode == SelectionMode.QUALITY)
             {
                 GenericList<Tuple<ICollector, LyricData>> lyrics = new GenericList<Tuple<ICollector, LyricData>>();
 
@@ -53,7 +53,7 @@ namespace LyricsWPF.Backend.Collector
                     }
                 }
             }
-            else if (selectionMode == SelectionMode.PERFORMANCE)
+            else if (songRequestObject.SelectioMode == SelectionMode.PERFORMANCE)
             {
                 for (int i = 0; i < this._lyricCollectors.Count; i++)
                 {

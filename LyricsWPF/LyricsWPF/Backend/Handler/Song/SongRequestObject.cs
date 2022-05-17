@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Net.Sockets;
 using System.Security.RightsManagement;
 using System.Text;
 using System.Threading.Tasks;
+using LyricsWPF.Backend.Collector;
 
 namespace LyricsWPF.Backend.Handler.Song
 {
@@ -13,18 +16,20 @@ namespace LyricsWPF.Backend.Handler.Song
         private string[] _artists;
         private string _album;
         private long _songDuration;
+        private SelectionMode _selectioMode;
 
-        public SongRequestObject(string songName, string[] artists, long songDuration, string album)
+        public SongRequestObject(string songName, string[] artists, long songDuration, string album, SelectionMode selectioMode)
         {
             _songName = songName;
             _artists = artists;
             _songDuration = songDuration;
             _album = album;
+            _selectioMode = selectioMode;
         }
 
-        public SongRequestObject(string songName) : this(songName, new string[] { }, 0, null) {}
+        public SongRequestObject(string songName) : this(songName, new string[] { }, 0, null, SelectionMode.PERFORMANCE) {}
 
-        public SongRequestObject(string songName, string[] artists) : this(songName, artists, 0, null) { }
+        public SongRequestObject(string songName, string[] artists) : this(songName, artists, 0, null, SelectionMode.PERFORMANCE) { }
 
         public string SongName
         {
@@ -45,6 +50,12 @@ namespace LyricsWPF.Backend.Handler.Song
         {
             get => _album;
             set => _album = value;
+        }
+
+        public SelectionMode SelectioMode
+        {
+            get => _selectioMode;
+            set => _selectioMode = value;
         }
 
         public string GetArtistsSplit()

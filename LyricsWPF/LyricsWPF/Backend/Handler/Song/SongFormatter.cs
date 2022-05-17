@@ -19,7 +19,7 @@ namespace LyricsWPF.Backend.Handler.Song
                 Match r = Regex.Match(songName, regexes[i]);
                 if (r.Success)
                 {
-                    return Regex.Split(songName, regexes[i])[0];
+                    songName = songName.Replace(r.Value, string.Empty);
                 }
             }
 
