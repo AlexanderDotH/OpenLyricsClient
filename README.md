@@ -18,6 +18,12 @@ Update Devbase Generic list with only an array. It should work(With functions na
   Update Devbase Request-Class to interpret those Objects
   Update Devbase Request-Class to handle other encodings
   Use another library for web requests
+ 
+ Found new bug in the Lyriccollector
+ New Song found -> LyricCollector searches for song and finds -> Gets the wrong lyrics to the song(only accurs when song is not in the netease database, it gets an alternative)
+ 
+ How to fix?
+ Make search rules more strict to get the current lyrics more accurate
   
 Notes:
 
