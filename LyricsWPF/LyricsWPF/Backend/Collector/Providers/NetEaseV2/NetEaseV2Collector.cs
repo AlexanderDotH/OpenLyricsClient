@@ -52,7 +52,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                             DataValidator.ValidateData(response.Result.HasMore, response.Result.SongCount, response.Result.Songs))
                         {
 
-                            if (response.Result.Songs.Count > 0)
+                            if (response.Result.Songs.Length > 0)
                             {
                                 GenericList<Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>> lyrics = 
                                     new GenericList<Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>>();
@@ -61,7 +61,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 
                                 for (int i = 0; i < RETRIES; i++)
                                 {
-                                    for (int j = 0; j < response.Result.Songs.Count; j++)
+                                    for (int j = 0; j < response.Result.Songs.Length; j++)
                                     {
                                         NetEaseV2SongResponse songResponse = response.Result.Songs[j];
 
@@ -72,6 +72,8 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 
                                             if (songRequestObject.SelectioMode == SelectionMode.QUALITY)
                                             {
+                                                lyrics.Add(new Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>(songResponse, lyricResponse));
+
                                                 for (int k = 0; k < lyrics.Count; k++)
                                                 {
                                                     Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse> lyricElement = lyrics[i];
@@ -81,7 +83,6 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                                                     }
                                                 }
 
-                                                lyrics.Add(new Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>(songResponse, lyricResponse));
                                             }
                                             else if (songRequestObject.SelectioMode == SelectionMode.PERFORMANCE)
                                             {
@@ -89,30 +90,9 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                                             }
                                         }
 
-                                        retryPercentage = (int)Math.Ceiling(i * RETRY_DURATION_MULTIPLIER);
+                                        retryPercentage += (int)Math.Ceiling(i * RETRY_DURATION_MULTIPLIER);
                                     }
                                 }
-
-                            //    if (songRequestObject.SelectioMode != SelectionMode.QUALITY)
-                            //        return null;
-
-                            //    retryPercentage = 5;
-
-                            //    for (int i = 0; i < lyrics.Count; i++)
-                            //    {
-                            //        Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse> songResponse = lyrics[i];
-
-                            //        if (IsValidSong(songResponse.Item1, songRequestObject, retryPercentage))
-                            //        {
-                            //            if (songResponse.Item2.Lrc.Lyric != "")
-                            //            {
-                            //                return ParseLyricResponse(songResponse.Item2);
-                            //            }
-                            //        }
-
-                            //        retryPercentage = (int)Math.Ceiling(i * RETRY_DURATION_MULTIPLIER);
-
-                            //    }
                             }
                         }
                     }
@@ -124,14 +104,15 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 
         private bool IsValidSong(NetEaseV2SongResponse songResponse, SongRequestObject songRequestObject, double percentage)
         {
-            if (!(DataValidator.ValidateData(songResponse) || 
-                  DataValidator.ValidateData(songRequestObject) ||
-                percentage > 0))
+            if (!DataValidator.ValidateData(songResponse) || 
+                  !DataValidator.ValidateData(songRequestObject))
                 return false;
 
-            if (DataTransformer.CapitalizeFirstLetter(songRequestObject.Album) !=
-                DataTransformer.CapitalizeFirstLetter(songResponse.Album.Name))
-                return false;
+            if (IsSimilar(songRequestObject.FormattedSongName, songResponse.Name) != IsSimilar(songRequestObject.FormattedSongAlbum, songResponse.Album.Name))
+            {
+                if (!IsSimilar(songRequestObject.FormattedSongAlbum, songResponse.Album.Name))
+                    return false;
+            }
 
             if (!MatchDuration(songResponse, songRequestObject.SongDuration, percentage))
                 return false;
@@ -139,13 +120,16 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
             if (!MatchArtists(songResponse, songRequestObject.Artists, 70))
                 return false;
 
-            if (songRequestObject.SongName != songResponse.Name)
+            if (!IsSimilar(songRequestObject.FormattedSongName, songResponse.Name))
                 return false;
 
-            //if (MathUtils.CalculateLevenshteinDistance(songRequestObject.SongName, songResponse.Name) > 3)
-                //return false;
-
             return true;
+        }
+
+        private bool IsSimilar(string string1, string string2)
+        {
+            return MathUtils.CalculateLevenshteinDistance(string1, string2) >=
+                   Math.Abs(string1.Length - string2.Length);
         }
 
         private LyricData ParseLyricResponse(NetEaseV2LyricResponse lyricResponse)
@@ -184,9 +168,9 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
         //Makes too many track search request: why the hell?
         private async Task<NetEaseV2SearchResponse> SearchTrack(SongRequestObject songRequestObject)
         {
-            string requestUrl = Uri.EscapeUriString(string.Format("{0}/search?limit=10&type=1&keywords={2}",
+            string requestUrl = Uri.EscapeUriString(string.Format("{0}/search?limit=100&type=1&keywords={2}",
                 this._baseUrl,
-                songRequestObject.GetArtistsSplit(), songRequestObject.SongName));
+                songRequestObject.GetArtistsSplit(), songRequestObject.FormattedSongName));
 
             this._debugger.Write("Full track search URL: " + requestUrl, DebugType.DEBUG);
 
@@ -195,7 +179,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 
             if (responseData.StatusCode == HttpStatusCode.OK)
             {
-                return JsonConvert.DeserializeObject<NetEaseV2SearchResponse>(responseData.GetContentAsString());
+                return JsonConvert.DeserializeObject<NetEaseV2SearchResponse>(SongFormatter.FormatString(responseData.GetContentAsString()));
             }
 
             return null;
@@ -215,7 +199,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
             if (responseData.StatusCode == HttpStatusCode.OK)
             {
                 return JsonConvert.DeserializeObject<NetEaseV2LyricResponse>(
-                    responseData.GetContentAsString());
+                    SongFormatter.FormatString(responseData.GetContentAsString()));
             }
 
             return null;
@@ -234,11 +218,17 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 
             if (artists.Length > 0)
             {
-                for (int i = 0; i < netEaseSongResponse.Artists.Count; i++)
+                for (int i = 0; i < netEaseSongResponse.Artists.Length; i++)
                 {
                     for (int j = 0; j < artists.Length; j++)
                     {
-                        if (netEaseSongResponse.Artists[i].Name == artists[j])
+                        string artist = SongFormatter.FormatString(netEaseSongResponse.Artists[i].Name);
+
+                        if (MathUtils.CalculateLevenshteinDistance(artist, artists[j]) <= Math.Abs(artist.Length - artists[j].Length))
+                        {
+                            artistsMatch++;
+                        } 
+                        else if (MathUtils.CalculateLevenshteinDistance(artist, artists[j]) <= 5)
                         {
                             artistsMatch++;
                         }
@@ -247,9 +237,15 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
             }
             else
             {
-                for (int i = 0; i < netEaseSongResponse.Artists.Count; i++)
+                for (int i = 0; i < netEaseSongResponse.Artists.Length; i++)
                 {
-                    if (netEaseSongResponse.Artists[i].Name == artists[0])
+                    string artist = SongFormatter.FormatString(netEaseSongResponse.Artists[i].Name);
+
+                    if (MathUtils.CalculateLevenshteinDistance(artist, artists[0]) <=  Math.Abs(artist.Length - artists[0].Length))
+                    {
+                        artistsMatch++;
+                    }
+                    else if (MathUtils.CalculateLevenshteinDistance(artist, artists[0]) <= 5)
                     {
                         artistsMatch++;
                     }
@@ -267,7 +263,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 
         public int ProviderQuality()
         {
-            return 6;
+            return 8;
         }
     }
 }

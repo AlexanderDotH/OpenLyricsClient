@@ -54,10 +54,10 @@
   <ItemGroup>
     <Reference Include="DevBase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\New\EinfachEinAlex\LyricsWPF\LyricsWPF\Libraries\DevBase.dll</HintPath>
+      <HintPath>..\Libraries\DevBase.dll</HintPath>
     </Reference>
     <Reference Include="DevBaseFormat">
-      <HintPath>..\..\..\..\New\EinfachEinAlex\LyricsWPF\LyricsWPF\Libraries\DevBaseFormat.dll</HintPath>
+      <HintPath>..\Libraries\DevBaseFormat.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignColors, Version=2.0.4.3, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.2.0.4\lib\net452\MaterialDesignColors.dll</HintPath>

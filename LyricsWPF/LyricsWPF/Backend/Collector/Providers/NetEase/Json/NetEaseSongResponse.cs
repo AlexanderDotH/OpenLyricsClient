@@ -12,7 +12,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase.Json
         public string Name { get; set; }
 
         [JsonProperty("artists")]
-        public List<NetEaseArtistResponse> Artists { get; set; }
+        public NetEaseArtistResponse[] Artists { get; set; }
 
         [JsonProperty("album")]
         public NetEaseAlbumResponse NetEaseAlbumResponse { get; set; }
@@ -27,7 +27,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase.Json
         public int Status { get; set; }
 
         [JsonProperty("alias")]
-        public List<object> Alias { get; set; }
+        public object[] Alias { get; set; }
 
         [JsonProperty("rtype")]
         public int Rtype { get; set; }

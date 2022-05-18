@@ -41,46 +41,32 @@ namespace LyricsWPF.Backend.Utils
         //}
 
 
-        public static bool ValidateData(object baseObject, params object[] values)
-        {
-            if (baseObject != null)
-            {
-                return ValidateData(values);
-            }
+        //public static bool ValidateData(object baseObject, params object[] values)
+        //{
+        //    if (baseObject != null)
+        //    {
+        //        return ValidateData(values);
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
         public static bool ValidateData(params object[] values)
         {
-            if (values != null)
-            {
-                try
-                {
-                    if (ValidateData(values.Length))
-                    {
-                        if (values[0] == null)
-                        {
-                            return false;
-                        }
-
-                        for (int i = 0; i < values.Length; i++)
-                        {
-                            if (values[i] == null)
-                            {
-                                return false;
-                            }
-                        }
-
-                        return true;
-                    }
-                }
-                catch (Exception e) { }
-
+            if (values == null)
                 return false;
-            }
 
-            return false;
+            if (values.Length == 0)
+                return false;
+
+            if (values[0] == null)
+                return false;
+
+            for (int i = 0; i < values.Length; i++)
+                if (values[i] == null)
+                    return false;
+
+            return true;
         }
 
         public static bool ValidateData(object value)

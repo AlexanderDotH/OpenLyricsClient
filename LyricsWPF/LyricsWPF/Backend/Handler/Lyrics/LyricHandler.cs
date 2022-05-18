@@ -108,10 +108,13 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                     stopwatch.Start();
 
                     SongRequestObject songRequestObject = new SongRequestObject(
+                        songChangedEventArgs.Song.Title,
                         SongFormatter.FormatSongName(songChangedEventArgs.Song.Title),
                         songChangedEventArgs.Song.Artists,
                         songChangedEventArgs.Song.MaxTime,
-                        songChangedEventArgs.Song.Album, SelectionMode.PERFORMANCE);
+                        songChangedEventArgs.Song.Album, 
+                        SongFormatter.FormatSongAlbum(songChangedEventArgs.Song.Album),
+                        SelectionMode.QUALITY);
 
                     LyricData lyricData =
                         await this._lyricCollector.CollectLyrics(songRequestObject);

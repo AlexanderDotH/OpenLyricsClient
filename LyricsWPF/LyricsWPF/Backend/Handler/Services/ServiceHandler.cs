@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using DevBase.Generic;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Services.Services;
 using LyricsWPF.Backend.Handler.Services.Services.Spotify;
@@ -9,14 +10,14 @@ namespace LyricsWPF.Backend.Handler.Services
 {
     class ServiceHandler : IHandler
     {
-        private List<IService> _services;
+        private GenericList<IService> _services;
         private Debugger<ServiceHandler> _debugger;
 
         public ServiceHandler()
         {
             this._debugger = new Debugger<ServiceHandler>(this);
 
-            this._services = new List<IService>();
+            this._services = new GenericList<IService>();
             this._services.Add(new SpotifyService());
         }
         

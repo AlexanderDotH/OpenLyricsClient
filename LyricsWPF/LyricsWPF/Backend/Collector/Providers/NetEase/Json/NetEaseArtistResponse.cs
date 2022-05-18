@@ -15,7 +15,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase.Json
         public object PicUrl { get; set; }
 
         [JsonProperty("alias")]
-        public List<object> Alias { get; set; }
+        public object[] Alias { get; set; }
 
         [JsonProperty("albumSize")]
         public int AlbumSize { get; set; }

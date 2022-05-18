@@ -47,8 +47,8 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
                 {
                     if (Core.INSTANCE.Settings.BearerAccess != null)
                     {
-                        DateTime? expire = Core.INSTANCE.Settings.SpotifyExpireTime;
-                        DateTime expiresTime = expire.Value.AddMinutes(Core.INSTANCE.Settings.BearerAccess.ExpiresIn / 60);
+                        DateTime expire = Core.INSTANCE.Settings.SpotifyExpireTime.Value;
+                        DateTime expiresTime = expire.AddSeconds(Core.INSTANCE.Settings.BearerAccess.ExpiresIn);
 
                         if (DateTime.Now > expiresTime)
                         {
@@ -78,6 +78,8 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
                 BearerAccessToken bearerAccess = await _userAccountsService.RefreshUserAccessToken(Core.INSTANCE.Settings.BearerAccess.RefreshToken);
                 Core.INSTANCE.Settings.SpotifyExpireTime = bearerAccess.Expires;
                 Core.INSTANCE.Settings.BearerAccess.AccessToken = bearerAccess.AccessToken;
+                Core.INSTANCE.Settings.SpotifyExpireTime = bearerAccess.Expires.Value;
+                Core.INSTANCE.Settings.BearerAccess.ExpiresIn = bearerAccess.ExpiresIn;
                 Core.INSTANCE.WriteSettings();
             }
             catch (Exception e)

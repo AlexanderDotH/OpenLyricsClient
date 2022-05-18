@@ -56,13 +56,13 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
                             DataValidator.ValidateData(response.NetEaseResultDataResponse.HasMore,
                                 response.NetEaseResultDataResponse.SongCount, response.NetEaseResultDataResponse.Songs))
                         {
-                            if (response.NetEaseResultDataResponse.Songs.Count > 0)
+                            if (response.NetEaseResultDataResponse.Songs.Length > 0)
                             {
                                 int retryPercentage = 5;
 
                                 for (int i = 0; i < RETRIES; i++)
                                 {
-                                    for (int j = 0; j < response.NetEaseResultDataResponse.Songs.Count; j++)
+                                    for (int j = 0; j < response.NetEaseResultDataResponse.Songs.Length; j++)
                                     {
                                         NetEaseSongResponse songResponse = response.NetEaseResultDataResponse.Songs[j];
 
@@ -134,7 +134,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
 
             if (artists.Length > 0)
             {
-                for (int i = 0; i < netEaseSongResponse.Artists.Count; i++)
+                for (int i = 0; i < netEaseSongResponse.Artists.Length; i++)
                 {
                     for (int j = 0; j < artists.Length; j++)
                     {
@@ -147,7 +147,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
             }
             else
             {
-                for (int i = 0; i < netEaseSongResponse.Artists.Count; i++)
+                for (int i = 0; i < netEaseSongResponse.Artists.Length; i++)
                 {
                     if (netEaseSongResponse.Artists[i].Name == artists[0])
                     {

@@ -6,7 +6,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase.Json
     public class NetEaseResultResponse
     {
         [JsonProperty("songs")]
-        public List<NetEaseSongResponse> Songs { get; set; }
+        public NetEaseSongResponse[] Songs { get; set; }
 
         [JsonProperty("hasMore")]
         public bool HasMore { get; set; }

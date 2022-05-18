@@ -13,23 +13,33 @@ namespace LyricsWPF.Backend.Handler.Song
     class SongRequestObject
     {
         private string _songName;
+        private string _formattedSongName;
         private string[] _artists;
         private string _album;
+        private string _formattedSongAlbum;
         private long _songDuration;
         private SelectionMode _selectioMode;
 
-        public SongRequestObject(string songName, string[] artists, long songDuration, string album, SelectionMode selectioMode)
+        public SongRequestObject(string songName, string formattedSongName, string[] artists, long songDuration, string album, string formattedSongAlbum, SelectionMode selectioMode)
         {
             _songName = songName;
+            _formattedSongName = formattedSongName;
             _artists = artists;
             _songDuration = songDuration;
             _album = album;
+            _formattedSongAlbum = formattedSongAlbum;
             _selectioMode = selectioMode;
         }
 
-        public SongRequestObject(string songName) : this(songName, new string[] { }, 0, null, SelectionMode.PERFORMANCE) {}
+        public string FormattedSongAlbum
+        {
+            get => _formattedSongAlbum;
+        }
 
-        public SongRequestObject(string songName, string[] artists) : this(songName, artists, 0, null, SelectionMode.PERFORMANCE) { }
+        public string FormattedSongName
+        {
+            get => _formattedSongName;
+        }
 
         public string SongName
         {
