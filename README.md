@@ -24,7 +24,11 @@ Update Devbase Generic list with only an array. It should work(With functions na
  
  How to fix?
  Make search rules more strict to get the current lyrics more accurate
-  
+ 
+ Make auto latency for bluetooth devices to get the correnct lyric offset
+ 
+ Make a better UI lol
+ 
 Notes:
  Don´t forget to touch some grass
 
