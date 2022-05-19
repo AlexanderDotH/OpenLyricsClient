@@ -34,7 +34,7 @@ namespace LyricsWPF.Backend.Handler.Song
                     return true;
                 }
 
-                int msSection = (int)(currentSong.MaxTime * 0.01);
+                short msSection = (short)(currentSong.MaxTime * 0.01);
 
                 if (currentSong.Time < msSection)
                 {

@@ -98,7 +98,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
                                                             GenericList<LyricElement> lyrics =
                                                                 fileFormatParser.FormatFromString(lyricResponse.NetEaseLrcResponse.Lyric).Lyrics;
 
-                                                            if (DataValidator.ValidateData(lyrics) && lyrics.Count > 0)
+                                                            if (DataValidator.ValidateData(lyrics) && lyrics.Length > 0)
                                                             {
                                                                 this._debugger.Write("Found new Lyrics", DebugType.DEBUG);
                                                                 return LyricData.ConvertToData(lyrics);

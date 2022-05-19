@@ -74,9 +74,9 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                                             {
                                                 lyrics.Add(new Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>(songResponse, lyricResponse));
 
-                                                for (int k = 0; k < lyrics.Count; k++)
+                                                for (int k = 0; k < lyrics.Length; k++)
                                                 {
-                                                    Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse> lyricElement = lyrics[i];
+                                                    Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse> lyricElement = lyrics.Get(i);
                                                     if (lyricElement.Item2.Lrc.Lyric != "")
                                                     {
                                                         return ParseLyricResponse(lyricElement.Item2);

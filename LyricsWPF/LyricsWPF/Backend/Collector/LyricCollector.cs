@@ -72,9 +72,9 @@ namespace LyricsWPF.Backend.Collector
             //    }
             //}
 
-            for (int i = 0; i < this._lyricCollectors.Count; i++)
+            for (int i = 0; i < this._lyricCollectors.Length; i++)
             {
-                ICollector collector = this._lyricCollectors[i];
+                ICollector collector = this._lyricCollectors.Get(i);
                 LyricData lyricData = await collector.GetLyrics(songRequestObject);
 
                 if (lyricData != null)
@@ -87,28 +87,15 @@ namespace LyricsWPF.Backend.Collector
 
         public ICollector GetCollector()
         {
-            for (int i = 0; i < this._lyricCollectors.Count; i++)
+            for (int i = 0; i < this._lyricCollectors.Length; i++)
             {
-                ICollector collector = this._lyricCollectors[i];
+                ICollector collector = this._lyricCollectors.Get(i);
 
                 if (collector != null)
                     return collector;
             }
 
-            return this._lyricCollectors[0];
-        }
-
-        public ICollector GetCollectorByName(string collectorName)
-        {
-            foreach (ICollector collector in _lyricCollectors)
-            {
-                if (collector.CollectorName().Equals(collectorName))
-                {
-                    return collector;
-                }
-            }
-
-            return this._lyricCollectors[0];
+            return this._lyricCollectors.Get(0);
         }
 
         //public string CollectLyrics()

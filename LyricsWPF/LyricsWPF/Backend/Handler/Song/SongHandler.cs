@@ -20,7 +20,7 @@ namespace LyricsWPF.Backend.Handler.Song
     {
         private SongStageChange _songStageChange;
 
-        private GenericList<Tuple<ISongProvider, EnumSongProvider>> _songProviders;
+        private GenericTupleList<ISongProvider, EnumSongProvider> _songProviders;
         private SongProviderChooser _songProviderChooser;
 
         private Task _manageCurrentSongTask;
@@ -35,7 +35,7 @@ namespace LyricsWPF.Backend.Handler.Song
         {
             this._debugger = new Debugger<SongHandler>(this);
 
-            this._songProviders = new GenericList<Tuple<ISongProvider, EnumSongProvider>>();
+            this._songProviders = new GenericTupleList<ISongProvider, EnumSongProvider>();
             this._songProviders.Add(new Tuple<ISongProvider, EnumSongProvider>(new SpotifySongProvider(), EnumSongProvider.SPOTIFY));
 
             this._songProviderChooser = new SongProviderChooser();
@@ -102,16 +102,7 @@ namespace LyricsWPF.Backend.Handler.Song
 
         private ISongProvider GetSongProvider(EnumSongProvider enumSongProvider)
         {
-            for (int i = 0; i < this._songProviders.Count; i++)
-            {
-                Tuple<ISongProvider, EnumSongProvider> item = this._songProviders[i];
-                if (item.Item2.Equals(enumSongProvider))
-                {
-                    return item.Item1;
-                }
-            }
-
-            return null;
+            return this._songProviders.FindEntry(enumSongProvider).Item1;
         }
 
         private Song GetCurrentSong()
@@ -145,9 +136,9 @@ namespace LyricsWPF.Backend.Handler.Song
 
             try
             {
-                for (int i = 0; i < this._songProviders.Count; i++)
+                for (int i = 0; i < this._songProviders.Length; i++)
                 {
-                    this._songProviders[i].Item1.Dispose();
+                    this._songProviders.Get(i).Item1.Dispose();
                 }
             }
             catch (Exception e)

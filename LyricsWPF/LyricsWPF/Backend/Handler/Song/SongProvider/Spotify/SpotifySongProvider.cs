@@ -86,6 +86,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                                 }
                                 this._currentSong.Time = (long)BigInteger.Add(progress, diff);
                                 this._currentSong.TimeStamp = 0;
+
                             }
                         }
                         catch (Exception e)

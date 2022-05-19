@@ -23,14 +23,14 @@ namespace LyricsWPF.Backend.Structure
 
         public static LyricData ConvertToData(GenericList<LyricElement> lyrics)
         {
-            if (lyrics == null || lyrics.Count == 0)
+            if (lyrics == null || lyrics.Length == 0)
                 return new LyricData(LyricReturnCode.Failed, null);
 
-            LyricPart[] lyricParts = new LyricPart[lyrics.Count];
+            LyricPart[] lyricParts = new LyricPart[lyrics.Length];
 
-            for (int i = 0; i < lyrics.Count; i++)
+            for (int i = 0; i < lyrics.Length; i++)
             {
-                lyricParts[i] = new LyricPart(lyrics[i].TimeStamp, lyrics[i].Line);
+                lyricParts[i] = new LyricPart(lyrics.Get(i).TimeStamp, lyrics.Get(i).Line);
             }
 
             return new LyricData(LyricReturnCode.Success, lyricParts);

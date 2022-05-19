@@ -5,6 +5,7 @@ using DevBase.Generic;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Services.Services;
 using LyricsWPF.Backend.Handler.Services.Services.Spotify;
+using LyricsWPF.Backend.Utils;
 
 namespace LyricsWPF.Backend.Handler.Services
 {
@@ -28,15 +29,12 @@ namespace LyricsWPF.Backend.Handler.Services
 
         public string GetAccessToken(IService service)
         {
-            foreach (IService s in _services)
-            {
-                if (service.Equals(s))
-                { 
-                    return s.GetAccessToken();
-                }
-            }
+            IService s = this._services.FindEntry(service);
 
-            return null;
+            if (!DataValidator.ValidateData(s))
+                return null;
+
+            return s.GetAccessToken();
         }
 
         public string GetAccessToken(string serviceName)
@@ -51,14 +49,15 @@ namespace LyricsWPF.Backend.Handler.Services
 
         public IService GetServiceByName(string serviceName)
         {
-            foreach (IService s in _services)
+            for (int i = 0; i < this._services.Length; i++)
             {
+                IService s = this._services.Get(i);
                 if (s.ServiceName().Equals(serviceName))
                 {
                     return s;
                 }
             }
-
+            
             return null;
         }
 
@@ -66,9 +65,9 @@ namespace LyricsWPF.Backend.Handler.Services
         {
             try
             {
-                for (int i = 0; i < this._services.Count; i++)
+                for (int i = 0; i < this._services.Length; i++)
                 {
-                    this._services[i].Dispose();
+                    this._services.Get(i).Dispose();
                 }
             }
             catch (Exception e)

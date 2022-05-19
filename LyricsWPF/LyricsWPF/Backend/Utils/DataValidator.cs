@@ -51,6 +51,41 @@ namespace LyricsWPF.Backend.Utils
         //    return false;
         //}
 
+        public static bool ValidateData(object value)
+        {
+            return value != null;
+        }
+
+        //public static bool ValidateData(object value, object value1)
+        //{
+        //    return value != null && value1 != null;
+        //}
+
+        //public static bool ValidateData(object value, object value1, object value2)
+        //{
+        //    return value != null && value1 != null && value2 != null;
+        //}
+
+        //public static bool ValidateData(object value, object value1, object value3, object value4)
+        //{
+        //    return value != null && value1 != null && value3 != null && value4 != null;
+        //}
+
+        //public static bool ValidateData(object value, object value1, object value3, object value4, object value5)
+        //{
+        //    return value != null && value1 != null && value3 != null && value4 != null && value5 != null;
+        //}
+
+        //public static bool ValidateData(object value, object value1, object value3, object value4, object value5, object value6)
+        //{
+        //    return value != null && value1 != null && value3 != null && value4 != null && value5 != null && value6 != null;
+        //}
+
+        //public static bool ValidateData(object value, object value1, object value3, object value4, object value5, object value6, object value7)
+        //{
+        //    return value != null && value1 != null && value3 != null && value4 != null && value5 != null && value6 != null && value7 != null;
+        //}
+
         public static bool ValidateData(params object[] values)
         {
             if (values == null)
@@ -67,11 +102,6 @@ namespace LyricsWPF.Backend.Utils
                     return false;
 
             return true;
-        }
-
-        public static bool ValidateData(object value)
-        {
-            return value != null;
         }
 
         public static bool ValidateSong(Song value)

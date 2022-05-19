@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -11,6 +12,7 @@ using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Lyrics;
 using LyricsWPF.Backend.Handler.Services;
 using LyricsWPF.Backend.Handler.Song;
+using LyricsWPF.Backend.Utils;
 using Newtonsoft.Json;
 using SpotifyApi.NetCore;
 using SpotifyApi.NetCore.Authorization;
