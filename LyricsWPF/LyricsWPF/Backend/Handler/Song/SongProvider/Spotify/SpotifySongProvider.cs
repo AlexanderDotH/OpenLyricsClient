@@ -86,7 +86,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                                 }
                                 this._currentSong.Time = (long)BigInteger.Add(progress, diff);
                                 this._currentSong.TimeStamp = 0;
-
                             }
                         }
                         catch (Exception e)
@@ -106,7 +105,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                 if (!this._service.IsConnected())
                     break;
 
-                await Task.Delay(500);
+                await Task.Delay(50);
 
                 if (DataValidator.ValidateData(this._playerApi) &&
                     DataValidator.ValidateData(this._currentSong))

@@ -47,7 +47,7 @@ namespace LyricsWPF.Backend.Handler.Song
 
             if (Environment.GetCommandLineArgs().Contains("--enable-command-output"))
             {
-                this._songInformationTask = new Task(async () => SongInformation(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
+                this._songInformationTask = new Task(async () => await SongInformation(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
                 this._songInformationTask.Start();
             }
 
@@ -58,6 +58,8 @@ namespace LyricsWPF.Backend.Handler.Song
         {
             while (!this._disposed)
             {
+                await Task.Delay(100);
+
                 if (DataValidator.ValidateData(this._songStageChange) && 
                     DataValidator.ValidateData(this._songProviderChooser))
                 {
@@ -76,10 +78,11 @@ namespace LyricsWPF.Backend.Handler.Song
             }
         }
 
-        private void SongInformation()
+        private async Task SongInformation()
         {
             while (!this._disposed)
             {
+                await Task.Delay(10);
                 PrintSongState(GetCurrentSong());
             }
         }

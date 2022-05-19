@@ -117,7 +117,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
             if (!MatchDuration(songResponse, songRequestObject.SongDuration, percentage))
                 return false;
 
-            if (!MatchArtists(songResponse, songRequestObject.Artists, 70))
+            if (!MatchArtists(songResponse, songRequestObject.Artists, 80))
                 return false;
 
             if (!IsSimilar(songRequestObject.FormattedSongName, songResponse.Name))
@@ -126,6 +126,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
             return true;
         }
 
+        //Untested it should make everything a bit more strict
         private bool IsSimilar(string string1, string string2)
         {
             return MathUtils.CalculateLevenshteinDistance(string1, string2) >=
@@ -179,7 +180,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 
             if (responseData.StatusCode == HttpStatusCode.OK)
             {
-                return JsonConvert.DeserializeObject<NetEaseV2SearchResponse>(SongFormatter.FormatString(responseData.GetContentAsString()));
+                return JsonConvert.DeserializeObject<NetEaseV2SearchResponse>(responseData.GetContentAsString());
             }
 
             return null;

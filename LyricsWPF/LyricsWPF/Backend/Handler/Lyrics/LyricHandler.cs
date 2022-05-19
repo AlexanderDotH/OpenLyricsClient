@@ -47,6 +47,8 @@ namespace LyricsWPF.Backend.Handler.Lyrics
         {
             while (!this._disposed)
             {
+                await Task.Delay(50);
+
                 if (DataValidator.ValidateData(this._songHandler))
                 {
                     Song.Song currentSong = this._songHandler.CurrentSong;
