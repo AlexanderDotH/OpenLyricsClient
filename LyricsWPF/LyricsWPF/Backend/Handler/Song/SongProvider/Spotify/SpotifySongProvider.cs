@@ -51,7 +51,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
             this._updateSongDataTask = new Task(async() => await UpdateSongData(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
             this._updateSongDataTask.Start();
 
-            this._timeSyncTask = new Task(async() => await TimeSync(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
+            this._timeSyncTask = new Task(async () => await TimeSync(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
             this._timeSyncTask.Start();
         }
 
@@ -105,7 +105,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                 if (!this._service.IsConnected())
                     break;
 
-                await Task.Delay(100);
+                await Task.Delay(500);
 
                 if (DataValidator.ValidateData(this._playerApi) &&
                     DataValidator.ValidateData(this._currentSong))
@@ -137,7 +137,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                 if (!this._service.IsConnected())
                     break;
 
-                await Task.Delay(500);
+                await Task.Delay(1000);
 
                 if (DataValidator.ValidateData(this._playerApi) && 
                     DataValidator.ValidateData(this._currentSong))

@@ -67,7 +67,11 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
 
         public string GetAccessToken()
         {
-            RefreshTokenRequest();
+            Task.Factory.StartNew(async() =>
+            {
+                await RefreshTokenRequest();
+
+            }).Wait(Core.INSTANCE.CancellationTokenSource.Token);
             return Core.INSTANCE.Settings.BearerAccess.AccessToken;
         }
 
