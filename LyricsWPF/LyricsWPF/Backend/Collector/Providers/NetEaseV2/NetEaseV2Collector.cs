@@ -199,8 +199,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 
             if (responseData.StatusCode == HttpStatusCode.OK)
             {
-                return JsonConvert.DeserializeObject<NetEaseV2LyricResponse>(
-                    SongFormatter.FormatString(responseData.GetContentAsString()));
+                return JsonConvert.DeserializeObject<NetEaseV2LyricResponse>(responseData.GetContentAsString());
             }
 
             return null;

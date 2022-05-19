@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DevBase.Generic;
 using DevBaseFormat.Structure;
+using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Utils;
 
 namespace LyricsWPF.Backend.Structure
@@ -30,7 +31,7 @@ namespace LyricsWPF.Backend.Structure
 
             for (int i = 0; i < lyrics.Length; i++)
             {
-                lyricParts[i] = new LyricPart(lyrics.Get(i).TimeStamp, lyrics.Get(i).Line);
+                lyricParts[i] = new LyricPart(lyrics.Get(i).TimeStamp, SongFormatter.FormatString(lyrics.Get(i).Line));
             }
 
             return new LyricData(LyricReturnCode.Success, lyricParts);

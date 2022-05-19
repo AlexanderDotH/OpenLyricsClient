@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using DevBase.Generic;
+using LyricsWPF.Backend.Collector.Providers.Musixmatch;
 using LyricsWPF.Backend.Collector.Providers.NetEase;
 using LyricsWPF.Backend.Collector.Providers.NetEaseV2;
 using LyricsWPF.Backend.Exceptions;
@@ -24,12 +25,22 @@ namespace LyricsWPF.Backend.Collector
             this._lyricCollectors = new GenericList<ICollector>();
             this._lyricCollectors.Add(new NetEaseCollector());
             this._lyricCollectors.Add(new NetEaseV2Collector());
+            this._lyricCollectors.Add(new MusixMatchCollector());
 
             this._lyricCollectors.Sort(new CollectorComparer());
         }
 
         public async Task<LyricData> CollectLyrics(SongRequestObject songRequestObject)
         {
+            for (int i = 0; i < this._lyricCollectors.Length; i++)
+            {
+                ICollector collector = this._lyricCollectors.Get(i);
+                LyricData lyricData = await collector.GetLyrics(songRequestObject);
+
+                if (lyricData != null)
+                    return lyricData;
+            }
+
             //if (songRequestObject.SelectioMode == SelectionMode.QUALITY)
             //{
             //    GenericList<Tuple<ICollector, LyricData>> lyrics = new GenericList<Tuple<ICollector, LyricData>>();
@@ -55,31 +66,24 @@ namespace LyricsWPF.Backend.Collector
             //}
             //else if (songRequestObject.SelectioMode == SelectionMode.PERFORMANCE)
             //{
-            //    for (int i = 0; i < this._lyricCollectors.Count; i++)
+            //for (int i = 0; i < this._lyricCollectors.Length; i++)
+            //{
+            //    ICollector collector = this._lyricCollectors.Get(i);
+            //    LyricData lyricData = null;
+
+            //    while ((lyricData = await collector.GetLyrics(songRequestObject)) == null)
             //    {
-            //        ICollector collector = this._lyricCollectors[i];
-            //        LyricData lyricData = null;
-
-            //        while ((lyricData = await collector.GetLyrics(songRequestObject)) == null)
+            //        if (i + 1 < this._lyricCollectors.Length)
             //        {
-            //            if (i + 1 < this._lyricCollectors.Count)
-            //            {
-            //                collector = this._lyricCollectors[i++];
-            //            }
+            //            collector = this._lyricCollectors[i++];
             //        }
-
-            //        return lyricData;
             //    }
+
+            //    return lyricData;
+            //}
             //}
 
-            for (int i = 0; i < this._lyricCollectors.Length; i++)
-            {
-                ICollector collector = this._lyricCollectors.Get(i);
-                LyricData lyricData = await collector.GetLyrics(songRequestObject);
 
-                if (lyricData != null)
-                    return lyricData;
-            }
 
             GC.Collect();
             return null;

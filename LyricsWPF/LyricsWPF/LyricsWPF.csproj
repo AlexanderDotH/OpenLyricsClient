@@ -119,9 +119,6 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MusixMatchAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MusixMatchAPI.1.0.0\lib\netstandard1.4\MusixMatchAPI.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -305,6 +302,41 @@
     <Compile Include="Backend\Collector\ICollector.cs" />
     <Compile Include="Backend\Collector\LyricCollector.cs" />
     <Compile Include="Backend\Collector\LyricsCollectorComparer.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchRootBody.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchRootHeader.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchMacroCalls.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchMatcherTrackGet.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchMatcherTrackGetMessage.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchMatcherTrackGetMessageBody.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchMatcherTrackGetMessageHeader.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchRootMessage.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackLyricsGetBodyLyrics.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchUserblobGetMeta.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchMusicGenre.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchMusicGenreList.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchMatcherTrackGetMessageBodyTrackPrimaryGenres.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchRoot.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchMatcherTrackGetMessageBodyTrackSecondaryGenres.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchMatcherTrackGetMessageBodyTrack.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackLyricsGet.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackLyricsGetBody.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackLyricsGetHeader.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackLyricsGetMessage.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackSnippetGet.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackSnippetGetMessage.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackSnippetGetMessageBody.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackSnippetGetMessageBodySnippet.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackSnippetGetMessageHeader.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackSubtitlesGet.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackSubtitlesGetMessage.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackSubtitlesGetMessageBody.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackSubtitlesGetMessageBodySubtitleList.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackSubtitlesGetMessageBodySubtitleListSubtitle.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchTrackSubtitlesGetMessageHeader.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchUserblobGet.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchUserblobGetMessage.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchUserblobGetMessageHeader.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\MusixMatchCollector.cs" />
     <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2AlbumResponse.cs" />
     <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2ArtistResponse.cs" />
     <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2KlyricResponse.cs" />
