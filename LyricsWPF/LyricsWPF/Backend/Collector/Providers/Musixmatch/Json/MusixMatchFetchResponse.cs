@@ -7,12 +7,9 @@ using Newtonsoft.Json;
 
 namespace LyricsWPF.Backend.Collector.Providers.Musixmatch.Json
 {
-    public class MusixMatchUserblobGetMeta
+    public class MusixMatchFetchResponse
     {
-        [JsonProperty("status_code")]
-        public int StatusCode { get; set; }
-
-        [JsonProperty("last_updated")]
-        public DateTime LastUpdated { get; set; }
+        [JsonProperty("message")]
+        public MusixMatchFetchResponseMessage Message { get; set; }
     }
 }

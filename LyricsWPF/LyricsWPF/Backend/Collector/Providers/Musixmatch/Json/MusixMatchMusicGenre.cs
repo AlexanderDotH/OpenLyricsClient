@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace LyricsWPF.Backend.Collector.Providers.Musixmatch.Json
 {
     public class MusixMatchMusicGenre
     {
         [JsonProperty("music_genre_id")]
-        public int MusicGenreId { get; set; }
+        public long MusicGenreId { get; set; }
 
         [JsonProperty("music_genre_parent_id")]
-        public int MusicGenreParentId { get; set; }
+        public long MusicGenreParentId { get; set; }
 
         [JsonProperty("music_genre_name")]
         public string MusicGenreName { get; set; }

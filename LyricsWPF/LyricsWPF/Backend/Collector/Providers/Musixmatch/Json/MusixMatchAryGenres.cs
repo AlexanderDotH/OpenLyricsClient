@@ -1,0 +1,10 @@
+﻿using Newtonsoft.Json;
+
+namespace LyricsWPF.Backend.Collector.Providers.Musixmatch.Json
+{
+    public class MusixMatchAryGenres
+    {
+        [JsonProperty("music_genre_list")]
+        public MusixMatchMusicGenreList[] MusicGenreList { get; set; }
+    }
+}

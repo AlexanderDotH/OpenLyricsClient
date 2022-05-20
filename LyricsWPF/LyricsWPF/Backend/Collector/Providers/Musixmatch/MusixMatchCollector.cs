@@ -34,30 +34,65 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
             if (!DataValidator.ValidateData(songRequestObject))
                 return null;
 
-            try
+            MusixMatchFetchResponse fetchedLyrics = await FetchTrack(songRequestObject);
+
+            if (!DataValidator.ValidateData(fetchedLyrics))
+                return null;
+
+            if (!DataValidator.ValidateData(fetchedLyrics.Message))
+                return null;
+
+            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body, fetchedLyrics.Message.Header))
+                return null;
+
+
+            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls))
+                return null;
+
+            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet))
+                return null;
+
+            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message))
+                return null;
+
+            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body, fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Header))
+                return null;
+
+            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track))
+                return null;
+
+            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet))
+                return null;
+
+            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message))
+                return null;
+
+            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Header, fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Body))
+                return null;
+
+            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Body.SubtitleList))
+                return null;
+
+            MusixMatchSubtitleList[] subtitleList =
+                fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Body.SubtitleList;
+
+            for (int i = 0; i < subtitleList.Length; i++)
             {
-                MusixMatchRoot fetchedLyrics = await FetchTrack(songRequestObject);
+                MusixMatchSubtitle subtitle = subtitleList[i].Subtitle;
+
+                if (!DataValidator.ValidateData(subtitle))
+                    continue;
+
+                if (subtitle.SubtitleBody == "")
+                    continue;
+
+                Console.WriteLine(subtitle.SubtitleBody);
             }
-            catch (Exception e)
-            {
-                throw;
-            }
-
-            //if (!DataValidator.ValidateData(fetchedLyrics))
-            //    return null;
-
-            //if (!DataValidator.ValidateData(fetchedLyrics.RootMessage))
-            //    return null;
-
-            //if (!DataValidator.ValidateData(fetchedLyrics.RootMessage.RootBody, fetchedLyrics.RootMessage.RootHeader))
-            //    return null;
-
-            //Console.WriteLine(fetchedLyrics.RootMessage.RootBody.MacroCalls.TrackSubtitlesGet.Message.Body.Subtitle.Subtitle.SubtitleBody);
 
             return null;
         }
 
-        public async Task<MusixMatchRoot> FetchTrack(SongRequestObject songRequestObject)
+        public async Task<MusixMatchFetchResponse> FetchTrack(SongRequestObject songRequestObject)
         {
             if (!DataValidator.ValidateData(songRequestObject))
                 return null;
@@ -93,7 +128,7 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
 
             this._debugger.Write("Full track response data: " + responseData.GetContentAsString(), DebugType.DEBUG);
 
-            return JsonConvert.DeserializeObject<MusixMatchRoot>(responseData.GetContentAsString());
+            return JsonConvert.DeserializeObject<MusixMatchFetchResponse>(responseData.GetContentAsString());
         }
 
         public string CollectorName()
