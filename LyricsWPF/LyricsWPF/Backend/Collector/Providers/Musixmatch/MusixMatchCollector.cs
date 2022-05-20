@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DevBase.Generic;
 using DevBase.Web;
 using DevBase.Web.RequestData;
 using DevBase.Web.ResponseData;
+using DevBaseFormat;
+using DevBaseFormat.Formats.LrcFormat;
+using DevBaseFormat.Formats.MmlFormat;
+using DevBaseFormat.Structure;
 using LyricsWPF.Backend.Collector.Providers.Musixmatch.Json;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Song;
@@ -45,7 +51,6 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
             if (!DataValidator.ValidateData(fetchedLyrics.Message.Body, fetchedLyrics.Message.Header))
                 return null;
 
-
             if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls))
                 return null;
 
@@ -73,6 +78,9 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
             if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Body.SubtitleList))
                 return null;
 
+            if (fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Header.Instrumental == 1)
+                return new LyricData(LyricReturnCode.Success, new LyricPart[] { new LyricPart(0, "Instrumental") });
+
             MusixMatchSubtitleList[] subtitleList =
                 fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Body.SubtitleList;
 
@@ -86,7 +94,20 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                 if (subtitle.SubtitleBody == "")
                     continue;
 
-                Console.WriteLine(subtitle.SubtitleBody);
+                FileFormatParser<LrcObject> fileFormatParser =
+                    new FileFormatParser<LrcObject>(
+                        new MmlParser<LrcObject>());
+
+                if (!DataValidator.ValidateData(fileFormatParser))
+                    return null;
+
+                GenericList<LyricElement> lyricElements =
+                    fileFormatParser.FormatFromString(subtitle.SubtitleBody).Lyrics;
+
+                if (!DataValidator.ValidateData(lyricElements))
+                    return null;
+
+                return LyricData.ConvertToData(lyricElements);
             }
 
             return null;
@@ -127,6 +148,9 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                 return null;
 
             this._debugger.Write("Full track response data: " + responseData.GetContentAsString(), DebugType.DEBUG);
+
+            if (responseData.GetContentAsString().Contains("\"hint\":\"captcha\""))
+                return null;
 
             return JsonConvert.DeserializeObject<MusixMatchFetchResponse>(responseData.GetContentAsString());
         }
