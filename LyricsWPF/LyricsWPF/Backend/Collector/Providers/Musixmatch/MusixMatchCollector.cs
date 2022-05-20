@@ -140,7 +140,8 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
 
             RequestData requestData = new RequestData(requestString);
             requestData.Header.Add("Cookie", "AWSELB=55578B011601B1EF8BC274C33F9043CA947F99DCFF0A80541772015CA2B39C35C0F9E1C932D31725A7310BCAEB0C37431E024E2B45320B7F2C84490C2C97351FDE34690157");
-            
+            requestData.UserAgent = requestData.GetRandomUseragent();
+
             Request request = new Request(requestData);
             ResponseData responseData = await request.GetResponseAsync();
 

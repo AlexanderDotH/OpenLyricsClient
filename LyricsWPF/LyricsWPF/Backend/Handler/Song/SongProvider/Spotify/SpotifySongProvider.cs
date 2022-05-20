@@ -74,17 +74,18 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                         {
                             if (this._currentSong != null)
                             {
-                                BigInteger currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                                BigInteger timeStamp = this._currentSong.TimeStamp;
+                                long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                                long timeStamp = this._currentSong.TimeStamp;
 
-                                BigInteger diff = 0;
-                                BigInteger progress = this._currentSong.ProgressMs;
+                                long diff = 0;
+                                long progress = this._currentSong.ProgressMs;
 
                                 if (this._currentSong.TimeStamp > 0)
                                 {
-                                    diff = BigInteger.Subtract(currentTime, timeStamp);
+                                    diff = currentTime - timeStamp;
                                 }
-                                this._currentSong.Time = (long)BigInteger.Add(progress, diff);
+
+                                this._currentSong.Time = progress + diff;
                                 this._currentSong.TimeStamp = 0;
                             }
                         }

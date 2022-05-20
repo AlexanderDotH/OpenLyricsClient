@@ -117,7 +117,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
             if (!MatchDuration(songResponse, songRequestObject.SongDuration, percentage))
                 return false;
 
-            if (!MatchArtists(songResponse, songRequestObject.Artists, 80))
+            if (!MatchArtists(songResponse, songRequestObject.Artists, 70))
                 return false;
 
             if (!IsSimilar(songRequestObject.FormattedSongName, songResponse.Name))
