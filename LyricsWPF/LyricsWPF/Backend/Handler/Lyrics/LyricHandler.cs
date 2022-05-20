@@ -63,31 +63,36 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                         {
                             LyricPart currentPart = currentSong.Lyrics.LyricParts[i];
 
-                            if (i + 1 < currentSong.Lyrics.LyricParts.Length)
-                            {
-                                LyricPart nextPart = currentSong.Lyrics.LyricParts[i + 1];
-
-                                // I thing this is the issue
-                                // What did I do?: nothing, cause I don´t now how to fix it
-                                if (DataValidator.ValidateData(currentPart) &&
-                                    DataValidator.ValidateData(currentPart.Part) && 
-                                    DataValidator.ValidateData(currentPart.Time) &&
-                                    DataValidator.ValidateData(nextPart) &&
-                                    DataValidator.ValidateData(nextPart.Part) &&
-                                    DataValidator.ValidateData(nextPart.Time))
-                                {
-                                    if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, currentSong.Time + LYRIC_OFFSET))
-                                    {
-                                        currentSong.CurrentLyricPart = currentPart;
-                                        break;
-                                    }
-                                }
-                            }
-                            else
+                            if (i == currentSong.Lyrics.LyricParts.Length)
                             {
                                 currentSong.CurrentLyricPart =
                                     currentSong.Lyrics.LyricParts[currentSong.Lyrics.LyricParts.Length - 1];
                                 break;
+                            }
+                            else
+                            {
+                                if (i + 1 < currentSong.Lyrics.LyricParts.Length)
+                                {
+                                    LyricPart nextPart = currentSong.Lyrics.LyricParts[i + 1];
+
+                                    // I thing this is the issue
+                                    // What did I do?: nothing, cause I don´t now how to fix it
+                                    if (DataValidator.ValidateData(currentPart) &&
+                                        DataValidator.ValidateData(currentPart.Part) &&
+                                        DataValidator.ValidateData(currentPart.Time) &&
+                                        DataValidator.ValidateData(nextPart) &&
+                                        DataValidator.ValidateData(nextPart.Part) &&
+                                        DataValidator.ValidateData(nextPart.Time))
+                                    {
+                                        if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, currentSong.Time + LYRIC_OFFSET))
+                                        {
+                                            currentSong.CurrentLyricPart = currentPart;
+                                            break;
+                                        }
+                                    }
+
+                                }
+
                             }
                         }
                     }
