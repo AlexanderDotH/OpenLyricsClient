@@ -14,6 +14,7 @@ using DevBase.Web.ResponseData;
 using DevBaseFormat;
 using DevBaseFormat.Formats.LrcFormat;
 using DevBaseFormat.Structure;
+using Kawazu;
 using LyricsWPF.Backend.Collector.Providers.NetEase.Json;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Song;
@@ -73,35 +74,38 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
                                                 songResponse.Mvid, songResponse.NetEaseAlbumResponse,
                                                 songResponse.Alias, songResponse.Status))
                                         {
-                                            if (MatchDuration(songResponse, songRequestObject.SongDuration, retryPercentage))
+                                            if (songResponse.NetEaseAlbumResponse.Name.Equals(songRequestObject.Album))
                                             {
-                                                if (MatchArtists(songResponse, songRequestObject.Artists, 100))
+                                                if (MatchDuration(songResponse, songRequestObject.SongDuration, retryPercentage))
                                                 {
-                                                    int songId = songResponse.Id;
-                                                    NetEaseLyricResponse lyricResponse = await GetLyricsFromEndpoint(songId);
-
-                                                    if (DataValidator.ValidateData(lyricResponse) &&
-                                                        DataValidator.ValidateData(lyricResponse.Code,
-                                                            lyricResponse.NetEaseKlyricResponse,
-                                                            lyricResponse.NetEaseLrcResponse,
-                                                            lyricResponse.NetEaseLyricUserResponse,
-                                                            lyricResponse.NetEaseTlyricResponse,
-                                                            lyricResponse.NetEaseTransUserResponse, lyricResponse.Qfy,
-                                                            lyricResponse.Sfy, lyricResponse.Sgc))
+                                                    if (MatchArtists(songResponse, songRequestObject.Artists, 100))
                                                     {
-                                                        FileFormatParser<LrcObject> fileFormatParser =
-                                                            new FileFormatParser<LrcObject>(
-                                                                new LrcParser<LrcObject>());
+                                                        int songId = songResponse.Id;
+                                                        NetEaseLyricResponse lyricResponse = await GetLyricsFromEndpoint(songId);
 
-                                                        if (DataValidator.ValidateData(fileFormatParser))
+                                                        if (DataValidator.ValidateData(lyricResponse) &&
+                                                            DataValidator.ValidateData(lyricResponse.Code,
+                                                                lyricResponse.NetEaseKlyricResponse,
+                                                                lyricResponse.NetEaseLrcResponse,
+                                                                lyricResponse.NetEaseLyricUserResponse,
+                                                                lyricResponse.NetEaseTlyricResponse,
+                                                                lyricResponse.NetEaseTransUserResponse, lyricResponse.Qfy,
+                                                                lyricResponse.Sfy, lyricResponse.Sgc))
                                                         {
-                                                            GenericList<LyricElement> lyrics =
-                                                                fileFormatParser.FormatFromString(lyricResponse.NetEaseLrcResponse.Lyric).Lyrics;
+                                                            FileFormatParser<LrcObject> fileFormatParser =
+                                                                new FileFormatParser<LrcObject>(
+                                                                    new LrcParser<LrcObject>());
 
-                                                            if (DataValidator.ValidateData(lyrics) && lyrics.Length > 0)
+                                                            if (DataValidator.ValidateData(fileFormatParser))
                                                             {
-                                                                this._debugger.Write("Found new Lyrics", DebugType.DEBUG);
-                                                                return LyricData.ConvertToData(lyrics);
+                                                                GenericList<LyricElement> lyrics =
+                                                                    fileFormatParser.FormatFromString(lyricResponse.NetEaseLrcResponse.Lyric).Lyrics;
+
+                                                                if (DataValidator.ValidateData(lyrics) && lyrics.Length > 0)
+                                                                {
+                                                                    this._debugger.Write("Found new Lyrics", DebugType.DEBUG);
+                                                                    return await LyricData.ConvertToData(lyrics);
+                                                                }
                                                             }
                                                         }
                                                     }

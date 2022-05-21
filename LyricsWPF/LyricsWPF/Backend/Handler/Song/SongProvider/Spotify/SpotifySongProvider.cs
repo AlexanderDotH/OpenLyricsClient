@@ -68,30 +68,33 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                     DataValidator.ValidateData(this._currentSong.Paused) &&
                     DataValidator.ValidateData(this._currentSong.ProgressMs))
                 {
-                    if (!this._currentSong.Paused)
+                    lock (this._currentSong)
                     {
-                        try
+                        if (!this._currentSong.Paused)
                         {
-                            if (this._currentSong != null)
+                            try
                             {
-                                long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                                long timeStamp = this._currentSong.TimeStamp;
-
-                                long diff = 0;
-                                long progress = this._currentSong.ProgressMs;
-
-                                if (this._currentSong.TimeStamp > 0)
+                                if (this._currentSong != null)
                                 {
-                                    diff = currentTime - timeStamp;
-                                }
+                                    long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                                    long timeStamp = this._currentSong.TimeStamp;
 
-                                this._currentSong.Time = progress + diff;
-                                this._currentSong.TimeStamp = 0;
+                                    long diff = 0;
+                                    long progress = this._currentSong.ProgressMs;
+
+                                    if (this._currentSong.TimeStamp > 0)
+                                    {
+                                        diff = currentTime - timeStamp;
+                                    }
+
+                                    this._currentSong.Time = progress + diff;
+                                    this._currentSong.TimeStamp = 0;
+                                }
                             }
-                        }
-                        catch (Exception e)
-                        {
-                            this._debugger.Write(e);
+                            catch (Exception e)
+                            {
+                                this._debugger.Write(e);
+                            }
                         }
                     }
                 }

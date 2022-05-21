@@ -9,7 +9,6 @@ namespace LyricsWPF.Backend.Utils
 {
     class DataConverter
     {
-
         public static string[] SpotifyArtistsToStrings(Artist[] artists)
         {
             string[] artistsAsStrings = new string[artists.Length];

@@ -12,6 +12,7 @@ using DevBaseFormat;
 using DevBaseFormat.Formats.LrcFormat;
 using DevBaseFormat.Formats.MmlFormat;
 using DevBaseFormat.Structure;
+using Kawazu;
 using LyricsWPF.Backend.Collector.Providers.Musixmatch.Json;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Song;
@@ -101,13 +102,15 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                 if (!DataValidator.ValidateData(fileFormatParser))
                     return null;
 
+                string lyrics = subtitle.SubtitleBody;
+
                 GenericList<LyricElement> lyricElements =
-                    fileFormatParser.FormatFromString(subtitle.SubtitleBody).Lyrics;
+                    fileFormatParser.FormatFromString(lyrics).Lyrics;
 
                 if (!DataValidator.ValidateData(lyricElements))
                     return null;
 
-                return LyricData.ConvertToData(lyricElements);
+                return await LyricData.ConvertToData(lyricElements);
             }
 
             return null;

@@ -11,6 +11,7 @@ using DevBase.Web.ResponseData;
 using DevBaseFormat;
 using DevBaseFormat.Formats.LrcFormat;
 using DevBaseFormat.Structure;
+using Kawazu;
 using LyricsWPF.Backend.Collector.Providers.NetEaseV2.Json;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Song;
@@ -79,14 +80,14 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                                                     Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse> lyricElement = lyrics.Get(i);
                                                     if (lyricElement.Item2.Lrc.Lyric != "")
                                                     {
-                                                        return ParseLyricResponse(lyricElement.Item2);
+                                                        return await ParseLyricResponse(lyricElement.Item2);
                                                     }
                                                 }
 
                                             }
                                             else if (songRequestObject.SelectioMode == SelectionMode.PERFORMANCE)
                                             {
-                                                return ParseLyricResponse(lyricResponse);
+                                                return await ParseLyricResponse(lyricResponse);
                                             }
                                         }
 
@@ -133,7 +134,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                    Math.Abs(string1.Length - string2.Length);
         }
 
-        private LyricData ParseLyricResponse(NetEaseV2LyricResponse lyricResponse)
+        private async Task<LyricData> ParseLyricResponse(NetEaseV2LyricResponse lyricResponse)
         {
             if (DataValidator.ValidateData(lyricResponse) && 
                 DataValidator.ValidateData(lyricResponse.Code, lyricResponse.Klyric,
@@ -151,12 +152,11 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                         if (DataValidator.ValidateData(fileFormatParser))
                         {
                             GenericList<LyricElement> lyricElements =
-                                fileFormatParser.FormatFromString(lyricResponse.Lrc
-                                    .Lyric).Lyrics;
+                                fileFormatParser.FormatFromString(lyricResponse.Lrc.Lyric).Lyrics;
 
                             if (DataValidator.ValidateData(lyricElements))
                             {
-                                return LyricData.ConvertToData(lyricElements);
+                                return await LyricData.ConvertToData(lyricElements);
                             }
                         }
                     }

@@ -8,7 +8,7 @@ namespace LyricsWPF.Backend.Utils
 {
     class MathUtils
     {
-        public static bool IsDoubleInRange(double  min, double max, double current)
+        public static bool IsDoubleInRange(double min, double max, double current)
         {
             return current > min && current < max;
         }
