@@ -10,6 +10,9 @@ Fix song change detection in listening party
  
  Make a better UI lol
  
+ Add Korean Rumanji
+ https://github.com/BenjaminTMilnes/KoreanRomanisation#usage
+ 
 Notes:
  Don´t forget to touch some grass
 
