@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DevBase.Generic;
 using DevBaseFormat.Structure;
-using Kawazu;
 using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Utils;
+using LyricsWPF.Backend.Romanisation;
 
 namespace LyricsWPF.Backend.Structure
 {
@@ -28,7 +29,7 @@ namespace LyricsWPF.Backend.Structure
             if (lyrics == null || lyrics.Length == 0)
                 return new LyricData(LyricReturnCode.Failed, null);
 
-            var converter = new KawazuConverter();
+            Romanisation.Romanisation romanisation = new Romanisation.Romanisation();
 
             LyricPart[] lyricParts = new LyricPart[lyrics.Length];
 
@@ -36,10 +37,8 @@ namespace LyricsWPF.Backend.Structure
             {
                 string currentLine = SongFormatter.FormatString(lyrics.Get(i).Line);
 
-                if (Utilities.HasJapanese(currentLine))
-                {
-                    currentLine = await converter.Convert(currentLine, To.Romaji, Mode.Spaced);
-                }
+                //Make setting to prevent this
+                currentLine = await romanisation.Romanise(currentLine);
 
                 lyricParts[i] = new LyricPart(lyrics.Get(i).TimeStamp, currentLine);
             }
