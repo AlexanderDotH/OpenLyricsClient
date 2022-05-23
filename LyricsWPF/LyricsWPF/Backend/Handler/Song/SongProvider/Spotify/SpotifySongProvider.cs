@@ -96,9 +96,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                                     }
                                 }
                                 catch (Exception e)
-                                {
-                                    this._debugger.Write(e);
-                                }
+                                { }
                             }
                         }
                     }
@@ -118,7 +116,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                 if (!this._service.IsConnected())
                     continue;
 
-                await Task.Delay(50);
+                await Task.Delay(250);
 
                 if (DataValidator.ValidateData(this._playerApi) &&
                     DataValidator.ValidateData(this._currentSong))
