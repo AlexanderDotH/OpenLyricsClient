@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -37,9 +38,16 @@ namespace LyricsWPF.Backend.Collector
                 ICollector collector = this._lyricCollectors.Get(i);
                 LyricData lyricData = await collector.GetLyrics(songRequestObject);
 
-                if (lyricData != null)
-                    return lyricData;
+                if (DataValidator.ValidateData(lyricData))
+                {
+                    if (lyricData.LyricReturnCode == LyricReturnCode.Success)
+                    {
+                        return lyricData;
+                    }
+                }
             }
+
+
 
             //if (songRequestObject.SelectioMode == SelectionMode.QUALITY)
             //{

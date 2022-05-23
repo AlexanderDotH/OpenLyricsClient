@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using LyricsWPF.Backend;
 using LyricsWPF.Backend.Collector;
+using LyricsWPF.Backend.Events.EventArgs;
 using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Utils;
@@ -27,13 +28,17 @@ namespace LyricsWPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Settings _settings;
+
         public MainWindow()
         {
             InitializeComponent();
 
+
             this.fullLyricText.Text = @"";
 
             //BindText(currentLine, "Line");
+            Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
 
 
             var t = new TaskFactory().StartNew(async () =>
@@ -44,59 +49,82 @@ namespace LyricsWPF
 
                     Song song = Core.INSTANCE.SongHandler.CurrentSong;
 
-                    if (DataValidator.ValidateSong(song))
+                    if (DataValidator.ValidateData(song))
                     {
-                        LyricsRoll lyricsRoll = Core.INSTANCE.SongHandler.CurrentSong.GetLyricsRoll();
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            this.currentTitle.Text = song.Title;
+                        });
 
-                        if (DataValidator.ValidateData(lyricsRoll))
+                        if (DataValidator.ValidateData(song.Lyrics) &&
+                            DataValidator.ValidateData(song.Lyrics.LyricProvider))
                         {
                             this.Dispatcher.Invoke(() =>
                             {
-                                if (DataValidator.ValidateData(lyricsRoll.PartOne) &&
-                                    DataValidator.ValidateData(lyricsRoll.PartOne.Part))
-                                {
-                                    this.firstLine.Text = lyricsRoll.PartOne.Part;
-                                }
-                                else
-                                {
-                                    this.firstLine.Text = "";
-                                }
+                                this.provider.Text = "Powered by " + song.Lyrics.LyricProvider;
 
-                                if (DataValidator.ValidateData(lyricsRoll.PartTwo) &&
-                                    DataValidator.ValidateData(lyricsRoll.PartTwo.Part))
-                                {
-                                    this.secondLine.Text = lyricsRoll.PartTwo.Part;
-                                }
-                                else
-                                {
-                                    this.secondLine.Text = "";
-                                }
-
-                                if (DataValidator.ValidateData(lyricsRoll.PartThree) &&
-                                    DataValidator.ValidateData(lyricsRoll.PartThree.Part))
-                                {
-                                    this.thirdLine.Text = lyricsRoll.PartThree.Part;
-                                } 
-                                else
-                                {
-                                    this.thirdLine.Text = "";
-                                }
-                            });
-                        }
-                        else
-                        {
-                            this.Dispatcher.Invoke(() =>
-                            {
-                                this.firstLine.Text = "";
-                                this.secondLine.Text = "";
-                                this.thirdLine.Text = "";
                             });
                         }
 
                         this.Dispatcher.Invoke(() =>
                         {
-                            this.currentTitle.Text = song.Title;
+                            this.pgSongProgress.Value = song.GetPercentage();
                         });
+
+                        if (DataValidator.ValidateData(song.State))
+                        {
+                            if (song.State == SongState.NO_LYRICS_AVAILABLE)
+                            {
+                                this.Dispatcher.Invoke(() =>
+                                {
+                                    this.firstLine.Text = "";
+                                    this.secondLine.Text = "Lyrics not found";
+                                    this.thirdLine.Text = "";
+                                    this.provider.Text = "";
+                                });
+                            }
+                            else if (DataValidator.ValidateData(song.Lyrics) &&
+                                     song.State == SongState.HAS_LYRICS_AVAILABLE)
+                            {
+                                LyricsRoll lyricsRoll = Core.INSTANCE.SongHandler.CurrentSong.GetLyricsRoll();
+
+                                if (DataValidator.ValidateData(lyricsRoll))
+                                {
+                                    this.Dispatcher.Invoke(() =>
+                                    {
+                                        if (DataValidator.ValidateData(lyricsRoll.PartOne) &&
+                                            DataValidator.ValidateData(lyricsRoll.PartOne.Part))
+                                        {
+                                            this.firstLine.Text = lyricsRoll.PartOne.Part;
+                                        }
+                                        else
+                                        {
+                                            this.firstLine.Text = "";
+                                        }
+
+                                        if (DataValidator.ValidateData(lyricsRoll.PartTwo) &&
+                                            DataValidator.ValidateData(lyricsRoll.PartTwo.Part))
+                                        {
+                                            this.secondLine.Text = lyricsRoll.PartTwo.Part;
+                                        }
+                                        else
+                                        {
+                                            this.secondLine.Text = "";
+                                        }
+
+                                        if (DataValidator.ValidateData(lyricsRoll.PartThree) &&
+                                            DataValidator.ValidateData(lyricsRoll.PartThree.Part))
+                                        {
+                                            this.thirdLine.Text = lyricsRoll.PartThree.Part;
+                                        }
+                                        else
+                                        {
+                                            this.thirdLine.Text = "";
+                                        }
+                                    });
+                                }
+                            }
+                        }
                     }
                 }
             }, Core.INSTANCE.CancellationTokenSource.Token);
@@ -128,6 +156,17 @@ namespace LyricsWPF
             //trd.Start();
         }
 
+        private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                this.firstLine.Text = "";
+                this.secondLine.Text = "";
+                this.thirdLine.Text = "";
+                this.provider.Text = "";
+            });
+        }
+
         static void BindText(TextBlock textBox, string property)
         {
             DependencyProperty textProp = TextBlock.TextProperty;
@@ -140,8 +179,16 @@ namespace LyricsWPF
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Settings settings = new Settings();
-            settings.Show();
+            if (this._settings == null)
+            {
+                this._settings = new Settings();
+                this._settings.Closed += (o, args) => this._settings = null;
+                this._settings.Show();
+            }
+            else
+            {
+                this._settings.Show();
+            }
         }
 
         private void button_Click_1(object sender, RoutedEventArgs e)

@@ -156,14 +156,14 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 
                             if (DataValidator.ValidateData(lyricElements))
                             {
-                                return await LyricData.ConvertToData(lyricElements);
+                                return await LyricData.ConvertToData(lyricElements, this.CollectorName());
                             }
                         }
                     }
                 }
             }
 
-            return new LyricData(LyricReturnCode.Failed, null);
+            return new LyricData(LyricReturnCode.Failed, null, this.CollectorName());
         }
 
         //Makes too many track search request: why the hell?
@@ -263,7 +263,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 
         public int ProviderQuality()
         {
-            return 8;
+            return 1;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace LyricsWPF.Backend.Collector
 {
-    enum SelectionMode
+    public enum SelectionMode
     {
         QUALITY, PERFORMANCE
     }

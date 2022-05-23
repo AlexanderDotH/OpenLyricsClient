@@ -27,7 +27,8 @@
         <TabControl
              Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
              materialDesign:ColorZoneAssist.Mode="Standard"
-             materialDesign:ShadowAssist.ShadowDepth="Depth1" Grid.ColumnSpan="3">
+             materialDesign:ShadowAssist.ShadowDepth="Depth1" 
+             Grid.ColumnSpan="3">
             <TabItem>
                 <TabItem.Header>
                     <StackPanel
@@ -58,6 +59,19 @@
                     <TextBlock x:Name="thirdLine"
                     Style="{StaticResource MaterialDesignHeadline4TextBlock}"
                     Text="Line 2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,200,0,0" />
+                    <TextBlock x:Name="provider"
+                        Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                        Text="Provider" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,20,20,0" TextAlignment="Right" FontSize="18" />
+
+                    <ProgressBar
+                        x:Name="pgSongProgress"
+                        Value="50"
+                        VerticalAlignment="Bottom"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth1" 
+                        Height="7" 
+                        Margin="17,0,45,17"/>
+
+
                 </Grid>
             </TabItem>
             <TabItem>

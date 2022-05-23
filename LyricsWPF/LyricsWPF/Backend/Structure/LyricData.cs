@@ -17,19 +17,21 @@ namespace LyricsWPF.Backend.Structure
     {
         private LyricReturnCode _lyricReturnCode;
         private LyricPart[] _lyricParts;
+        private string _lyricProvider;
 
-        public LyricData(LyricReturnCode lyricReturnCode, LyricPart[] lyricParts)
+        public LyricData(LyricReturnCode lyricReturnCode, LyricPart[] lyricParts, string lyricProvider)
         {
             this._lyricReturnCode = lyricReturnCode;
             this._lyricParts = lyricParts;
+            _lyricProvider = lyricProvider;
         }
 
-        public static async Task<LyricData> ConvertToData(GenericList<LyricElement> lyrics)
+        public static async Task<LyricData> ConvertToData(GenericList<LyricElement> lyrics, string lyricProvider)
         {
             if (lyrics == null || lyrics.Length == 0)
-                return new LyricData(LyricReturnCode.Failed, null);
+                return new LyricData(LyricReturnCode.Failed, null, lyricProvider);
 
-            Romanisation.Romanisation romanisation = new Romanisation.Romanisation();
+            Romanisation.Romanization romanization = new Romanisation.Romanization();
 
             LyricPart[] lyricParts = new LyricPart[lyrics.Length];
 
@@ -38,12 +40,12 @@ namespace LyricsWPF.Backend.Structure
                 string currentLine = SongFormatter.FormatString(lyrics.Get(i).Line);
 
                 //Make setting to prevent this
-                currentLine = await romanisation.Romanise(currentLine);
+                currentLine = await romanization.Romanize(currentLine);
 
                 lyricParts[i] = new LyricPart(lyrics.Get(i).TimeStamp, currentLine);
             }
 
-            return new LyricData(LyricReturnCode.Success, lyricParts);
+            return new LyricData(LyricReturnCode.Success, lyricParts, lyricProvider);
         }
 
         public LyricReturnCode LyricReturnCode
@@ -56,6 +58,11 @@ namespace LyricsWPF.Backend.Structure
         {
             get => this._lyricParts;
             set => this._lyricParts = value;
+        }
+
+        public string LyricProvider
+        {
+            get => _lyricProvider;
         }
     }
 }

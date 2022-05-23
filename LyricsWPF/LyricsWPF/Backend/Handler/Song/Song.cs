@@ -14,9 +14,9 @@ namespace LyricsWPF.Backend.Handler.Song
         private string _album;
         private long _time;
         private long _maxTime;
-        private bool _hasLyrics;
         private LyricData _lyrics;
         private LyricPart _currentLyricPart;
+        private SongState _state;
 
         private long _timeStamp;
         private long _progressMS;
@@ -29,7 +29,7 @@ namespace LyricsWPF.Backend.Handler.Song
             this._maxTime = maxTime;
 
             this._time = 0;
-            this._hasLyrics = false;
+            this._state = SongState.NO_LYRICS_AVAILABLE;
 
             //this._currentLyricPart = new LyricPart(0, "Error");
         }
@@ -39,7 +39,7 @@ namespace LyricsWPF.Backend.Handler.Song
             if (DataValidator.ValidateData(this._lyrics) &&
                 DataValidator.ValidateData(this._currentLyricPart) &&
                 DataValidator.ValidateData(this._lyrics.LyricParts) &&
-                this._hasLyrics)
+                this._state == SongState.HAS_LYRICS_AVAILABLE)
             {
                 for (int i = 0; i < this._lyrics.LyricParts.Length; i++)
                 {
@@ -69,6 +69,11 @@ namespace LyricsWPF.Backend.Handler.Song
             return null;
         }
 
+        public double GetPercentage()
+        {
+            return 100.0 * this._time / this._maxTime;
+        }
+
         public string Title
         {
             get => _title;
@@ -93,21 +98,21 @@ namespace LyricsWPF.Backend.Handler.Song
             set => _maxTime = value;
         }
 
-        public bool HasLyrics
-        {
-            get => _hasLyrics;
-            set => _hasLyrics = value;
-        }
-
         public LyricData Lyrics
         {
             get => _lyrics;
 
             set
             {
-                _hasLyrics = true;
+                _state = SongState.HAS_LYRICS_AVAILABLE;
                 _lyrics = value;
             }
+        }
+
+        public SongState State
+        {
+            get => _state;
+            set => _state = value;
         }
 
         public bool Paused

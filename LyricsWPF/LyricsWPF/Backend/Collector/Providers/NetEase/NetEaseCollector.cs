@@ -74,7 +74,8 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
                                                 songResponse.Mvid, songResponse.NetEaseAlbumResponse,
                                                 songResponse.Alias, songResponse.Status))
                                         {
-                                            if (songResponse.NetEaseAlbumResponse.Name.Equals(songRequestObject.Album))
+                                            if (SongFormatter.FormatSongName(songResponse.Name).Equals(SongFormatter.FormatSongName(songRequestObject.SongName)) &&
+                                                SongFormatter.FormatSongAlbum(songResponse.NetEaseAlbumResponse.Name).Equals(SongFormatter.FormatSongAlbum(songRequestObject.Album)))
                                             {
                                                 if (MatchDuration(songResponse, songRequestObject.SongDuration, retryPercentage))
                                                 {
@@ -104,7 +105,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
                                                                 if (DataValidator.ValidateData(lyrics) && lyrics.Length > 0)
                                                                 {
                                                                     this._debugger.Write("Found new Lyrics", DebugType.DEBUG);
-                                                                    return await LyricData.ConvertToData(lyrics);
+                                                                    return await LyricData.ConvertToData(lyrics, this.CollectorName());
                                                                 }
                                                             }
                                                         }
@@ -122,7 +123,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
                 }
             }
 
-            return new LyricData(LyricReturnCode.Failed, null);
+            return new LyricData(LyricReturnCode.Failed, null, this.CollectorName());
         }
 
         private bool MatchDuration(NetEaseSongResponse netEaseSongResponse, long duration, int percentage)
@@ -212,7 +213,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
 
         public int ProviderQuality()
         {
-            return 5;
+            return 10;
         }
     }
 }

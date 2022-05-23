@@ -45,7 +45,7 @@ namespace LyricsWPF.Backend.Handler.Song
             this._manageCurrentSongTask = new Task(async() => await ManageCurrentSong(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
             this._manageCurrentSongTask.Start();
 
-            if (Environment.GetCommandLineArgs().Contains("--enable-command-output"))
+            if (EnvironmentUtils.IsDebugLogEnabled())
             {
                 this._songInformationTask = new Task(async () => await SongInformation(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
                 this._songInformationTask.Start();

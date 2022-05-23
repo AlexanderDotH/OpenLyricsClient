@@ -40,8 +40,8 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 
             //songHandler.SongChanged += OnSongChanged;
 
-            this._playerApi = new PlayerApi(new HttpClient(), Core.INSTANCE.Settings.BearerAccess.AccessToken);
-            this._accessToken = Core.INSTANCE.Settings.BearerAccess.AccessToken;
+            this._playerApi = new PlayerApi(new HttpClient(), Core.INSTANCE.SettingManager.Settings.BearerAccess.AccessToken);
+            this._accessToken = Core.INSTANCE.SettingManager.Settings.BearerAccess.AccessToken;
 
             this._service = Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
 
@@ -61,41 +61,50 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
             while (!this._disposed)
             {
                 if (!this._service.IsConnected())
-                    break;
+                    continue;
 
                 if (DataValidator.ValidateData(this._currentSong) &&
                     DataValidator.ValidateData(this._currentSong.TimeStamp) &&
                     DataValidator.ValidateData(this._currentSong.Paused) &&
                     DataValidator.ValidateData(this._currentSong.ProgressMs))
                 {
-                    lock (this._currentSong)
+                    try
                     {
-                        if (!this._currentSong.Paused)
+                        Song currentSong = this._currentSong;
+
+                        lock (currentSong)
                         {
-                            try
+                            if (!currentSong.Paused)
                             {
-                                if (this._currentSong != null)
+                                try
                                 {
-                                    long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                                    long timeStamp = this._currentSong.TimeStamp;
-
-                                    long diff = 0;
-                                    long progress = this._currentSong.ProgressMs;
-
-                                    if (this._currentSong.TimeStamp > 0)
+                                    if (currentSong != null)
                                     {
-                                        diff = currentTime - timeStamp;
-                                    }
+                                        long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                                        long timeStamp = currentSong.TimeStamp;
 
-                                    this._currentSong.Time = progress + diff;
-                                    this._currentSong.TimeStamp = 0;
+                                        long diff = 0;
+                                        long progress = currentSong.ProgressMs;
+
+                                        if (currentSong.TimeStamp > 0)
+                                        {
+                                            diff = currentTime - timeStamp;
+                                        }
+
+                                        currentSong.Time = progress + diff;
+                                        currentSong.TimeStamp = 0;
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    this._debugger.Write(e);
                                 }
                             }
-                            catch (Exception e)
-                            {
-                                this._debugger.Write(e);
-                            }
                         }
+                    }
+                    catch (Exception e)
+                    {
+                        this._debugger.Write(e);
                     }
                 }
             }
@@ -107,7 +116,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
             while (!this._disposed)
             {
                 if (!this._service.IsConnected())
-                    break;
+                    continue;
 
                 await Task.Delay(50);
 
@@ -139,7 +148,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
             while (!this._disposed)
             {
                 if (!this._service.IsConnected())
-                    break;
+                    continue;
 
                 await Task.Delay(1000);
 
@@ -198,10 +207,10 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 
         private PlayerApi GetPlayerApi()
         {
-            if (this._accessToken != Core.INSTANCE.Settings.BearerAccess.AccessToken)
+            if (this._accessToken != Core.INSTANCE.SettingManager.Settings.BearerAccess.AccessToken)
             {
-                this._playerApi = new PlayerApi(new HttpClient(), Core.INSTANCE.Settings.BearerAccess.AccessToken);
-                this._accessToken = Core.INSTANCE.Settings.BearerAccess.AccessToken;
+                this._playerApi = new PlayerApi(new HttpClient(), Core.INSTANCE.SettingManager.Settings.BearerAccess.AccessToken);
+                this._accessToken = Core.INSTANCE.SettingManager.Settings.BearerAccess.AccessToken;
             }
 
             return this._playerApi;

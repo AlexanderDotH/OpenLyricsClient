@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using LyricsWPF.Backend.Utils;
 
 namespace LyricsWPF.Backend.Debug
 {
@@ -19,7 +20,7 @@ namespace LyricsWPF.Backend.Debug
 
         public void Write(string message, DebugType debugType)
         {
-            if (!Environment.GetCommandLineArgs().Contains("--enable-command-output"))
+            if (!EnvironmentUtils.IsDebugLogEnabled())
                 return;
 
             switch (debugType)

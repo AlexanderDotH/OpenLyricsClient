@@ -26,7 +26,7 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
 
             ConfigurationManager configurationManager = new ConfigurationManager();
             configurationManager["SpotifyApiClientId"] = "d77eb56257c44acd8e1a123eabd2390c";
-            configurationManager["SpotifyApiClientSecret"] = "48f5fc414d264247b87502daa0c68668";
+            configurationManager["SpotifyApiClientSecret"] = "b86de866925f48a7b1045b57e5f4b463";
             configurationManager["SpotifyAuthRedirectUri"] = "http://localhost:8080/callback";
             this._configurationManager = configurationManager;
 
@@ -43,12 +43,12 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
             {
                 await Task.Delay(1000);
 
-                if (Core.INSTANCE.Settings.IsSpotifyConnected)
+                if (Core.INSTANCE.SettingManager.Settings.IsSpotifyConnected)
                 {
-                    if (Core.INSTANCE.Settings.BearerAccess != null)
+                    if (Core.INSTANCE.SettingManager.Settings.BearerAccess != null)
                     {
-                        DateTime expire = Core.INSTANCE.Settings.SpotifyExpireTime.Value;
-                        DateTime expiresTime = expire.AddSeconds(Core.INSTANCE.Settings.BearerAccess.ExpiresIn);
+                        DateTime expire = Core.INSTANCE.SettingManager.Settings.SpotifyExpireTime.Value;
+                        DateTime expiresTime = expire.AddSeconds(Core.INSTANCE.SettingManager.Settings.BearerAccess.ExpiresIn);
 
                         if (DateTime.Now > expiresTime)
                         {
@@ -62,7 +62,7 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
 
         public bool IsConnected()
         {
-            return Core.INSTANCE.Settings.IsSpotifyConnected && Core.INSTANCE.Settings.BearerAccess.AccessToken != null;
+            return Core.INSTANCE.SettingManager.Settings.IsSpotifyConnected && Core.INSTANCE.SettingManager.Settings.BearerAccess.AccessToken != null;
         }
 
         public string GetAccessToken()
@@ -72,19 +72,19 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
                 await RefreshTokenRequest();
 
             }).Wait(Core.INSTANCE.CancellationTokenSource.Token);
-            return Core.INSTANCE.Settings.BearerAccess.AccessToken;
+            return Core.INSTANCE.SettingManager.Settings.BearerAccess.AccessToken;
         }
 
         private async Task RefreshTokenRequest()
         {
             try
             {
-                BearerAccessToken bearerAccess = await _userAccountsService.RefreshUserAccessToken(Core.INSTANCE.Settings.BearerAccess.RefreshToken);
-                Core.INSTANCE.Settings.SpotifyExpireTime = bearerAccess.Expires;
-                Core.INSTANCE.Settings.BearerAccess.AccessToken = bearerAccess.AccessToken;
-                Core.INSTANCE.Settings.SpotifyExpireTime = bearerAccess.Expires.Value;
-                Core.INSTANCE.Settings.BearerAccess.ExpiresIn = bearerAccess.ExpiresIn;
-                Core.INSTANCE.WriteSettings();
+                BearerAccessToken bearerAccess = await _userAccountsService.RefreshUserAccessToken(Core.INSTANCE.SettingManager.Settings.BearerAccess.RefreshToken);
+                Core.INSTANCE.SettingManager.Settings.SpotifyExpireTime = bearerAccess.Expires;
+                Core.INSTANCE.SettingManager.Settings.BearerAccess.AccessToken = bearerAccess.AccessToken;
+                Core.INSTANCE.SettingManager.Settings.SpotifyExpireTime = bearerAccess.Expires.Value;
+                Core.INSTANCE.SettingManager.Settings.BearerAccess.ExpiresIn = bearerAccess.ExpiresIn;
+                Core.INSTANCE.SettingManager.WriteSettings();
             }
             catch (Exception e)
             {
@@ -119,10 +119,10 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
 
             BearerAccessRefreshToken bearerAccessRefresh = await _userAccountsService.RequestAccessRefreshToken(token);
 
-            Core.INSTANCE.Settings.BearerAccess = bearerAccessRefresh;
-            Core.INSTANCE.Settings.SpotifyExpireTime = bearerAccessRefresh.Expires;
-            Core.INSTANCE.Settings.IsSpotifyConnected = true;
-            Core.INSTANCE.WriteSettings();
+            Core.INSTANCE.SettingManager.Settings.BearerAccess = bearerAccessRefresh;
+            Core.INSTANCE.SettingManager.Settings.SpotifyExpireTime = bearerAccessRefresh.Expires;
+            Core.INSTANCE.SettingManager.Settings.IsSpotifyConnected = true;
+            Core.INSTANCE.SettingManager.WriteSettings();
         }
 
         string IService.ServiceName()

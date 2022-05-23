@@ -65,9 +65,6 @@
     <Reference Include="Kawazu, Version=1.1.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kawazu.1.1.4\lib\netstandard2.0\Kawazu.dll</HintPath>
     </Reference>
-    <Reference Include="KoreanRomanisation">
-      <HintPath>..\Libraries\KoreanRomanisation.dll</HintPath>
-    </Reference>
     <Reference Include="LibNMeCab, Version=0.10.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LibNMeCab.0.10.2\lib\netstandard2.0\LibNMeCab.dll</HintPath>
     </Reference>
@@ -393,15 +390,18 @@
     <Compile Include="Backend\Handler\Song\SongProvider\Spotify\SpotifyDataMerger.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\Spotify\SpotifySongProvider.cs" />
     <Compile Include="Backend\Handler\Song\SongRequestObject.cs" />
+    <Compile Include="Backend\Handler\Song\SongState.cs" />
     <Compile Include="Backend\Listener\Listener.cs" />
     <Compile Include="Backend\Handler\Lyrics\LyricHandler.cs" />
     <Compile Include="Backend\Handler\Services\ServiceHandler.cs" />
     <Compile Include="Backend\Handler\Services\Services\IService.cs" />
     <Compile Include="Backend\Handler\Services\Services\Spotify\SpotifyService.cs" />
-    <Compile Include="Backend\Romanisation\Romanisation.cs" />
-    <Compile Include="Backend\Settings\Settings.cs" />
+    <Compile Include="Backend\Romanisation\Romanization.cs" />
+    <Compile Include="Backend\Settings\RomanizeSelection.cs" />
+    <Compile Include="Backend\Settings\SettingManager.cs" />
     <Compile Include="Backend\Handler\Song\Song.cs" />
     <Compile Include="Backend\Handler\Song\SongStageChange.cs" />
+    <Compile Include="Backend\Settings\Settings.cs" />
     <Compile Include="Backend\Structure\LyricData.cs" />
     <Compile Include="Backend\Structure\LyricPart.cs" />
     <Compile Include="Backend\Structure\LyricReturnCode.cs" />
@@ -409,9 +409,11 @@
     <Compile Include="Backend\Utils\DataConverter.cs" />
     <Compile Include="Backend\Utils\DataTransformer.cs" />
     <Compile Include="Backend\Utils\DataValidator.cs" />
+    <Compile Include="Backend\Utils\EnvironmentUtils.cs" />
     <Compile Include="Backend\Utils\LanguageUtils.cs" />
     <Compile Include="Backend\Utils\MathUtils.cs" />
     <Compile Include="Backend\Utils\TaskUtils.cs" />
+    <Compile Include="Frontend\ItemSources\LyricsProviderItemSource.cs" />
     <Compile Include="Frontend\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
@@ -450,34 +452,24 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="AUTHORS" />
-    <None Include="char.bin" />
-    <None Include="contentFiles\any\any\LanguageCharacterMaps\HanjaHangeul.csv" />
-    <None Include="contentFiles\any\any\LanguageCharacterMaps\HanziHanyuPinlu.csv" />
-    <None Include="contentFiles\any\any\LanguageCharacterMaps\HanziHanyuPinyin.csv" />
-    <None Include="contentFiles\any\any\LanguageCharacterMaps\HanziXHC.csv" />
-    <None Include="contentFiles\any\any\LanguageCharacterMaps\KanjiKun.csv" />
-    <None Include="contentFiles\any\any\LanguageCharacterMaps\KanjiOn.csv" />
-    <None Include="COPYING" />
     <None Include="IpaDic\AUTHORS" />
     <None Include="IpaDic\char.bin" />
     <None Include="IpaDic\COPYING" />
     <None Include="IpaDic\matrix.bin" />
     <None Include="IpaDic\sys.dic" />
     <None Include="IpaDic\unk.dic" />
-    <None Include="matrix.bin" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="sys.dic" />
-    <None Include="unk.dic" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Frontend\ViewModel\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

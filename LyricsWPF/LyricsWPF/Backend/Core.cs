@@ -12,6 +12,7 @@ using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Lyrics;
 using LyricsWPF.Backend.Handler.Services;
 using LyricsWPF.Backend.Handler.Song;
+using LyricsWPF.Backend.Settings;
 using LyricsWPF.Backend.Utils;
 using Newtonsoft.Json;
 using SpotifyApi.NetCore;
@@ -30,7 +31,7 @@ namespace LyricsWPF.Backend
 
         private Debugger<Core> _debugger;
 
-        private Settings.Settings _settings;
+        private SettingManager _settingManager;
 
         private ServiceHandler _serviceHandler;
         private SongHandler _songHandler;
@@ -49,63 +50,14 @@ namespace LyricsWPF.Backend
             _disposed = false;
             this._cancellationTokenSource = new CancellationTokenSource();
 
-            SetupInternals();
+            this._settingManager = new SettingManager("settings.json");
+            this._settingManager.Setup();
 
             this._serviceHandler = new ServiceHandler();
             this._songHandler = new SongHandler();
             this._lyricHandler = new LyricHandler(this._songHandler);
         }
-
-        public void SetupInternals()
-        {
-
-            if (File.Exists("settings.json"))
-            {
-                Settings.Settings settings =
-                    JsonConvert.DeserializeObject<Settings.Settings>(File.ReadAllText("settings.json"));
-
-                if (settings != null)
-                {
-                    this._settings = settings;
-                }
-                else
-                {
-                    this._settings = GenerateAndWriteSettings();
-                }
-            }
-            else
-            {
-                this._settings = GenerateAndWriteSettings();
-            }
-        }
-
-        public Settings.Settings GenerateAndWriteSettings()
-        {
-            LyricsWPF.Backend.Settings.Settings settings = new Settings.Settings();
-
-            BearerAccessRefreshToken bearerRefreshAccess = new BearerAccessRefreshToken();
-            bearerRefreshAccess.RefreshToken = "empty";
-            bearerRefreshAccess.AccessToken = "empty";
-            bearerRefreshAccess.ExpiresIn = 0;
-
-            // TODO: Remove unnecessary permissions
-            bearerRefreshAccess.Scope = "playlist-read-private,playlist-read-collaborative,streaming,user-follow-read,user-library-read,user-read-private,user-read-playback-state,user-modify-playback-state,user-read-currently-playing,user-read-recently-played";
-            settings.BearerAccess = bearerRefreshAccess;
-
-            settings.IsSpotifyConnected = false;
-            settings.SpotifyExpireTime = DateTime.Now;
-
-            WriteSettings();
-
-            return settings;
-        }
-
-        public void WriteSettings()
-        {
-            string json = JsonConvert.SerializeObject(this._settings, Formatting.Indented);
-            File.WriteAllText("settings.json", json);
-        }
-
+        
         public void DisposeEverything()
         {
             _disposed = true;
@@ -116,13 +68,9 @@ namespace LyricsWPF.Backend
             this._serviceHandler.Dispose();
         }
 
-        public Settings.Settings Settings
+        public SettingManager SettingManager
         {
-            get { return this._settings; }
-            set
-            {
-                this._settings = value;
-            }
+            get => _settingManager;
         }
 
         public ServiceHandler ServiceHandler

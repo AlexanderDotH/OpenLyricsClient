@@ -80,7 +80,10 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                 return null;
 
             if (fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Header.Instrumental == 1)
-                return new LyricData(LyricReturnCode.Success, new LyricPart[] { new LyricPart(0, "Instrumental") });
+                return new LyricData(LyricReturnCode.Success, new LyricPart[] { new LyricPart(0, "Instrumental") }, this.CollectorName());
+
+            if (fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.HasSubtitles == 0)
+                return null;
 
             MusixMatchSubtitleList[] subtitleList =
                 fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Body.SubtitleList;
@@ -110,7 +113,7 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                 if (!DataValidator.ValidateData(lyricElements))
                     return null;
 
-                return await LyricData.ConvertToData(lyricElements);
+                return await LyricData.ConvertToData(lyricElements, this.CollectorName());
             }
 
             return null;
@@ -133,16 +136,16 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                               "&f_subtitle_length_max_deviation=1" +
                               "&subtitle_format=mxm" +
                               "&app_id=web-desktop-app-v1.0" +
-                              "&usertoken=190511307254ae92ff84462c794732b84754b64a2f051121eff330" +
+                              "&usertoken={4}" +
                               "&q_track={1}" +
                               "&q_artist={2}" +
                               "&q_album={3}", 
-                    this._baseUrl, songRequestObject.SongName, songRequestObject.GetArtistsSplit(), songRequestObject.Album));
+                    this._baseUrl, songRequestObject.SongName, songRequestObject.GetArtistsSplit(), songRequestObject.Album, GetRandomUserToken()));
 
             this._debugger.Write("Full track fetch url: " + requestString, DebugType.DEBUG);
 
             RequestData requestData = new RequestData(requestString);
-            requestData.Header.Add("Cookie", "AWSELB=55578B011601B1EF8BC274C33F9043CA947F99DCFF0A80541772015CA2B39C35C0F9E1C932D31725A7310BCAEB0C37431E024E2B45320B7F2C84490C2C97351FDE34690157");
+            requestData.Header.Add("Cookie", GetRandomCookieToken());
             requestData.UserAgent = requestData.GetRandomUseragent();
 
             Request request = new Request(requestData);
@@ -159,6 +162,22 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
             return JsonConvert.DeserializeObject<MusixMatchFetchResponse>(responseData.GetContentAsString());
         }
 
+        private string GetRandomCookieToken()
+        {
+            GenericList<string> tokens = new GenericList<string>();
+            tokens.Add("AWSELB=55578B011601B1EF8BC274C33F9043CA947F99DCFF0A80541772015CA2B39C35C0F9E1C932D31725A7310BCAEB0C37431E024E2B45320B7F2C84490C2C97351FDE34690157");
+            tokens.Add("AWSELB=55578B011601B1EF8BC274C33F9043CA947F99DCFF6AB1B746DBF1E96A6F2B997493EE03F2DD5F516C3BC8E8DE7FE9C81FF414E8E76CF57330A3F26A0D86825F74794F3C94");
+            return tokens.Get(new Random().Next(0, tokens.Length));
+        }
+
+        private string GetRandomUserToken()
+        {
+            GenericList<string> tokens = new GenericList<string>();
+            tokens.Add("1710144894f79b194e5a5866d9e084d48f227d257dcd8438261277");
+            tokens.Add("190511307254ae92ff84462c794732b84754b64a2f051121eff330");
+            return tokens.Get(new Random().Next(0, tokens.Length));
+        }
+
         public string CollectorName()
         {
             return "Musixmatch";
@@ -166,7 +185,7 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
 
         public int ProviderQuality()
         {
-            return 10;
+            return 5;
         }
     }
 }

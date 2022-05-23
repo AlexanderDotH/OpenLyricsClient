@@ -57,7 +57,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                         DataValidator.ValidateData(currentSong.Time) &&
                         DataValidator.ValidateData(currentSong.Lyrics) &&
                         DataValidator.ValidateData(currentSong.Lyrics.LyricParts) &&
-                        currentSong.HasLyrics)
+                        currentSong.State == SongState.HAS_LYRICS_AVAILABLE)
                     {
                         for (int i = 0; i < currentSong.Lyrics.LyricParts.Length; i++)
                         {
@@ -67,7 +67,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                             {
                                 currentSong.CurrentLyricPart =
                                     currentSong.Lyrics.LyricParts[currentSong.Lyrics.LyricParts.Length - 1];
-                                break;
+                                continue;
                             }
                             else
                             {
@@ -87,7 +87,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                                         if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, currentSong.Time + LYRIC_OFFSET))
                                         {
                                             currentSong.CurrentLyricPart = currentPart;
-                                            break;
+                                            continue;
                                         }
                                     }
 
@@ -121,20 +121,24 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                         songChangedEventArgs.Song.MaxTime,
                         songChangedEventArgs.Song.Album, 
                         SongFormatter.FormatSongAlbum(songChangedEventArgs.Song.Album),
-                        SelectionMode.QUALITY);
+                        Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
 
                     LyricData lyricData =
                         await this._lyricCollector.CollectLyrics(songRequestObject);
                     
                     this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
 
+                    if (!DataValidator.ValidateData(lyricData))
+                        this._songHandler.CurrentSong.State = SongState.NO_LYRICS_AVAILABLE;
+
                     if (DataValidator.ValidateData(lyricData) &&
                         DataValidator.ValidateData(lyricData.LyricParts, lyricData.LyricReturnCode))
                     {
-                        if (lyricData.LyricReturnCode == LyricReturnCode.Success)
-                        {
-                            this._songHandler.CurrentSong.Lyrics = lyricData;
-                        }
+                        this._songHandler.CurrentSong.Lyrics = lyricData;
+                    }
+                    else
+                    {
+                        this._songHandler.CurrentSong.State = SongState.NO_LYRICS_AVAILABLE;
                     }
                 }
 

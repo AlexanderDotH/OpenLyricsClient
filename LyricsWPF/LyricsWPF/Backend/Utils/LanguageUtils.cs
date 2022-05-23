@@ -7,14 +7,15 @@ using System.Windows.Navigation;
 using DevBase.Generic;
 using DevBase.Typography;
 using Kawazu;
-using KoreanRomanisation;
 
 namespace LyricsWPF.Backend.Utils
 {
     public class LanguageUtils
     {
         public static bool IsKorean(string text)
-            => text.Any<char>(new Func<char, bool>(IsKorean));
+        {
+            return text.Any(IsKoreanChar);
+        }
 
         public static bool IsKoreanChar(char c)
         {

@@ -104,9 +104,5 @@ namespace LyricsWPF.Backend.Utils
             return true;
         }
 
-        public static bool ValidateSong(Song value)
-        {
-            return value != null && value.Lyrics != null && value.CurrentLyricPart != null;
-        }
     }
 }

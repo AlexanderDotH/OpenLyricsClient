@@ -13,6 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using LyricsWPF.Backend;
+using LyricsWPF.Backend.Settings;
+using LyricsWPF.Frontend.ItemSources;
+using SelectionMode = LyricsWPF.Backend.Collector.SelectionMode;
 
 namespace LyricsWPF
 {
@@ -34,6 +37,21 @@ namespace LyricsWPF
                 this.btnSpotify.IsEnabled = false;
                 this.btnSpotify.Content = "Connected";
             }
+
+            LyricsProviderItemSource lyricsProviderItemSource = new LyricsProviderItemSource();
+
+            lscb.ItemsSource = lyricsProviderItemSource.ListOfItems;
+
+            SelectionMode selectionMode = Core.INSTANCE.SettingManager.Settings.LyricSelectionMode;
+
+            if (selectionMode == SelectionMode.PERFORMANCE)
+                lscb.SelectedItem = "Performance";
+
+            if (selectionMode == SelectionMode.QUALITY)
+                lscb.SelectedItem = "Quality";
+
+            this.chkJtR.IsChecked = Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection.JAPANESE_TO_ROMANJI);
+            this.chkKtR.IsChecked = Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection.KOREAN_TO_ROMANJI);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -60,6 +78,41 @@ namespace LyricsWPF
             });
             check.Start();
 
+        }
+
+        private void lscb_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string selection = this.lscb.SelectedItem.ToString();
+
+            if (selection.Equals("Quality"))
+            {
+                Core.INSTANCE.SettingManager.Settings.LyricSelectionMode = SelectionMode.QUALITY;
+            } 
+            else if (selection.Equals("Performance"))
+            {
+                Core.INSTANCE.SettingManager.Settings.LyricSelectionMode = SelectionMode.PERFORMANCE;
+            }
+
+            Core.INSTANCE.SettingManager.WriteSettings();
+        }
+
+        private void chkJtR_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection.JAPANESE_TO_ROMANJI))
+            {
+                Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Add(RomanizeSelection.JAPANESE_TO_ROMANJI);
+                Core.INSTANCE.SettingManager.WriteSettings();
+            }
+        }
+
+        private void chkJtR_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection
+                    .JAPANESE_TO_ROMANJI))
+            {
+                Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Remove(RomanizeSelection.JAPANESE_TO_ROMANJI);
+                Core.INSTANCE.SettingManager.WriteSettings();
+            }
         }
     }
 }
