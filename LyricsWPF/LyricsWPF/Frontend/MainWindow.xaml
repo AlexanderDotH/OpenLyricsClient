@@ -67,11 +67,8 @@
                         x:Name="pgSongProgress"
                         Value="50"
                         VerticalAlignment="Bottom"
-                        materialDesign:ShadowAssist.ShadowDepth="Depth1" 
                         Height="7" 
                         Margin="17,0,45,17"/>
-
-
                 </Grid>
             </TabItem>
             <TabItem>

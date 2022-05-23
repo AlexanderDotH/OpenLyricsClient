@@ -213,7 +213,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
 
         public int ProviderQuality()
         {
-            return 10;
+            return 9;
         }
     }
 }

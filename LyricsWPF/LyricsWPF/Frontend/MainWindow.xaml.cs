@@ -45,7 +45,7 @@ namespace LyricsWPF
             {
                 while (!Core.IsDisposed())
                 {
-                    await Task.Delay(233);
+                    await Task.Delay(200);
 
                     Song song = Core.INSTANCE.SongHandler.CurrentSong;
 

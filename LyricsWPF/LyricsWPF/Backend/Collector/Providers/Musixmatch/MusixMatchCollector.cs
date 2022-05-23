@@ -185,7 +185,7 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
 
         public int ProviderQuality()
         {
-            return 5;
+            return 10;
         }
     }
 }
