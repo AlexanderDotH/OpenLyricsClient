@@ -97,7 +97,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
             song.Album = currentTrack.Item.Album.Name;
             song.ProgressMs = currentTrack.ProgressMs.Value;
             song.TimeStamp = currentTrack.Timestamp;
-            song.State = SongState.NO_LYRICS_AVAILABLE;
             song.Lyrics = null;
             song.CurrentLyricPart = null;
             return song;
