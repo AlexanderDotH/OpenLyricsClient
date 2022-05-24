@@ -12,6 +12,7 @@ using DevBaseFormat;
 using DevBaseFormat.Formats.LrcFormat;
 using DevBaseFormat.Structure;
 using Kawazu;
+using LyricsWPF.Backend.Collector.Providers.NetEase.Json;
 using LyricsWPF.Backend.Collector.Providers.NetEaseV2.Json;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Song;
@@ -163,10 +164,9 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                 }
             }
 
-            return new LyricData(LyricReturnCode.Failed, null, this.CollectorName());
+            return new LyricData(LyricReturnCode.Failed);
         }
 
-        //Makes too many track search request: why the hell?
         private async Task<NetEaseV2SearchResponse> SearchTrack(SongRequestObject songRequestObject)
         {
             string requestUrl = Uri.EscapeUriString(string.Format("{0}/search?limit=100&type=1&keywords={2}",
@@ -179,8 +179,8 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
             ResponseData responseData = await request.GetResponseAsync();
 
             if (responseData.StatusCode == HttpStatusCode.OK)
-            {
-                return JsonConvert.DeserializeObject<NetEaseV2SearchResponse>(responseData.GetContentAsString());
+            { 
+                return new JsonDeserializer<NetEaseV2SearchResponse>().Deserialize(responseData.GetContentAsString());
             }
 
             return null;
@@ -199,7 +199,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 
             if (responseData.StatusCode == HttpStatusCode.OK)
             {
-                return JsonConvert.DeserializeObject<NetEaseV2LyricResponse>(responseData.GetContentAsString());
+                return new JsonDeserializer<NetEaseV2LyricResponse>().Deserialize(responseData.GetContentAsString());
             }
 
             return null;

@@ -34,8 +34,17 @@ namespace LyricsWPF
         {
             InitializeComponent();
 
-
             this.fullLyricText.Text = @"";
+
+            this.currentFullTitle.Text = string.Empty;
+            this.currentTitle.Text = string.Empty;
+            this.provider.Text = string.Empty;
+
+            this.firstLine.Text = string.Empty;
+            this.secondLine.Text = string.Empty;
+            this.thirdLine.Text = string.Empty;
+
+            this.pgSongProgress.Value = 0;
 
             //BindText(currentLine, "Line");
             Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
@@ -54,6 +63,7 @@ namespace LyricsWPF
                         this.Dispatcher.Invoke(() =>
                         {
                             this.currentTitle.Text = song.Title;
+                            this.currentFullTitle.Text = song.Title;
                         });
 
                         if (DataValidator.ValidateData(song.Lyrics) &&
@@ -62,7 +72,7 @@ namespace LyricsWPF
                             this.Dispatcher.Invoke(() =>
                             {
                                 this.provider.Text = "Powered by " + song.Lyrics.LyricProvider;
-
+                                this.fullLyricText.Text = song.Lyrics.FullLyrics;
                             });
                         }
 

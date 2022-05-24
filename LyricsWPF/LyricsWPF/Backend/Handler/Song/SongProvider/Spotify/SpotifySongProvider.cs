@@ -40,8 +40,8 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 
             //songHandler.SongChanged += OnSongChanged;
 
-            this._playerApi = new PlayerApi(new HttpClient(), Core.INSTANCE.SettingManager.Settings.BearerAccess.AccessToken);
-            this._accessToken = Core.INSTANCE.SettingManager.Settings.BearerAccess.AccessToken;
+            this._playerApi = new PlayerApi(new HttpClient(), Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken);
+            this._accessToken = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken;
 
             this._service = Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
 
@@ -205,10 +205,10 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 
         private PlayerApi GetPlayerApi()
         {
-            if (this._accessToken != Core.INSTANCE.SettingManager.Settings.BearerAccess.AccessToken)
+            if (this._accessToken != Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken)
             {
-                this._playerApi = new PlayerApi(new HttpClient(), Core.INSTANCE.SettingManager.Settings.BearerAccess.AccessToken);
-                this._accessToken = Core.INSTANCE.SettingManager.Settings.BearerAccess.AccessToken;
+                this._playerApi = new PlayerApi(new HttpClient(), Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken);
+                this._accessToken = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken;
             }
 
             return this._playerApi;

@@ -7,6 +7,7 @@ using System.Net;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using DevBase.Generic;
 using DevBase.Web;
 using DevBase.Web.RequestData;
@@ -21,6 +22,7 @@ using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Utils;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace LyricsWPF.Backend.Collector.Providers.NetEase
 {
@@ -74,12 +76,11 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
                                                 songResponse.Mvid, songResponse.NetEaseAlbumResponse,
                                                 songResponse.Alias, songResponse.Status))
                                         {
-                                            if (SongFormatter.FormatSongName(songResponse.Name).Equals(SongFormatter.FormatSongName(songRequestObject.SongName)) &&
-                                                SongFormatter.FormatSongAlbum(songResponse.NetEaseAlbumResponse.Name).Equals(SongFormatter.FormatSongAlbum(songRequestObject.Album)))
+                                            if (SongFormatter.FormatSongAlbum(songResponse.NetEaseAlbumResponse.Name).Equals(SongFormatter.FormatSongAlbum(songRequestObject.Album)))
                                             {
                                                 if (MatchDuration(songResponse, songRequestObject.SongDuration, retryPercentage))
                                                 {
-                                                    if (MatchArtists(songResponse, songRequestObject.Artists, 100))
+                                                    if (MatchArtists(songResponse, songRequestObject.Artists, 70))
                                                     {
                                                         int songId = songResponse.Id;
                                                         NetEaseLyricResponse lyricResponse = await GetLyricsFromEndpoint(songId);
@@ -123,7 +124,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
                 }
             }
 
-            return new LyricData(LyricReturnCode.Failed, null, this.CollectorName());
+            return new LyricData(LyricReturnCode.Failed);
         }
 
         private bool MatchDuration(NetEaseSongResponse netEaseSongResponse, long duration, int percentage)
@@ -167,7 +168,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
         private async Task<NetEaseSearchResponse> SearchTrack(SongRequestObject songRequestObject)
         {
             string requestUrl = Uri.EscapeUriString(string.Format(
-                "{0}/search/get?s={1}+{2}&type=1&offset=0&sub=false&limit=25",
+                "{0}/search/get?s={2}&type=1&offset=0&sub=false&limit=25",
                 this._baseUrl, songRequestObject.GetArtistsSplit(), songRequestObject.SongName));
 
             this._debugger.Write("Full track search URL: " + requestUrl, DebugType.DEBUG);
@@ -179,8 +180,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
 
             if (responseData.StatusCode == HttpStatusCode.OK)
             {
-                return JsonConvert.DeserializeObject<NetEaseSearchResponse>(
-                    responseData.GetContentAsString());
+                return new JsonDeserializer<NetEaseSearchResponse>().Deserialize(responseData.GetContentAsString());
             }
 
             return null;
@@ -196,11 +196,9 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
             ResponseData responseData = await request.GetResponseAsync();
 
             this._debugger.Write(responseData.GetContentAsString(), DebugType.DEBUG);
-
             if (responseData.StatusCode == HttpStatusCode.OK)
             {
-                return JsonConvert.DeserializeObject<NetEaseLyricResponse>(
-                    responseData.GetContentAsString());
+                return new JsonDeserializer<NetEaseLyricResponse>().Deserialize(responseData.GetContentAsString());
             }
 
             return null;

@@ -80,7 +80,7 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                 return null;
 
             if (fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Header.Instrumental == 1)
-                return new LyricData(LyricReturnCode.Success, new LyricPart[] { new LyricPart(0, "Instrumental") }, this.CollectorName());
+                return new LyricData(LyricReturnCode.Success, LyricType.INSTRUMENTAL);
 
             if (fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.HasSubtitles == 0)
                 return null;
@@ -159,7 +159,7 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
             if (responseData.GetContentAsString().Contains("\"hint\":\"captcha\""))
                 return null;
 
-            return JsonConvert.DeserializeObject<MusixMatchFetchResponse>(responseData.GetContentAsString());
+            return new JsonDeserializer<MusixMatchFetchResponse>().Deserialize(responseData.GetContentAsString());
         }
 
         private string GetRandomCookieToken()

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DevBase.Generic;
 using DevBase.IO;
 using LyricsWPF.Backend.Collector;
+using LyricsWPF.Backend.Structure;
 using Newtonsoft.Json;
 using SpotifyApi.NetCore.Authorization;
 
@@ -20,6 +21,7 @@ namespace LyricsWPF.Backend.Settings
         public SettingManager(string filePath)
         {
             this._filePath = new AFileObject(new FileInfo(filePath));
+            Setup();
         }
 
         public void Setup()
@@ -47,31 +49,41 @@ namespace LyricsWPF.Backend.Settings
         {
             Settings settings = new Settings();
 
-            BearerAccessRefreshToken bearerRefreshAccess = new BearerAccessRefreshToken();
-            bearerRefreshAccess.RefreshToken = "empty";
-            bearerRefreshAccess.AccessToken = "empty";
-            bearerRefreshAccess.ExpiresIn = 0;
+            SpotifyAccess spotifyAccess = new SpotifyAccess();
 
-            // TODO: Remove unnecessary permissions
-            bearerRefreshAccess.Scope = "playlist-read-private,playlist-read-collaborative,streaming,user-follow-read,user-library-read,user-read-private,user-read-playback-state,user-modify-playback-state,user-read-currently-playing,user-read-recently-played";
-            settings.BearerAccess = bearerRefreshAccess;
+            BearerAccessToken bearerAccessToken = new BearerAccessToken();
+            bearerAccessToken.AccessToken = "null";
+            bearerAccessToken.ExpiresIn = 0;
+            bearerAccessToken.Scope = "playlist-read-private,playlist-read-collaborative,streaming,user-follow-read,user-library-read,user-read-private,user-read-playback-state,user-modify-playback-state,user-read-currently-playing,user-read-recently-played";
 
-            settings.IsSpotifyConnected = false;
-            settings.SpotifyExpireTime = DateTime.Now;
-            settings.RomanizeSelection = new List<RomanizeSelection>();
-            settings.RomanizeSelection.Add(RomanizeSelection.JAPANESE_TO_ROMANJI);
+            spotifyAccess.BearerAccess = bearerAccessToken;
+
+            spotifyAccess.IsSpotifyConnected = false;
+            spotifyAccess.RefreshToken = string.Empty;
+            spotifyAccess.SpotifyExpireTime = DateTime.Now;
+            settings.SpotifyAccess = spotifyAccess;
+
+            List<RomanizeSelection> romanizeSelections = new List<RomanizeSelection>();
+            romanizeSelections.Add(RomanizeSelection.KOREAN_TO_ROMANJI);
+            romanizeSelections.Add(RomanizeSelection.JAPANESE_TO_ROMANJI);
+            settings.RomanizeSelection = romanizeSelections;
 
             settings.LyricSelectionMode = SelectionMode.QUALITY;
 
-            WriteSettings();
+            WriteSettings(settings);
 
             return settings;
         }
 
+        public void WriteSettings(Settings settings)
+        {
+            string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
+            File.WriteAllText(this._filePath.FileInfo.FullName, json);
+        }
+
         public void WriteSettings()
         {
-            string json = JsonConvert.SerializeObject(this._settings, Formatting.Indented);
-            File.WriteAllText(this._filePath.FileInfo.FullName, json);
+            WriteSettings(this._settings);
         }
 
         private Settings ReadSettings()

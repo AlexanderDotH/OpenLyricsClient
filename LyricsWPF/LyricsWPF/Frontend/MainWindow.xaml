@@ -89,18 +89,18 @@
 
                 <Grid>
 
-                    <ScrollViewer 
-                        HorizontalScrollBarVisibility="Auto" 
-                        VerticalScrollBarVisibility="Auto" 
-                                 Width="Auto" 
-                        Margin="20,70,10,10">
+                    <TextBlock x:Name="currentFullTitle"
+                               Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                               Text="Title" Height="45" HorizontalAlignment="Left" FontWeight="Bold" Margin="20,20,0,0" VerticalAlignment="Top" />
 
-                        <TextBlock x:Name="fullLyricText" HorizontalAlignment="Left" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type ScrollContentPresenter}}}" VerticalAlignment="Top" Text="" Margin="0"  ></TextBlock>
+                    <ScrollViewer
+                        VerticalScrollBarVisibility="Auto"
+                        HorizontalScrollBarVisibility="Auto" Margin="0,68,0,0">
+
+                        <TextBlock x:Name="fullLyricText" HorizontalAlignment="Left" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type ScrollContentPresenter}}}" VerticalAlignment="Top" Text="" Margin="25,0,0,0" FontSize="22" FontWeight="Bold"  ></TextBlock>
                     </ScrollViewer>
 
-                    <TextBlock
-                    Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                    Text="Title" Height="45" HorizontalAlignment="Left" FontWeight="Bold" Margin="20,20,0,0" VerticalAlignment="Top" />
+                    
                 </Grid>
             </TabItem>
 

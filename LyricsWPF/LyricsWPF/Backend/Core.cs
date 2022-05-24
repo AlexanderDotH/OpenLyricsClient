@@ -51,7 +51,6 @@ namespace LyricsWPF.Backend
             this._cancellationTokenSource = new CancellationTokenSource();
 
             this._settingManager = new SettingManager("settings.json");
-            this._settingManager.Setup();
 
             this._serviceHandler = new ServiceHandler();
             this._songHandler = new SongHandler();

@@ -18,22 +18,33 @@ namespace LyricsWPF.Backend.Structure
         private LyricReturnCode _lyricReturnCode;
         private LyricPart[] _lyricParts;
         private string _lyricProvider;
+        private string _fullLyrics;
+        private LyricType _lyricType;
 
-        public LyricData(LyricReturnCode lyricReturnCode, LyricPart[] lyricParts, string lyricProvider)
+        public LyricData(LyricReturnCode lyricReturnCode, LyricPart[] lyricParts, string lyricProvider, string fullLyrics, LyricType lyricType)
         {
             this._lyricReturnCode = lyricReturnCode;
             this._lyricParts = lyricParts;
-            _lyricProvider = lyricProvider;
+            this._lyricProvider = lyricProvider;
+            this._fullLyrics = fullLyrics;
+            _lyricType = lyricType;
         }
+
+        public LyricData(LyricReturnCode lyricReturnCode) : this(lyricReturnCode, null, null, null, LyricType.NONE) {}
+
+        public LyricData(LyricReturnCode lyricReturnCode, LyricType lyricType) : this(lyricReturnCode, null, null, null, lyricType) { }
+
 
         public static async Task<LyricData> ConvertToData(GenericList<LyricElement> lyrics, string lyricProvider)
         {
             if (lyrics == null || lyrics.Length == 0)
-                return new LyricData(LyricReturnCode.Failed, null, lyricProvider);
+                return new LyricData(LyricReturnCode.Failed);
 
             Romanisation.Romanization romanization = new Romanisation.Romanization();
 
             LyricPart[] lyricParts = new LyricPart[lyrics.Length];
+
+            StringBuilder stringBuilder = new StringBuilder();
 
             for (int i = 0; i < lyrics.Length; i++)
             {
@@ -43,9 +54,11 @@ namespace LyricsWPF.Backend.Structure
                 currentLine = await romanization.Romanize(currentLine);
 
                 lyricParts[i] = new LyricPart(lyrics.Get(i).TimeStamp, currentLine);
+
+                stringBuilder.Append(currentLine + Environment.NewLine);
             }
 
-            return new LyricData(LyricReturnCode.Success, lyricParts, lyricProvider);
+            return new LyricData(LyricReturnCode.Success, lyricParts, lyricProvider, stringBuilder.ToString(), LyricType.TEXT);
         }
 
         public LyricReturnCode LyricReturnCode
@@ -63,6 +76,11 @@ namespace LyricsWPF.Backend.Structure
         public string LyricProvider
         {
             get => _lyricProvider;
+        }
+
+        public string FullLyrics
+        {
+            get => _fullLyrics;
         }
     }
 }

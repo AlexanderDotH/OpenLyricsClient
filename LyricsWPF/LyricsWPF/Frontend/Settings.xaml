@@ -27,7 +27,7 @@
             <StackPanel>
 
                 <TextBlock
-                Margin="10,10,0,0"
+                Margin="15,15,0,0"
                 HorizontalAlignment="Left" VerticalAlignment="Top"
                 Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                 Text="Settings" />
@@ -35,7 +35,7 @@
                 <Expander Header="Application Settings" 
                       Foreground="White"
                       IsExpanded="True"
-                      Margin="0,1,0,0"
+                      Margin="0,15,0,0"
                       Background="{DynamicResource MaterialDesignDarkBackground}">
 
                     <WrapPanel
@@ -61,9 +61,9 @@
                                     Content="Japanese to Romanji" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="chkJtR_Checked" Unchecked="chkJtR_Unchecked" />
                                 <CheckBox
                                     x:Name="chkKtR"
-                                    IsChecked="True"
+                                    IsChecked="False"
                                     Margin="10,0,0,0"
-                                    Content="Korean to Romanji" HorizontalAlignment="Left" VerticalAlignment="Top" IsEnabled="False" />
+                                    Content="Korean to Romanji" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                             </WrapPanel>
                         </GroupBox>
                         <GroupBox 

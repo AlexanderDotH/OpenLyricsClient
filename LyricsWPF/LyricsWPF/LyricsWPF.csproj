@@ -62,6 +62,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libraries\DevBaseFormat.dll</HintPath>
     </Reference>
+    <Reference Include="HangeulRomaniser.Services">
+      <HintPath>..\Libraries\HangeulRomaniser.Services.dll</HintPath>
+    </Reference>
     <Reference Include="Kawazu, Version=1.1.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kawazu.1.1.4\lib\netstandard2.0\Kawazu.dll</HintPath>
     </Reference>
@@ -311,6 +314,7 @@
     </ApplicationDefinition>
     <Compile Include="Backend\Collector\CollectorComparer.cs" />
     <Compile Include="Backend\Collector\ICollector.cs" />
+    <Compile Include="Backend\Collector\JsonDeserializer.cs" />
     <Compile Include="Backend\Collector\LyricCollector.cs" />
     <Compile Include="Backend\Collector\LyricsCollectorComparer.cs" />
     <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchMatcherTrackGetMessage.cs" />
@@ -406,6 +410,8 @@
     <Compile Include="Backend\Structure\LyricPart.cs" />
     <Compile Include="Backend\Structure\LyricReturnCode.cs" />
     <Compile Include="Backend\Structure\LyricsRoll.cs" />
+    <Compile Include="Backend\Structure\LyricType.cs" />
+    <Compile Include="Backend\Structure\SpotifyAccess.cs" />
     <Compile Include="Backend\Utils\DataConverter.cs" />
     <Compile Include="Backend\Utils\DataTransformer.cs" />
     <Compile Include="Backend\Utils\DataValidator.cs" />
