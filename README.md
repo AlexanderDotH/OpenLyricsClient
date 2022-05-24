@@ -23,6 +23,12 @@ Fix song change detection in listening party
  How to fix?
  Revalidate data before passing it to the frontend
  
+ Merge Settings UI to main window
+ 
+ Clean main window code base
+ 
+ learn how to make mvv
+ 
 Notes:
  Don´t forget to touch some grass
 
