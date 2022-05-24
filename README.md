@@ -29,6 +29,11 @@ Fix song change detection in listening party
  
  learn how to make mvv
  
+ Show album
+ 
+ Global color picker
+ AUTO or CUSTOM
+ 
 Notes:
  Don´t forget to touch some grass
 
