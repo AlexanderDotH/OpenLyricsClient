@@ -114,5 +114,24 @@ namespace LyricsWPF
                 Core.INSTANCE.SettingManager.WriteSettings();
             }
         }
+
+        private void chkKtR_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection.KOREAN_TO_ROMANJI))
+            {
+                Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Add(RomanizeSelection.KOREAN_TO_ROMANJI);
+                Core.INSTANCE.SettingManager.WriteSettings();
+            }
+        }
+
+        private void chkKtR_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection
+                    .KOREAN_TO_ROMANJI))
+            {
+                Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Remove(RomanizeSelection.KOREAN_TO_ROMANJI);
+                Core.INSTANCE.SettingManager.WriteSettings();
+            }
+        }
     }
 }

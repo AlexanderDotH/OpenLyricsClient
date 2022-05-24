@@ -63,7 +63,7 @@
                                     x:Name="chkKtR"
                                     IsChecked="False"
                                     Margin="10,0,0,0"
-                                    Content="Korean to Romanji" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                    Content="Korean to Romanji" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="chkKtR_Checked" Unchecked="chkKtR_Unchecked"/>
                             </WrapPanel>
                         </GroupBox>
                         <GroupBox 
