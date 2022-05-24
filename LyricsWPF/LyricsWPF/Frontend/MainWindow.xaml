@@ -69,6 +69,27 @@
                         VerticalAlignment="Bottom"
                         Height="7" 
                         Margin="17,0,45,17"/>
+
+                    <TextBlock x:Name="timeFrom"
+                               Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                               Text="0:00" 
+                               Height="45" 
+                               HorizontalAlignment="Left" 
+                               FontWeight="Bold" 
+                               Margin="20,20,0,10" 
+                               VerticalAlignment="Bottom" 
+                               FontSize="17" />
+
+                    <TextBlock x:Name="timeTo"
+                               Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                               Text="10:00" 
+                               Height="45" 
+                               HorizontalAlignment="Right" 
+                               FontWeight="Bold" 
+                               Margin="20,20,48,10" 
+                               VerticalAlignment="Bottom" 
+                               FontSize="17" />
+
                 </Grid>
             </TabItem>
             <TabItem>
