@@ -8,11 +8,6 @@ Fix song change detection in listening party
 
  Make auto latency for bluetooth devices to get the correnct lyric offset
  
- Make a better UI lol
- 
- Add Korean Rumanji
- https://github.com/BenjaminTMilnes/KoreanRomanisation#usage
- 
 Notes:
  Don´t forget to touch some grass
 
