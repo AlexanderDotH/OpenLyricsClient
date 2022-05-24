@@ -68,7 +68,8 @@
                         Value="50"
                         VerticalAlignment="Bottom"
                         Height="7" 
-                        Margin="17,0,45,17"/>
+                        Margin="17,0,45,17"
+                        materialDesign:TransitionAssist.DisableTransitions="True"/>
 
                     <TextBlock x:Name="timeFrom"
                                Style="{StaticResource MaterialDesignHeadline5TextBlock}"
