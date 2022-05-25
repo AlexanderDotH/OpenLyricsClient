@@ -178,7 +178,10 @@
                     </WrapPanel>
                 </Expander>
             </StackPanel>
-
         </ScrollViewer>
+
+        <TextBlock x:Name="love"
+                   Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                   Text="Made with ♥ for Hannah" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,5,5" TextAlignment="Right" FontSize="14" />
     </Grid>
 </Window>
