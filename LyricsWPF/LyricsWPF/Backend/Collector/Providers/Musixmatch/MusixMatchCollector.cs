@@ -185,7 +185,7 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
 
         public int ProviderQuality()
         {
-            return 10;
+            return (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.PERFORMANCE ? 10 : 5);
         }
     }
 }

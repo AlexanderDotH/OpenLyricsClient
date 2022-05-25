@@ -248,7 +248,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
 
         public int ProviderQuality()
         {
-            return 7;
+            return (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.PERFORMANCE ? 8 : 2);
         }
     }
 }
