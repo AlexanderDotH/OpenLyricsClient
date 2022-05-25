@@ -55,12 +55,9 @@ namespace LyricsWPF.Backend.Structure
             {
                 string currentLine = SongFormatter.FormatString(lyrics.Get(i).Line);
 
-                //Make setting to prevent this
-                currentLine = await romanization.Romanize(currentLine);
-
                 lyricParts[i] = new LyricPart(lyrics.Get(i).TimeStamp, currentLine);
 
-                stringBuilder.Append(currentLine + Environment.NewLine);
+                stringBuilder.Append(await romanization.Romanize(currentLine) + Environment.NewLine);
             }
 
             return new LyricData(LyricReturnCode.Success, songName, album, artists, lyricParts, lyricProvider, stringBuilder.ToString(), LyricType.TEXT);

@@ -94,9 +94,10 @@ namespace LyricsWPF
                                 });
                             }
                             else if (DataValidator.ValidateData(song.Lyrics) &&
+                                     DataValidator.ValidateData(song.CurrentLyricsRoll) &&
                                      song.State == SongState.HAS_LYRICS_AVAILABLE)
                             {
-                                LyricsRoll lyricsRoll = Core.INSTANCE.SongHandler.CurrentSong.GetLyricsRoll();
+                                LyricsRoll lyricsRoll = song.CurrentLyricsRoll;
 
                                 if (DataValidator.ValidateData(lyricsRoll))
                                 {

@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using LyricsWPF.Backend.Debug;
+using LyricsWPF.Backend.Romanisation;
 using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Utils;
 
@@ -16,6 +17,7 @@ namespace LyricsWPF.Backend.Handler.Song
         private long _maxTime;
         private LyricData _lyrics;
         private LyricPart _currentLyricPart;
+        private LyricsRoll _currentLyricsRoll;
         private SongState _state;
 
         private long _timeStamp;
@@ -32,41 +34,6 @@ namespace LyricsWPF.Backend.Handler.Song
             this._state = SongState.NO_LYRICS_AVAILABLE;
 
             //this._currentLyricPart = new LyricPart(0, "Error");
-        }
-
-        public LyricsRoll GetLyricsRoll()
-        {
-            if (DataValidator.ValidateData(this._lyrics) &&
-                DataValidator.ValidateData(this._currentLyricPart) &&
-                DataValidator.ValidateData(this._lyrics.LyricParts) &&
-                this._state == SongState.HAS_LYRICS_AVAILABLE)
-            {
-                for (int i = 0; i < this._lyrics.LyricParts.Length; i++)
-                {
-                    LyricPart secondLyricPart = this._lyrics.LyricParts[i];
-
-                    if (secondLyricPart == this._currentLyricPart)
-                    {
-                        LyricPart firstLyricPart = null;
-                        LyricPart thirdLyricPart = null;
-
-                        if (i - 1 > 0)
-                        {
-                            firstLyricPart = this._lyrics.LyricParts[i - 1];
-                        }
-
-                        if (i + 1 < this._lyrics.LyricParts.Length)
-                        {
-                            thirdLyricPart = this._lyrics.LyricParts[i + 1];
-                        }
-
-                        LyricsRoll lyricsRoll = new LyricsRoll(firstLyricPart, secondLyricPart, thirdLyricPart);
-                        return lyricsRoll;
-                    }
-                }
-            }
-            
-            return null;
         }
 
         public double GetPercentage()
@@ -149,6 +116,12 @@ namespace LyricsWPF.Backend.Handler.Song
             {
                 this._currentLyricPart = value;
             }
+        }
+
+        public LyricsRoll CurrentLyricsRoll
+        {
+            get => _currentLyricsRoll;
+            set => _currentLyricsRoll = value;
         }
     }
 }

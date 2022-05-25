@@ -33,13 +33,11 @@ namespace LyricsWPF.Backend.Collector
             this._cacheManager = new CacheManager();
         }
 
-        public async Task<LyricData> CollectLyrics(SongRequestObject songRequestObject)
+        public async Task CollectLyrics(SongRequestObject songRequestObject)
         {
-            LyricData cacheLyricData = this._cacheManager.GetDataByRequest(songRequestObject);
-
-            if (DataValidator.ValidateData(cacheLyricData))
-                return cacheLyricData;
-
+            if (this._cacheManager.IsInCache(songRequestObject))
+                return;
+            
             this._lyricCollectors.Sort(new CollectorComparer());
 
             for (int i = 0; i < this._lyricCollectors.Length; i++)
@@ -52,47 +50,16 @@ namespace LyricsWPF.Backend.Collector
                     if (lyricData.LyricReturnCode == LyricReturnCode.Success)
                     {
                         this._cacheManager.WriteToCache(songRequestObject, lyricData);
-                        return lyricData;
                     }
                 }
             }
             
             GC.Collect();
-            return null;
         }
 
-        public ICollector GetCollector()
+        public CacheManager CacheManager
         {
-            for (int i = 0; i < this._lyricCollectors.Length; i++)
-            {
-                ICollector collector = this._lyricCollectors.Get(i);
-
-                if (collector != null)
-                    return collector;
-            }
-
-            return this._lyricCollectors.Get(0);
+            get => _cacheManager;
         }
-
-        //public string CollectLyrics()
-        //{
-        //    if (this._songName == null)
-        //        throw new LyricNotCollectableException();
-
-        //    HttpWebRequest httpWebRequest = HttpWebRequest.CreateHttp(new Uri(_baseUrl + _songName));
-        //    httpWebRequest.Method = "GET";
-        //    httpWebRequest.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0";
-        //    httpWebRequest.Accept = "application/json;text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8";
-
-        //    Stream stream = httpWebRequest.GetResponse().GetResponseStream();
-        //    StreamReader streamReader = new StreamReader(stream);
-
-        //    return streamReader.ReadToEnd();
-        //}
-
-        //public string SongName
-        //{
-        //    get { return this._songName; }
-        //}
     }
 }

@@ -66,7 +66,7 @@ namespace LyricsWPF.Backend.Collector.Cache
             if (!File.Exists(filePath))
             {
                 File.WriteAllText(filePath, JsonConvert.SerializeObject(ConvertToJsonLyricData(cacheData), Formatting.Indented));
-                this._cache.Add(new CacheEntry(CalculateID(songRequestObject), cacheData));
+                this._cache.Add(new CacheEntry(id, cacheData));
             }
         }
 
@@ -83,6 +83,21 @@ namespace LyricsWPF.Backend.Collector.Cache
             }
 
             return null;
+        }
+
+        public bool IsInCache(SongRequestObject songRequestObject)
+        {
+            for (int i = 0; i < this._cache.Length; i++)
+            {
+                CacheEntry cacheEntry = this._cache.Get(i);
+
+                if (cacheEntry.Id == CalculateID(songRequestObject))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private long CalculateID(SongRequestObject songRequestObject)
