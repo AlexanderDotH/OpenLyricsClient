@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DevBase.Generic;
 using DevBase.IO;
 using LyricsWPF.Backend.Collector;
+using LyricsWPF.Backend.Romanisation;
 using LyricsWPF.Backend.Structure;
 using Newtonsoft.Json;
 using SpotifyApi.NetCore.Authorization;
@@ -16,17 +17,26 @@ namespace LyricsWPF.Backend.Settings
     public class SettingManager
     {
         private Settings _settings;
-        private AFileObject _filePath;
+        private AFileObject _settingsFilePath;
+        private string _workingDirectory;
 
-        public SettingManager(string filePath)
+        private const string SETTING_FILE_NAME = "settings.json";
+        
+        public SettingManager(string workingFolder)
         {
-            this._filePath = new AFileObject(new FileInfo(filePath));
+            this._settingsFilePath = new AFileObject(new FileInfo(workingFolder + "\\" + SETTING_FILE_NAME));
+
+            this._workingDirectory = workingFolder;
+
             Setup();
         }
 
         public void Setup()
         {
-            if (this._filePath.FileInfo.Exists)
+            if (!Directory.Exists(this._workingDirectory))
+                Directory.CreateDirectory(this._workingDirectory);
+
+            if (this._settingsFilePath.FileInfo.Exists)
             {
                 Settings settings = ReadSettings();
 
@@ -78,7 +88,7 @@ namespace LyricsWPF.Backend.Settings
         public void WriteSettings(Settings settings)
         {
             string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
-            File.WriteAllText(this._filePath.FileInfo.FullName, json);
+            File.WriteAllText(this._settingsFilePath.FileInfo.FullName, json);
         }
 
         public void WriteSettings()
@@ -88,16 +98,21 @@ namespace LyricsWPF.Backend.Settings
 
         private Settings ReadSettings()
         {
-            if (!this._filePath.FileInfo.Exists)
+            if (!this._settingsFilePath.FileInfo.Exists)
                 return null;
 
-            return JsonConvert.DeserializeObject<Settings>(AFile.ReadFile(this._filePath.FileInfo).ToStringData());
+            return JsonConvert.DeserializeObject<Settings>(AFile.ReadFile(this._settingsFilePath.FileInfo).ToStringData());
         }
         
         public Settings Settings
         {
             get => _settings;
             set => _settings = value;
+        }
+
+        public string WorkingDirectory
+        {
+            get => _workingDirectory;
         }
     }
 }

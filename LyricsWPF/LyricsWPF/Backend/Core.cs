@@ -49,8 +49,8 @@ namespace LyricsWPF.Backend
 
             _disposed = false;
             this._cancellationTokenSource = new CancellationTokenSource();
-
-            this._settingManager = new SettingManager("settings.json");
+            
+            this._settingManager = new SettingManager(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Lyrics\\");
 
             this._serviceHandler = new ServiceHandler();
             this._songHandler = new SongHandler();

@@ -1,0 +1,54 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+using DevBase.Utilities;
+using DevBase.Web.RequestData;
+using LyricsWPF.Backend.Handler.Song;
+using LyricsWPF.Backend.Structure;
+
+namespace LyricsWPF.Backend.Collector.Cache
+{
+    public class CacheEntry
+    {
+        private long _id;
+        private LyricData cacheData;
+
+        public CacheEntry(SongRequestObject songRequestObject, LyricData cacheData)
+        {
+            this.cacheData = cacheData;
+
+            if (songRequestObject != null)
+            {
+                string append = string.Empty;
+
+                append += MemoryUtils.GetSize(songRequestObject.SongName).ToString();
+                append += MemoryUtils.GetSize(songRequestObject.Album).ToString();
+                append += MemoryUtils.GetSize(songRequestObject.Artists).ToString();
+                append += MemoryUtils.GetSize(songRequestObject.FormattedSongName).ToString();
+                append += MemoryUtils.GetSize(songRequestObject.FormattedSongAlbum).ToString();
+                append += MemoryUtils.GetSize(songRequestObject.SongDuration).ToString();
+
+                this._id = Convert.ToInt64(append);
+            }
+        }
+
+        public CacheEntry(long id, LyricData cacheData)
+        {
+            this.cacheData = cacheData;
+            this._id = id;
+        }
+
+        public long Id
+        {
+            get => _id;
+        }
+
+        public LyricData CacheData
+        {
+            get => cacheData;
+        }
+    }
+}

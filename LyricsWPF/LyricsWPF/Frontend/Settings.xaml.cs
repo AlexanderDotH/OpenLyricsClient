@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using LyricsWPF.Backend;
+using LyricsWPF.Backend.Romanisation;
 using LyricsWPF.Backend.Settings;
 using LyricsWPF.Frontend.ItemSources;
 using SelectionMode = LyricsWPF.Backend.Collector.SelectionMode;

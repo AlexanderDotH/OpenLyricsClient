@@ -81,14 +81,14 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                                                     Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse> lyricElement = lyrics.Get(i);
                                                     if (lyricElement.Item2.Lrc.Lyric != "")
                                                     {
-                                                        return await ParseLyricResponse(lyricElement.Item2, songResponse.Name);
+                                                        return await ParseLyricResponse(lyricElement.Item2, songResponse.Name, songResponse.Album.Name, DataConverter.ToArtists(songResponse.Artists));
                                                     }
                                                 }
 
                                             }
                                             else if (songRequestObject.SelectioMode == SelectionMode.PERFORMANCE)
                                             {
-                                                return await ParseLyricResponse(lyricResponse, songResponse.Name);
+                                                return await ParseLyricResponse(lyricResponse, songResponse.Name, songResponse.Album.Name, DataConverter.ToArtists(songResponse.Artists));
                                             }
                                         }
 
@@ -135,7 +135,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                    Math.Abs(string1.Length - string2.Length);
         }
 
-        private async Task<LyricData> ParseLyricResponse(NetEaseV2LyricResponse lyricResponse, string songName)
+        private async Task<LyricData> ParseLyricResponse(NetEaseV2LyricResponse lyricResponse, string songName, string album, string[] artists)
         {
             if (DataValidator.ValidateData(lyricResponse) && 
                 DataValidator.ValidateData(lyricResponse.Code, lyricResponse.Klyric,
@@ -157,7 +157,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 
                             if (DataValidator.ValidateData(lyricElements))
                             {
-                                return await LyricData.ConvertToData(lyricElements, songName, this.CollectorName());
+                                return await LyricData.ConvertToData(lyricElements, songName, album, artists, this.CollectorName());
                             }
                         }
                     }

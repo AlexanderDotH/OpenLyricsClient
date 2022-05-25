@@ -7,6 +7,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using DevBase.Generic;
+using LyricsWPF.Backend.Collector.Cache;
 using LyricsWPF.Backend.Collector.Providers.Musixmatch;
 using LyricsWPF.Backend.Collector.Providers.NetEase;
 using LyricsWPF.Backend.Collector.Providers.NetEaseV2;
@@ -20,6 +21,7 @@ namespace LyricsWPF.Backend.Collector
     class LyricCollector
     {
         private GenericList<ICollector> _lyricCollectors;
+        private CacheManager _cacheManager;
 
         public LyricCollector()
         {
@@ -27,10 +29,17 @@ namespace LyricsWPF.Backend.Collector
             this._lyricCollectors.Add(new NetEaseCollector());
             this._lyricCollectors.Add(new NetEaseV2Collector());
             this._lyricCollectors.Add(new MusixMatchCollector());
+
+            this._cacheManager = new CacheManager();
         }
 
         public async Task<LyricData> CollectLyrics(SongRequestObject songRequestObject)
         {
+            LyricData cacheLyricData = this._cacheManager.GetDataByRequest(songRequestObject);
+
+            if (DataValidator.ValidateData(cacheLyricData))
+                return cacheLyricData;
+
             this._lyricCollectors.Sort(new CollectorComparer());
 
             for (int i = 0; i < this._lyricCollectors.Length; i++)
@@ -42,6 +51,7 @@ namespace LyricsWPF.Backend.Collector
                 {
                     if (lyricData.LyricReturnCode == LyricReturnCode.Success)
                     {
+                        this._cacheManager.WriteToCache(songRequestObject, lyricData);
                         return lyricData;
                     }
                 }

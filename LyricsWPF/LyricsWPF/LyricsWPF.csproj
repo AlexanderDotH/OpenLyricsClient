@@ -312,9 +312,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Backend\Collector\Cache\CacheEntry.cs" />
+    <Compile Include="Backend\Collector\Cache\CacheManager.cs" />
     <Compile Include="Backend\Collector\CollectorComparer.cs" />
     <Compile Include="Backend\Collector\ICollector.cs" />
-    <Compile Include="Backend\Collector\JsonDeserializer.cs" />
+    <Compile Include="Backend\Structure\JsonLyricData.cs" />
+    <Compile Include="Backend\Utils\JsonDeserializer.cs" />
     <Compile Include="Backend\Collector\LyricCollector.cs" />
     <Compile Include="Backend\Collector\LyricsCollectorComparer.cs" />
     <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchMatcherTrackGetMessage.cs" />
@@ -401,7 +404,7 @@
     <Compile Include="Backend\Handler\Services\Services\IService.cs" />
     <Compile Include="Backend\Handler\Services\Services\Spotify\SpotifyService.cs" />
     <Compile Include="Backend\Romanisation\Romanization.cs" />
-    <Compile Include="Backend\Settings\RomanizeSelection.cs" />
+    <Compile Include="Backend\Romanisation\RomanizeSelection.cs" />
     <Compile Include="Backend\Settings\SettingManager.cs" />
     <Compile Include="Backend\Handler\Song\Song.cs" />
     <Compile Include="Backend\Handler\Song\SongStageChange.cs" />

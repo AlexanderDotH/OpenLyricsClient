@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DevBase.Generic;
 using LyricsWPF.Backend.Collector;
+using LyricsWPF.Backend.Romanisation;
 using LyricsWPF.Backend.Structure;
 using SpotifyApi.NetCore.Authorization;
 

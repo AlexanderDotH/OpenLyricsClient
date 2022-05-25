@@ -80,7 +80,12 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                 return null;
 
             if (fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Header.Instrumental == 1)
-                return new LyricData(LyricReturnCode.Success, fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.TrackName, LyricType.INSTRUMENTAL);
+                return new LyricData(
+                    LyricReturnCode.Success, 
+                    fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.TrackName,
+                    fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.AlbumName,
+                    new string[] { fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.ArtistName },
+                    LyricType.INSTRUMENTAL);
 
             if (fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.HasSubtitles == 0)
                 return null;
@@ -113,7 +118,12 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                 if (!DataValidator.ValidateData(lyricElements))
                     return null;
 
-                return await LyricData.ConvertToData(lyricElements, fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.TrackName, this.CollectorName());
+                return await LyricData.ConvertToData(
+                    lyricElements, 
+                    fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.TrackName, 
+                    fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.AlbumName, 
+                    new string[] { fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.ArtistName }, 
+                    this.CollectorName());
             }
 
             return null;

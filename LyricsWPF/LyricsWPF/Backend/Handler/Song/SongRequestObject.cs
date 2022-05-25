@@ -10,7 +10,7 @@ using LyricsWPF.Backend.Collector;
 
 namespace LyricsWPF.Backend.Handler.Song
 {
-    class SongRequestObject
+    public class SongRequestObject
     {
         private string _songName;
         private string _formattedSongName;

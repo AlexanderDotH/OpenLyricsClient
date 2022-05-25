@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DevBase.Generic;
+﻿using DevBase.Generic;
 using Newtonsoft.Json;
 
-namespace LyricsWPF.Backend.Collector
+namespace LyricsWPF.Backend.Utils
 {
     public class JsonDeserializer<T>
     {
@@ -18,6 +13,9 @@ namespace LyricsWPF.Backend.Collector
             this._errorList = new GenericList<string>();
 
             this._serializerSettings = new JsonSerializerSettings();
+
+            this._serializerSettings.NullValueHandling = NullValueHandling.Ignore;
+
             this._serializerSettings.Error = delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
             {
                 this._errorList.Add(args.ErrorContext.Error.Message);
