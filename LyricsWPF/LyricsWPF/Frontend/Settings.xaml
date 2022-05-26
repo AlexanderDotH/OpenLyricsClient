@@ -83,7 +83,7 @@
                                     x:Name="lscb"
                                     Style="{StaticResource MaterialDesignOutlinedComboBox}"
                                     IsEnabled="{Binding IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
-                                    materialDesign:HintAssist.Hint="Some item"
+                                    materialDesign:HintAssist.Hint="Selection Modes"
                                     Width="256" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" SelectionChanged="lscb_SelectionChanged"/>
                             </WrapPanel>
                         </GroupBox>

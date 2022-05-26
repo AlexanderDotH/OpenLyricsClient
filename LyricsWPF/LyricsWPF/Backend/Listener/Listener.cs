@@ -40,7 +40,6 @@ namespace LyricsWPF.Backend.Listener
                 var c = await httpListener.GetContextAsync();
 
                 HttpListenerRequest request = c.Request;
-
                 if (request.RawUrl.StartsWith(this._suffix))
                 {
                     var options = c.Request.QueryString;

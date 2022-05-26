@@ -59,6 +59,16 @@ namespace LyricsWPF.Backend.Settings
         {
             Settings settings = new Settings();
 
+            TidalAccess tidalAccess = new TidalAccess();
+            tidalAccess.AccessToken = "null";
+            tidalAccess.RefreshToken = "null";
+            tidalAccess.ApiToken = "null";
+            tidalAccess.UniqueKey = "null";
+            tidalAccess.ExpirationDate = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            tidalAccess.UserID = 0;
+
+            settings.TidalAccess = tidalAccess;
+
             SpotifyAccess spotifyAccess = new SpotifyAccess();
 
             BearerAccessToken bearerAccessToken = new BearerAccessToken();

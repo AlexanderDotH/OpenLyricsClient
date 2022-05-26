@@ -14,6 +14,8 @@ namespace LyricsWPF.Backend.Settings
     public class Settings
     {
         public SpotifyAccess SpotifyAccess { get; set; }
+
+        public TidalAccess TidalAccess { get; set; }
         public List<RomanizeSelection> RomanizeSelection { get; set; }
         public SelectionMode LyricSelectionMode { get; set; }
     }

@@ -156,7 +156,7 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
 
             RequestData requestData = new RequestData(requestString);
             requestData.Header.Add("Cookie", GetRandomCookieToken());
-            requestData.UserAgent = requestData.GetRandomUseragent();
+            requestData.UserAgent = RequestData.GetRandomUseragent();
 
             Request request = new Request(requestData);
             ResponseData responseData = await request.GetResponseAsync();
