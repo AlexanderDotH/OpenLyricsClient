@@ -36,14 +36,30 @@ namespace LyricsWPF.Backend.Handler.Song
             //this._currentLyricPart = new LyricPart(0, "Error");
         }
 
-        public TimeSpan Seconds
+        public TimeSpan ProgressTimeSpan
         {
             get { return TimeSpan.FromMilliseconds(this._time); }
         }
 
-        public TimeSpan MaxSeconds
+        public TimeSpan MaxProgressTimeSpan
         {
             get { return TimeSpan.FromMilliseconds(this._maxTime); }
+        }
+
+        public string ProgressString
+        {
+            get
+            {
+                return $"{(int)ProgressTimeSpan.TotalMinutes}:{ProgressTimeSpan.Seconds:00}";
+            }
+        }
+
+        public string MaxProgressString
+        {
+            get
+            {
+                return $"{(int)MaxProgressTimeSpan.TotalMinutes}:{MaxProgressTimeSpan.Seconds:00}";
+            }
         }
 
         public double GetPercentage()

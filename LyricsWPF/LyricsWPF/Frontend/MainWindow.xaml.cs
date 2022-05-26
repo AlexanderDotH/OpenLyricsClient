@@ -64,6 +64,9 @@ namespace LyricsWPF
                         {
                             this.currentTitle.Text = song.Title;
                             this.currentFullTitle.Text = song.Title;
+
+                            this.timeFrom.Text = song.ProgressString;
+                            this.timeTo.Text = song.MaxProgressString;
                         });
 
                         if (DataValidator.ValidateData(song.Lyrics) &&
