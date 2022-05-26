@@ -5,6 +5,7 @@ using DevBase.Generic;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Services.Services;
 using LyricsWPF.Backend.Handler.Services.Services.Spotify;
+using LyricsWPF.Backend.Handler.Services.Services.Tidal;
 using LyricsWPF.Backend.Utils;
 
 namespace LyricsWPF.Backend.Handler.Services
@@ -19,9 +20,11 @@ namespace LyricsWPF.Backend.Handler.Services
             this._debugger = new Debugger<ServiceHandler>(this);
 
             this._services = new GenericList<IService>();
+
             this._services.Add(new SpotifyService());
+            this._services.Add(new TidalService());
         }
-        
+
         public bool IsConnected(string serviceName)
         {
             return GetServiceByName(serviceName).IsConnected();
