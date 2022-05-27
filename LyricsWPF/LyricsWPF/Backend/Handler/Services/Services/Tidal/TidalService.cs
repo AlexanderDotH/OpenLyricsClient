@@ -42,29 +42,32 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
         {
             while (!this._disposed)
             {
-                long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-
-                if (DataValidator.ValidateData(Core.INSTANCE.SettingManager.Settings.TidalAccess))
+                if (Core.INSTANCE.SettingManager.Settings.TidalAccess.IsTidalConnected)
                 {
-                    long savedTime = Core.INSTANCE.SettingManager.Settings.TidalAccess.ExpirationDate;
+                    long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
-                    if (currentTime > savedTime)
+                    if (DataValidator.ValidateData(Core.INSTANCE.SettingManager.Settings.TidalAccess))
                     {
-                        TidalAccess tidalAccess = GetNewestTidalAccess();
+                        long savedTime = Core.INSTANCE.SettingManager.Settings.TidalAccess.ExpirationDate;
 
-                        if (!DataValidator.ValidateData(tidalAccess))
-                            continue;
+                        if (currentTime > savedTime)
+                        {
+                            TidalAccess tidalAccess = await GetNewestTidalAccess();
 
-                        Core.INSTANCE.SettingManager.Settings.TidalAccess = tidalAccess;
-                        Core.INSTANCE.SettingManager.WriteSettings();
+                            if (!DataValidator.ValidateData(tidalAccess))
+                                continue;
+
+                            Core.INSTANCE.SettingManager.Settings.TidalAccess = tidalAccess;
+                            Core.INSTANCE.SettingManager.WriteSettings();
+                        }
                     }
-                }
 
-                await Task.Delay(2000);
+                    await Task.Delay(2000);
+                }
             }
         }
 
-        private TidalAccess GetNewestTidalAccess()
+        private async Task<TidalAccess> GetNewestTidalAccess()
         {
             AFileObject file = new AFileObject(
                 FileUtils.SafeFileReadAccess(
@@ -120,27 +123,37 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
             tidalAccess.RefreshToken = lastTidalAccess.OAuthRefreshToken;
             tidalAccess.ExpirationDate = lastTidalAccess.OAuthExpirationDate;
 
+            if (await TestTidalConnection(tidalAccess))
+                tidalAccess.IsTidalConnected = true;
+
             return tidalAccess;
+        }
+
+        private async Task<bool> TestTidalConnection(TidalAccess tidalAccess)
+        {
+            (string s, LoginKey lg) = await Client.Login(tidalAccess.AccessToken);
+            return lg != null;
         }
 
         public string ServiceName()
         {
-            throw new NotImplementedException();
+            return "Tidal";
         }
 
-        public Task StartAuthorization()
+        public async Task StartAuthorization()
         {
-            throw new NotImplementedException();
+            Core.INSTANCE.SettingManager.Settings.TidalAccess = await GetNewestTidalAccess();
+            Core.INSTANCE.SettingManager.WriteSettings();
         }
 
         public string GetAccessToken()
         {
-            throw new NotImplementedException();
+            return Core.INSTANCE.SettingManager.Settings.TidalAccess.AccessToken;
         }
 
         public bool IsConnected()
         {
-            throw new NotImplementedException();
+            return Core.INSTANCE.SettingManager.Settings.TidalAccess != null && Core.INSTANCE.SettingManager.Settings.TidalAccess.IsTidalConnected;
         }
 
         public void Dispose()

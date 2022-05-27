@@ -16,6 +16,7 @@ using LyricsWPF.Backend;
 using LyricsWPF.Backend.Romanisation;
 using LyricsWPF.Backend.Settings;
 using LyricsWPF.Frontend.ItemSources;
+using MaterialDesignThemes.Wpf;
 using SelectionMode = LyricsWPF.Backend.Collector.SelectionMode;
 
 namespace LyricsWPF
@@ -25,18 +26,21 @@ namespace LyricsWPF
     /// </summary>
     public partial class Settings : Window
     {
-        private int spotifyCheckTime;
 
         public Settings()
         {
             InitializeComponent();
 
-            spotifyCheckTime = 0;
-
             if (Core.INSTANCE.ServiceHandler.IsConnected("Spotify"))
             {
                 this.btnSpotify.IsEnabled = false;
                 this.btnSpotify.Content = "Connected";
+            }
+
+            if (Core.INSTANCE.ServiceHandler.IsConnected("Tidal"))
+            {
+                this.btnTidal.IsEnabled = false;
+                this.btnTidal.Content = "Connected";
             }
 
             LyricsProviderItemSource lyricsProviderItemSource = new LyricsProviderItemSource();
@@ -59,9 +63,10 @@ namespace LyricsWPF
         {
             Core.INSTANCE.ServiceHandler.AuthorizeService("Spotify");
 
+            int spotifyCheckTime = 0;
+
             Thread check = new Thread(() =>
             {
-
                 while (spotifyCheckTime != 10)
                 {
                     Thread.Sleep(2000);
@@ -79,6 +84,32 @@ namespace LyricsWPF
             });
             check.Start();
 
+        }
+
+        private void btnTidal_Click(object sender, RoutedEventArgs e)
+        {
+            Core.INSTANCE.ServiceHandler.AuthorizeService("Tidal");
+
+            int tidalCheckTime = 0;
+
+            Thread check = new Thread(() =>
+            {
+                while (tidalCheckTime != 10)
+                {
+                    Thread.Sleep(2000);
+                    if (Core.INSTANCE.ServiceHandler.IsConnected("Tidal"))
+                    {
+                        this.Dispatcher.Invoke((Action)(() =>
+                        {
+                            this.btnTidal.IsEnabled = false;
+                            this.btnTidal.Content = "Connected";
+                        }));
+                    }
+
+                    tidalCheckTime++;
+                }
+            });
+            check.Start();
         }
 
         private void lscb_SelectionChanged(object sender, SelectionChangedEventArgs e)

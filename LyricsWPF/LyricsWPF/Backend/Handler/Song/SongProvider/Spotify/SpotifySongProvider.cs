@@ -38,8 +38,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
             this._debugger = new Debugger<SpotifySongProvider>(this);
             this._disposed = false;
 
-            //songHandler.SongChanged += OnSongChanged;
-
             this._playerApi = new PlayerApi(new HttpClient(), Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken);
             this._accessToken = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken;
 

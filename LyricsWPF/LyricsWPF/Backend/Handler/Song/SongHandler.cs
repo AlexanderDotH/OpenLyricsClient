@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DevBase.Async;
 using DevBase.Generic;
 using LyricsWPF.Backend.Debug;
+using LyricsWPF.Backend.Events;
 using LyricsWPF.Backend.Events.EventArgs;
 using LyricsWPF.Backend.Events.EventHandler;
 using LyricsWPF.Backend.Handler.Lyrics;
@@ -63,15 +64,19 @@ namespace LyricsWPF.Backend.Handler.Song
                 if (DataValidator.ValidateData(this._songStageChange) && 
                     DataValidator.ValidateData(this._songProviderChooser))
                 {
-                    if (this._songStageChange.HasSongChanged(GetCurrentSong()))
+                    Song currentSong = GetCurrentSong();
+
+                    if (this._songStageChange.HasSongChanged(currentSong))
                     {
+                        BeforeSongChanged(new SongChangedEventArgs(currentSong, EventType.PRE));
+
                         ISongProvider songProvider = GetSongProvider(this._songProviderChooser.GetSongProvider());
                         Song song = await songProvider.UpdateCurrentPlaybackTrack();
 
                         //                                      Idk why but it works
                         if (DataValidator.ValidateData(song) && this._songStageChange.HasSongChanged(song))
                         {
-                            OnSongChanged(new SongChangedEventArgs(song));
+                            AfterSongChanged(new SongChangedEventArgs(song, EventType.POST));
                         }
                     }
                 }
@@ -122,7 +127,13 @@ namespace LyricsWPF.Backend.Handler.Song
             return null;
         }
 
-        protected virtual void OnSongChanged(SongChangedEventArgs songChangedEventArgs)
+        protected virtual void AfterSongChanged(SongChangedEventArgs songChangedEventArgs)
+        {
+            SongChangedEventHandler songChangedEventHandler = SongChanged;
+            songChangedEventHandler?.Invoke(this, songChangedEventArgs);
+        }
+
+        protected virtual void BeforeSongChanged(SongChangedEventArgs songChangedEventArgs)
         {
             SongChangedEventHandler songChangedEventHandler = SongChanged;
             songChangedEventHandler?.Invoke(this, songChangedEventArgs);

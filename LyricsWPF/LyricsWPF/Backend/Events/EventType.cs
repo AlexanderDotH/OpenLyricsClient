@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LyricsWPF.Backend.Handler.Song.SongProvider
+namespace LyricsWPF.Backend.Events
 {
-    enum EnumSongProvider
+    public enum EventType
     {
-        SPOTIFY, TIDAL
+        PRE, POST
     }
 }

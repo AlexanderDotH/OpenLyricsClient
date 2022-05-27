@@ -60,6 +60,7 @@ namespace LyricsWPF.Backend.Settings
             Settings settings = new Settings();
 
             TidalAccess tidalAccess = new TidalAccess();
+            tidalAccess.IsTidalConnected = false;
             tidalAccess.AccessToken = "null";
             tidalAccess.RefreshToken = "null";
             tidalAccess.ApiToken = "null";

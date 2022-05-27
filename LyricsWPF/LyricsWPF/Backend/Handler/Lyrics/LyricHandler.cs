@@ -153,7 +153,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
         {
             while (!this._disposed)
             {
-                await Task.Delay(1);
+                await Task.Delay(35);
 
                 Song.Song song = this._songHandler.CurrentSong;
 

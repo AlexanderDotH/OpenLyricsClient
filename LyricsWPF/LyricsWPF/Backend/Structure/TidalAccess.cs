@@ -9,6 +9,9 @@ namespace LyricsWPF.Backend.Structure
 {
     public class TidalAccess
     {
+        [JsonProperty("isTidalConnected")]
+        public bool IsTidalConnected { get; set; }
+
         [JsonProperty("userId")]
         public int UserID { get; set; }
 

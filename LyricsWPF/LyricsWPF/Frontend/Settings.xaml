@@ -8,7 +8,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:Collector="clr-namespace:LyricsWPF.Backend.Collector" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:ItemSources="clr-namespace:LyricsWPF.Frontend.ItemSources" x:Class="LyricsWPF.Settings"
         mc:Ignorable="d"
-        Title="Settings" Height="450" Width="800"
+        Title="Settings" Height="600" Width="800"
         
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -105,7 +105,7 @@
                         Header="Spotify" 
                         Height="125"
                         Style="{StaticResource MaterialDesignGroupBox}"
-                        materialDesign:ColorZoneAssist.Background="#1DB954"
+                        materialDesign:ColorZoneAssist.Background="#1ED760"
                         materialDesign:ColorZoneAssist.Foreground="White"
                         materialDesign:ColorZoneAssist.Mode="Custom"
                         materialDesign:ShadowAssist.ShadowDepth="Depth3"
@@ -125,7 +125,7 @@
                                     ToolTip="Connect to your Spotify Account"
                                     Content="Connect"
                                     Margin="10,33,0,0"
-                                    Background="#1DB954"
+                                    Background="#1ED760"
                                     materialDesign:ShadowAssist.ShadowDepth="Depth2"
                                     materialDesign:ButtonAssist.CornerRadius="5"
                                     IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Click="Button_Click" Cursor="Hand" HorizontalAlignment="Center" Padding="16,4,15,4" VerticalAlignment="Top" Grid.ColumnSpan="2" />
@@ -159,7 +159,7 @@
                                 <Button x:Name="btnYoutube"
                                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                                     Width="201"
-                                    ToolTip="Connect to your Spotify Account"
+                                    ToolTip="Connect with Youtube"
                                     Content="Connect"
                                     Margin="10,33,0,0"
                                     Background="#FF0000"
@@ -167,11 +167,48 @@
                                     materialDesign:ButtonAssist.CornerRadius="5"
                                     IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Click="Button_Click" Cursor="Hand" HorizontalAlignment="Center" Padding="16,4,15,4" VerticalAlignment="Top" Grid.ColumnSpan="2" />
 
+
                                 <materialDesign:PackIcon
                                 Kind="Youtube"
                                 Width="25"
                                 IsHitTestVisible="False"
                                 Height="25" Margin="182,36,0,0"/>
+                            </Grid>
+                        </GroupBox>
+                        
+                        <GroupBox 
+                        Header="Tidal" 
+                        Height="125"
+                        Style="{StaticResource MaterialDesignGroupBox}"
+                        materialDesign:ColorZoneAssist.Background="#242528"
+                        materialDesign:ColorZoneAssist.Foreground="White"
+                        materialDesign:ColorZoneAssist.Mode="Custom"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                        BorderThickness="0" 
+                        Margin="20,0,0,4">
+                            <Grid>
+
+                                <TextBlock
+                                Margin="20,0,54,0"
+                                HorizontalAlignment="Center" VerticalAlignment="Top"
+                                Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                Text="Connect to Spotify" Grid.ColumnSpan="2" />
+
+                                <Button x:Name="btnTidal"
+                                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                    Width="201"
+                                    ToolTip="Connect to your Tidal Account"
+                                    Content="Connect"
+                                    Margin="10,33,0,0"
+                                    Background="#31F4FF"
+                                    materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                    materialDesign:ButtonAssist.CornerRadius="5"
+                                    IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Click="btnTidal_Click" Cursor="Hand" HorizontalAlignment="Center" Padding="16,4,15,4" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+
+                                <Image Source="/Resources/Icons/tidal.ico" 
+                                       Width="25" 
+                                       Height="25" 
+                                       Margin="182,36,5,14"/>
                             </Grid>
                         </GroupBox>
 
