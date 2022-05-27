@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing.Printing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +20,28 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
 
         private long _progressTime;
 
+        private Task _listenerTask;
+        private bool _disposed;
+
         public TidalProgressListener()
         {
+            this._disposed = false;
 
+            this._listenerTask = new Task(async t => await Listener(), Core.INSTANCE.CancellationTokenSource.Token);
+        }
+
+        private async Task Listener()
+        {
+            while (!this._disposed)
+            {
+                await Task.Delay(3000);
+
+                if (!DataValidator.ValidateData(this._process))
+                    continue;
+
+                Process currentProcess = this._process;
+
+            }
         }
 
         
@@ -31,8 +51,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
 
             if (this._process == null)
                 return;
-            
-
         }
 
         private Process FindTidalProcess()
