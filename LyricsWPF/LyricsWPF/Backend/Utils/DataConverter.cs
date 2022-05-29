@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,18 @@ namespace LyricsWPF.Backend.Utils
 {
     class DataConverter
     {
+        public static string[] TidalArtistsToString(ObservableCollection<TidalLib.Artist> artists)
+        {
+            string[] artistsAsStrings = new string[artists.Count];
+
+            for (int i = 0; i < artists.Count; i++)
+            {
+                artistsAsStrings[i] = artists[i].Name;
+            }
+
+            return artistsAsStrings;
+        }
+
         public static string[] SpotifyArtistsToStrings(Artist[] artists)
         {
             string[] artistsAsStrings = new string[artists.Length];

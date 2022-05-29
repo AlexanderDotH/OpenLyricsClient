@@ -14,6 +14,7 @@ using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Structure.Json;
 using LyricsWPF.Backend.Utils;
+using LyricsWPF.Backend.Utils.Service;
 using Newtonsoft.Json;
 using TidalLib;
 
@@ -42,27 +43,35 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
         {
             while (!this._disposed)
             {
+                await Task.Delay(2000);
+
                 if (Core.INSTANCE.SettingManager.Settings.TidalAccess.IsTidalConnected)
                 {
-                    long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-
                     if (DataValidator.ValidateData(Core.INSTANCE.SettingManager.Settings.TidalAccess))
                     {
+                        TidalAccess newestTidal = await GetNewestTidalAccess();
+
                         long savedTime = Core.INSTANCE.SettingManager.Settings.TidalAccess.ExpirationDate;
+                        DateTimeOffset savedTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(savedTime);
+                        DateTimeOffset currentTime = DateTimeOffset.Now;
 
-                        if (currentTime > savedTime)
+                        if (currentTime > savedTimeOffset)
                         {
-                            TidalAccess tidalAccess = await GetNewestTidalAccess();
+                            (string error, TidalAccess access) = await TidalUtils.RefreshAccessToken(newestTidal);
 
-                            if (!DataValidator.ValidateData(tidalAccess))
+                            if (!DataValidator.ValidateData(access))
+                            {
+                                this._debugger.Write(error, DebugType.ERROR);
                                 continue;
+                            }
 
-                            Core.INSTANCE.SettingManager.Settings.TidalAccess = tidalAccess;
+                            Core.INSTANCE.SettingManager.Settings.TidalAccess = access;
                             Core.INSTANCE.SettingManager.WriteSettings();
+
+                            this._debugger.Write("Refreshed Tidal!", DebugType.INFO);
                         }
                     }
 
-                    await Task.Delay(2000);
                 }
             }
         }
@@ -123,16 +132,10 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
             tidalAccess.RefreshToken = lastTidalAccess.OAuthRefreshToken;
             tidalAccess.ExpirationDate = lastTidalAccess.OAuthExpirationDate;
 
-            if (await TestTidalConnection(tidalAccess))
+            if (await TidalUtils.TestTidalConnection(tidalAccess))
                 tidalAccess.IsTidalConnected = true;
 
             return tidalAccess;
-        }
-
-        private async Task<bool> TestTidalConnection(TidalAccess tidalAccess)
-        {
-            (string s, LoginKey lg) = await Client.Login(tidalAccess.AccessToken);
-            return lg != null;
         }
 
         public string ServiceName()

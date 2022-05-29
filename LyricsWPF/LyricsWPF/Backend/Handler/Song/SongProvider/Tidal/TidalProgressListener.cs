@@ -6,7 +6,14 @@ using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Utils;
+using LyricsWPF.Backend.Utils.Service;
+using Squalr.Engine.DataTypes;
+using Squalr.Engine.Scanning.Scanners;
+using Squalr.Engine.Scanning.Scanners.Constraints;
+using Squalr.Engine.Scanning.Snapshots;
+using Squalr.Engine.Snapshots;
 
 namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
 {
@@ -18,62 +25,113 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
         private Process _process;
         private ulong? _progressAddress;
 
-        private long _progressTime;
+        private Stopwatch _progressTime;
 
         private Task _listenerTask;
         private bool _disposed;
 
+        private Debugger<TidalProgressListener> _debugger;
+
+        private int _retryTimes;
+
         public TidalProgressListener()
         {
+            this._debugger = new Debugger<TidalProgressListener>(this);
+
+            this._progressTime = new Stopwatch();
+
             this._disposed = false;
 
+            this._retryTimes = 0;
+
             this._listenerTask = new Task(async t => await Listener(), Core.INSTANCE.CancellationTokenSource.Token);
+            this._listenerTask.Start();
         }
 
         private async Task Listener()
         {
             while (!this._disposed)
             {
-                await Task.Delay(3000);
+                await Task.Delay(1000);
 
                 if (!DataValidator.ValidateData(this._process))
+                {
+                    this._process = TidalUtils.FindTidalProcess();
                     continue;
+                }
 
                 Process currentProcess = this._process;
+                Process tidalProcess = TidalUtils.FindTidalProcess();
 
-            }
-        }
-
-        
-        private void FindAddress()
-        {
-            this._process = FindTidalProcess();
-
-            if (this._process == null)
-                return;
-        }
-
-        private Process FindTidalProcess()
-        {
-            if (!DataValidator.ValidateData(this._process))
-                return null;
-
-            if (this._process != null || !this._process.HasExited)
-                return null;
-
-            Process[] processes = Process.GetProcessesByName("TIDAL");
-
-            for (int i = 0; i < processes.Length; i++)
-            {
-                Process p = processes[i];
-
-                if (!string.IsNullOrWhiteSpace(p.MainWindowTitle))
+                if (currentProcess != tidalProcess)
                 {
-                    return p;
+                    this._process = tidalProcess;
+                    await FindAddress();
+                } else if (this._progressAddress == null)
+                {
+                    await FindAddress();
                 }
             }
+        }
 
-            return null;
+        private async Task FindAddress()
+        {
+            if (!TidalUtils.IsTidalRunning())
+                return;
+
+            Process tidalProcess = TidalUtils.FindTidalProcess();
+
+            this._progressTime.Start();
+
+            if (tidalProcess == null)
+                return;
+
+            if (this._progressTime == null)
+                return;
+
+            if (this._retryTimes > 4)
+                return;
+
+            this._debugger.Write("Trying to find a new address", DebugType.DEBUG);
+
+            Snapshot snapshot = SnapshotManager.GetSnapshot(Snapshot.SnapshotRetrievalMode.FromSettings);
+            snapshot.ElementDataType = DataType.Double;
+
+            ScanConstraintCollection scanConstraint = new ScanConstraintCollection();
+
+            double upper = (this._progressTime.ElapsedMilliseconds + 2000) / 1000D;
+            double lower = (this._progressTime.ElapsedMilliseconds - 3000) / 1000D;
+
+            scanConstraint.AddConstraint(new ScanConstraint(ScanConstraint.ConstraintType.LessThanOrEqual, upper));
+            scanConstraint.AddConstraint(new ScanConstraint(ScanConstraint.ConstraintType.GreaterThanOrEqual, lower));
+
+            snapshot = await ManualScanner.Scan(snapshot, DataType.Double, scanConstraint, null, out var scanCts);
+
+            if (snapshot.ElementCount == 0)
+            {
+                this._debugger.Write("Address could not be found", DebugType.ERROR);
+                this._retryTimes++;
+            }
+            else if (snapshot.ElementCount <= 4)
+            {
+                this._progressAddress = snapshot[0].BaseAddress;
+                this._debugger.Write("Found address "+ $"0x{this._progressAddress.Value:X}", DebugType.INFO);
+            }
+
+            this._progressTime.Stop();
+
+        }
+
+        public void Start()
+        {
+            this._retryTimes = 0;
+            this._progressTime.Start();
+        }
+
+        public void Stop()
+        {
+            this._progressTime.Stop();
+            this._process = null;
         }
 
     }

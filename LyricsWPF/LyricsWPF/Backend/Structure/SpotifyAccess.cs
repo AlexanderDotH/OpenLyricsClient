@@ -11,7 +11,7 @@ namespace LyricsWPF.Backend.Structure
     {
         public BearerAccessToken BearerAccess { get; set; }
         public string RefreshToken { get; set; }
-        public DateTime? SpotifyExpireTime { get; set; }
+        public DateTime SpotifyExpireTime { get; set; }
         public bool IsSpotifyConnected { get; set; }
     }
 }

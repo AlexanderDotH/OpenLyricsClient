@@ -13,6 +13,7 @@ using LyricsWPF.Backend.Events.EventHandler;
 using LyricsWPF.Backend.Handler.Lyrics;
 using LyricsWPF.Backend.Handler.Song.SongProvider;
 using LyricsWPF.Backend.Handler.Song.SongProvider.Spotify;
+using LyricsWPF.Backend.Handler.Song.SongProvider.Tidal;
 using LyricsWPF.Backend.Utils;
 
 namespace LyricsWPF.Backend.Handler.Song
@@ -38,6 +39,7 @@ namespace LyricsWPF.Backend.Handler.Song
 
             this._songProviders = new GenericTupleList<ISongProvider, EnumSongProvider>();
             this._songProviders.Add(new Tuple<ISongProvider, EnumSongProvider>(new SpotifySongProvider(), EnumSongProvider.SPOTIFY));
+            this._songProviders.Add(new Tuple<ISongProvider, EnumSongProvider>(new TidalSongProvider(), EnumSongProvider.TIDAL));
 
             this._songProviderChooser = new SongProviderChooser();
 

@@ -47,7 +47,7 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
                 {
                     if (Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess != null)
                     {
-                        DateTime expire = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime.Value;
+                        DateTime expire = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime;
 
                         if (DateTime.Now > expire)
                         {
@@ -80,7 +80,22 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
             {
                 BearerAccessToken bearerAccess = await _userAccountsService.RefreshUserAccessToken(Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken);
                 Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess = bearerAccess;
-                Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime = bearerAccess.Expires;
+
+                DateTime bearerTime =
+                    Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.Expires.Value;
+
+                DateTime settingTime = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime;
+
+                if (bearerTime < settingTime)
+                {
+                    Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime =
+                        settingTime.Add(TimeSpan.FromSeconds(bearerAccess.ExpiresIn));
+                }
+                else
+                {
+                    Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime = bearerAccess.Expires.Value.Add(TimeSpan.FromSeconds(bearerAccess.ExpiresIn));
+                }
+
                 Core.INSTANCE.SettingManager.WriteSettings();
             }
             catch (Exception e)
