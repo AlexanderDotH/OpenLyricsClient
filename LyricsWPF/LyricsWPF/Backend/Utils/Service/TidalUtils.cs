@@ -44,7 +44,7 @@ namespace LyricsWPF.Backend.Utils.Service
             {
                 Process p = processes[i];
 
-                if (!string.IsNullOrWhiteSpace(p.MainWindowTitle))
+                if (!string.IsNullOrEmpty(p.MainWindowTitle))
                 {
                     return p;
                 }
