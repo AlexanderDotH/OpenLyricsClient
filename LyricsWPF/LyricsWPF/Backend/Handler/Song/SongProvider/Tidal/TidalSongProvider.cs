@@ -61,6 +61,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
 
             this._updateTimeTask = new Task(async t => await UpdateTimeTask(), Core.INSTANCE.CancellationTokenSource.Token);
             this._updateTimeTask.Start();
+
         }
 
         private async Task UpdateTimeTask()
@@ -147,7 +148,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
             if (!DataValidator.ValidateData(this._loginKey))
                 return null;
 
-
             Track tidalTrack = await FindTidalTrack();
 
             if (!DataValidator.ValidateData(tidalTrack))
@@ -168,6 +168,9 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
                 return null;
 
             if (!DataValidator.ValidateData(this._loginKey))
+                return null;
+
+            if (!tidalProcess.MainWindowTitle.Contains("-"))
                 return null;
 
             string title = tidalProcess.MainWindowTitle.Split('-')[0].Trim();

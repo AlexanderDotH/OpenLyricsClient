@@ -15,12 +15,6 @@ namespace LyricsWPF.Backend.Structure
         [JsonProperty("userId")]
         public int UserID { get; set; }
 
-        [JsonProperty("apiToken")]
-        public string ApiToken { get; set; }
-
-        [JsonProperty("clientUniqueKey")]
-        public string UniqueKey { get; set; }
-
         [JsonProperty("oAuthAccessToken")]
         public string AccessToken { get; set; }
 

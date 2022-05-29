@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -49,94 +51,92 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
                 {
                     if (DataValidator.ValidateData(Core.INSTANCE.SettingManager.Settings.TidalAccess))
                     {
-                        TidalAccess newestTidal = await GetNewestTidalAccess();
-
                         long savedTime = Core.INSTANCE.SettingManager.Settings.TidalAccess.ExpirationDate;
-                        DateTimeOffset savedTimeOffset = DateTimeOffset.FromUnixTimeMilliseconds(savedTime);
-                        DateTimeOffset currentTime = DateTimeOffset.Now;
+                        long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
-                        if (currentTime > savedTimeOffset)
+                        if (currentTime > savedTime)
                         {
-                            (string error, TidalAccess access) = await TidalUtils.RefreshAccessToken(newestTidal);
 
-                            if (!DataValidator.ValidateData(access))
-                            {
-                                this._debugger.Write(error, DebugType.ERROR);
+                            JsonTidalAccountRefreshAccess refresh =
+                                await TidalUtils.RefreshToken(Core.INSTANCE.SettingManager.Settings.TidalAccess);
+
+                            if (!DataValidator.ValidateData(refresh))
                                 continue;
-                            }
 
-                            Core.INSTANCE.SettingManager.Settings.TidalAccess = access;
+
+                            Core.INSTANCE.SettingManager.Settings.TidalAccess.AccessToken = refresh.AccessToken;
+                            Core.INSTANCE.SettingManager.Settings.TidalAccess.ExpirationDate = DateTimeOffset.Now.Add(TimeSpan.FromSeconds(refresh.ExpiresIn))
+                                .ToUnixTimeMilliseconds(); ;
                             Core.INSTANCE.SettingManager.WriteSettings();
 
                             this._debugger.Write("Refreshed Tidal!", DebugType.INFO);
                         }
                     }
-
                 }
             }
         }
 
-        private async Task<TidalAccess> GetNewestTidalAccess()
-        {
-            AFileObject file = new AFileObject(
-                FileUtils.SafeFileReadAccess(
-                    new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\TIDAL\\Logs\\app.log")));
+        //private async Task<TidalAccess> GetNewestTidalAccess()
+        //{
+        //    AFileObject file = new AFileObject(
+        //        FileUtils.SafeFileReadAccess(
+        //            new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\TIDAL\\Logs\\app.log")));
 
-            if (!file.FileInfo.Exists)
-                return null;
+        //    if (!file.FileInfo.Exists)
+        //        return null;
 
-            GenericList<string> fileContent = AFile.ReadFile(file.FileInfo).ToList();
+        //    GenericList<string> fileContent = AFile.ReadFile(file.FileInfo).ToList();
 
-            GenericList<JsonTidalAccess> tidalAccesses = new GenericList<JsonTidalAccess>();
+        //    GenericList<JsonTidalAccess> tidalAccesses = new GenericList<JsonTidalAccess>();
 
-            for (int i = 0; i < fileContent.Length; i++)
-            {
-                string line = fileContent[i];
+        //    for (int i = 0; i < fileContent.Length; i++)
+        //    {
+        //        string line = fileContent[i];
 
-                if (line.Contains("Session was changed "))
-                {
-                    if (i + 21 < fileContent.Length)
-                    {
-                        string content = StringUtils.StringArrayToString(fileContent.GetRangeAsList(i, i + 21).ToArray());
+        //        if (line.Contains("Session was changed "))
+        //        {
+        //            if (i + 21 < fileContent.Length)
+        //            {
+        //                string content = StringUtils.StringArrayToString(fileContent.GetRangeAsList(i, i + 21).ToArray());
 
-                        string regex =
-                            "(\\(\\d{0,3}.\\/\\d{0,3}\\/\\d{0,3}.\\d{0,3}:\\d{0,3}:\\d{0,3}.\\d{0,3}\\).\\[[a-zA-Z]*\\].- Session was changed )";
+        //                string regex =
+        //                    "(\\(\\d{0,3}.\\/\\d{0,3}\\/\\d{0,3}.\\d{0,3}:\\d{0,3}:\\d{0,3}.\\d{0,3}\\).\\[[a-zA-Z]*\\].- Session was changed )";
 
-                        if (Regex.IsMatch(content,regex))
-                        {
-                            content = content.Replace(Regex.Match(content, regex).Value, string.Empty);
-                            content += "}";
-                        }
+        //                if (Regex.IsMatch(content,regex))
+        //                {
+        //                    content = content.Replace(Regex.Match(content, regex).Value, string.Empty);
+        //                    content += "}";
+        //                }
 
-                        JsonTidalAccess json = new JsonDeserializer<JsonTidalAccess>().Deserialize(content);
+        //                JsonTidalAccess json = new JsonDeserializer<JsonTidalAccess>().Deserialize(content);
 
-                        if (DataValidator.ValidateData(json))
-                            tidalAccesses.Add(new JsonDeserializer<JsonTidalAccess>().Deserialize(content));
-                    }
-                }
-            }
+        //                if (DataValidator.ValidateData(json))
+        //                    tidalAccesses.Add(new JsonDeserializer<JsonTidalAccess>().Deserialize(content));
+        //            }
+        //        }
+        //    }
 
-            if (tidalAccesses.Length <= 0)
-                return null;
+        //    if (tidalAccesses.Length <= 0)
+        //        return null;
 
-            JsonTidalAccess lastTidalAccess = tidalAccesses.Get(tidalAccesses.Length - 1);
+        //    JsonTidalAccess lastTidalAccess = tidalAccesses.Get(tidalAccesses.Length - 1);
 
-            if (lastTidalAccess == null)
-                return null;
+        //    if (lastTidalAccess == null)
+        //        return null;
 
-            TidalAccess tidalAccess = new TidalAccess();
-            tidalAccess.UserID = lastTidalAccess.UserId;
-            tidalAccess.ApiToken = lastTidalAccess.ApiToken;
-            tidalAccess.UniqueKey = lastTidalAccess.ClientUniqueKey;
-            tidalAccess.AccessToken = lastTidalAccess.OAuthAccessToken;
-            tidalAccess.RefreshToken = lastTidalAccess.OAuthRefreshToken;
-            tidalAccess.ExpirationDate = lastTidalAccess.OAuthExpirationDate;
+        //    TidalAccess tidalAccess = new TidalAccess();
+        //    tidalAccess.UserID = lastTidalAccess.UserId;
+        //    tidalAccess.ApiToken = lastTidalAccess.ApiToken;
+        //    tidalAccess.UniqueKey = lastTidalAccess.ClientUniqueKey;
+        //    tidalAccess.AccessToken = lastTidalAccess.OAuthAccessToken;
+        //    tidalAccess.RefreshToken = lastTidalAccess.OAuthRefreshToken;
+        //    tidalAccess.ExpirationDate = lastTidalAccess.OAuthExpirationDate;
 
-            if (await TidalUtils.TestTidalConnection(tidalAccess))
-                tidalAccess.IsTidalConnected = true;
+        //    if (await TidalUtils.TestTidalConnection(tidalAccess))
+        //        tidalAccess.IsTidalConnected = true;
 
-            return tidalAccess;
-        }
+        //    return tidalAccess;
+        //}
 
         public string ServiceName()
         {
@@ -145,8 +145,42 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
 
         public async Task StartAuthorization()
         {
-            Core.INSTANCE.SettingManager.Settings.TidalAccess = await GetNewestTidalAccess();
-            Core.INSTANCE.SettingManager.WriteSettings();
+
+            JsonTidalAuthDevice authDevice = await TidalUtils.RegisterDevice();
+
+            Process.Start("https://" + authDevice.VerificationUriComplete);
+
+            DateTimeOffset expires = DateTimeOffset.Now.Add(TimeSpan.FromSeconds(authDevice.ExpiresIn));
+            bool authorized = false;
+
+            while (!authorized)
+            {
+                await Task.Delay(authDevice.Interval * 1000);
+
+                if (DateTimeOffset.Now > expires)
+                {
+                    //Give user some feedback
+                    return;
+                }
+
+                JsonTidalAccountAccess accountAccess = await TidalUtils.GetTokenFrom(authDevice);
+
+                if (accountAccess == null)
+                    continue;
+
+                TidalAccess access = new TidalAccess();
+                access.AccessToken = accountAccess.AccessToken;
+                access.RefreshToken = accountAccess.RefreshToken;
+                access.ExpirationDate = DateTimeOffset.Now.Add(TimeSpan.FromSeconds(accountAccess.ExpiresIn))
+                    .ToUnixTimeMilliseconds();
+                access.IsTidalConnected = true;
+                access.UserID = accountAccess.User.UserId;
+
+                Core.INSTANCE.SettingManager.Settings.TidalAccess = access;
+                Core.INSTANCE.SettingManager.WriteSettings();
+
+                authorized = true;
+            }
         }
 
         public string GetAccessToken()

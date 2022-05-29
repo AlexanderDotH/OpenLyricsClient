@@ -18,6 +18,5 @@ namespace LyricsWPF.Backend.Utils
 
             return input[0].ToString().ToUpper() + input.Substring(1);
         }
-
     }
 }

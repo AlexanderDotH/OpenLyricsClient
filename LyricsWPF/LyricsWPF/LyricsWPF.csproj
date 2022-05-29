@@ -372,7 +372,11 @@
     <Compile Include="Backend\Handler\Song\SongProvider\Tidal\TidalSongProvider.cs" />
     <Compile Include="Backend\Structure\Json\JsonLyricData.cs" />
     <Compile Include="Backend\Structure\Json\JsonTidalAccess.cs" />
+    <Compile Include="Backend\Structure\Json\JsonTidalAccountAccess.cs" />
+    <Compile Include="Backend\Structure\Json\JsonTidalAccountRefreshAccess.cs" />
+    <Compile Include="Backend\Structure\Json\JsonTidalAuthDevice.cs" />
     <Compile Include="Backend\Structure\Json\JsonTidalResponse.cs" />
+    <Compile Include="Backend\Structure\Json\JsonTidalUser.cs" />
     <Compile Include="Backend\Structure\Json\JsonTidalUtmParameters.cs" />
     <Compile Include="Backend\Structure\Json\Playersignal.cs" />
     <Compile Include="Backend\Structure\TidalAccess.cs" />

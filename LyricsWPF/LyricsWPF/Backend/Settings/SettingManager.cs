@@ -63,8 +63,6 @@ namespace LyricsWPF.Backend.Settings
             tidalAccess.IsTidalConnected = false;
             tidalAccess.AccessToken = "null";
             tidalAccess.RefreshToken = "null";
-            tidalAccess.ApiToken = "null";
-            tidalAccess.UniqueKey = "null";
             tidalAccess.ExpirationDate = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             tidalAccess.UserID = 0;
 
