@@ -6,6 +6,7 @@ namespace LyricsWPF.Backend.Handler.Song
     class SongStageChange
     {
         private Song _lastSong;
+        private bool _timeCheck = false;
 
         public SongStageChange()
         {
@@ -19,26 +20,38 @@ namespace LyricsWPF.Backend.Handler.Song
                 if (this._lastSong == null)
                 {
                     this._lastSong = currentSong;
+                    this._timeCheck = false;
                     return true;
                 }
 
                 if (currentSong.Title != this._lastSong.Title)
                 {
                     this._lastSong = currentSong;
+                    this._timeCheck = false;
+
                     return true;
                 }
 
                 if (this._lastSong.MaxTime != currentSong.MaxTime)
                 {
                     this._lastSong = currentSong;
+                    this._timeCheck = false;
+
                     return true;
                 }
 
+                
                 short msSection = (short)(currentSong.MaxTime * 0.01);
 
-                if (currentSong.Time < msSection)
+                if (currentSong.Time > msSection)
+                {
+                    this._timeCheck = true;
+                }
+
+                if (currentSong.Time < msSection && _timeCheck)
                 {
                     this._lastSong = currentSong;
+                    this._timeCheck = false;
                     return true;
                 }
 

@@ -70,8 +70,6 @@ namespace LyricsWPF.Backend.Utils.Service
                 Request request = new Request(requestData);
                 ResponseData response = await request.GetResponseAsync();
 
-                Console.WriteLine("dawd");
-
                 if (response.StatusCode == HttpStatusCode.NoContent)
                     return null;
 
@@ -139,18 +137,7 @@ namespace LyricsWPF.Backend.Utils.Service
         public static bool IsTidalRunning()
         {
             Process[] processes = Process.GetProcessesByName("TIDAL");
-
-            for (int i = 0; i < processes.Length; i++)
-            {
-                Process p = processes[i];
-
-                if (!string.IsNullOrWhiteSpace(p.MainWindowTitle))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return processes.Length > 0;
         }
 
         public static Process FindTidalProcess()

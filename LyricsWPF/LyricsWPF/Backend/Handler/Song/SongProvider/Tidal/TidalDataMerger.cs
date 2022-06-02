@@ -13,16 +13,16 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
         public static Song ValidateUpdatePlayBack(Song song, Track track)
         {
             if (!DataValidator.ValidateData(song))
-                return null;
+                return song;
 
             if (!DataValidator.ValidateData(song.Title, song.Album, song.Artists))
-                return null;
+                return song;
 
             if (!DataValidator.ValidateData(track))
-                return null;
+                return song;
 
             if (!DataValidator.ValidateData(track.Title, track.Album, track.Artists))
-                return null;
+                return song;
 
             return UpdatePlayBack(song, track);
         }
@@ -55,7 +55,9 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
                 TimeSpan.FromSeconds(track.Duration).Milliseconds);
             song.Album = track.Album.Title;
             song.ProgressMs = 0;
+            song.Time = 0;
             song.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            song.MaxTime = (int)TimeSpan.FromSeconds(track.Duration).TotalMilliseconds;
             song.Lyrics = null;
             song.CurrentLyricPart = null;
             return song;

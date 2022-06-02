@@ -12,7 +12,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
 
         public EnumSongProvider GetSongProvider()
         {
-            return EnumSongProvider.TIDAL;
+            return EnumSongProvider.SPOTIFY;
         } 
     }
 }

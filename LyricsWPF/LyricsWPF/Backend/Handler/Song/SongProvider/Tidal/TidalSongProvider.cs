@@ -27,17 +27,18 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
 
         private IService _tidalService;
 
-        private Task _loginTask;
         private Task _updateTrackTask;
         private Task _updateTimeTask;
+        private Task _loginTask;
         private bool _disposed;
-
-        private TidalAccess _tidalAccess;
-        private LoginKey _loginKey;
 
         private Debugger<TidalSongProvider> _debugger;
 
         private long _startTime;
+
+        private LoginKey _loginKey;
+
+        private Process _tidalProcess;
 
         public TidalSongProvider()
         {
@@ -48,8 +49,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
             this._tidalService = Core.INSTANCE.ServiceHandler.GetServiceByName("Tidal");
 
             this._tidalProgressListener = new TidalProgressListener();
-
-            this._tidalAccess = Core.INSTANCE.SettingManager.Settings.TidalAccess;
 
             this._startTime = 0;
 
@@ -68,7 +67,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
         {
             while (!this._disposed)
             {
-                await Task.Delay(1);
+                await Task.Delay(100);
 
                 if (!DataValidator.ValidateData(this._currentSong))
                     continue;
@@ -83,24 +82,26 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
             }
         }
 
+
         private async Task LoginTask()
         {
             while (!this._disposed)
             {
+                TidalAccess tidalAccess = Core.INSTANCE.SettingManager.Settings.TidalAccess;
 
-                if (!DataValidator.ValidateData(this._tidalAccess))
+                if (!DataValidator.ValidateData(tidalAccess))
                     continue;
 
                 if (!this._tidalService.IsConnected())
                     continue;
 
-                if (this._tidalAccess.AccessToken.Equals("null"))
-                    this._tidalAccess = Core.INSTANCE.SettingManager.Settings.TidalAccess;
+                if (tidalAccess.AccessToken.Equals("null"))
+                    tidalAccess = Core.INSTANCE.SettingManager.Settings.TidalAccess;
 
                 if (this._loginKey == null ||
-                    this._tidalAccess != Core.INSTANCE.SettingManager.Settings.TidalAccess)
+                    tidalAccess != Core.INSTANCE.SettingManager.Settings.TidalAccess)
                 {
-                    (string s, LoginKey lg) = await Client.Login(this._tidalAccess.AccessToken);
+                    (string s, LoginKey lg) = await Client.Login(tidalAccess.AccessToken);
 
                     if (!DataValidator.ValidateData(lg))
                     {
@@ -112,8 +113,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
 
                     Core.INSTANCE.SettingManager.Settings.TidalAccess.IsTidalConnected = true;
                     Core.INSTANCE.SettingManager.WriteSettings();
-                     
-                    this._tidalAccess = Core.INSTANCE.SettingManager.Settings.TidalAccess;
 
                     this._debugger.Write("Logged into Tidal!", DebugType.INFO);
                 }
@@ -121,6 +120,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
                 await Task.Delay(5000);
             }
         }
+
 
         private async Task UpdateCurrentTrack()
         {
@@ -130,7 +130,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
 
                 Track tidalTrack = await FindTidalTrack();
 
-                if (!DataValidator.ValidateData(tidalTrack))
+                if (!TidalUtils.IsTidalRunning())
                     continue;
                 
                 this._currentSong = TidalDataMerger.ValidateUpdatePlayBack(this._currentSong, tidalTrack);
@@ -145,9 +145,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
             if (!TidalUtils.IsTidalRunning())
                 return null;
 
-            if (!DataValidator.ValidateData(this._loginKey))
-                return null;
-
             Track tidalTrack = await FindTidalTrack();
 
             if (!DataValidator.ValidateData(tidalTrack))
@@ -156,12 +153,16 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
             this._currentSong = TidalDataMerger.ConvertAndMerge(tidalTrack);
 
             this._startTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            this._tidalProgressListener.Start();
 
             return this._currentSong;
         }
 
         private async Task<Track> FindTidalTrack()
         {
+            if (!TidalUtils.IsTidalRunning())
+                return null;
+
             Process tidalProcess = TidalUtils.FindTidalProcess();
 
             if (!DataValidator.ValidateData(tidalProcess))
@@ -176,7 +177,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
             string title = tidalProcess.MainWindowTitle.Split('-')[0].Trim();
             string artists = tidalProcess.MainWindowTitle.Split('-')[1].Trim().Replace(",", " /");
 
-            (string error, SearchResult searchResult) = await Client.Search(this._loginKey, title);
+            (string error, SearchResult searchResult) = await Client.Search(this._loginKey, title + " " + artists, iLimit:100);
 
             if (!DataValidator.ValidateData(searchResult))
             {
@@ -189,7 +190,10 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
             {
                 Track currentTrack = tracks[i];
 
-                if (currentTrack.Title.Equals(title) &&
+                string title1 = currentTrack.Title.ToLower();
+                string title2 = title1.ToLower();
+
+                if (title1.Equals(title2) &&
                     currentTrack.ArtistsName.Equals(artists))
                 {
                     return currentTrack;
@@ -198,7 +202,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
 
             return null;
         }
-
 
         public Song GetCurrentSong()
         {

@@ -5,6 +5,7 @@ using System.Drawing.Printing;
 using System.Drawing.Text;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Utils;
@@ -33,6 +34,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
         private Debugger<TidalProgressListener> _debugger;
 
         private int _retryTimes;
+        private CancellationTokenSource _tokenSource;
 
         public TidalProgressListener()
         {
@@ -44,6 +46,8 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
 
             this._retryTimes = 0;
 
+            this._tokenSource = new CancellationTokenSource();
+
             this._listenerTask = new Task(async t => await Listener(), Core.INSTANCE.CancellationTokenSource.Token);
             this._listenerTask.Start();
         }
@@ -52,8 +56,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
         {
             while (!this._disposed)
             {
-                await Task.Delay(1000);
-
                 if (!DataValidator.ValidateData(this._process))
                 {
                     this._process = TidalUtils.FindTidalProcess();
@@ -67,7 +69,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
                 {
                     this._process = tidalProcess;
                     await FindAddress();
-                } else if (this._progressAddress == null)
+                } else if (this._progressAddress == null || this._retryTimes == 0)
                 {
                     await FindAddress();
                 }
@@ -80,8 +82,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
                 return;
 
             Process tidalProcess = TidalUtils.FindTidalProcess();
-
-            this._progressTime.Start();
 
             if (tidalProcess == null)
                 return;
@@ -115,11 +115,8 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
             else if (snapshot.ElementCount <= 4)
             {
                 this._progressAddress = snapshot[0].BaseAddress;
-                this._debugger.Write("Found address "+ $"0x{this._progressAddress.Value:X}", DebugType.INFO);
+                this._debugger.Write("Found address " + $"0x{this._progressAddress.Value:X}", DebugType.INFO);
             }
-
-            this._progressTime.Stop();
-
         }
 
         public void Start()
@@ -131,7 +128,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
         public void Stop()
         {
             this._progressTime.Stop();
-            this._process = null;
         }
 
     }

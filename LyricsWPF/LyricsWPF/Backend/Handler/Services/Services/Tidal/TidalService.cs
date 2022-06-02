@@ -31,6 +31,9 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
 
         private Task _refeshTokenTask;
 
+        private TidalAccess _tidalAccess;
+        private Task _loginTask;
+
         public TidalService()
         {
             this._debugger = new Debugger<TidalService>(this);
@@ -40,7 +43,7 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
             this._refeshTokenTask = new Task(async () => await RefreshToken(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.None);
             this._refeshTokenTask.Start();
         }
-
+        
         private async Task RefreshToken()
         {
             while (!this._disposed)

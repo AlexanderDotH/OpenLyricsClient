@@ -151,7 +151,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                 if (DataValidator.ValidateData(this._playerApi) && 
                     DataValidator.ValidateData(this._currentSong))
                 {
-
                     try
                     {
                         CurrentTrackPlaybackContext currentTrack =
