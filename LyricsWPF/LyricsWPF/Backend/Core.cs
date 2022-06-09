@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using DevBase.Async.Task;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Lyrics;
 using LyricsWPF.Backend.Handler.Services;
@@ -40,6 +41,8 @@ namespace LyricsWPF.Backend
         private static bool _disposed;
 
         private CancellationTokenSource _cancellationTokenSource;
+        private TaskRegister _taskRegister;
+
 
         public Core()
         {
@@ -49,7 +52,9 @@ namespace LyricsWPF.Backend
 
             _disposed = false;
             this._cancellationTokenSource = new CancellationTokenSource();
-            
+
+            this._taskRegister = new TaskRegister();
+
             this._settingManager = new SettingManager(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Lyrics\\");
 
             this._serviceHandler = new ServiceHandler();
@@ -80,6 +85,11 @@ namespace LyricsWPF.Backend
         public SongHandler SongHandler
         {
             get { return this._songHandler; }
+        }
+
+        public TaskRegister TaskRegister
+        {
+            get => _taskRegister;
         }
 
         public CancellationTokenSource CancellationTokenSource
