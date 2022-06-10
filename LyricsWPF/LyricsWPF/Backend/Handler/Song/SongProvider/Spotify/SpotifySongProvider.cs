@@ -99,8 +99,10 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                                             diff = currentTime - timeStamp;
                                         }
 
-                                        currentSong.Time = progress + diff;
+                                        currentSong.Time = diff;
                                         currentSong.TimeStamp = 0;
+
+                                        // Fix timeglitch bug
                                         Thread.Sleep(1);
                                     }
                                 }
