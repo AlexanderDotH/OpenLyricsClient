@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DevBase.Async.Task;
 using DevBase.Generic;
 using DevBase.Utilities;
 using LyricsWPF.Backend.Debug;
@@ -13,6 +14,7 @@ using LyricsWPF.Backend.Events.EventArgs;
 using LyricsWPF.Backend.Handler.Services.Services;
 using LyricsWPF.Backend.Handler.Services.Services.Tidal;
 using LyricsWPF.Backend.Structure;
+using LyricsWPF.Backend.Structure.Enum;
 using LyricsWPF.Backend.Utils;
 using LyricsWPF.Backend.Utils.Service;
 using TidalLib;
@@ -27,9 +29,10 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
 
         private IService _tidalService;
 
-        private Task _updateTrackTask;
-        private Task _updateTimeTask;
-        private Task _loginTask;
+        private TaskSuspensionToken _loginTaskSuspensionToken;
+        private TaskSuspensionToken _updateCurrentTrackSuspensionToken;
+        private TaskSuspensionToken _updateTimeSuspensionToken;
+
         private bool _disposed;
 
         private Debugger<TidalSongProvider> _debugger;
@@ -52,21 +55,28 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
 
             this._startTime = 0;
 
-            this._loginTask = new Task(async t => await LoginTask(), Core.INSTANCE.CancellationTokenSource.Token);
-            this._loginTask.Start();
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out _loginTaskSuspensionToken,
+                new Task(async () => await LoginTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
+                EnumRegisterTypes.TIDALSONGPROVIDER_LOGIN);
 
-            this._updateTrackTask = new Task(async t => await UpdateCurrentTrack(), Core.INSTANCE.CancellationTokenSource.Token);
-            this._updateTrackTask.Start();
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out _updateCurrentTrackSuspensionToken,
+                new Task(async () => await UpdateCurrentTrack(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
+                EnumRegisterTypes.TIDALSONGPROVIDER_UPDATECURRENTTRACK);
 
-            this._updateTimeTask = new Task(async t => await UpdateTimeTask(), Core.INSTANCE.CancellationTokenSource.Token);
-            this._updateTimeTask.Start();
-
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out this._updateTimeSuspensionToken,
+                new Task(async () => await UpdateTimeTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
+                EnumRegisterTypes.TIDALSONGPROVIDER_UPDATETIME);
         }
 
         private async Task UpdateTimeTask()
         {
             while (!this._disposed)
             {
+                await this._updateTimeSuspensionToken.WaitForRelease();
+
                 await Task.Delay(100);
 
                 if (!DataValidator.ValidateData(this._currentSong))
@@ -87,6 +97,8 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
         {
             while (!this._disposed)
             {
+                await this._loginTaskSuspensionToken.WaitForRelease();
+
                 TidalAccess tidalAccess = Core.INSTANCE.SettingManager.Settings.TidalAccess;
 
                 if (!DataValidator.ValidateData(tidalAccess))
@@ -126,6 +138,8 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
         {
             while (!this._disposed)
             {
+                await this._updateCurrentTrackSuspensionToken.WaitForRelease();
+
                 await Task.Delay(500);
 
                 Track tidalTrack = await FindTidalTrack();
@@ -217,6 +231,8 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
         public void Dispose()
         {
             this._disposed = true;
+
+            Core.INSTANCE.TaskRegister.Kill(EnumRegisterTypes.TIDALSONGPROVIDER_LOGIN, EnumRegisterTypes.TIDALSONGPROVIDER_UPDATECURRENTTRACK, EnumRegisterTypes.TIDALSONGPROVIDER_UPDATETIME);
         }
     }
 }

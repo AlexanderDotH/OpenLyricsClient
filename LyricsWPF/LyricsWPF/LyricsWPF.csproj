@@ -371,7 +371,7 @@
     <Compile Include="Backend\Handler\Song\SongProvider\Tidal\TidalProgressListener.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\Tidal\TidalSongProvider.cs" />
     <Compile Include="Backend\Helper\WindowLogger.cs" />
-    <Compile Include="Backend\Structure\Enum\RegisterTypes.cs" />
+    <Compile Include="Backend\Structure\Enum\EnumRegisterTypes.cs" />
     <Compile Include="Backend\Structure\Json\JsonLyricData.cs" />
     <Compile Include="Backend\Structure\Json\JsonTidalAccess.cs" />
     <Compile Include="Backend\Structure\Json\JsonTidalAccountAccess.cs" />
@@ -491,6 +491,7 @@
     <Compile Include="Backend\Utils\Service\TidalUtils.cs" />
     <Compile Include="Backend\Utils\TaskUtils.cs" />
     <Compile Include="Backend\Utils\WinAPI.cs" />
+    <Compile Include="Backend\Utils\WindowUtils.cs" />
     <Compile Include="Frontend\ItemSources\LyricsProviderItemSource.cs" />
     <Compile Include="Frontend\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>

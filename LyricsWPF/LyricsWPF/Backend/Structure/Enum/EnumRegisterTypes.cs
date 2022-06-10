@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LyricsWPF.Backend.Structure.Enum
+{
+    public enum EnumRegisterTypes
+    {
+        WINDOW_LOGGER, 
+        SONG_PROVIDER_CHOOSER,
+        SONGHANDLER_MANAGECURRENTSONG, SONGHANDLER_SONGINFORMATION,
+        SPOTIFYSONGPROVIDER_UPDATEPLAYBACK, SPOTIFYSONGPROVIDER_UPDATESONGDATA, SPOTIFYSONGPROVIDER_TIMESYNC,
+        TIDALSONGPROVIDER_LOGIN, TIDALSONGPROVIDER_UPDATECURRENTTRACK, TIDALSONGPROVIDER_UPDATETIME
+    }
+}

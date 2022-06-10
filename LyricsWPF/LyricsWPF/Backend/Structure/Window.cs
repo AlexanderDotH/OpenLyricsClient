@@ -9,16 +9,23 @@ namespace LyricsWPF.Backend.Structure
     public class Window
     {
 
-        private string _windowName;
+        private string _windowTitle;
+        private string _processName;
 
-        public Window(string windowName)
+        public Window(string windowTitle, string processName)
         {
-            _windowName = windowName;
+            _windowTitle = windowTitle;
+            _processName = processName;
         }
 
-        public string WindowName
+        public string WindowTitle
         {
-            get => _windowName;
+            get => _windowTitle;
+        }
+
+        public string ProcessName
+        {
+            get => _processName;
         }
     }
 }

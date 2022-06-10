@@ -13,6 +13,7 @@ using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Lyrics;
 using LyricsWPF.Backend.Handler.Services;
 using LyricsWPF.Backend.Handler.Song;
+using LyricsWPF.Backend.Helper;
 using LyricsWPF.Backend.Settings;
 using LyricsWPF.Backend.Utils;
 using Newtonsoft.Json;
@@ -43,6 +44,7 @@ namespace LyricsWPF.Backend
         private CancellationTokenSource _cancellationTokenSource;
         private TaskRegister _taskRegister;
 
+        private WindowLogger _windowLogger;
 
         public Core()
         {
@@ -54,6 +56,8 @@ namespace LyricsWPF.Backend
             this._cancellationTokenSource = new CancellationTokenSource();
 
             this._taskRegister = new TaskRegister();
+
+            this._windowLogger = new WindowLogger();
 
             this._settingManager = new SettingManager(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Lyrics\\");
 
@@ -70,6 +74,7 @@ namespace LyricsWPF.Backend
             this._songHandler.Dispose();
             this._lyricHandler.Dispose();
             this._serviceHandler.Dispose();
+            this._windowLogger.Dispose();
         }
 
         public SettingManager SettingManager
@@ -90,6 +95,11 @@ namespace LyricsWPF.Backend
         public TaskRegister TaskRegister
         {
             get => _taskRegister;
+        }
+
+        public WindowLogger WindowLogger
+        {
+            get => _windowLogger;
         }
 
         public CancellationTokenSource CancellationTokenSource

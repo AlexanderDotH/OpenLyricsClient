@@ -8,9 +8,11 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DevBase.Async.Task;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Events.EventArgs;
 using LyricsWPF.Backend.Handler.Services.Services;
+using LyricsWPF.Backend.Structure.Enum;
 using LyricsWPF.Backend.Utils;
 using SpotifyApi.NetCore;
 using SpotifyApi.NetCore.Authorization;
@@ -25,9 +27,9 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
         private PlayerApi _playerApi;
         private string _accessToken;
 
-        private Task _timeSyncTask;
-        private Task _updateSongDataTask;
-        private Task _updateSongPlaybackTask;
+        private TaskSuspensionToken _updatePlaybackSuspensionToken;
+        private TaskSuspensionToken _updateSongDataSuspensionToken;
+        private TaskSuspensionToken _timeSyncSuspensionToken;
 
         private IService _service;
 
@@ -43,21 +45,29 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 
             this._service = Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
 
-            this._updateSongPlaybackTask = new Task(async() => await UpdatePlayback(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
-            this._updateSongPlaybackTask.Start();
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out _updatePlaybackSuspensionToken,
+                new Task(async () => await UpdatePlaybackTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
+                EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK);
 
-            this._updateSongDataTask = new Task(async() => await UpdateSongData(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
-            this._updateSongDataTask.Start();
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out _updateSongDataSuspensionToken,
+                new Task(async () => await UpdateSongDataTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
+                EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATESONGDATA);
 
-            this._timeSyncTask = new Task(async () => await TimeSync(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
-            this._timeSyncTask.Start();
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out _timeSyncSuspensionToken,
+                new Task(async () => await TimeSyncTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
+                EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC);
         }
 
         //Song info time sync -> always
-        private async Task TimeSync()
+        private async Task TimeSyncTask()
         {
             while (!this._disposed)
             {
+                await this._timeSyncSuspensionToken.WaitForRelease();
+
                 if (!this._service.IsConnected())
                     continue;
 
@@ -107,10 +117,12 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
         }
 
         //Song info sync -> data update
-        private async Task UpdatePlayback()
+        private async Task UpdatePlaybackTask()
         {
             while (!this._disposed)
             {
+                await this._updatePlaybackSuspensionToken.WaitForRelease();
+
                 if (!this._service.IsConnected())
                     continue;
 
@@ -139,10 +151,12 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
         }
 
         //Song info update -> data update
-        private async Task UpdateSongData()
+        private async Task UpdateSongDataTask()
         {
             while (!this._disposed)
             {
+                await this._updateSongDataSuspensionToken.WaitForRelease();
+
                 if (!this._service.IsConnected())
                     continue;
 
@@ -214,6 +228,11 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
         public void Dispose()
         {
             this._disposed = true;
+
+            Core.INSTANCE.TaskRegister.Kill(
+                EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATESONGDATA, 
+                EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC, 
+                EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK);
         }
 
         public Song GetCurrentSong()

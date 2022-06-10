@@ -14,6 +14,7 @@ using LyricsWPF.Backend.Handler.Lyrics;
 using LyricsWPF.Backend.Handler.Song.SongProvider;
 using LyricsWPF.Backend.Handler.Song.SongProvider.Spotify;
 using LyricsWPF.Backend.Handler.Song.SongProvider.Tidal;
+using LyricsWPF.Backend.Structure.Enum;
 using LyricsWPF.Backend.Utils;
 
 namespace LyricsWPF.Backend.Handler.Song
@@ -25,8 +26,6 @@ namespace LyricsWPF.Backend.Handler.Song
         private GenericTupleList<ISongProvider, EnumSongProvider> _songProviders;
         private SongProviderChooser _songProviderChooser;
 
-        private Task _manageCurrentSongTask;
-        private Task _songInformationTask;
         private bool _disposed;
 
         private Debugger<SongHandler> _debugger;
@@ -45,13 +44,15 @@ namespace LyricsWPF.Backend.Handler.Song
 
             this._songStageChange = new SongStageChange();
 
-            this._manageCurrentSongTask = new Task(async() => await ManageCurrentSong(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
-            this._manageCurrentSongTask.Start();
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                new Task(async () => await ManageCurrentSong(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
+                EnumRegisterTypes.SONGHANDLER_MANAGECURRENTSONG);
 
             if (EnvironmentUtils.IsDebugLogEnabled())
             {
-                this._songInformationTask = new Task(async () => await SongInformation(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
-                this._songInformationTask.Start();
+                Core.INSTANCE.TaskRegister.RegisterTask(
+                    new Task(async () => await SongInformation(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
+                    EnumRegisterTypes.SONGHANDLER_SONGINFORMATION);
             }
 
             this._disposed = false;
@@ -73,6 +74,10 @@ namespace LyricsWPF.Backend.Handler.Song
                         BeforeSongChanged(new SongChangedEventArgs(currentSong, EventType.PRE));
 
                         ISongProvider songProvider = GetSongProvider(this._songProviderChooser.GetSongProvider());
+
+                        if (!DataValidator.ValidateData(songProvider))
+                            continue;
+
                         Song song = await songProvider.UpdateCurrentPlaybackTrack();
 
                         //                                      Idk why but it works
@@ -112,7 +117,7 @@ namespace LyricsWPF.Backend.Handler.Song
 
         private ISongProvider GetSongProvider(EnumSongProvider enumSongProvider)
         {
-            return this._songProviders.FindEntry(enumSongProvider).Item1;
+            return this._songProviders.FindEntry(enumSongProvider);
         }
 
         private Song GetCurrentSong()
@@ -149,6 +154,10 @@ namespace LyricsWPF.Backend.Handler.Song
         public void Dispose()
         {
             this._disposed = true;
+
+            this._songProviderChooser.Dispose();
+
+            Core.INSTANCE.TaskRegister.Kill(EnumRegisterTypes.SONGHANDLER_MANAGECURRENTSONG, EnumRegisterTypes.SONGHANDLER_SONGINFORMATION);
 
             try
             {

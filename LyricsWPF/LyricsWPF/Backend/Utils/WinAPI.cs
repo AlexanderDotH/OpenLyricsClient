@@ -10,6 +10,6 @@ namespace LyricsWPF.Backend.Utils
     public class WinAPI
     {
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        private static extern IntPtr GetForegroundWindow();
+        public static extern IntPtr GetForegroundWindow();
     }
 }

@@ -8,6 +8,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
 {
     enum EnumSongProvider
     {
-        SPOTIFY, TIDAL
+        SPOTIFY, TIDAL, NONE
     }
 }
