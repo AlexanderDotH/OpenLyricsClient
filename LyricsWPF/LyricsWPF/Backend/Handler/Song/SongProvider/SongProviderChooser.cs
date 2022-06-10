@@ -50,23 +50,18 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
                 if (!DataValidator.ValidateData(Core.INSTANCE.WindowLogger))
                     continue;
 
-                EnumSongProvider songProvider;
+                EnumSongProvider songProvider = EnumSongProvider.NONE;
 
                 if (Core.INSTANCE.WindowLogger.IsLastWindow("Spotify"))
-                {
                     songProvider = EnumSongProvider.SPOTIFY;
-                } 
-                else if (Core.INSTANCE.WindowLogger.IsLastWindow("TIDAL"))
-                {
-                    songProvider = EnumSongProvider.TIDAL;
-                }
-                else
-                {
-                    songProvider = EnumSongProvider.NONE;
-                }
 
-                if (songProvider != EnumSongProvider.NONE && 
-                    !songProvider.Equals(this._currentSongProvider))
+                if (Core.INSTANCE.WindowLogger.IsLastWindow("TIDAL"))
+                    songProvider = EnumSongProvider.TIDAL;
+
+                if (songProvider == EnumSongProvider.NONE)
+                    continue;
+
+                if (!songProvider.Equals(this._currentSongProvider))
                 {
                     this._debugger.Write("SongProvider has been changed to: " + new AString(songProvider.ToString()).CapitalizeFirst(), DebugType.INFO);
                     this._currentSongProvider = songProvider;
