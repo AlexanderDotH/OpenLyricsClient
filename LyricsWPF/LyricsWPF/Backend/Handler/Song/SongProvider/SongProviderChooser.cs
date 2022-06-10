@@ -31,8 +31,8 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
 
             this._currentSongProvider = EnumSongProvider.NONE;
 
-            Core.INSTANCE.TaskRegister.Suspend(EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK, EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATESONGDATA, EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC,
-                EnumRegisterTypes.TIDALSONGPROVIDER_LOGIN, EnumRegisterTypes.TIDALSONGPROVIDER_UPDATECURRENTTRACK, EnumRegisterTypes.TIDALSONGPROVIDER_UPDATETIME);
+            //Core.INSTANCE.TaskRegister.Suspend(EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK, EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATESONGDATA, EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC,
+            //    EnumRegisterTypes.TIDALSONGPROVIDER_LOGIN, EnumRegisterTypes.TIDALSONGPROVIDER_UPDATECURRENTTRACK, EnumRegisterTypes.TIDALSONGPROVIDER_UPDATETIME);
 
             Core.INSTANCE.TaskRegister.RegisterTask(
                 out _taskSuspensionToken, 
@@ -45,6 +45,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
             while (!this._disposed)
             {
                 await this._taskSuspensionToken.WaitForRelease();
+
                 await Task.Delay(100);
 
                 if (!DataValidator.ValidateData(Core.INSTANCE.WindowLogger))
@@ -70,13 +71,12 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
                     {
                         ResumeProvider(EnumSongProvider.SPOTIFY);
                         SuspendProvider(EnumSongProvider.TIDAL);
-                    } 
+                    }
                     else if (songProvider == EnumSongProvider.TIDAL)
                     {
                         ResumeProvider(EnumSongProvider.TIDAL);
                         SuspendProvider(EnumSongProvider.SPOTIFY);
                     }
-
                 }
             }
         }
@@ -90,7 +90,8 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
                     Core.INSTANCE.TaskRegister.Resume(
                         EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK,
                         EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATESONGDATA,
-                        EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC);
+                        EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC,
+                        EnumRegisterTypes.SPOTIFY_REFRESHTOKEN);
                     break;
                 }
                 case EnumSongProvider.TIDAL:
@@ -98,10 +99,11 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
                     Core.INSTANCE.TaskRegister.Resume(
                         EnumRegisterTypes.TIDALSONGPROVIDER_LOGIN,
                         EnumRegisterTypes.TIDALSONGPROVIDER_UPDATECURRENTTRACK,
-                        EnumRegisterTypes.TIDALSONGPROVIDER_UPDATETIME);
+                        EnumRegisterTypes.TIDALSONGPROVIDER_UPDATETIME,
+                        EnumRegisterTypes.TIDAL_REFRESHTOKEN,
+                        EnumRegisterTypes.TIDALPROGRESSLISTENER_FINDADDRESS);
                     break;
                 }
-
             }
         }
 
@@ -114,7 +116,8 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
                     Core.INSTANCE.TaskRegister.Suspend(
                         EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK,
                         EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATESONGDATA,
-                        EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC);
+                        EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC,
+                        EnumRegisterTypes.SPOTIFY_REFRESHTOKEN);
                     break;
                 }
                 case EnumSongProvider.TIDAL:
@@ -122,10 +125,11 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
                     Core.INSTANCE.TaskRegister.Suspend(
                         EnumRegisterTypes.TIDALSONGPROVIDER_LOGIN,
                         EnumRegisterTypes.TIDALSONGPROVIDER_UPDATECURRENTTRACK,
-                        EnumRegisterTypes.TIDALSONGPROVIDER_UPDATETIME);
+                        EnumRegisterTypes.TIDALSONGPROVIDER_UPDATETIME,
+                        EnumRegisterTypes.TIDAL_REFRESHTOKEN,
+                        EnumRegisterTypes.TIDALPROGRESSLISTENER_FINDADDRESS);
                     break;
                 }
-
             }
         }
 

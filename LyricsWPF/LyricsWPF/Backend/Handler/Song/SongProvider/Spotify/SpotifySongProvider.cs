@@ -101,6 +101,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 
                                         currentSong.Time = progress + diff;
                                         currentSong.TimeStamp = 0;
+                                        Thread.Sleep(1);
                                     }
                                 }
                                 catch (Exception e)

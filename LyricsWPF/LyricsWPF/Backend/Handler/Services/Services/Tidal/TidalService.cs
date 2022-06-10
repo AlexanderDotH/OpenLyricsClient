@@ -8,12 +8,14 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DevBase.Async.Task;
 using DevBase.Generic;
 using DevBase.IO;
 using DevBase.Typography;
 using DevBase.Utilities;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Structure;
+using LyricsWPF.Backend.Structure.Enum;
 using LyricsWPF.Backend.Structure.Json;
 using LyricsWPF.Backend.Utils;
 using LyricsWPF.Backend.Utils.Service;
@@ -29,10 +31,9 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
 
         private Debugger<TidalService> _debugger;
 
-        private Task _refeshTokenTask;
+        private TaskSuspensionToken _refreshTokenSuspensionToken;
 
         private TidalAccess _tidalAccess;
-        private Task _loginTask;
 
         public TidalService()
         {
@@ -40,14 +41,17 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
 
             this._disposed = false;
 
-            this._refeshTokenTask = new Task(async () => await RefreshToken(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.None);
-            this._refeshTokenTask.Start();
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out _refreshTokenSuspensionToken,
+                new Task(async () => await RefreshToken(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.None), 
+                EnumRegisterTypes.TIDAL_REFRESHTOKEN);
         }
         
         private async Task RefreshToken()
         {
             while (!this._disposed)
             {
+                await this._refreshTokenSuspensionToken.WaitForRelease();
                 await Task.Delay(2000);
 
                 if (Core.INSTANCE.SettingManager.Settings.TidalAccess.IsTidalConnected)
@@ -59,7 +63,6 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
 
                         if (currentTime > savedTime)
                         {
-
                             JsonTidalAccountRefreshAccess refresh =
                                 await TidalUtils.RefreshToken(Core.INSTANCE.SettingManager.Settings.TidalAccess);
 
@@ -86,7 +89,6 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
 
         public async Task StartAuthorization()
         {
-
             JsonTidalAuthDevice authDevice = await TidalUtils.RegisterDevice();
 
             Process.Start("https://" + authDevice.VerificationUriComplete);
@@ -137,6 +139,8 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
         public void Dispose()
         {
             this._disposed = true;
+
+            Core.INSTANCE.TaskRegister.Kill(EnumRegisterTypes.TIDAL_REFRESHTOKEN);
         }
     }
 }

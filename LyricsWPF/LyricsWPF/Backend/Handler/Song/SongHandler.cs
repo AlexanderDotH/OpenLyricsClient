@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DevBase.Async;
+using DevBase.Async.Task;
 using DevBase.Generic;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Events;
@@ -27,6 +28,8 @@ namespace LyricsWPF.Backend.Handler.Song
         private SongProviderChooser _songProviderChooser;
 
         private bool _disposed;
+        private TaskSuspensionToken _manageCurrentSongSuspensionToken;
+        private TaskSuspensionToken _songInformationSuspensionToken;
 
         private Debugger<SongHandler> _debugger;
 
@@ -45,12 +48,14 @@ namespace LyricsWPF.Backend.Handler.Song
             this._songStageChange = new SongStageChange();
 
             Core.INSTANCE.TaskRegister.RegisterTask(
+                out _manageCurrentSongSuspensionToken,
                 new Task(async () => await ManageCurrentSong(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
                 EnumRegisterTypes.SONGHANDLER_MANAGECURRENTSONG);
 
             if (EnvironmentUtils.IsDebugLogEnabled())
             {
                 Core.INSTANCE.TaskRegister.RegisterTask(
+                    out _songInformationSuspensionToken,
                     new Task(async () => await SongInformation(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                     EnumRegisterTypes.SONGHANDLER_SONGINFORMATION);
             }
@@ -62,6 +67,8 @@ namespace LyricsWPF.Backend.Handler.Song
         {
             while (!this._disposed)
             {
+                await this._manageCurrentSongSuspensionToken.WaitForRelease();
+
                 await Task.Delay(100);
 
                 if (DataValidator.ValidateData(this._songStageChange) && 
@@ -94,6 +101,8 @@ namespace LyricsWPF.Backend.Handler.Song
         {
             while (!this._disposed)
             {
+                await this._songInformationSuspensionToken.WaitForRelease();
+
                 await Task.Delay(10);
                 PrintSongState(GetCurrentSong());
             }
@@ -115,7 +124,7 @@ namespace LyricsWPF.Backend.Handler.Song
             }
         }
 
-        private ISongProvider GetSongProvider(EnumSongProvider enumSongProvider)
+        public ISongProvider GetSongProvider(EnumSongProvider enumSongProvider)
         {
             return this._songProviders.FindEntry(enumSongProvider);
         }

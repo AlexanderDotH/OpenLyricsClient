@@ -3,7 +3,9 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using DevBase.Async.Task;
 using LyricsWPF.Backend.Debug;
+using LyricsWPF.Backend.Structure.Enum;
 using Microsoft.Extensions.Configuration;
 using SpotifyApi.NetCore.Authorization;
 
@@ -14,7 +16,7 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
         private UserAccountsService _userAccountsService;
         private ConfigurationManager _configurationManager;
 
-        private Task _refeshTokenTask;
+        private TaskSuspensionToken _refreshTokenSuspensionToken;
 
         private Debugger<SpotifyService> _debugger;
         private bool _disposed;
@@ -33,14 +35,17 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
             HttpClient httpClient = new HttpClient();
             this._userAccountsService = new UserAccountsService(httpClient, _configurationManager);
 
-            this._refeshTokenTask = new Task(async () => await RefreshToken(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.None);
-            this._refeshTokenTask.Start();
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out _refreshTokenSuspensionToken,
+                new Task(async () => await RefreshToken(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.None),
+                EnumRegisterTypes.SPOTIFY_REFRESHTOKEN);
         }
 
         private async Task RefreshToken()
         {
             while (!this._disposed)
             {
+                await this._refreshTokenSuspensionToken.WaitForRelease();
                 await Task.Delay(1000);
 
                 if (Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected)
@@ -145,6 +150,8 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
         public void Dispose()
         {
             this._disposed = true;
+
+            Core.INSTANCE.TaskRegister.Kill(EnumRegisterTypes.SPOTIFY_REFRESHTOKEN);
         }
     }
 }

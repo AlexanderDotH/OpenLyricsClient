@@ -227,7 +227,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
             return EnumSongProvider.TIDAL;
         }
 
-
         public void Dispose()
         {
             this._disposed = true;

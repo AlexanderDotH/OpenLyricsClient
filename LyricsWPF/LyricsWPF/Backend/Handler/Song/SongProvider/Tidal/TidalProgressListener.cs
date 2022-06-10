@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DevBase.Async.Task;
 using LyricsWPF.Backend.Debug;
+using LyricsWPF.Backend.Structure.Enum;
 using LyricsWPF.Backend.Utils;
 using LyricsWPF.Backend.Utils.Service;
 using Squalr.Engine.DataTypes;
@@ -28,7 +30,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
 
         private Stopwatch _progressTime;
 
-        private Task _listenerTask;
+        private TaskSuspensionToken _findAddressSuspensionToken;
         private bool _disposed;
 
         private Debugger<TidalProgressListener> _debugger;
@@ -48,14 +50,19 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
 
             this._tokenSource = new CancellationTokenSource();
 
-            this._listenerTask = new Task(async t => await Listener(), Core.INSTANCE.CancellationTokenSource.Token);
-            this._listenerTask.Start();
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out this._findAddressSuspensionToken, 
+                new Task(async t => await Listener(), 
+                    Core.INSTANCE.CancellationTokenSource.Token), EnumRegisterTypes.TIDALPROGRESSLISTENER_FINDADDRESS);
         }
 
         private async Task Listener()
         {
             while (!this._disposed)
             {
+                await this._findAddressSuspensionToken.WaitForRelease();
+                await Task.Delay(100);
+
                 if (!DataValidator.ValidateData(this._process))
                 {
                     this._process = TidalUtils.FindTidalProcess();
