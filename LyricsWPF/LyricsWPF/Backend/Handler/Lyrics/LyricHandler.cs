@@ -2,12 +2,14 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using DevBase.Async.Task;
 using LyricsWPF.Backend.Collector;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Events.EventArgs;
 using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Romanisation;
 using LyricsWPF.Backend.Structure;
+using LyricsWPF.Backend.Structure.Enum;
 using LyricsWPF.Backend.Utils;
 
 namespace LyricsWPF.Backend.Handler.Lyrics
@@ -23,9 +25,11 @@ namespace LyricsWPF.Backend.Handler.Lyrics
         private LyricCollector _lyricCollector;
 
         private SongHandler _songHandler;
-        private Task _manageLyricsTask;
-        private Task _manageLyricsRollTask;
-        private Task _applyLyricTask;
+
+        private TaskSuspensionToken _manageLyricSuspensionToken;
+        private TaskSuspensionToken _manageLyricsRollSuspensionToken;
+        private TaskSuspensionToken _applyLyricSuspensionToken;
+
         private CancellationTokenSource _cancellationTokenSource;
 
         private Romanization _romanization;
@@ -38,22 +42,28 @@ namespace LyricsWPF.Backend.Handler.Lyrics
         {
             this._debugger = new Debugger<LyricHandler>(this);
 
+            this._lyricCollector = new LyricCollector();
+            this._romanization = new Romanization();
+
             this._songHandler = songHandler;
             songHandler.SongChanged += OnSongChanged;
 
             this._cancellationTokenSource = new CancellationTokenSource();
 
-            this._lyricCollector = new LyricCollector();
-            this._romanization = new Romanization();
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out _manageLyricSuspensionToken, 
+                new Task(async () => await ManageLyrics(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
+                EnumRegisterTypes.MANAGE_LYRICS);
 
-            this._manageLyricsTask = new Task(async () => await ManageLyrics(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
-            this._manageLyricsTask.Start();
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out _manageLyricsRollSuspensionToken,
+                new Task(async () => await ManageLyricsRoll(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
+                EnumRegisterTypes.MANAGE_LYRICS_ROLL);
 
-            this._manageLyricsRollTask = new Task(async () => await ManageLyricsRoll(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
-            this._manageLyricsRollTask.Start();
-
-            this._applyLyricTask = new Task(async () => await ApplyLyricsToSong(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning);
-            this._applyLyricTask.Start();
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out _applyLyricSuspensionToken,
+                new Task(async () => await ApplyLyricsToSong(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
+                EnumRegisterTypes.APPLY_LYRICS_TO_SONG);
 
             this._disposed = false;
         }
@@ -62,6 +72,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
         {
             while (!this._disposed)
             {
+                await this._applyLyricSuspensionToken.WaitForRelease();
                 await Task.Delay(1);
 
                 Song.Song song = _songHandler.CurrentSong;
@@ -96,6 +107,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
         {
             while (!this._disposed)
             {
+                await this._manageLyricSuspensionToken.WaitForRelease();
                 await Task.Delay(50);
 
                 if (DataValidator.ValidateData(this._songHandler))
@@ -153,6 +165,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
         {
             while (!this._disposed)
             {
+                await this._manageLyricsRollSuspensionToken.WaitForRelease();
                 await Task.Delay(35);
 
                 Song.Song song = this._songHandler.CurrentSong;
@@ -229,6 +242,11 @@ namespace LyricsWPF.Backend.Handler.Lyrics
         public void Dispose()
         {
             this._disposed = true;
+
+            Core.INSTANCE.TaskRegister.Kill(
+                EnumRegisterTypes.MANAGE_LYRICS, 
+                EnumRegisterTypes.MANAGE_LYRICS_ROLL,
+                EnumRegisterTypes.APPLY_LYRICS_TO_SONG);
         }
     }
 }

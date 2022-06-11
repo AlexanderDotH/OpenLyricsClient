@@ -1,198 +1,166 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using DevBase.Async.Task;
 using DevBase.Generic;
-using DevBase.Web;
-using DevBase.Web.RequestData;
-using DevBase.Web.ResponseData;
 using DevBaseFormat;
-using DevBaseFormat.Formats.MmlFormat;
+using DevBaseFormat.Formats.LrcFormat;
 using DevBaseFormat.Structure;
-using LyricsWPF.Backend.Collector.Providers.Musixmatch.Json;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Structure;
+using LyricsWPF.Backend.Structure.Enum;
 using LyricsWPF.Backend.Utils;
+using MusixmatchClientLib;
+using MusixmatchClientLib.API.Contexts;
+using MusixmatchClientLib.API.Model.Types;
+using MusixmatchClientLib.Auth;
+using MusixmatchClientLib.Types;
 
 namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
 {
-    class MusixMatchCollector : ICollector
+    public class MusixMatchCollector : ICollector
     {
-
-        private string _baseUrl;
-
         private Debugger<MusixMatchCollector> _debugger;
+
+        private MusixmatchToken _musixmatchToken;
+
+        private TaskSuspensionToken _collectMusixMatchSuspensionToken;
 
         public MusixMatchCollector()
         {
             this._debugger = new Debugger<MusixMatchCollector>(this);
 
-            this._baseUrl = "https://apic-desktop.musixmatch.com";
+            this._musixmatchToken = null;
+
+            if (Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Count > 0)
+            {
+                this._musixmatchToken = new MusixmatchToken(GetRandomMusixMatchToken(), ApiContext.Desktop);
+            }
+            else
+            {
+                this._musixmatchToken = new MusixmatchToken();
+                Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Add(this._musixmatchToken.Token);
+                Core.INSTANCE.SettingManager.WriteSettings();
+            }
+
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out this._collectMusixMatchSuspensionToken, 
+                new Task(async () => await this.CollectMusixMatchTokensTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
+                EnumRegisterTypes.MUSIXMATCH_COLLECT_TOKENS);
+        }
+
+        private async Task CollectMusixMatchTokensTask()
+        {
+            while (!Core.IsDisposed())
+            {
+                await this._collectMusixMatchSuspensionToken.WaitForRelease();
+                await Task.Delay(15000);
+
+                try
+                {
+                    Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Add(new MusixmatchToken().Token);
+                    Core.INSTANCE.SettingManager.WriteSettings();
+                }
+                catch (Exception e) { }
+            }
         }
 
         public async Task<LyricData> GetLyrics(SongRequestObject songRequestObject)
         {
             if (!DataValidator.ValidateData(songRequestObject))
-                return null;
+                return new LyricData(LyricReturnCode.Failed);
 
-            MusixMatchFetchResponse fetchedLyrics = await FetchTrack(songRequestObject);
+            if (!DataValidator.ValidateData(this._musixmatchToken))
+                return new LyricData(LyricReturnCode.Failed);
 
-            if (!DataValidator.ValidateData(fetchedLyrics))
-                return null;
+            MusixmatchClient musixmatchClient = new MusixmatchClient(GetRandomMusixMatchToken());
 
-            if (!DataValidator.ValidateData(fetchedLyrics.Message))
-                return null;
+            if (!DataValidator.ValidateData(musixmatchClient))
+                return new LyricData(LyricReturnCode.Failed);
 
-            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body, fetchedLyrics.Message.Header))
-                return null;
-
-            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls))
-                return null;
-
-            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet))
-                return null;
-
-            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message))
-                return null;
-
-            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body, fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Header))
-                return null;
-
-            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track))
-                return null;
-
-            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet))
-                return null;
-
-            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message))
-                return null;
-
-            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Header, fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Body))
-                return null;
-
-            if (!DataValidator.ValidateData(fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Body.SubtitleList))
-                return null;
-
-            if (fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Header.Instrumental == 1)
-                return new LyricData(
-                    LyricReturnCode.Success, 
-                    fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.TrackName,
-                    fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.AlbumName,
-                    new string[] { fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.ArtistName },
-                    LyricType.INSTRUMENTAL);
-
-            if (fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.HasSubtitles == 0)
-                return null;
-
-            MusixMatchSubtitleList[] subtitleList =
-                fetchedLyrics.Message.Body.MacroCalls.TrackSubtitlesGet.Message.Body.SubtitleList;
-
-            for (int i = 0; i < subtitleList.Length; i++)
+            GenericList<Track> tracks = await musixmatchClient.SongSearchAsync(
+                new TrackSearchParameters
             {
-                MusixMatchSubtitle subtitle = subtitleList[i].Subtitle;
+                Album = songRequestObject.FormattedSongAlbum, // Album name
+                Artist = songRequestObject.GetArtistsSplit(), // Artist name
+                Title = songRequestObject.FormattedSongName, // Track name
+                HasSubtitles = true, // Only search for tracks with synced lyrics
+                Sort = TrackSearchParameters.SortStrategy.TrackRatingAsc // List sorting strategy 
+            });
 
-                if (!DataValidator.ValidateData(subtitle))
-                    continue;
+            for (int i = 0; i < tracks.Length; i++)
+            {
+                Track track = tracks[i];
 
-                if (subtitle.SubtitleBody == "")
-                    continue;
+                if (track.Instrumental == 1)
+                {
+                    return new LyricData(
+                        LyricReturnCode.Success,
+                        track.TrackName,
+                        track.AlbumName,
+                        new string[] { track.ArtistName },
+                        LyricType.INSTRUMENTAL);
+                }
+
+                SubtitleRawResponse response = await musixmatchClient.GetTrackSubtitlesRawAsync(track.TrackId, MusixmatchClient.SubtitleFormat.Lrc);
 
                 FileFormatParser<LrcObject> fileFormatParser =
                     new FileFormatParser<LrcObject>(
-                        new MmlParser<LrcObject>());
+                        new LrcParser<LrcObject>());
 
-                if (!DataValidator.ValidateData(fileFormatParser))
-                    return null;
+                if (DataValidator.ValidateData(fileFormatParser))
+                {
+                    GenericList<LyricElement> lyricElements =
+                        fileFormatParser.FormatFromString(response.SubtitleBody).Lyrics;
 
-                string lyrics = subtitle.SubtitleBody;
-
-                GenericList<LyricElement> lyricElements =
-                    fileFormatParser.FormatFromString(lyrics).Lyrics;
-
-                if (!DataValidator.ValidateData(lyricElements))
-                    return null;
-
-                return await LyricData.ConvertToData(
-                    lyricElements, 
-                    fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.TrackName, 
-                    fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.AlbumName, 
-                    new string[] { fetchedLyrics.Message.Body.MacroCalls.MatcherTrackGet.Message.Body.Track.ArtistName }, 
-                    this.CollectorName());
+                    if (DataValidator.ValidateData(lyricElements))
+                    {
+                        return await LyricData.ConvertToData(
+                            lyricElements, 
+                            track.TrackName,
+                            track.AlbumName,
+                            new string[] { track.ArtistName }, 
+                            this.CollectorName());
+                    }
+                }
             }
 
-            return null;
+            return new LyricData(LyricReturnCode.Failed);
         }
 
-        public async Task<MusixMatchFetchResponse> FetchTrack(SongRequestObject songRequestObject)
+        private bool IsTrackValid(Track track, SongRequestObject songRequestObject)
         {
-            if (!DataValidator.ValidateData(songRequestObject))
-                return null;
+            string trackNameFormatted = SongFormatter.FormatSongName(track.TrackName);
 
-            if (!DataValidator.ValidateData(songRequestObject.SongName, songRequestObject.Artists,
-                    songRequestObject.Album))
-                return null;
+            if ((!track.TrackName.Equals(songRequestObject.SongName) ||
+                !track.TrackName.Equals(songRequestObject.FormattedSongName) || 
+                (!trackNameFormatted.Equals(songRequestObject.SongName) ||
+                    !trackNameFormatted.Equals(songRequestObject.FormattedSongName))))
+                return false;
 
-            string requestString = Uri.EscapeUriString(
-                string.Format("{0}/ws/1.1/macro.subtitles.get" +
-                              "?format=json" +
-                              "&user_language=en" +
-                              "&namespace=lyrics_synched" +
-                              "&f_subtitle_length_max_deviation=1" +
-                              "&subtitle_format=mxm" +
-                              "&app_id=web-desktop-app-v1.0" +
-                              "&usertoken={4}" +
-                              "&q_track={1}" +
-                              "&q_artist={2}" +
-                              "&q_album={3}", 
-                    this._baseUrl, songRequestObject.SongName, songRequestObject.GetArtistsSplit(), songRequestObject.Album, GetRandomUserToken()));
-
-            this._debugger.Write("Full track fetch url: " + requestString, DebugType.DEBUG);
-
-            RequestData requestData = new RequestData(requestString);
-            requestData.Header.Add("Cookie", GetRandomCookieToken());
-            requestData.UserAgent = RequestData.GetRandomUseragent();
-
-            Request request = new Request(requestData);
-            ResponseData responseData = await request.GetResponseAsync();
-
-            if (!DataValidator.ValidateData(responseData))
-                return null;
-
-            this._debugger.Write("Full track response data: " + responseData.GetContentAsString(), DebugType.DEBUG);
-
-            if (responseData.GetContentAsString().Contains("\"hint\":\"captcha\""))
-                return null;
-
-            return new JsonDeserializer<MusixMatchFetchResponse>().Deserialize(responseData.GetContentAsString());
+            return true;
         }
 
-        private string GetRandomCookieToken()
+        private string GetRandomMusixMatchToken()
         {
-            GenericList<string> tokens = new GenericList<string>();
-            tokens.Add("AWSELB=55578B011601B1EF8BC274C33F9043CA947F99DCFF0A80541772015CA2B39C35C0F9E1C932D31725A7310BCAEB0C37431E024E2B45320B7F2C84490C2C97351FDE34690157");
-            tokens.Add("AWSELB=55578B011601B1EF8BC274C33F9043CA947F99DCFF6AB1B746DBF1E96A6F2B997493EE03F2DD5F516C3BC8E8DE7FE9C81FF414E8E76CF57330A3F26A0D86825F74794F3C94");
-            return tokens.Get(new Random().Next(0, tokens.Length));
-        }
+            if (!DataValidator.ValidateData(Core.INSTANCE.SettingManager.Settings.MusixMatchTokens))
+                return null;
 
-        private string GetRandomUserToken()
-        {
-            GenericList<string> tokens = new GenericList<string>();
-            tokens.Add("220611243cc62d411df2aff1e2353d75745bc326b8408ff840c52f");
-            tokens.Add("220611d151ae5ae988c7e7c7240d39843217b7df97f780e48547ea");
-            tokens.Add("220611a593d2f9b89995241492c5a5a16482ff9e5f1aa7b1bc5f00");
-            tokens.Add("22061192080af31393137ad3bc64df568a11c6a9b0005520d1e66a");
-            //tokens.Add("1710144894f79b194e5a5866d9e084d48f227d257dcd8438261277");
-            //tokens.Add("190511307254ae92ff84462c794732b84754b64a2f051121eff330");
-            return tokens.Get(new Random().Next(0, tokens.Length));
+            return Core.INSTANCE.SettingManager.Settings.MusixMatchTokens[new Random().Next(0,
+                Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Count - 1)];
         }
 
         public string CollectorName()
         {
-            return "Musixmatch";
+            return "MusixMatch";
         }
 
         public int ProviderQuality()
         {
-            return (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.PERFORMANCE ? 10 : 5);
+            return (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.PERFORMANCE ? 10 : 5); 
         }
     }
 }

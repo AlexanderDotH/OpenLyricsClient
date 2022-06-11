@@ -73,6 +73,7 @@ namespace LyricsWPF.Backend
             _cancellationTokenSource.Cancel();
 
             this.TaskRegister.Kill(EnumRegisterTypes.SHOW_LYRICS, EnumRegisterTypes.SHOW_PROGRESS, EnumRegisterTypes.SHOW_INFOS);
+            this.TaskRegister.Kill(EnumRegisterTypes.MUSIXMATCH_COLLECT_TOKENS);
 
             this._songHandler.Dispose();
             this._lyricHandler.Dispose();

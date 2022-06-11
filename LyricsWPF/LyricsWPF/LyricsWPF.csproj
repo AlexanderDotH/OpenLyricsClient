@@ -368,7 +368,7 @@
     <Compile Include="Backend\Collector\Cache\CacheManager.cs" />
     <Compile Include="Backend\Collector\CollectorComparer.cs" />
     <Compile Include="Backend\Collector\ICollector.cs" />
-    <Compile Include="Backend\Collector\Providers\Musixmatch\NewMusixMatchCollector.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\MusixMatchCollector.cs" />
     <Compile Include="Backend\Events\EventType.cs" />
     <Compile Include="Backend\Handler\Services\Services\Tidal\TidalService.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\Tidal\TidalDataMerger.cs" />
@@ -424,7 +424,6 @@
     <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchUserblobGet.cs" />
     <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchUserblobGetMessage.cs" />
     <Compile Include="Backend\Collector\Providers\Musixmatch\Json\MusixMatchUserblobGetMessageHeader.cs" />
-    <Compile Include="Backend\Collector\Providers\Musixmatch\MusixMatchCollector.cs" />
     <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2AlbumResponse.cs" />
     <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2ArtistResponse.cs" />
     <Compile Include="Backend\Collector\Providers\NetEaseV2\Json\NetEaseV2KlyricResponse.cs" />

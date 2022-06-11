@@ -26,10 +26,9 @@ namespace LyricsWPF.Backend.Collector
         public LyricCollector()
         {
             this._lyricCollectors = new GenericList<ICollector>();
-            //this._lyricCollectors.Add(new NetEaseCollector());
-            //this._lyricCollectors.Add(new NetEaseV2Collector());
-            //this._lyricCollectors.Add(new MusixMatchCollector());
-            this._lyricCollectors.Add(new NewMusixMatchCollector());
+            this._lyricCollectors.Add(new NetEaseCollector());
+            this._lyricCollectors.Add(new NetEaseV2Collector());
+            this._lyricCollectors.Add(new MusixMatchCollector());
             
             this._cacheManager = new CacheManager();
         }

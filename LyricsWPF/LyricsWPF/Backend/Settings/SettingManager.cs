@@ -89,6 +89,8 @@ namespace LyricsWPF.Backend.Settings
 
             settings.LyricSelectionMode = SelectionMode.QUALITY;
 
+            settings.MusixMatchTokens = new List<string>();
+
             WriteSettings(settings);
 
             return settings;
