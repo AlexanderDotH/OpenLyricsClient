@@ -7,6 +7,7 @@ using DevBase.Async.Task;
 using DevBase.Generic;
 using DevBaseFormat;
 using DevBaseFormat.Formats.LrcFormat;
+using DevBaseFormat.Formats.MmlFormat;
 using DevBaseFormat.Structure;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Song;
@@ -105,11 +106,11 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                         LyricType.INSTRUMENTAL);
                 }
 
-                SubtitleRawResponse response = await musixmatchClient.GetTrackSubtitlesRawAsync(track.TrackId, MusixmatchClient.SubtitleFormat.Lrc);
+                SubtitleRawResponse response = await musixmatchClient.GetTrackSubtitlesRawAsync(track.TrackId, MusixmatchClient.SubtitleFormat.Musixmatch);
 
                 FileFormatParser<LrcObject> fileFormatParser =
                     new FileFormatParser<LrcObject>(
-                        new LrcParser<LrcObject>());
+                        new MmlParser<LrcObject>());
 
                 if (DataValidator.ValidateData(fileFormatParser))
                 {
@@ -129,19 +130,6 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
             }
 
             return new LyricData(LyricReturnCode.Failed);
-        }
-
-        private bool IsTrackValid(Track track, SongRequestObject songRequestObject)
-        {
-            string trackNameFormatted = SongFormatter.FormatSongName(track.TrackName);
-
-            if ((!track.TrackName.Equals(songRequestObject.SongName) ||
-                !track.TrackName.Equals(songRequestObject.FormattedSongName) || 
-                (!trackNameFormatted.Equals(songRequestObject.SongName) ||
-                    !trackNameFormatted.Equals(songRequestObject.FormattedSongName))))
-                return false;
-
-            return true;
         }
 
         private string GetRandomMusixMatchToken()
