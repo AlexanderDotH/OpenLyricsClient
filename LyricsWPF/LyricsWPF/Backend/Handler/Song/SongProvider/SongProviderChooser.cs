@@ -25,14 +25,27 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
 
         private Debugger<SongProviderChooser> _debugger;
 
+        private readonly object[] _spotifyTypes = new Object[]
+        {
+            EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK,
+            EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATESONGDATA,
+            EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC,
+            EnumRegisterTypes.SPOTIFY_REFRESHTOKEN
+        };
+
+        private readonly object[] _tidalTypes = new Object[]
+        {
+            EnumRegisterTypes.TIDALSONGPROVIDER_LOGIN,
+            EnumRegisterTypes.TIDALSONGPROVIDER_UPDATECURRENTTRACK,
+            EnumRegisterTypes.TIDALSONGPROVIDER_UPDATETIME,
+            EnumRegisterTypes.TIDAL_REFRESHTOKEN,
+            EnumRegisterTypes.TIDALPROGRESSLISTENER_FINDADDRESS
+        };
+
         public SongProviderChooser()
         {
             this._debugger = new Debugger<SongProviderChooser>(this);
-
             this._currentSongProvider = EnumSongProvider.NONE;
-
-            //Core.INSTANCE.TaskRegister.Suspend(EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK, EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATESONGDATA, EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC,
-            //    EnumRegisterTypes.TIDALSONGPROVIDER_LOGIN, EnumRegisterTypes.TIDALSONGPROVIDER_UPDATECURRENTTRACK, EnumRegisterTypes.TIDALSONGPROVIDER_UPDATETIME);
 
             Core.INSTANCE.TaskRegister.RegisterTask(
                 out _taskSuspensionToken, 
@@ -45,7 +58,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
             while (!this._disposed)
             {
                 await this._taskSuspensionToken.WaitForRelease();
-
                 await Task.Delay(100);
 
                 if (!DataValidator.ValidateData(Core.INSTANCE.WindowLogger))
@@ -87,21 +99,12 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
             {
                 case EnumSongProvider.SPOTIFY:
                 {
-                    Core.INSTANCE.TaskRegister.Resume(
-                        EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK,
-                        EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATESONGDATA,
-                        EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC,
-                        EnumRegisterTypes.SPOTIFY_REFRESHTOKEN);
+                    Core.INSTANCE.TaskRegister.ResumeByArray(this._spotifyTypes);
                     break;
                 }
                 case EnumSongProvider.TIDAL:
                 {
-                    Core.INSTANCE.TaskRegister.Resume(
-                        EnumRegisterTypes.TIDALSONGPROVIDER_LOGIN,
-                        EnumRegisterTypes.TIDALSONGPROVIDER_UPDATECURRENTTRACK,
-                        EnumRegisterTypes.TIDALSONGPROVIDER_UPDATETIME,
-                        EnumRegisterTypes.TIDAL_REFRESHTOKEN,
-                        EnumRegisterTypes.TIDALPROGRESSLISTENER_FINDADDRESS);
+                    Core.INSTANCE.TaskRegister.ResumeByArray(this._tidalTypes);
                     break;
                 }
             }
@@ -113,21 +116,12 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
             {
                 case EnumSongProvider.SPOTIFY:
                 {
-                    Core.INSTANCE.TaskRegister.Suspend(
-                        EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK,
-                        EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATESONGDATA,
-                        EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC,
-                        EnumRegisterTypes.SPOTIFY_REFRESHTOKEN);
+                    Core.INSTANCE.TaskRegister.SuspendByArray(this._spotifyTypes);
                     break;
                 }
                 case EnumSongProvider.TIDAL:
                 {
-                    Core.INSTANCE.TaskRegister.Suspend(
-                        EnumRegisterTypes.TIDALSONGPROVIDER_LOGIN,
-                        EnumRegisterTypes.TIDALSONGPROVIDER_UPDATECURRENTTRACK,
-                        EnumRegisterTypes.TIDALSONGPROVIDER_UPDATETIME,
-                        EnumRegisterTypes.TIDAL_REFRESHTOKEN,
-                        EnumRegisterTypes.TIDALPROGRESSLISTENER_FINDADDRESS);
+                    Core.INSTANCE.TaskRegister.SuspendByArray(this._tidalTypes);
                     break;
                 }
             }

@@ -31,6 +31,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
             if (playbackContext.ProgressMs.HasValue && playbackContext.IsPlaying)
             {
                 song.ProgressMs = playbackContext.ProgressMs.Value;
+                song.Time = playbackContext.ProgressMs.Value;
             }
 
             return song;

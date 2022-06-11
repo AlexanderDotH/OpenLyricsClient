@@ -88,7 +88,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                                 {
                                     if (currentSong != null)
                                     {
-                                        long currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
                                         long timeStamp = currentSong.TimeStamp;
 
                                         long diff = 0;
@@ -96,14 +95,14 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 
                                         if (currentSong.TimeStamp > 0)
                                         {
-                                            diff = currentTime - timeStamp;
+                                            diff = DateTimeOffset.Now.ToUnixTimeMilliseconds() - timeStamp;
                                         }
 
-                                        currentSong.Time = diff;
+                                        currentSong.Time = progress + diff;
                                         currentSong.TimeStamp = 0;
+                                        //Thread.Sleep(1);
 
                                         // Fix timeglitch bug
-                                        Thread.Sleep(1);
                                     }
                                 }
                                 catch (Exception e)

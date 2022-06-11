@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using DevBase.Generic;
 using DevBase.IO;
 using DevBase.Utilities;
 using LyricsWPF.Backend.Handler.Song;
-using LyricsWPF.Backend.Settings;
 using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Utils;
 using Newtonsoft.Json;
@@ -18,7 +12,6 @@ namespace LyricsWPF.Backend.Collector.Cache
 {
     public class CacheManager
     {
-
         private GenericList<CacheEntry> _cache;
 
         private const string CACHE_EXTENSION = ".cache";
@@ -141,7 +134,6 @@ namespace LyricsWPF.Backend.Collector.Cache
                 Album = lyricData.Album,
                 Artists = lyricData.Artists
             };
-
         }
     }
 }

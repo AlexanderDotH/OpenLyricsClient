@@ -15,6 +15,7 @@ using LyricsWPF.Backend.Handler.Services;
 using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Helper;
 using LyricsWPF.Backend.Settings;
+using LyricsWPF.Backend.Structure.Enum;
 using LyricsWPF.Backend.Utils;
 using Newtonsoft.Json;
 using SpotifyApi.NetCore;
@@ -71,10 +72,11 @@ namespace LyricsWPF.Backend
             _disposed = true;
             _cancellationTokenSource.Cancel();
 
+            this.TaskRegister.Kill(EnumRegisterTypes.SHOW_LYRICS, EnumRegisterTypes.SHOW_PROGRESS, EnumRegisterTypes.SHOW_INFOS);
+
             this._songHandler.Dispose();
             this._lyricHandler.Dispose();
             this._serviceHandler.Dispose();
-            this._windowLogger.Dispose();
         }
 
         public SettingManager SettingManager

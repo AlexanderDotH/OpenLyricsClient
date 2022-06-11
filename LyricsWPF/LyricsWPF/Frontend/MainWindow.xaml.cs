@@ -14,11 +14,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using DevBase.Async.Task;
 using LyricsWPF.Backend;
 using LyricsWPF.Backend.Collector;
 using LyricsWPF.Backend.Events.EventArgs;
 using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Structure;
+using LyricsWPF.Backend.Structure.Enum;
 using LyricsWPF.Backend.Utils;
 
 namespace LyricsWPF
@@ -29,6 +31,10 @@ namespace LyricsWPF
     public partial class MainWindow : System.Windows.Window
     {
         private Settings _settings;
+
+        private TaskSuspensionToken _showInfoSuspensionToken;
+        private TaskSuspensionToken _showLyricSuspensionToken;
+        private TaskSuspensionToken _showProgressSuspensionToken;
 
         public MainWindow()
         {
@@ -46,128 +52,153 @@ namespace LyricsWPF
 
             this.pgSongProgress.Value = 0;
 
-            //BindText(currentLine, "Line");
             Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
 
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out this._showInfoSuspensionToken,
+                new Task(async () => await this.ShowInfoTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
+                EnumRegisterTypes.SHOW_INFOS);
 
-            var t = new TaskFactory().StartNew(async () =>
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out this._showLyricSuspensionToken,
+                new Task(async () => await this.ShowLyricsTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
+                EnumRegisterTypes.SHOW_LYRICS);
+
+            Core.INSTANCE.TaskRegister.RegisterTask(
+                out this._showProgressSuspensionToken,
+                new Task(async () => await this.ShowProgressTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
+                EnumRegisterTypes.SHOW_PROGRESS);
+        }
+
+        private async Task ShowProgressTask()
+        {
+            while (!Core.IsDisposed())
             {
-                while (!Core.IsDisposed())
+                await Task.Delay(1);
+                await this._showProgressSuspensionToken.WaitForRelease();
+
+                Song song = Core.INSTANCE.SongHandler.CurrentSong;
+
+                if (!DataValidator.ValidateData(song))
+                    continue;
+
+                if (!DataValidator.ValidateData(song.Time, song.MaxTime))
+                    continue;
+
+                await this.Dispatcher.InvokeAsync(() =>
                 {
-                    await Task.Delay(200);
+                    this.pgSongProgress.Value = song.GetPercentage();
+                });
+            }
+        }
 
-                    Song song = Core.INSTANCE.SongHandler.CurrentSong;
+        private async Task ShowInfoTask()
+        {
+            while (!Core.IsDisposed())
+            {
+                await this._showInfoSuspensionToken.WaitForRelease();
+                await Task.Delay(100);
 
-                    if (DataValidator.ValidateData(song))
+                Song song = Core.INSTANCE.SongHandler.CurrentSong;
+
+                if (!DataValidator.ValidateData(song))
+                    continue;
+
+                if (!DataValidator.ValidateData(song.Title, song.ProgressString, song.MaxProgressString))
+                    continue;
+
+                //Title
+                await this.Dispatcher.InvokeAsync(() =>
+                {
+                    this.currentTitle.Text = song.Title;
+                    this.currentFullTitle.Text = song.Title;
+
+                    this.timeFrom.Text = song.ProgressString;
+                    this.timeTo.Text = song.MaxProgressString;
+                });
+
+                if (!DataValidator.ValidateData(song.Lyrics))
+                    continue;
+                
+                if (!DataValidator.ValidateData(song.Lyrics.LyricProvider))
+                    continue;
+
+                //Lyric provider
+                await this.Dispatcher.InvokeAsync(() =>
+                {
+                    this.provider.Text = "Powered by " + song.Lyrics.LyricProvider;
+                    this.fullLyricText.Text = song.Lyrics.FullLyrics;
+                });
+            }
+        }
+
+        private async Task ShowLyricsTask()
+        {
+            while (!Core.IsDisposed())
+            {
+                await this._showLyricSuspensionToken.WaitForRelease();
+                await Task.Delay(1);
+
+                Song song = Core.INSTANCE.SongHandler.CurrentSong;
+
+                if (!DataValidator.ValidateData(song))
+                    continue;
+
+                if (!DataValidator.ValidateData(song.State))
+                    continue;
+
+                if (song.State == SongState.NO_LYRICS_AVAILABLE)
+                {
+                    this.Dispatcher.Invoke(() =>
                     {
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            this.currentTitle.Text = song.Title;
-                            this.currentFullTitle.Text = song.Title;
-
-                            this.timeFrom.Text = song.ProgressString;
-                            this.timeTo.Text = song.MaxProgressString;
-                        });
-
-                        if (DataValidator.ValidateData(song.Lyrics) &&
-                            DataValidator.ValidateData(song.Lyrics.LyricProvider))
-                        {
-                            this.Dispatcher.Invoke(() =>
-                            {
-                                this.provider.Text = "Powered by " + song.Lyrics.LyricProvider;
-                                this.fullLyricText.Text = song.Lyrics.FullLyrics;
-                            });
-                        }
-
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            this.pgSongProgress.Value = song.GetPercentage();
-                        });
-
-                        if (DataValidator.ValidateData(song.State))
-                        {
-                            if (song.State == SongState.NO_LYRICS_AVAILABLE)
-                            {
-                                this.Dispatcher.Invoke(() =>
-                                {
-                                    this.firstLine.Text = "";
-                                    this.secondLine.Text = "Lyrics not found";
-                                    this.thirdLine.Text = "";
-                                    this.provider.Text = "";
-                                });
-                            }
-                            else if (DataValidator.ValidateData(song.Lyrics) &&
-                                     DataValidator.ValidateData(song.CurrentLyricsRoll) &&
-                                     song.State == SongState.HAS_LYRICS_AVAILABLE)
-                            {
-                                LyricsRoll lyricsRoll = song.CurrentLyricsRoll;
-
-                                if (DataValidator.ValidateData(lyricsRoll))
-                                {
-                                    this.Dispatcher.Invoke(() =>
-                                    {
-                                        if (DataValidator.ValidateData(lyricsRoll.PartOne) &&
-                                            DataValidator.ValidateData(lyricsRoll.PartOne.Part))
-                                        {
-                                            this.firstLine.Text = lyricsRoll.PartOne.Part;
-                                        }
-                                        else
-                                        {
-                                            this.firstLine.Text = "";
-                                        }
-
-                                        if (DataValidator.ValidateData(lyricsRoll.PartTwo) &&
-                                            DataValidator.ValidateData(lyricsRoll.PartTwo.Part))
-                                        {
-                                            this.secondLine.Text = lyricsRoll.PartTwo.Part;
-                                        }
-                                        else
-                                        {
-                                            this.secondLine.Text = "";
-                                        }
-
-                                        if (DataValidator.ValidateData(lyricsRoll.PartThree) &&
-                                            DataValidator.ValidateData(lyricsRoll.PartThree.Part))
-                                        {
-                                            this.thirdLine.Text = lyricsRoll.PartThree.Part;
-                                        }
-                                        else
-                                        {
-                                            this.thirdLine.Text = "";
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    }
+                        this.firstLine.Text = "";
+                        this.secondLine.Text = "Lyrics not found";
+                        this.thirdLine.Text = "";
+                        this.provider.Text = "";
+                    });
                 }
-            }, Core.INSTANCE.CancellationTokenSource.Token);
 
-            //Thread trd = new Thread(t =>
-            //{
-            //    while (true)
-            //    {
-            //        Thread.Sleep(10);
+                if (!DataValidator.ValidateData(song.Lyrics, song.CurrentLyricsRoll))
+                    continue;
 
-            //        Song song = core.SongHandler.CurrentSong;
-            //        if (DataValidator.ValidateSong(song))
-            //        {
-            //            this.Dispatcher.Invoke((Action)(() =>
-            //            {
-            //                this.currentLine.Text = song.CurrentLyricPart.Part;
-            //            }));
-            //            this.Dispatcher.InvokeAsync(() =>
-            //            {
-            //                while (!Core.IsDisposed())
-            //                {
-            //                    this.currentLine.Text = song.CurrentLyricPart.Part;
-            //                }
-            //            }, DispatcherPriority.Normal);
-            //        }
+                LyricsRoll lyricsRoll = song.CurrentLyricsRoll;
 
-            //    }
-            //});
-            //trd.Start();
+                if (!DataValidator.ValidateData(lyricsRoll))
+                    continue;
+
+                await this.Dispatcher.InvokeAsync(() =>
+                {
+                    if (DataValidator.ValidateData(lyricsRoll.PartOne) &&
+                        DataValidator.ValidateData(lyricsRoll.PartOne.Part))
+                    {
+                        this.firstLine.Text = lyricsRoll.PartOne.Part;
+                    }
+                    else
+                    {
+                        this.firstLine.Text = "";
+                    }
+
+                    if (DataValidator.ValidateData(lyricsRoll.PartTwo) &&
+                        DataValidator.ValidateData(lyricsRoll.PartTwo.Part))
+                    {
+                        this.secondLine.Text = lyricsRoll.PartTwo.Part;
+                    }
+                    else
+                    {
+                        this.secondLine.Text = "";
+                    }
+
+                    if (DataValidator.ValidateData(lyricsRoll.PartThree) &&
+                        DataValidator.ValidateData(lyricsRoll.PartThree.Part))
+                    {
+                        this.thirdLine.Text = lyricsRoll.PartThree.Part;
+                    }
+                    else
+                    {
+                        this.thirdLine.Text = "";
+                    }
+                });
+            }
         }
 
         private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
@@ -178,17 +209,9 @@ namespace LyricsWPF
                 this.secondLine.Text = "";
                 this.thirdLine.Text = "";
                 this.provider.Text = "";
+                this.currentTitle.Text = "";
+                this.provider.Text = "";
             });
-        }
-
-        static void BindText(TextBlock textBox, string property)
-        {
-            DependencyProperty textProp = TextBlock.TextProperty;
-            if (!BindingOperations.IsDataBound(textBox, textProp))
-            {
-                Binding b = new Binding(property);
-                BindingOperations.SetBinding(textBox, textProp, b);
-            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -203,33 +226,6 @@ namespace LyricsWPF
             {
                 this._settings.Show();
             }
-        }
-
-        private void button_Click_1(object sender, RoutedEventArgs e)
-        {
-            //var col = new LyricCollector();
-            //foreach (var s in col.CollectLyrics("Don´t You Worry Child", new []{ "Swedish House" }, "NetEase").LyricParts)
-            //{
-            //    Console.WriteLine(s.Part + " : " + s.Time);
-            //}
-
-            //var col = new LyricCollector();
-            //foreach (var s in col.CollectLyrics(new SongRequestObject(Core.INSTANCE.SongHandler.CurrentSong.Title, Core.INSTANCE.SongHandler.CurrentSong.Artists), "NetEase").LyricParts)
-            //{
-            //    Console.WriteLine(s.Part + " : " + s.Time);
-            //}
-            //var _lyricCollector = new LyricCollector("Heros");
-            //var _lyricDeserializer = new LyricDeserializer(_lyricCollector.CollectLyrics());
-            //var _jsonFullLyrics = _lyricDeserializer.deserialize();
-
-            //foreach (var l in _jsonFullLyrics)
-            //{
-            //    Console.WriteLine(l.lyrics);
-            //}
-            //SpotifyService spotifyService = new SpotifyService();
-            //spotifyService.startAuthorization();
-            //LyricHandler lyricHandler = new LyricHandler("b3d1e5357f438d523562d175cf697244");
-            //lyricHandler.getLyric();
         }
 
         private void Window_Closing_1(object sender, System.ComponentModel.CancelEventArgs e)

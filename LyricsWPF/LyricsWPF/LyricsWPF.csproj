@@ -136,6 +136,9 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MusixmatchClientLib">
+      <HintPath>..\Libraries\MusixmatchClientLib.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -365,6 +368,7 @@
     <Compile Include="Backend\Collector\Cache\CacheManager.cs" />
     <Compile Include="Backend\Collector\CollectorComparer.cs" />
     <Compile Include="Backend\Collector\ICollector.cs" />
+    <Compile Include="Backend\Collector\Providers\Musixmatch\NewMusixMatchCollector.cs" />
     <Compile Include="Backend\Events\EventType.cs" />
     <Compile Include="Backend\Handler\Services\Services\Tidal\TidalService.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\Tidal\TidalDataMerger.cs" />

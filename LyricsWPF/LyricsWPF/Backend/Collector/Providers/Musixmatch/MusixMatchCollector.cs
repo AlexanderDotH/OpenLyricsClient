@@ -1,24 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DevBase.Generic;
 using DevBase.Web;
 using DevBase.Web.RequestData;
 using DevBase.Web.ResponseData;
 using DevBaseFormat;
-using DevBaseFormat.Formats.LrcFormat;
 using DevBaseFormat.Formats.MmlFormat;
 using DevBaseFormat.Structure;
-using Kawazu;
 using LyricsWPF.Backend.Collector.Providers.Musixmatch.Json;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Utils;
-using Newtonsoft.Json;
 
 namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
 {
@@ -183,8 +176,12 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
         private string GetRandomUserToken()
         {
             GenericList<string> tokens = new GenericList<string>();
-            tokens.Add("1710144894f79b194e5a5866d9e084d48f227d257dcd8438261277");
-            tokens.Add("190511307254ae92ff84462c794732b84754b64a2f051121eff330");
+            tokens.Add("220611243cc62d411df2aff1e2353d75745bc326b8408ff840c52f");
+            tokens.Add("220611d151ae5ae988c7e7c7240d39843217b7df97f780e48547ea");
+            tokens.Add("220611a593d2f9b89995241492c5a5a16482ff9e5f1aa7b1bc5f00");
+            tokens.Add("22061192080af31393137ad3bc64df568a11c6a9b0005520d1e66a");
+            //tokens.Add("1710144894f79b194e5a5866d9e084d48f227d257dcd8438261277");
+            //tokens.Add("190511307254ae92ff84462c794732b84754b64a2f051121eff330");
             return tokens.Get(new Random().Next(0, tokens.Length));
         }
 
