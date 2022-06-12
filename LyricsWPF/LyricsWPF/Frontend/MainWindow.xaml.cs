@@ -119,16 +119,25 @@ namespace LyricsWPF
 
                 if (!DataValidator.ValidateData(song.Lyrics))
                     continue;
-                
+
+                if (!DataValidator.ValidateData(song.State))
+                    continue;
+
                 if (!DataValidator.ValidateData(song.Lyrics.LyricProvider))
                     continue;
 
-                //Lyric provider
-                await this.Dispatcher.InvokeAsync(() =>
+                if (song.State == SongState.SEARCHING_LYRICS)
+                    continue;
+
+                if (song.State == SongState.HAS_LYRICS_AVAILABLE)
                 {
-                    this.provider.Text = "Powered by " + song.Lyrics.LyricProvider;
-                    this.fullLyricText.Text = song.Lyrics.FullLyrics;
-                });
+                    //Lyric provider
+                    await this.Dispatcher.InvokeAsync(() =>
+                    {
+                        this.provider.Text = "Powered by " + song.Lyrics.LyricProvider;
+                        this.fullLyricText.Text = song.Lyrics.FullLyrics;
+                    });
+                }
             }
         }
 
@@ -154,7 +163,24 @@ namespace LyricsWPF
                         this.firstLine.Text = "";
                         this.secondLine.Text = "Lyrics not found";
                         this.thirdLine.Text = "";
-                        this.provider.Text = "";
+                    });
+                }
+                else if (song.State == SongState.SEARCHING_LYRICS)
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        this.firstLine.Text = "";
+                        this.secondLine.Text = "Searching lyrics...";
+                        this.thirdLine.Text = "";
+                    });
+                }
+                else if (song.State == SongState.HAS_LYRICS_AVAILABLE || song.State == SongState.SEARCHING_FINISHED)
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        this.firstLine.Text = "";
+                        this.secondLine.Text = "♪";
+                        this.thirdLine.Text = "";
                     });
                 }
 

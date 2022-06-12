@@ -97,7 +97,16 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                         Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
 
                     LyricData lyricData = this._lyricCollector.CacheManager.GetDataByRequest(songRequestObject);
-                    song.Lyrics = lyricData;
+
+                    if (this._lyricCollector.CacheManager.IsInCache(songRequestObject) && lyricData.LyricReturnCode == LyricReturnCode.Success)
+                    {
+                        song.Lyrics = lyricData;
+                        song.State = SongState.HAS_LYRICS_AVAILABLE;
+                    }
+                    else if (song.State != SongState.SEARCHING_LYRICS)
+                    {
+                        song.State = SongState.NO_LYRICS_AVAILABLE;
+                    }
 
                 }
             }
@@ -231,8 +240,10 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                         SongFormatter.FormatSongAlbum(songChangedEventArgs.Song.Album),
                         Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
 
+                    songChangedEventArgs.Song.State = SongState.SEARCHING_LYRICS;
                     await this._lyricCollector.CollectLyrics(songRequestObject);
-                    
+                    songChangedEventArgs.Song.State = SongState.SEARCHING_FINISHED;
+
                     this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
                 }
             });

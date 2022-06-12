@@ -42,9 +42,13 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
             }
             else
             {
-                this._musixmatchToken = new MusixmatchToken();
-                Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Add(this._musixmatchToken.Token);
-                Core.INSTANCE.SettingManager.WriteSettings();
+                try
+                {
+                    this._musixmatchToken = new MusixmatchToken();
+                    Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Add(this._musixmatchToken.Token);
+                    Core.INSTANCE.SettingManager.WriteSettings();
+                }
+                catch (Exception e) { }
             }
 
             Core.INSTANCE.TaskRegister.RegisterTask(
@@ -85,11 +89,11 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
             GenericList<Track> tracks = await musixmatchClient.SongSearchAsync(
                 new TrackSearchParameters
             {
-                Album = songRequestObject.FormattedSongAlbum, // Album name
-                Artist = songRequestObject.GetArtistsSplit(), // Artist name
-                Title = songRequestObject.FormattedSongName, // Track name
-                HasSubtitles = true, // Only search for tracks with synced lyrics
-                Sort = TrackSearchParameters.SortStrategy.TrackRatingAsc // List sorting strategy 
+                Album = songRequestObject.FormattedSongAlbum, 
+                Artist = songRequestObject.GetArtistsSplit(),
+                Title = songRequestObject.FormattedSongName,
+                HasSubtitles = true,
+                Sort = TrackSearchParameters.SortStrategy.TrackRatingAsc
             });
 
             for (int i = 0; i < tracks.Length; i++)
@@ -129,7 +133,7 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                 }
             }
 
-            return new LyricData(LyricReturnCode.Failed);
+            return null;
         }
 
         private string GetRandomMusixMatchToken()

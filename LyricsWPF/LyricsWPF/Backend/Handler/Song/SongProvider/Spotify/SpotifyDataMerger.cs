@@ -26,12 +26,13 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
         public static Song UpdatePlayBack(Song song, CurrentPlaybackContext playbackContext)
         {
             song.Paused = !playbackContext.IsPlaying;
-            song.TimeStamp = playbackContext.Timestamp;
 
-            if (playbackContext.ProgressMs.HasValue && playbackContext.IsPlaying)
+            if (!song.Paused)
             {
-                song.ProgressMs = playbackContext.ProgressMs.Value;
-                song.Time = playbackContext.ProgressMs.Value;
+                song.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+
+                if (playbackContext.ProgressMs.HasValue)
+                    song.ProgressMs = playbackContext.ProgressMs.Value;
             }
 
             return song;
@@ -68,6 +69,15 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
         {
             song.Title = currentTrack.Item.Name;
             song.Artists = DataConverter.SpotifyArtistsToStrings(currentTrack.Item.Artists);
+
+            if (!song.Paused)
+            {
+                song.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+
+                if (currentTrack.ProgressMs.HasValue)
+                    song.ProgressMs = currentTrack.ProgressMs.Value;
+            }
+
             return song;
         }
 
@@ -97,9 +107,10 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                 currentTrack.Item.DurationMs);
             song.Album = currentTrack.Item.Album.Name;
             song.ProgressMs = currentTrack.ProgressMs.Value;
-            song.TimeStamp = currentTrack.Timestamp;
+            song.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             song.Lyrics = null;
             song.CurrentLyricPart = null;
+            song.State = SongState.SEARCHING_LYRICS;
             return song;
         }
     }

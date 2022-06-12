@@ -60,6 +60,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
             song.MaxTime = (int)TimeSpan.FromSeconds(track.Duration).TotalMilliseconds;
             song.Lyrics = null;
             song.CurrentLyricPart = null;
+            song.State = SongState.SEARCHING_LYRICS;
             return song;
         }
     }

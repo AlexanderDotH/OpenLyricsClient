@@ -66,6 +66,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
         {
             while (!this._disposed)
             {
+                await Task.Delay(1);
                 await this._timeSyncSuspensionToken.WaitForRelease();
 
                 if (!this._service.IsConnected())
@@ -82,31 +83,20 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 
                         lock (currentSong)
                         {
-                            if (!currentSong.Paused)
+                            try
                             {
-                                try
+                                if (currentSong != null)
                                 {
-                                    if (currentSong != null)
+                                    long diff = DateTimeOffset.Now.ToUnixTimeMilliseconds() - currentSong.TimeStamp;
+                                    
+                                    if (!currentSong.Paused)
                                     {
-                                        long timeStamp = currentSong.TimeStamp;
-
-                                        long diff = 0;
-                                        long progress = currentSong.ProgressMs;
-
-                                        if (currentSong.TimeStamp > 0)
-                                        {
-                                            diff = DateTimeOffset.Now.ToUnixTimeMilliseconds() - timeStamp;
-                                        }
-
-                                        currentSong.Time = progress + diff;
-                                        currentSong.TimeStamp = 0;
-
-                                        // Fix timeglitch bug
+                                        currentSong.Time = currentSong.ProgressMs + diff;
                                     }
                                 }
-                                catch (Exception e)
-                                { }
                             }
+                            catch (Exception e)
+                            { }
                         }
                     }
                     catch (Exception e)

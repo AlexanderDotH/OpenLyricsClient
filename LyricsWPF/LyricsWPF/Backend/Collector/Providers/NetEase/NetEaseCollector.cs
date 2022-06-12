@@ -129,7 +129,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
                 }
             }
 
-            return new LyricData(LyricReturnCode.Failed);
+            return null;
         }
 
         private async Task<LyricData> ParseLyricResponse(NetEaseLyricResponse lyricResponse, string songName, string album, string[] artists)

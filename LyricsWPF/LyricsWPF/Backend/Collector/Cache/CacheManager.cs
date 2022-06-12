@@ -75,7 +75,7 @@ namespace LyricsWPF.Backend.Collector.Cache
                 }
             }
 
-            return null;
+            return new LyricData(LyricReturnCode.Failed);
         }
 
         public bool IsInCache(SongRequestObject songRequestObject)
