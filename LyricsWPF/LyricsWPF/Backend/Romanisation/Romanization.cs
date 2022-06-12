@@ -18,8 +18,13 @@ namespace LyricsWPF.Backend.Romanisation
 
         public Romanization()
         {
-            this._kawazuConverter = new KawazuConverter();
-            this._koreanConverter = new RomaniserService();
+            try
+            {
+                this._kawazuConverter = new KawazuConverter();
+                this._koreanConverter = new RomaniserService();
+            }
+            catch (Exception e)
+            { }
         }
 
         public async Task<string> Romanize(string text)
@@ -27,7 +32,7 @@ namespace LyricsWPF.Backend.Romanisation
             if (!DataValidator.ValidateData(text))
                 return text;
 
-            if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection.JAPANESE_TO_ROMANJI))
+            if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection.JAPANESE_TO_ROMANJI) && DataValidator.ValidateData(this._kawazuConverter))
             {
                 if (Utilities.HasJapanese(text))
                 {
@@ -36,7 +41,7 @@ namespace LyricsWPF.Backend.Romanisation
                 }
             }
 
-            if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection.KOREAN_TO_ROMANJI))
+            if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection.KOREAN_TO_ROMANJI) && DataValidator.ValidateData(this._koreanConverter))
             {
                 if (LanguageUtils.IsKorean(text))
                 {
