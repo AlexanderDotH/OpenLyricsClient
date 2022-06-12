@@ -11,5 +11,7 @@ namespace LyricsWPF.Backend.Handler.Services.Services
         bool IsConnected();
 
         void Dispose();
+
+        string ProcessName();
     }
 }

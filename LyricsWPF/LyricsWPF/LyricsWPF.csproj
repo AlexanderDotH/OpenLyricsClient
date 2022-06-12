@@ -491,6 +491,7 @@
     <Compile Include="Backend\Utils\EnvironmentUtils.cs" />
     <Compile Include="Backend\Utils\LanguageUtils.cs" />
     <Compile Include="Backend\Utils\MathUtils.cs" />
+    <Compile Include="Backend\Utils\ProcessUtils.cs" />
     <Compile Include="Backend\Utils\Service\TidalUtils.cs" />
     <Compile Include="Backend\Utils\TaskUtils.cs" />
     <Compile Include="Backend\Utils\WinAPI.cs" />

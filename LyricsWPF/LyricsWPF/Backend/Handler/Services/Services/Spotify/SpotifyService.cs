@@ -147,6 +147,11 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
             return "Spotify";
         }
 
+        public string ProcessName()
+        {
+            return "Spotify";
+        }
+
         public void Dispose()
         {
             this._disposed = true;

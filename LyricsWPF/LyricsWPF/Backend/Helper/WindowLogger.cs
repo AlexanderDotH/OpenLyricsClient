@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using DevBase.Generic;
 using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Utils;
 
@@ -12,6 +13,22 @@ namespace LyricsWPF.Backend.Helper
         public WindowLogger()
         {
             this._lastWindow = null;
+        }
+
+        public GenericList<string> LastWindows(params string[] processNames)
+        {
+            GenericList<string> names = new GenericList<string>(processNames);
+            GenericList<string> returnList = new GenericList<string>();
+
+            names.ForEach(n =>
+            {
+                if (!returnList.Contains(n) && IsLastWindow(n))
+                {
+                    returnList.Add(n);
+                }
+            });
+
+            return returnList;
         }
 
         public bool IsLastWindow(string processName)

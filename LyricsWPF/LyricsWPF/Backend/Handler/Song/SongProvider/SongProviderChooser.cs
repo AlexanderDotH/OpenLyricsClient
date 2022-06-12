@@ -11,6 +11,7 @@ using DevBase.Generic;
 using DevBase.Typography;
 using DevBase.Utilities;
 using LyricsWPF.Backend.Debug;
+using LyricsWPF.Backend.Handler.Services.Services;
 using LyricsWPF.Backend.Structure.Enum;
 using LyricsWPF.Backend.Utils;
 
@@ -58,19 +59,40 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
             while (!this._disposed)
             {
                 await this._taskSuspensionToken.WaitForRelease();
-                await Task.Delay(100);
+                await Task.Delay(500);
 
                 if (!DataValidator.ValidateData(Core.INSTANCE.WindowLogger))
                     continue;
 
                 EnumSongProvider songProvider = EnumSongProvider.NONE;
 
-                if (Core.INSTANCE.WindowLogger.IsLastWindow("Spotify"))
-                    songProvider = EnumSongProvider.SPOTIFY;
+                IService spotifyService = Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
+                IService tidalService = Core.INSTANCE.ServiceHandler.GetServiceByName("Tidal");
 
-                if (Core.INSTANCE.WindowLogger.IsLastWindow("TIDAL"))
-                    songProvider = EnumSongProvider.TIDAL;
+                string spotifyProcess = spotifyService.ProcessName();
+                string tidalProcess = tidalService.ProcessName();
 
+                GenericList<string> lastWindows = Core.INSTANCE.WindowLogger.LastWindows(spotifyProcess, tidalProcess);
+                GenericList<string> foundProcesses = ProcessUtils.GetRunningProcesses(tidalProcess, spotifyProcess);
+
+                if (!lastWindows.IsEmpty())
+                {
+                    if (spotifyService.IsConnected() && lastWindows.Get(0).Equals(spotifyProcess))
+                        songProvider = EnumSongProvider.SPOTIFY;
+
+                    if (tidalService.IsConnected() && lastWindows.Get(0).Equals(tidalProcess))
+                        songProvider = EnumSongProvider.TIDAL;
+                }
+
+                if (!foundProcesses.IsEmpty())
+                {
+                    if (foundProcesses.Get(0).Equals(spotifyProcess))
+                        songProvider = EnumSongProvider.SPOTIFY;
+
+                    if (foundProcesses.Get(0).Equals(tidalProcess))
+                        songProvider = EnumSongProvider.TIDAL;
+                }
+                
                 if (songProvider == EnumSongProvider.NONE)
                     continue;
 

@@ -81,11 +81,6 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
                 }
             }
         }
-        
-        public string ServiceName()
-        {
-            return "Tidal";
-        }
 
         public async Task StartAuthorization()
         {
@@ -134,6 +129,16 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
         public bool IsConnected()
         {
             return Core.INSTANCE.SettingManager.Settings.TidalAccess != null && Core.INSTANCE.SettingManager.Settings.TidalAccess.IsTidalConnected;
+        }
+
+        public string ServiceName()
+        {
+            return "Tidal";
+        }
+
+        public string ProcessName()
+        {
+            return "TIDAL";
         }
 
         public void Dispose()

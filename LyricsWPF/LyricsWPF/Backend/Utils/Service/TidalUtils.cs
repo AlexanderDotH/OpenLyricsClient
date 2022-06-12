@@ -136,8 +136,7 @@ namespace LyricsWPF.Backend.Utils.Service
         }
         public static bool IsTidalRunning()
         {
-            Process[] processes = Process.GetProcessesByName("TIDAL");
-            return processes.Length > 0;
+            return ProcessUtils.IsProcessRunning("TIDAL");
         }
 
         public static Process FindTidalProcess()

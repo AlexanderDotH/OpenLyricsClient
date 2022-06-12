@@ -156,32 +156,35 @@ namespace LyricsWPF
                 if (!DataValidator.ValidateData(song.State))
                     continue;
 
-                if (song.State == SongState.NO_LYRICS_AVAILABLE)
+                if (song.State != SongState.HAS_LYRICS_AVAILABLE)
                 {
-                    this.Dispatcher.Invoke(() =>
+                    if (song.State == SongState.NO_LYRICS_AVAILABLE)
                     {
-                        this.firstLine.Text = "";
-                        this.secondLine.Text = "Lyrics not found";
-                        this.thirdLine.Text = "";
-                    });
-                }
-                else if (song.State == SongState.SEARCHING_LYRICS)
-                {
-                    this.Dispatcher.Invoke(() =>
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            this.firstLine.Text = "";
+                            this.secondLine.Text = "Lyrics not found";
+                            this.thirdLine.Text = "";
+                        });
+                    }
+                    else if (song.State == SongState.SEARCHING_LYRICS)
                     {
-                        this.firstLine.Text = "";
-                        this.secondLine.Text = "Searching lyrics...";
-                        this.thirdLine.Text = "";
-                    });
-                }
-                else if (song.State == SongState.HAS_LYRICS_AVAILABLE || song.State == SongState.SEARCHING_FINISHED)
-                {
-                    this.Dispatcher.Invoke(() =>
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            this.firstLine.Text = "";
+                            this.secondLine.Text = "Searching lyrics...";
+                            this.thirdLine.Text = "";
+                        });
+                    }
+                    else if (song.State == SongState.SEARCHING_FINISHED)
                     {
-                        this.firstLine.Text = "";
-                        this.secondLine.Text = "♪";
-                        this.thirdLine.Text = "";
-                    });
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            this.firstLine.Text = "";
+                            this.secondLine.Text = "♪";
+                            this.thirdLine.Text = "";
+                        });
+                    }
                 }
 
                 if (!DataValidator.ValidateData(song.Lyrics, song.CurrentLyricsRoll))
@@ -194,6 +197,10 @@ namespace LyricsWPF
 
                 await this.Dispatcher.InvokeAsync(() =>
                 {
+                    this.firstLine.Text = "";
+                    this.secondLine.Text = "♪";
+                    this.thirdLine.Text = "";
+
                     if (DataValidator.ValidateData(lyricsRoll.PartOne) &&
                         DataValidator.ValidateData(lyricsRoll.PartOne.Part))
                     {
@@ -224,6 +231,7 @@ namespace LyricsWPF
                         this.thirdLine.Text = "";
                     }
                 });
+
             }
         }
 
