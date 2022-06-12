@@ -73,7 +73,7 @@ namespace LyricsWPF.Backend.Settings
             BearerAccessToken bearerAccessToken = new BearerAccessToken();
             bearerAccessToken.AccessToken = "null";
             bearerAccessToken.ExpiresIn = 0;
-            bearerAccessToken.Scope = "playlist-read-private,playlist-read-collaborative,streaming,user-follow-read,user-library-read,user-read-private,user-read-playback-state,user-modify-playback-state,user-read-currently-playing,user-read-recently-played";
+            bearerAccessToken.Scope = "playlist-read-private playlist-read-collaborative streaming user-follow-read user-library-read user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played";
 
             spotifyAccess.BearerAccess = bearerAccessToken;
 

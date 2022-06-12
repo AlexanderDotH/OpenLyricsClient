@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using DevBase.Async.Task;
+using DevBase.Generic;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Structure.Enum;
 using Microsoft.Extensions.Configuration;
@@ -27,8 +28,8 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
             this._disposed = false;
 
             ConfigurationManager configurationManager = new ConfigurationManager();
-            configurationManager["SpotifyApiClientId"] = "d77eb56257c44acd8e1a123eabd2390c";
-            configurationManager["SpotifyApiClientSecret"] = "b86de866925f48a7b1045b57e5f4b463";
+            configurationManager["SpotifyApiClientId"] = "5506575c84334b25978bda35ee43e6fd";
+            configurationManager["SpotifyApiClientSecret"] = "0896c04d78374ff2ad51a2c4f4c857ed";
             configurationManager["SpotifyAuthRedirectUri"] = "http://localhost:8080/callback";
             this._configurationManager = configurationManager;
 
@@ -113,11 +114,20 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
         {
             // TODO: Remove unnecessary permissions
             string state = Guid.NewGuid().ToString("N");
-            string url = _userAccountsService.AuthorizeUrl(state,
-                new[]
-                {
-                    "playlist-read-private,playlist-read-collaborative,streaming,user-follow-read,user-library-read,user-read-private,user-read-playback-state,user-modify-playback-state,user-read-currently-playing,user-read-recently-played"
-                });
+
+            GenericList<string> scopes = new GenericList<string>();
+            scopes.Add("playlist-read-private");
+            scopes.Add("playlist-read-collaborative");
+            scopes.Add("streaming");
+            scopes.Add("user-follow-read");
+            scopes.Add("user-library-read");
+            scopes.Add("user-read-private");
+            scopes.Add("user-read-playback-state");
+            scopes.Add("user-modify-playback-state");
+            scopes.Add("user-read-currently-playing");
+            scopes.Add("user-read-recently-played");
+
+            string url = _userAccountsService.AuthorizeUrl(state, scopes.GetAsArray());
 
             Process.Start(url);
 
