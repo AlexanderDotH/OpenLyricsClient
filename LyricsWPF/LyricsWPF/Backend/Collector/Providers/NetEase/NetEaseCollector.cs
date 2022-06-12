@@ -160,7 +160,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
                 }
             }
 
-            return new LyricData(LyricReturnCode.Failed);
+            return null;
         }
 
 

@@ -164,7 +164,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                 }
             }
 
-            return new LyricData(LyricReturnCode.Failed);
+            return null;
         }
 
         private async Task<NetEaseV2SearchResponse> SearchTrack(SongRequestObject songRequestObject)

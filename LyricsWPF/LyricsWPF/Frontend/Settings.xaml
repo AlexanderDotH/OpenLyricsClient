@@ -154,7 +154,7 @@
                                 Margin="20,0,54,0"
                                 HorizontalAlignment="Center" VerticalAlignment="Top"
                                 Style="{StaticResource MaterialDesignBody1TextBlock}"
-                                Text="Connect to Spotify" Grid.ColumnSpan="2" />
+                                Text="Connect to Youtube" Grid.ColumnSpan="2" />
 
                                 <Button x:Name="btnYoutube"
                                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
@@ -187,12 +187,11 @@
                         BorderThickness="0" 
                         Margin="20,0,0,4">
                             <Grid>
-
                                 <TextBlock
                                 Margin="20,0,54,0"
                                 HorizontalAlignment="Center" VerticalAlignment="Top"
                                 Style="{StaticResource MaterialDesignBody1TextBlock}"
-                                Text="Connect to Spotify" Grid.ColumnSpan="2" />
+                                Text="Connect to Tidal" Grid.ColumnSpan="2" />
 
                                 <Button x:Name="btnTidal"
                                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
