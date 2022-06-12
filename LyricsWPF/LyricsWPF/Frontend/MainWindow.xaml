@@ -52,7 +52,7 @@
                     
                     <TextBlock x:Name="firstLine"
                                Style="{StaticResource MaterialDesignHeadline4TextBlock}"
-                               Text="Line 1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="330,0,0,200" >
+                               Text="Line 1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="330,0,0,200" >
                         <TextBlock.Effect>
                             <BlurEffect/>
                         </TextBlock.Effect>
@@ -60,11 +60,11 @@
 
                     <TextBlock x:Name="secondLine"
                                Style="{StaticResource MaterialDesignHeadline3TextBlock}"
-                               Text="Line 2" Foreground="{StaticResource PrimaryHueMidBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="325,0,0,0" FontFamily="Arial" TextAlignment="Left" />
+                               Text="Line 2" TextWrapping="Wrap"  Foreground="{StaticResource PrimaryHueMidBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="325,0,0,0" FontFamily="Arial" TextAlignment="Left" />
                     
                     <TextBlock x:Name="thirdLine"
                                Style="{StaticResource MaterialDesignHeadline4TextBlock}"
-                               Text="Line 2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="330,200,0,0" >
+                               Text="Line 2" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="330,200,0,0" >
                         <TextBlock.Effect>
                             <BlurEffect/>
                         </TextBlock.Effect>
