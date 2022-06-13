@@ -143,6 +143,11 @@ namespace LyricsWPF.Backend.Handler.Song
             return null;
         }
 
+        public void RequestNewSong()
+        {
+            BeforeSongChanged(new SongChangedEventArgs(null, EventType.PRE));
+        }
+
         protected virtual void AfterSongChanged(SongChangedEventArgs songChangedEventArgs)
         {
             SongChangedEventHandler songChangedEventHandler = SongChanged;

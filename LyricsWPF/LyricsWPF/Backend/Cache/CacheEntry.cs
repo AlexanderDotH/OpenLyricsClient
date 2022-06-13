@@ -3,7 +3,7 @@ using DevBase.Utilities;
 using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Structure;
 
-namespace LyricsWPF.Backend.Collector.Cache
+namespace LyricsWPF.Backend.Cache
 {
     public class CacheEntry
     {

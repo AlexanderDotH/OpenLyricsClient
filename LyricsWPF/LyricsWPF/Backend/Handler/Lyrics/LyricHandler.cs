@@ -84,7 +84,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                     DataValidator.ValidateData(song.Album) &&
                     DataValidator.ValidateData(Core.INSTANCE.SettingManager.Settings.LyricSelectionMode) &&
                     DataValidator.ValidateData(this._lyricCollector) &&
-                    DataValidator.ValidateData(this._lyricCollector.CacheManager))
+                    DataValidator.ValidateData(Core.INSTANCE.CacheManager))
                 {
 
                     SongRequestObject songRequestObject = new SongRequestObject(
@@ -96,18 +96,19 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                         SongFormatter.FormatSongAlbum(song.Album),
                         Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
 
-                    LyricData lyricData = this._lyricCollector.CacheManager.GetDataByRequest(songRequestObject);
+                    LyricData lyricData = Core.INSTANCE.CacheManager.GetDataByRequest(songRequestObject);
 
-                    if (this._lyricCollector.CacheManager.IsInCache(songRequestObject) && lyricData.LyricReturnCode == LyricReturnCode.Success)
+                    if (Core.INSTANCE.CacheManager.IsInCache(songRequestObject) && 
+                        lyricData.LyricReturnCode == LyricReturnCode.Success)
                     {
                         song.Lyrics = lyricData;
                         song.State = SongState.HAS_LYRICS_AVAILABLE;
                     }
                     else if (song.State != SongState.SEARCHING_LYRICS)
                     {
+                        song.Lyrics = null;
                         song.State = SongState.NO_LYRICS_AVAILABLE;
                     }
-
                 }
             }
         }
@@ -129,41 +130,48 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                         DataValidator.ValidateData(currentSong.Lyrics.LyricParts) &&
                         currentSong.State == SongState.HAS_LYRICS_AVAILABLE)
                     {
-                        for (int i = 0; i < currentSong.Lyrics.LyricParts.Length; i++)
+                        try
                         {
-                            LyricPart currentPart = currentSong.Lyrics.LyricParts[i];
+                            for (int i = 0; i < currentSong.Lyrics.LyricParts.Length; i++)
+                            {
+                                LyricPart currentPart = currentSong.Lyrics.LyricParts[i];
 
-                            if (i == currentSong.Lyrics.LyricParts.Length)
-                            {
-                                currentSong.CurrentLyricPart =
-                                    currentSong.Lyrics.LyricParts[currentSong.Lyrics.LyricParts.Length - 1];
-                                continue;
-                            }
-                            else
-                            {
-                                if (i + 1 < currentSong.Lyrics.LyricParts.Length)
+                                if (i == currentSong.Lyrics.LyricParts.Length)
                                 {
-                                    LyricPart nextPart = currentSong.Lyrics.LyricParts[i + 1];
-
-                                    // I thing this is the issue
-                                    // What did I do?: nothing, cause I don´t now how to fix it
-                                    if (DataValidator.ValidateData(currentPart) &&
-                                        DataValidator.ValidateData(currentPart.Part) &&
-                                        DataValidator.ValidateData(currentPart.Time) &&
-                                        DataValidator.ValidateData(nextPart) &&
-                                        DataValidator.ValidateData(nextPart.Part) &&
-                                        DataValidator.ValidateData(nextPart.Time))
+                                    currentSong.CurrentLyricPart =
+                                        currentSong.Lyrics.LyricParts[currentSong.Lyrics.LyricParts.Length - 1];
+                                    continue;
+                                }
+                                else
+                                {
+                                    if (i + 1 < currentSong.Lyrics.LyricParts.Length)
                                     {
-                                        if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, currentSong.Time + LYRIC_OFFSET))
+                                        LyricPart nextPart = currentSong.Lyrics.LyricParts[i + 1];
+
+                                        // I thing this is the issue
+                                        // What did I do?: nothing, cause I don´t now how to fix it
+                                        if (DataValidator.ValidateData(currentPart) &&
+                                            DataValidator.ValidateData(currentPart.Part) &&
+                                            DataValidator.ValidateData(currentPart.Time) &&
+                                            DataValidator.ValidateData(nextPart) &&
+                                            DataValidator.ValidateData(nextPart.Part) &&
+                                            DataValidator.ValidateData(nextPart.Time))
                                         {
-                                            currentSong.CurrentLyricPart = currentPart;
-                                            continue;
+                                            if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, currentSong.Time + LYRIC_OFFSET))
+                                            {
+                                                currentSong.CurrentLyricPart = currentPart;
+                                                continue;
+                                            }
                                         }
+
                                     }
 
                                 }
-
                             }
+                        }
+                        catch (Exception e)
+                        {
+                            this._debugger.Write(e);
                         }
                     }
                 }
@@ -186,34 +194,57 @@ namespace LyricsWPF.Backend.Handler.Lyrics
 
                     song.State == SongState.HAS_LYRICS_AVAILABLE)
                 {
-                    for (int i = 0; i < song.Lyrics.LyricParts.Length; i++)
+
+                    try
                     {
-                        LyricPart secondLyricPart = song.Lyrics.LyricParts[i];
-                        secondLyricPart.Part = await this._romanization.Romanize(secondLyricPart.Part);
+                        LyricData lyrics = song.Lyrics;
 
-                        if (secondLyricPart == song.CurrentLyricPart)
+                        for (int i = 0; i < lyrics.LyricParts.Length; i++)
                         {
-                            LyricPart firstLyricPart = null;
-                            LyricPart thirdLyricPart = null;
+                            LyricPart thirdLyricPart = lyrics.LyricParts[i];
+                            thirdLyricPart.Part = await this._romanization.Romanize(thirdLyricPart.Part);
 
-                            if (MathUtils.IsInRange(0, song.Lyrics.LyricParts.Length - 1, i - 1))
+                            if (thirdLyricPart == song.CurrentLyricPart)
                             {
-                                firstLyricPart = song.Lyrics.LyricParts[i - 1];
-                                firstLyricPart.Part = await this._romanization.Romanize(firstLyricPart.Part);
-                            }
+                                LyricPart firstLyricPart = null;
+                                LyricPart secondLyricPart = null;
+                                LyricPart fourthLyricPart = null;
+                                LyricPart fifthLine = null;
 
-                            if (MathUtils.IsInRange(0, song.Lyrics.LyricParts.Length - 1, i + 1))
-                            {
-                                thirdLyricPart = song.Lyrics.LyricParts[i + 1];
-                                thirdLyricPart.Part = await this._romanization.Romanize(thirdLyricPart.Part);
-                            }
+                                if (MathUtils.IsInRange(0, lyrics.LyricParts.Length - 1, i - 2))
+                                {
+                                    firstLyricPart = lyrics.LyricParts[i - 2];
+                                    firstLyricPart.Part = await this._romanization.Romanize(firstLyricPart.Part);
+                                }
 
-                            song.CurrentLyricsRoll =
-                                new LyricsRoll(firstLyricPart, secondLyricPart, thirdLyricPart);
+                                if (MathUtils.IsInRange(0, lyrics.LyricParts.Length - 1, i - 1))
+                                {
+                                    secondLyricPart = lyrics.LyricParts[i - 1];
+                                    secondLyricPart.Part = await this._romanization.Romanize(secondLyricPart.Part);
+                                }
+
+                                if (MathUtils.IsInRange(0, lyrics.LyricParts.Length - 1, i + 1))
+                                {
+                                    fourthLyricPart = lyrics.LyricParts[i + 1];
+                                    fourthLyricPart.Part = await this._romanization.Romanize(fourthLyricPart.Part);
+                                }
+
+                                if (MathUtils.IsInRange(0, lyrics.LyricParts.Length - 1, i + 2))
+                                {
+                                    fifthLine = lyrics.LyricParts[i + 2];
+                                    fifthLine.Part = await this._romanization.Romanize(fifthLine.Part);
+                                }
+
+                                song.CurrentLyricsRoll =
+                                    new LyricsRoll(firstLyricPart, secondLyricPart, thirdLyricPart, fourthLyricPart, fifthLine);
+                            }
                         }
                     }
+                    catch (Exception e)
+                    {
+                        this._debugger.Write(e);
+                    }
                 }
-
             }
         }
 
@@ -247,7 +278,6 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                     this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
                 }
             });
-
         }
 
         public void Dispose()

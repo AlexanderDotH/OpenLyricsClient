@@ -49,24 +49,41 @@
                     <TextBlock x:Name="currentTitle"
                     Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                     Text="Title" Height="45" HorizontalAlignment="Left" FontWeight="Bold" Margin="20,20,0,0" VerticalAlignment="Top" />
-                    
+
                     <TextBlock x:Name="firstLine"
                                Style="{StaticResource MaterialDesignHeadline4TextBlock}"
-                               Text="Line 1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="330,0,0,200" >
+                               Text="Line 1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="330,0,0,400" >
                         <TextBlock.Effect>
-                            <BlurEffect/>
+                            <BlurEffect Radius="7"/>
                         </TextBlock.Effect>
                     </TextBlock>
 
                     <TextBlock x:Name="secondLine"
-                               Style="{StaticResource MaterialDesignHeadline3TextBlock}"
-                               Text="Line 2" TextWrapping="Wrap"  Foreground="{StaticResource PrimaryHueMidBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="325,0,0,0" FontFamily="Arial" TextAlignment="Left" />
-                    
-                    <TextBlock x:Name="thirdLine"
                                Style="{StaticResource MaterialDesignHeadline4TextBlock}"
-                               Text="Line 2" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="330,200,0,0" >
+                               Text="Line 2" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="330,0,0,200" >
                         <TextBlock.Effect>
-                            <BlurEffect/>
+                            <BlurEffect Radius="5"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+
+                    <TextBlock x:Name="thirdLine"
+                               Style="{StaticResource MaterialDesignHeadline3TextBlock}"
+                               Text="Line 3" TextWrapping="Wrap"  Foreground="{StaticResource PrimaryHueMidBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="325,0,0,0" FontFamily="Arial" TextAlignment="Left" />
+
+
+                    <TextBlock x:Name="fourthLine"
+                               Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                               Text="Line 3" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="330,200,0,0" >
+                        <TextBlock.Effect>
+                            <BlurEffect Radius="5"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+
+                    <TextBlock x:Name="fifthLine"
+                               Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                               Text="Line 4" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="330,400,0,0" >
+                        <TextBlock.Effect>
+                            <BlurEffect Radius="7"/>
                         </TextBlock.Effect>
                     </TextBlock>
 
@@ -79,7 +96,7 @@
                         Value="50"
                         VerticalAlignment="Bottom"
                         Height="7" 
-                        Margin="17,0,45,17"
+                        Margin="17,0,17,17"
                         materialDesign:TransitionAssist.DisableTransitions="True"/>
 
                     <TextBlock x:Name="timeFrom"
@@ -98,7 +115,7 @@
                                Height="45" 
                                HorizontalAlignment="Right" 
                                FontWeight="Bold" 
-                               Margin="20,20,48,10" 
+                               Margin="20,20,20,10" 
                                VerticalAlignment="Bottom" 
                                FontSize="17" />
 
@@ -121,6 +138,10 @@
                 </TabItem.Header>
 
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="221*"/>
+                        <RowDefinition Height="513*"/>
+                    </Grid.RowDefinitions>
 
                     <TextBlock x:Name="currentFullTitle"
                                Style="{StaticResource MaterialDesignHeadline5TextBlock}"
@@ -128,7 +149,7 @@
 
                     <ScrollViewer
                         VerticalScrollBarVisibility="Auto"
-                        HorizontalScrollBarVisibility="Auto" Margin="0,68,0,0">
+                        HorizontalScrollBarVisibility="Auto" Margin="0,68,0,0" Grid.RowSpan="2">
 
                         <TextBlock x:Name="fullLyricText" HorizontalAlignment="Left" MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type ScrollContentPresenter}}}" VerticalAlignment="Top" Text="" Margin="25,0,0,0" FontSize="22" FontWeight="Bold"  ></TextBlock>
                     </ScrollViewer>
@@ -136,9 +157,367 @@
 
                 </Grid>
             </TabItem>
+            <TabItem Margin="0,0,0,0">
+                <TabItem.Header>
+                    <StackPanel
+                        Height="auto"
+                        Width="auto" VerticalAlignment="Stretch">
+                        <materialDesign:PackIcon
+                            Kind="Settings"
+                            Width="24"
+                            Height="24"
+                            HorizontalAlignment="Center" />
+                        <TextBlock
+                            Text="Settings"
+                            HorizontalAlignment="Center" />
+                    </StackPanel>
+                </TabItem.Header>
+
+                <Grid>
+
+                    <ScrollViewer
+                        VerticalScrollBarVisibility="Auto"
+                        HorizontalScrollBarVisibility="Auto">
+
+                        <StackPanel>
+
+                            <TextBlock
+                                Margin="15,15,0,0"
+                                HorizontalAlignment="Left" VerticalAlignment="Top"
+                                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                Text="Settings" />
+
+                            <Expander 
+                                Header="Application Settings" 
+                                Foreground="White"
+                                IsExpanded="True"
+                                Margin="5,15,5,0"
+                                Background="{DynamicResource MaterialDesignDarkBackground}">
+
+                                <WrapPanel
+                                    Orientation="Vertical"
+                                    TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                    Margin="24,8,24,16">
+
+                                    <GroupBox 
+                                        Header="Romanize" 
+                                        Height="75"
+                                        Style="{StaticResource MaterialDesignGroupBox}"
+                                        materialDesign:ColorZoneAssist.Background="Purple"
+                                        materialDesign:ColorZoneAssist.Foreground="White"
+                                        materialDesign:ColorZoneAssist.Mode="Custom"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                        BorderThickness="0" 
+                                        Margin="5,0,0,4">
+
+                                        <WrapPanel Orientation="Horizontal">
+                                            <CheckBox
+                                                x:Name="chkJtR"
+                                                Margin="0,0,0,0"
+                                                Content="Japanese to Romanji" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="chkJtR_Checked" Unchecked="chkJtR_Unchecked" />
+
+                                            <CheckBox
+                                                x:Name="chkKtR"
+                                                IsChecked="False"
+                                                Margin="10,0,0,0"
+                                                Content="Korean to Romanji" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="chkKtR_Checked" Unchecked="chkKtR_Unchecked"/>
+
+                                        </WrapPanel>
+                                    </GroupBox>
+                                    <GroupBox 
+                                        Header="Lyrics Selection" 
+                                        Height="110"
+                                        Style="{StaticResource MaterialDesignGroupBox}"
+                                        materialDesign:ColorZoneAssist.Background="Purple"
+                                        materialDesign:ColorZoneAssist.Foreground="White"
+                                        materialDesign:ColorZoneAssist.Mode="Custom"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                        BorderThickness="0" 
+                                        Margin="5,0,0,4">
+
+                                        <WrapPanel 
+                                            Orientation="Horizontal" 
+                                            Height="100">
+
+                                            <ComboBox
+                                                x:Name="lscb"
+                                                Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                                                IsEnabled="{Binding IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
+                                                materialDesign:HintAssist.Hint="Selection Modes"
+                                                Width="256" 
+                                                HorizontalAlignment="Left" 
+                                                VerticalAlignment="Top" 
+                                                Margin="5,5,0,0" 
+                                                SelectionChanged="lscb_SelectionChanged"/>
+                                        </WrapPanel>
+                                    </GroupBox>
+
+                                    <GroupBox 
+                                        Header="Advanced" 
+                                        Height="110"
+                                        Style="{StaticResource MaterialDesignGroupBox}"
+                                        materialDesign:ColorZoneAssist.Background="Purple"
+                                        materialDesign:ColorZoneAssist.Foreground="White"
+                                        materialDesign:ColorZoneAssist.Mode="Custom"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                        BorderThickness="0" 
+                                        Margin="5,0,0,4">
+
+                                        <WrapPanel 
+                                            Orientation="Horizontal"
+                                            Height="50">
+
+                                            <Button x:Name="btnClearCache"
+                                                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                                    Width="150"
+                                                    ToolTip="Clears the lyrics cache"
+                                                    Content="Clear Cache"
+                                                    Background="Purple"
+                                                    materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                                    materialDesign:ButtonAssist.CornerRadius="5"
+                                                    IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" 
+                                                    Click="btnClearCache_Click" 
+                                                    Cursor="Hand" 
+                                                    HorizontalAlignment="Left" 
+                                                    Padding="16,4,15,4" 
+                                                    VerticalAlignment="Top" 
+                                                    Grid.ColumnSpan="2" 
+                                                    Margin="5,5,0,0"  />
+
+
+                                        </WrapPanel>
+                                    </GroupBox>
+
+                                </WrapPanel>
+                            </Expander>
+
+                            <Expander Header="Connection Settings" 
+                                      Foreground="White"
+                                      Margin="5,1,5,0"
+                                      Background="{DynamicResource MaterialDesignDarkBackground}"
+                                      IsExpanded="True">
+
+
+                                <WrapPanel
+                                    TextBlock.Foreground="{DynamicResource MaterialDesignBody}"
+                                    Margin="15,5,0,0" 
+                                    HorizontalAlignment="Left" 
+                                    VerticalAlignment="Top">
+
+                                    <GroupBox 
+                                        Header="Spotify" 
+                                        Height="155"
+                                        Style="{StaticResource MaterialDesignGroupBox}"
+                                        materialDesign:ColorZoneAssist.Background="#1ED760"
+                                        materialDesign:ColorZoneAssist.Foreground="White"
+                                        materialDesign:ColorZoneAssist.Mode="Custom"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                        BorderThickness="0" 
+                                        Margin="20,0,0,4">
+
+                                        <Grid>
+
+                                            <TextBlock
+                                                Margin="20,0,54,0"
+                                                HorizontalAlignment="Center" 
+                                                VerticalAlignment="Top"
+                                                Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                                Text="Connect to Spotify" 
+                                                Grid.ColumnSpan="2" />
+
+
+                                            <Button x:Name="btnSpotify"
+                                                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                                    Width="201"
+                                                    ToolTip="Connect to your Spotify Account"
+                                                    Content="Connect"
+                                                    Margin="10,35,0,0"
+                                                    Background="#1ED760"
+                                                    materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                                    materialDesign:ButtonAssist.CornerRadius="5"
+                                                    IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Click="btnSpotifyConnect_Click" Cursor="Hand" HorizontalAlignment="Center" Padding="16,4,15,4" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+
+                                            <Button x:Name="btnSpotifyDisconnect"
+                                                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                                    Width="201"
+                                                    ToolTip="Disconnect"
+                                                    Content="Disconnect"
+                                                    Margin="10,72,0,0"
+                                                    Background="#ff4040"
+                                                    materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                                    materialDesign:ButtonAssist.CornerRadius="5"
+                                                    IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Click="ButtonSpotifyDisconnect_Click" Cursor="Hand" HorizontalAlignment="Center" Padding="16,4,15,4" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+
+                                            
+                                            <materialDesign:PackIcon
+                                                Kind="Spotify"
+                                                Width="25"
+                                                IsHitTestVisible="False"
+                                                Height="25" Margin="182,38,0,0"/>
+
+                                            <materialDesign:PackIcon
+                                                Kind="LanDisconnect"
+                                                Width="24"
+                                                IsHitTestVisible="False"
+                                                Height="25" 
+                                                Margin="0,75,3,0" 
+                                                HorizontalAlignment="Right"/>
+
+                                        </Grid>
+                                    </GroupBox>
+
+                                    <GroupBox 
+                                        Header="Youtube" 
+                                        Height="155"
+                                        Style="{StaticResource MaterialDesignGroupBox}"
+                                        materialDesign:ColorZoneAssist.Background="#FF0000"
+                                        materialDesign:ColorZoneAssist.Foreground="White"
+                                        materialDesign:ColorZoneAssist.Mode="Custom"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                        BorderThickness="0" 
+                                        Margin="20,0,0,4">
+
+                                        <Grid>
+                                            <TextBlock
+                                                Margin="20,0,54,0"
+                                                HorizontalAlignment="Center" 
+                                                VerticalAlignment="Top"
+                                                Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                                Text="Connect to Youtube" 
+                                                Grid.ColumnSpan="2" 
+                                                IsEnabled="False"/>
+
+                                            <Button x:Name="btnYoutube"
+                                                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                                    Width="201"
+                                                    ToolTip="Connect with Youtube"
+                                                    Content="Connect"
+                                                    Margin="10,35,0,0"
+                                                    Background="#FF0000"
+                                                    materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                                    materialDesign:ButtonAssist.CornerRadius="5"
+                                                    IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" 
+                                                    Cursor="Hand" 
+                                                    HorizontalAlignment="Center" 
+                                                    Padding="16,4,15,4" 
+                                                    VerticalAlignment="Top" 
+                                                    Grid.ColumnSpan="2" />
+
+                                            <Button x:Name="btnYoutubeDisconnect"
+                                                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                                    Width="201"
+                                                    ToolTip="Disconnect"
+                                                    Content="Disconnect"
+                                                    Margin="10,72,0,0"
+                                                    Background="#ff4040"
+                                                    materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                                    materialDesign:ButtonAssist.CornerRadius="5"
+                                                    IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" 
+                                                    Click="ButtonYoutubeDisconnect_Click" 
+                                                    Cursor="Hand" 
+                                                    HorizontalAlignment="Center" 
+                                                    Padding="16,4,15,4" 
+                                                    VerticalAlignment="Top" 
+                                                    Grid.ColumnSpan="2" />
+
+                                            <materialDesign:PackIcon
+                                                Kind="Youtube"
+                                                Width="25"
+                                                IsHitTestVisible="False"
+                                                Height="25" Margin="182,36,0,0"/>
+
+                                            <materialDesign:PackIcon
+                                                Kind="LanDisconnect"
+                                                Width="24"
+                                                IsHitTestVisible="False"
+                                                Height="25" 
+                                                Margin="0,75,3,0" 
+                                                HorizontalAlignment="Right"/>
+
+                                        </Grid>
+                                    </GroupBox>
+
+                                    <GroupBox 
+                                        Header="Tidal" 
+                                        Height="155"
+                                        Style="{StaticResource MaterialDesignGroupBox}"
+                                        materialDesign:ColorZoneAssist.Background="#242528"
+                                        materialDesign:ColorZoneAssist.Foreground="White"
+                                        materialDesign:ColorZoneAssist.Mode="Custom"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                                        BorderThickness="0" 
+                                        Margin="20,0,0,4">
+
+                                        <Grid>
+                                            <TextBlock
+                                                Margin="20,0,54,0"
+                                                HorizontalAlignment="Center" VerticalAlignment="Top"
+                                                Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                                Text="Connect to Tidal" Grid.ColumnSpan="2" />
+
+                                            <Button x:Name="btnTidal"
+                                                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                                    Width="201"
+                                                    ToolTip="Connect to your Tidal Account"
+                                                    Content="Connect"
+                                                    Margin="10,35,0,0"
+                                                    Background="#31F4FF"
+                                                    materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                                    materialDesign:ButtonAssist.CornerRadius="5"
+                                                    IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" 
+                                                    Click="btnTidalConnect_Click" 
+                                                    Cursor="Hand" 
+                                                    HorizontalAlignment="Center" 
+                                                    Padding="16,4,15,4" 
+                                                    VerticalAlignment="Top" 
+                                                    Grid.ColumnSpan="2" />
+
+                                            <Button x:Name="btnTidalDisconnect"
+                                                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                                    Width="201"
+                                                    ToolTip="Disconnect"
+                                                    Content="Disconnect"
+                                                    Margin="10,72,0,0"
+                                                    Background="#ff4040"
+                                                    materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                                    materialDesign:ButtonAssist.CornerRadius="5"
+                                                    IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+                                                    Click="ButtonTidalDisconnect_Click" 
+                                                    Cursor="Hand" 
+                                                    HorizontalAlignment="Center" 
+                                                    Padding="16,4,15,4" 
+                                                    VerticalAlignment="Top" 
+                                                    Grid.ColumnSpan="2" />
+
+                                            <Image Source="/Resources/Icons/tidal.ico" 
+                                                   Width="25" 
+                                                   Height="25" 
+                                                   Margin="182,28,5,30"/>
+
+                                            <materialDesign:PackIcon
+                                                Kind="LanDisconnect"
+                                                Width="24"
+                                                IsHitTestVisible="False"
+                                                Height="25" 
+                                                Margin="0,75,3,0" 
+                                                HorizontalAlignment="Right"/>
+
+                                        </Grid>
+                                    </GroupBox>
+
+                                </WrapPanel>
+                            </Expander>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <TextBlock x:Name="love"
+                        Style="{StaticResource MaterialDesignHeadline4TextBlock}"
+                        Text="Made with ♥ for Hannah" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,5,5" TextAlignment="Right" FontSize="14" />
+                </Grid>
+            </TabItem>
 
         </TabControl>
-        <Button
+        <!--<Button
             Style="{StaticResource MaterialDesignRaisedDarkButton}"
             Width="32"
             ToolTip="Go to the settings"
@@ -146,16 +525,15 @@
             Margin="0,0,5,5"
             Background="#212121"
             materialDesign:ShadowAssist.ShadowDepth="Depth3"
-            IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="Button_Click" Grid.Column="2">
-
-        </Button>
-        <materialDesign:PackIcon
+            IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="Button_Click" Grid.Column="2">-->
+        <!--</Button>-->
+        <!--<materialDesign:PackIcon
                             Kind="Settings"
                             VerticalAlignment="Bottom"
                             HorizontalAlignment="Right"
                             IsHitTestVisible="False"
                             Foreground="White"
                             Width="24"
-                            Height="24" Margin="0,0,9,9" Grid.Column="2"/>
+                            Height="24" Margin="0,0,9,9" Grid.Column="2"/>-->
     </Grid>
 </Window>

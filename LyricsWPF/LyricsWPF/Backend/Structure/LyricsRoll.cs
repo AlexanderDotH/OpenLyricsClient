@@ -11,12 +11,16 @@ namespace LyricsWPF.Backend.Structure
         private LyricPart _partOne;
         private LyricPart _partTwo;
         private LyricPart _partThree;
+        private LyricPart _partFour;
+        private LyricPart _partFive;
 
-        public LyricsRoll(LyricPart partOne, LyricPart partTwo, LyricPart partThree)
+        public LyricsRoll(LyricPart partOne, LyricPart partTwo, LyricPart partThree, LyricPart partFour, LyricPart partFive)
         {
             _partOne = partOne;
             _partTwo = partTwo;
             _partThree = partThree;
+            _partFour = partFour;
+            _partFive = partFive;
         }
 
         public LyricPart PartOne
@@ -35,6 +39,18 @@ namespace LyricsWPF.Backend.Structure
         {
             get => _partThree;
             set => _partThree = value;
+        }
+
+        public LyricPart PartFour
+        {
+            get => _partFour;
+            set => _partFour = value;
+        }
+
+        public LyricPart PartFive
+        {
+            get => _partFive;
+            set => _partFive = value;
         }
     }
 }

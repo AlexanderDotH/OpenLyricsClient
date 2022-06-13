@@ -88,13 +88,31 @@
                             </WrapPanel>
                         </GroupBox>
 
+                        <GroupBox 
+                            Header="Advanced" 
+                            Height="110"
+                            Style="{StaticResource MaterialDesignGroupBox}"
+                            materialDesign:ColorZoneAssist.Background="Purple"
+                            materialDesign:ColorZoneAssist.Foreground="White"
+                            materialDesign:ColorZoneAssist.Mode="Custom"
+                            materialDesign:ShadowAssist.ShadowDepth="Depth3"
+                            BorderThickness="0" 
+                            Margin="5,0,0,4">
+
+                            <WrapPanel Orientation="Horizontal"
+                                       Height="100">
+                                
+                            </WrapPanel>
+                        </GroupBox>
+
                     </WrapPanel>
                 </Expander>
 
                 <Expander Header="Connection Settings" 
                       Foreground="White"
                       Margin="0,1,0,0"
-                      Background="{DynamicResource MaterialDesignDarkBackground}">
+                      Background="{DynamicResource MaterialDesignDarkBackground}"
+                      IsExpanded="True">
 
 
                     <WrapPanel

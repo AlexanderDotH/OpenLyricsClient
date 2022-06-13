@@ -364,8 +364,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Backend\Collector\Cache\CacheEntry.cs" />
-    <Compile Include="Backend\Collector\Cache\CacheManager.cs" />
+    <Compile Include="Backend\Cache\CacheEntry.cs" />
+    <Compile Include="Backend\Cache\CacheManager.cs" />
     <Compile Include="Backend\Collector\CollectorComparer.cs" />
     <Compile Include="Backend\Collector\ICollector.cs" />
     <Compile Include="Backend\Collector\Providers\Musixmatch\MusixMatchCollector.cs" />

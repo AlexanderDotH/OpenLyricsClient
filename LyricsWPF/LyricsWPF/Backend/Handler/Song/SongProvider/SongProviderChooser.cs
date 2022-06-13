@@ -75,6 +75,15 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
                 GenericList<string> lastWindows = Core.INSTANCE.WindowLogger.LastWindows(spotifyProcess, tidalProcess);
                 GenericList<string> foundProcesses = ProcessUtils.GetRunningProcesses(tidalProcess, spotifyProcess);
 
+                if (!foundProcesses.IsEmpty())
+                {
+                    if (foundProcesses.Get(0).Equals(spotifyProcess))
+                        songProvider = EnumSongProvider.SPOTIFY;
+
+                    if (foundProcesses.Get(0).Equals(tidalProcess))
+                        songProvider = EnumSongProvider.TIDAL;
+                }
+
                 if (!lastWindows.IsEmpty())
                 {
                     if (spotifyService.IsConnected() && lastWindows.Get(0).Equals(spotifyProcess))
@@ -84,15 +93,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider
                         songProvider = EnumSongProvider.TIDAL;
                 }
 
-                if (!foundProcesses.IsEmpty())
-                {
-                    if (foundProcesses.Get(0).Equals(spotifyProcess))
-                        songProvider = EnumSongProvider.SPOTIFY;
-
-                    if (foundProcesses.Get(0).Equals(tidalProcess))
-                        songProvider = EnumSongProvider.TIDAL;
-                }
-                
                 if (songProvider == EnumSongProvider.NONE)
                     continue;
 

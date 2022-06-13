@@ -47,7 +47,7 @@ namespace LyricsWPF
             if (Core.INSTANCE.ServiceHandler.IsConnected("Tidal"))
             {
                 this.btnTidal.IsEnabled = false;
-                this.btnSpotifyDisconnect.IsEnabled = true;
+                this.btnTidalDisconnect.IsEnabled = true;
                 this.btnTidal.Content = "Connected";
             }
 
@@ -111,7 +111,7 @@ namespace LyricsWPF
                         this.Dispatcher.Invoke((Action)(() =>
                         {
                             this.btnTidal.IsEnabled = false;
-                            this.btnSpotifyDisconnect.IsEnabled = true;
+                            this.btnTidalDisconnect.IsEnabled = true;
                             this.btnTidal.Content = "Connected";
                         }));
                     }

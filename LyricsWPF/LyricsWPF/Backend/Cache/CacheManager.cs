@@ -3,12 +3,13 @@ using System.IO;
 using DevBase.Generic;
 using DevBase.IO;
 using DevBase.Utilities;
+using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Utils;
 using Newtonsoft.Json;
 
-namespace LyricsWPF.Backend.Collector.Cache
+namespace LyricsWPF.Backend.Cache
 {
     public class CacheManager
     {
@@ -18,9 +19,13 @@ namespace LyricsWPF.Backend.Collector.Cache
         private const string CACHE_FOLDER_NAME = "Cache";
         private readonly string CACHE_PATH;
 
+        private Debugger<CacheManager> _debugger;
+
         public CacheManager()
         {
             CACHE_PATH = Core.INSTANCE.SettingManager.WorkingDirectory + "\\" + CACHE_FOLDER_NAME + "\\";
+
+            this._debugger = new Debugger<CacheManager>(this);
 
             if (!Directory.Exists(CACHE_PATH))
                 Directory.CreateDirectory(CACHE_PATH);
@@ -63,11 +68,35 @@ namespace LyricsWPF.Backend.Collector.Cache
             }
         }
 
+        public void ClearCache()
+        {
+            Core.INSTANCE.SongHandler.RequestNewSong();
+
+            this._cache.Clear();
+
+            if (Directory.Exists(CACHE_PATH))
+            {
+                GenericList<AFileObject> files = AFile.GetFiles(CACHE_PATH, false, "*" + CACHE_EXTENSION);
+
+                try
+                {
+                    files.ForEach(f => f.FileInfo.Delete());
+                }
+                catch (Exception e)
+                {
+                    this._debugger.Write("Could not delete cache file: " + e.Message, DebugType.ERROR);
+                }
+            }
+        }
+
         public LyricData GetDataByRequest(SongRequestObject songRequestObject)
         {
             for (int i = 0; i < this._cache.Length; i++)
             {
                 CacheEntry cacheEntry = this._cache.Get(i);
+
+                if (!DataValidator.ValidateData(cacheEntry))
+                    continue;
 
                 if (cacheEntry.Id == CalculateID(songRequestObject))
                 {
@@ -83,6 +112,9 @@ namespace LyricsWPF.Backend.Collector.Cache
             for (int i = 0; i < this._cache.Length; i++)
             {
                 CacheEntry cacheEntry = this._cache.Get(i);
+
+                if (!DataValidator.ValidateData(cacheEntry))
+                    continue;
 
                 if (cacheEntry.Id == CalculateID(songRequestObject))
                 {
