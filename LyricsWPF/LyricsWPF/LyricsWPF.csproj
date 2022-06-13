@@ -536,17 +536,23 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="AUTHORS" />
+    <None Include="char.bin" />
+    <None Include="COPYING" />
     <None Include="IpaDic\AUTHORS" />
     <None Include="IpaDic\char.bin" />
     <None Include="IpaDic\COPYING" />
     <None Include="IpaDic\matrix.bin" />
     <None Include="IpaDic\sys.dic" />
     <None Include="IpaDic\unk.dic" />
+    <None Include="matrix.bin" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="sys.dic" />
+    <None Include="unk.dic" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
