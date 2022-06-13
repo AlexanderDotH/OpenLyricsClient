@@ -15,9 +15,11 @@ using System.Windows.Shapes;
 using LyricsWPF.Backend;
 using LyricsWPF.Backend.Romanisation;
 using LyricsWPF.Backend.Settings;
+using LyricsWPF.Backend.Structure;
 using LyricsWPF.Frontend.ItemSources;
 using MaterialDesignThemes.Wpf;
 using SelectionMode = LyricsWPF.Backend.Collector.SelectionMode;
+using Window = System.Windows.Window;
 
 namespace LyricsWPF
 {
@@ -31,15 +33,21 @@ namespace LyricsWPF
         {
             InitializeComponent();
 
+            this.btnSpotifyDisconnect.IsEnabled = false;
+            this.btnYoutubeDisconnect.IsEnabled = false;
+            this.btnTidalDisconnect.IsEnabled = false;
+
             if (Core.INSTANCE.ServiceHandler.IsConnected("Spotify"))
             {
                 this.btnSpotify.IsEnabled = false;
+                this.btnSpotifyDisconnect.IsEnabled = true;
                 this.btnSpotify.Content = "Connected";
             }
 
             if (Core.INSTANCE.ServiceHandler.IsConnected("Tidal"))
             {
                 this.btnTidal.IsEnabled = false;
+                this.btnSpotifyDisconnect.IsEnabled = true;
                 this.btnTidal.Content = "Connected";
             }
 
@@ -76,6 +84,7 @@ namespace LyricsWPF
                         {
                             this.btnSpotify.IsEnabled = false;
                             this.btnSpotify.Content = "Connected";
+                            this.btnSpotifyDisconnect.IsEnabled = true;
                         }));
                     }
 
@@ -102,6 +111,7 @@ namespace LyricsWPF
                         this.Dispatcher.Invoke((Action)(() =>
                         {
                             this.btnTidal.IsEnabled = false;
+                            this.btnSpotifyDisconnect.IsEnabled = true;
                             this.btnTidal.Content = "Connected";
                         }));
                     }
@@ -164,6 +174,31 @@ namespace LyricsWPF
                 Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Remove(RomanizeSelection.KOREAN_TO_ROMANJI);
                 Core.INSTANCE.SettingManager.WriteSettings();
             }
+        }
+
+        private void ButtonSpotifyDisconnect_Click(object sender, RoutedEventArgs e)
+        {
+            Core.INSTANCE.SettingManager.Settings.SpotifyAccess =
+                (SpotifyAccess)Core.INSTANCE.SettingManager.DefaultSetting(EnumSetting.SPOTIFY);
+            Core.INSTANCE.SettingManager.WriteSettings();
+
+            this.btnSpotify.IsEnabled = true;
+            this.btnSpotifyDisconnect.IsEnabled = false;
+        }
+
+        private void ButtonTidalDisconnect_Click(object sender, RoutedEventArgs e)
+        {
+            Core.INSTANCE.SettingManager.Settings.TidalAccess =
+                (TidalAccess)Core.INSTANCE.SettingManager.DefaultSetting(EnumSetting.TIDAL);
+            Core.INSTANCE.SettingManager.WriteSettings();
+
+            this.btnTidal.IsEnabled = true;
+            this.btnTidalDisconnect.IsEnabled = false;
+        }
+
+        private void ButtonYoutubeDisconnect_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
