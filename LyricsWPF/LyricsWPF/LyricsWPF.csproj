@@ -374,7 +374,6 @@
     <Compile Include="Backend\Handler\Song\SongProvider\Tidal\TidalDataMerger.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\Tidal\TidalProgressListener.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\Tidal\TidalSongProvider.cs" />
-    <Compile Include="Backend\Helper\SecurityHelper.cs" />
     <Compile Include="Backend\Helper\WindowLogger.cs" />
     <Compile Include="Backend\Structure\Enum\EnumRegisterTypes.cs" />
     <Compile Include="Backend\Structure\Json\JsonLyricData.cs" />
