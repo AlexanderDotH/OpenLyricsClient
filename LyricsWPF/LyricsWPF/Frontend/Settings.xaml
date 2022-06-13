@@ -103,7 +103,7 @@
 
                         <GroupBox 
                         Header="Spotify" 
-                        Height="125"
+                        Height="155"
                         Style="{StaticResource MaterialDesignGroupBox}"
                         materialDesign:ColorZoneAssist.Background="#1ED760"
                         materialDesign:ColorZoneAssist.Foreground="White"
@@ -124,23 +124,35 @@
                                     Width="201"
                                     ToolTip="Connect to your Spotify Account"
                                     Content="Connect"
-                                    Margin="10,33,0,0"
+                                    Margin="10,35,0,0"
                                     Background="#1ED760"
                                     materialDesign:ShadowAssist.ShadowDepth="Depth2"
                                     materialDesign:ButtonAssist.CornerRadius="5"
                                     IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Click="Button_Click" Cursor="Hand" HorizontalAlignment="Center" Padding="16,4,15,4" VerticalAlignment="Top" Grid.ColumnSpan="2" />
 
+                                <Button x:Name="btnSpotifyDisconnect"
+                                        Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                        Width="201"
+                                        ToolTip="Disconnect"
+                                        Content="Disconnect"
+                                        Margin="10,72,0,0"
+                                        Background="#ff4040"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                        materialDesign:ButtonAssist.CornerRadius="5"
+                                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Click="ButtonSpotifyDisconnect_Click" Cursor="Hand" HorizontalAlignment="Center" Padding="16,4,15,4" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+
+
                                 <materialDesign:PackIcon
                                 Kind="Spotify"
                                 Width="25"
                                 IsHitTestVisible="False"
-                                Height="25" Margin="182,36,0,0"/>
+                                Height="25" Margin="182,38,0,0"/>
                             </Grid>
                         </GroupBox>
 
                         <GroupBox 
                         Header="Youtube" 
-                        Height="125"
+                        Height="155"
                         Style="{StaticResource MaterialDesignGroupBox}"
                         materialDesign:ColorZoneAssist.Background="#FF0000"
                         materialDesign:ColorZoneAssist.Foreground="White"
@@ -161,11 +173,22 @@
                                     Width="201"
                                     ToolTip="Connect with Youtube"
                                     Content="Connect"
-                                    Margin="10,33,0,0"
+                                    Margin="10,35,0,0"
                                     Background="#FF0000"
                                     materialDesign:ShadowAssist.ShadowDepth="Depth2"
                                     materialDesign:ButtonAssist.CornerRadius="5"
                                     IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Click="Button_Click" Cursor="Hand" HorizontalAlignment="Center" Padding="16,4,15,4" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+
+                                <Button x:Name="btnYoutubeDisconnect"
+                                        Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                        Width="201"
+                                        ToolTip="Disconnect"
+                                        Content="Disconnect"
+                                        Margin="10,72,0,0"
+                                        Background="#ff4040"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                        materialDesign:ButtonAssist.CornerRadius="5"
+                                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Click="ButtonYoutubeDisconnect_Click" Cursor="Hand" HorizontalAlignment="Center" Padding="16,4,15,4" VerticalAlignment="Top" Grid.ColumnSpan="2" />
 
 
                                 <materialDesign:PackIcon
@@ -178,7 +201,7 @@
                         
                         <GroupBox 
                         Header="Tidal" 
-                        Height="125"
+                        Height="155"
                         Style="{StaticResource MaterialDesignGroupBox}"
                         materialDesign:ColorZoneAssist.Background="#242528"
                         materialDesign:ColorZoneAssist.Foreground="White"
@@ -198,16 +221,28 @@
                                     Width="201"
                                     ToolTip="Connect to your Tidal Account"
                                     Content="Connect"
-                                    Margin="10,33,0,0"
+                                    Margin="10,35,0,0"
                                     Background="#31F4FF"
                                     materialDesign:ShadowAssist.ShadowDepth="Depth2"
                                     materialDesign:ButtonAssist.CornerRadius="5"
                                     IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Click="btnTidal_Click" Cursor="Hand" HorizontalAlignment="Center" Padding="16,4,15,4" VerticalAlignment="Top" Grid.ColumnSpan="2" />
 
+                                <Button x:Name="btnTidalDisconnect"
+                                        Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                                        Width="201"
+                                        ToolTip="Disconnect"
+                                        Content="Disconnect"
+                                        Margin="10,72,0,0"
+                                        Background="#ff4040"
+                                        materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                        materialDesign:ButtonAssist.CornerRadius="5"
+                                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Click="ButtonTidalDisconnect_Click" Cursor="Hand" HorizontalAlignment="Center" Padding="16,4,15,4" VerticalAlignment="Top" Grid.ColumnSpan="2" />
+
+
                                 <Image Source="/Resources/Icons/tidal.ico" 
                                        Width="25" 
                                        Height="25" 
-                                       Margin="182,36,5,14"/>
+                                       Margin="182,28,5,30"/>
                             </Grid>
                         </GroupBox>
 

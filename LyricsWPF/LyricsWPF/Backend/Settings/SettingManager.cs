@@ -59,41 +59,67 @@ namespace LyricsWPF.Backend.Settings
         {
             Settings settings = new Settings();
 
-            TidalAccess tidalAccess = new TidalAccess();
-            tidalAccess.IsTidalConnected = false;
-            tidalAccess.AccessToken = "null";
-            tidalAccess.RefreshToken = "null";
-            tidalAccess.ExpirationDate = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-            tidalAccess.UserID = 0;
-
-            settings.TidalAccess = tidalAccess;
-
-            SpotifyAccess spotifyAccess = new SpotifyAccess();
-
-            BearerAccessToken bearerAccessToken = new BearerAccessToken();
-            bearerAccessToken.AccessToken = "null";
-            bearerAccessToken.ExpiresIn = 0;
-            bearerAccessToken.Scope = "playlist-read-private playlist-read-collaborative streaming user-follow-read user-library-read user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played";
-
-            spotifyAccess.BearerAccess = bearerAccessToken;
-
-            spotifyAccess.IsSpotifyConnected = false;
-            spotifyAccess.RefreshToken = string.Empty;
-            spotifyAccess.SpotifyExpireTime = DateTime.Now;
-            settings.SpotifyAccess = spotifyAccess;
-
-            List<RomanizeSelection> romanizeSelections = new List<RomanizeSelection>();
-            romanizeSelections.Add(RomanizeSelection.KOREAN_TO_ROMANJI);
-            romanizeSelections.Add(RomanizeSelection.JAPANESE_TO_ROMANJI);
-            settings.RomanizeSelection = romanizeSelections;
-
-            settings.LyricSelectionMode = SelectionMode.QUALITY;
-
-            settings.MusixMatchTokens = new List<string>();
+            settings.TidalAccess = (TidalAccess)DefaultSetting(EnumSetting.TIDAL);
+            settings.SpotifyAccess = (SpotifyAccess)DefaultSetting(EnumSetting.SPOTIFY);
+            settings.RomanizeSelection = (List<RomanizeSelection>)DefaultSetting(EnumSetting.ROMANIZATION);
+            settings.LyricSelectionMode = (SelectionMode)DefaultSetting(EnumSetting.LYRICS_SELECTION_MODE);
+            settings.MusixMatchTokens = (List<string>)DefaultSetting(EnumSetting.MUSIXMATCH_TOKENS);
 
             WriteSettings(settings);
 
             return settings;
+        }
+
+        public object DefaultSetting(EnumSetting enumSetting)
+        {
+            switch (enumSetting)
+            {
+                case EnumSetting.SPOTIFY:
+                {
+                    SpotifyAccess spotifyAccess = new SpotifyAccess();
+
+                    BearerAccessToken bearerAccessToken = new BearerAccessToken();
+                    bearerAccessToken.AccessToken = "null";
+                    bearerAccessToken.ExpiresIn = 0;
+                    bearerAccessToken.Scope = "playlist-read-private playlist-read-collaborative streaming user-follow-read user-library-read user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played";
+
+                    spotifyAccess.BearerAccess = bearerAccessToken;
+
+                    spotifyAccess.IsSpotifyConnected = false;
+                    spotifyAccess.RefreshToken = string.Empty;
+                    spotifyAccess.SpotifyExpireTime = DateTime.Now;
+
+                    return spotifyAccess;
+                }
+                case EnumSetting.TIDAL:
+                {
+                    TidalAccess tidalAccess = new TidalAccess();
+                    tidalAccess.IsTidalConnected = false;
+                    tidalAccess.AccessToken = "null";
+                    tidalAccess.RefreshToken = "null";
+                    tidalAccess.ExpirationDate = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                    tidalAccess.UserID = 0;
+
+                    return tidalAccess;
+                }
+                case EnumSetting.ROMANIZATION:
+                {
+                    List<RomanizeSelection> romanizeSelections = new List<RomanizeSelection>();
+                    romanizeSelections.Add(RomanizeSelection.KOREAN_TO_ROMANJI);
+                    romanizeSelections.Add(RomanizeSelection.JAPANESE_TO_ROMANJI);
+                    return romanizeSelections;
+                }
+                case EnumSetting.LYRICS_SELECTION_MODE:
+                {
+                    return SelectionMode.QUALITY;
+                }
+                case EnumSetting.MUSIXMATCH_TOKENS:
+                {
+                    return new List<string>();
+                }
+            }
+
+            return null;
         }
 
         public void WriteSettings(Settings settings)
