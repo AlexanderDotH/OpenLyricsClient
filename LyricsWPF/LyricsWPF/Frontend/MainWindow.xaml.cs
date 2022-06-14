@@ -25,6 +25,7 @@ using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Structure.Enum;
 using LyricsWPF.Backend.Utils;
 using LyricsWPF.Frontend.ItemSources;
+using MaterialDesignThemes.Wpf;
 using SelectionMode = LyricsWPF.Backend.Collector.SelectionMode;
 
 namespace LyricsWPF
@@ -80,6 +81,8 @@ namespace LyricsWPF
                 out this._showProgressSuspensionToken,
                 new Task(async () => await this.ShowProgressTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.SHOW_PROGRESS);
+
+
         }
 
         private async Task ShowProgressTask()
@@ -96,6 +99,8 @@ namespace LyricsWPF
 
                 if (!DataValidator.ValidateData(song.Time, song.MaxTime))
                     continue;
+
+
 
                 await this.Dispatcher.InvokeAsync(() =>
                 {
@@ -311,6 +316,7 @@ namespace LyricsWPF
 
         private void SetupSettingActivity()
         {
+
             this.btnSpotifyDisconnect.IsEnabled = false;
             this.btnYoutubeDisconnect.IsEnabled = false;
             this.btnTidalDisconnect.IsEnabled = false;

@@ -92,7 +92,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                                     if (!currentSong.Paused)
                                     {
                                         currentSong.Time = currentSong.ProgressMs + diff;
-                                        currentSong.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
                                     }
                                 }
                             }

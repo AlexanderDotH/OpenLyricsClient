@@ -24,7 +24,6 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 {
     class NetEaseV2Collector : ICollector
     {
-
         private string _baseUrl;
 
         private Debugger<NetEaseV2Collector> _debugger;

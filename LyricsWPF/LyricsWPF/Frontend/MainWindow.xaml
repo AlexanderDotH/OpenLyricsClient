@@ -52,7 +52,7 @@
 
                     <TextBlock x:Name="firstLine"
                                Style="{StaticResource MaterialDesignHeadline4TextBlock}"
-                               Text="Line 1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="330,0,0,400" >
+                               Text="Line 1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="480,0,0,400" >
                         <TextBlock.Effect>
                             <BlurEffect Radius="7"/>
                         </TextBlock.Effect>
@@ -60,7 +60,7 @@
 
                     <TextBlock x:Name="secondLine"
                                Style="{StaticResource MaterialDesignHeadline4TextBlock}"
-                               Text="Line 2" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="330,0,0,200" >
+                               Text="Line 2" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="485,0,0,200" >
                         <TextBlock.Effect>
                             <BlurEffect Radius="5"/>
                         </TextBlock.Effect>
@@ -68,12 +68,12 @@
 
                     <TextBlock x:Name="thirdLine"
                                Style="{StaticResource MaterialDesignHeadline3TextBlock}"
-                               Text="Line 3" TextWrapping="Wrap"  Foreground="{StaticResource PrimaryHueMidBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="325,0,0,0" FontFamily="Arial" TextAlignment="Left" />
+                               Text="Line 3" TextWrapping="Wrap"  Foreground="{StaticResource PrimaryHueMidBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="495,0,0,0" FontFamily="Arial" TextAlignment="Left" />
 
 
                     <TextBlock x:Name="fourthLine"
                                Style="{StaticResource MaterialDesignHeadline4TextBlock}"
-                               Text="Line 3" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="330,200,0,0" >
+                               Text="Line 3" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="485,200,0,0" >
                         <TextBlock.Effect>
                             <BlurEffect Radius="5"/>
                         </TextBlock.Effect>
@@ -81,7 +81,7 @@
 
                     <TextBlock x:Name="fifthLine"
                                Style="{StaticResource MaterialDesignHeadline4TextBlock}"
-                               Text="Line 4" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="330,400,0,0" >
+                               Text="Line 4" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="480,400,0,0" >
                         <TextBlock.Effect>
                             <BlurEffect Radius="7"/>
                         </TextBlock.Effect>

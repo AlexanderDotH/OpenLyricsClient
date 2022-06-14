@@ -112,7 +112,6 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Spotify
 
         public async Task StartAuthorization()
         {
-            // TODO: Remove unnecessary permissions
             string state = Guid.NewGuid().ToString("N");
 
             GenericList<string> scopes = new GenericList<string>();
