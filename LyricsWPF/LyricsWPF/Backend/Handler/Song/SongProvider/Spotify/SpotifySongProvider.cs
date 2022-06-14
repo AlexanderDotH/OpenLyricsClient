@@ -87,11 +87,18 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                             {
                                 if (currentSong != null)
                                 {
-                                    long diff = DateTimeOffset.Now.ToUnixTimeMilliseconds() - currentSong.TimeStamp;
-                                    
-                                    if (!currentSong.Paused)
+                                    if (currentSong.TimeStamp != 0)
                                     {
-                                        currentSong.Time = currentSong.ProgressMs + diff;
+                                        long diff = DateTimeOffset.Now.ToUnixTimeMilliseconds() - currentSong.TimeStamp;
+
+                                        if (diff < 0)
+                                            diff = 0;
+
+                                        if (!currentSong.Paused)
+                                        {
+                                            currentSong.Time = currentSong.ProgressMs + diff;
+                                            currentSong.TimeStamp = 0;
+                                        }
                                     }
                                 }
                             }

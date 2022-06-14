@@ -73,7 +73,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
             while (!this._disposed)
             {
                 await this._applyLyricSuspensionToken.WaitForRelease();
-                await Task.Delay(1);
+                await Task.Delay(100);
 
                 Song.Song song = _songHandler.CurrentSong;
 
@@ -118,7 +118,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
             while (!this._disposed)
             {
                 await this._manageLyricSuspensionToken.WaitForRelease();
-                await Task.Delay(1);
+                await Task.Delay(35);
 
                 if (DataValidator.ValidateData(this._songHandler))
                 {
@@ -183,7 +183,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
             while (!this._disposed)
             {
                 await this._manageLyricsRollSuspensionToken.WaitForRelease();
-                await Task.Delay(1);
+                await Task.Delay(35);
 
                 Song.Song song = this._songHandler.CurrentSong;
 

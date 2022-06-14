@@ -57,6 +57,7 @@ namespace LyricsWPF
 
             this.currentFullTitle.Text = string.Empty;
             this.currentTitle.Text = string.Empty;
+            this.currentArtists.Text = string.Empty;
             this.provider.Text = string.Empty;
 
             this.firstLine.Text = string.Empty;
@@ -129,6 +130,7 @@ namespace LyricsWPF
                 {
                     this.currentTitle.Text = song.Title;
                     this.currentFullTitle.Text = song.Title;
+                    this.currentArtists.Text = song.FullArtists;
 
                     this.timeFrom.Text = song.ProgressString;
                     this.timeTo.Text = song.MaxProgressString;
@@ -197,7 +199,10 @@ namespace LyricsWPF
                             this.fifthLine.Text = "";
                         });
                     }
-                    else if (song.State == SongState.SEARCHING_FINISHED)
+                }
+                else
+                {
+                    if (song.State == SongState.SEARCHING_FINISHED)
                     {
                         await this.Dispatcher.InvokeAsync(() =>
                         {
@@ -213,70 +218,80 @@ namespace LyricsWPF
                 if (!DataValidator.ValidateData(song.Lyrics, song.CurrentLyricsRoll))
                     continue;
 
-                LyricsRoll lyricsRoll = song.CurrentLyricsRoll;
-
-                if (!DataValidator.ValidateData(lyricsRoll))
-                    continue;
-
-                await this.Dispatcher.InvokeAsync(() =>
+                if (song.Lyrics.LyricType == LyricType.INSTRUMENTAL)
                 {
                     this.firstLine.Text = "";
                     this.secondLine.Text = "";
-                    this.thirdLine.Text = "♪";
+                    this.thirdLine.Text = "♪ Instrumental ♪";
                     this.fourthLine.Text = "";
                     this.fifthLine.Text = "";
+                }
+                else if (song.Lyrics.LyricType == LyricType.TEXT)
+                {
+                    LyricsRoll lyricsRoll = song.CurrentLyricsRoll;
 
-                    if (DataValidator.ValidateData(lyricsRoll.PartOne) &&
-                        DataValidator.ValidateData(lyricsRoll.PartOne.Part))
-                    {
-                        this.firstLine.Text = lyricsRoll.PartOne.Part;
-                    }
-                    else
+                    if (!DataValidator.ValidateData(lyricsRoll))
+                        continue;
+
+                    await this.Dispatcher.InvokeAsync(() =>
                     {
                         this.firstLine.Text = "";
-                    }
-
-                    if (DataValidator.ValidateData(lyricsRoll.PartTwo) &&
-                        DataValidator.ValidateData(lyricsRoll.PartTwo.Part))
-                    {
-                        this.secondLine.Text = lyricsRoll.PartTwo.Part;
-                    }
-                    else
-                    {
                         this.secondLine.Text = "";
-                    }
-
-                    if (DataValidator.ValidateData(lyricsRoll.PartThree) &&
-                        DataValidator.ValidateData(lyricsRoll.PartThree.Part))
-                    {
-                        this.thirdLine.Text = lyricsRoll.PartThree.Part;
-                    }
-                    else
-                    {
-                        this.thirdLine.Text = "";
-                    }
-
-                    if (DataValidator.ValidateData(lyricsRoll.PartFour) &&
-                        DataValidator.ValidateData(lyricsRoll.PartFour.Part))
-                    {
-                        this.fourthLine.Text = lyricsRoll.PartFour.Part;
-                    }
-                    else
-                    {
+                        this.thirdLine.Text = "♪";
                         this.fourthLine.Text = "";
-                    }
-
-                    if (DataValidator.ValidateData(lyricsRoll.PartFive) &&
-                        DataValidator.ValidateData(lyricsRoll.PartFive.Part))
-                    {
-                        this.fifthLine.Text = lyricsRoll.PartFive.Part;
-                    }
-                    else
-                    {
                         this.fifthLine.Text = "";
-                    }
-                });
 
+                        if (DataValidator.ValidateData(lyricsRoll.PartOne) &&
+                            DataValidator.ValidateData(lyricsRoll.PartOne.Part))
+                        {
+                            this.firstLine.Text = lyricsRoll.PartOne.Part;
+                        }
+                        else
+                        {
+                            this.firstLine.Text = "";
+                        }
+
+                        if (DataValidator.ValidateData(lyricsRoll.PartTwo) &&
+                            DataValidator.ValidateData(lyricsRoll.PartTwo.Part))
+                        {
+                            this.secondLine.Text = lyricsRoll.PartTwo.Part;
+                        }
+                        else
+                        {
+                            this.secondLine.Text = "";
+                        }
+
+                        if (DataValidator.ValidateData(lyricsRoll.PartThree) &&
+                            DataValidator.ValidateData(lyricsRoll.PartThree.Part))
+                        {
+                            this.thirdLine.Text = lyricsRoll.PartThree.Part;
+                        }
+                        else
+                        {
+                            this.thirdLine.Text = "";
+                        }
+
+                        if (DataValidator.ValidateData(lyricsRoll.PartFour) &&
+                            DataValidator.ValidateData(lyricsRoll.PartFour.Part))
+                        {
+                            this.fourthLine.Text = lyricsRoll.PartFour.Part;
+                        }
+                        else
+                        {
+                            this.fourthLine.Text = "";
+                        }
+
+                        if (DataValidator.ValidateData(lyricsRoll.PartFive) &&
+                            DataValidator.ValidateData(lyricsRoll.PartFive.Part))
+                        {
+                            this.fifthLine.Text = lyricsRoll.PartFive.Part;
+                        }
+                        else
+                        {
+                            this.fifthLine.Text = "";
+                        }
+                    });
+                }
             }
         }
 
@@ -292,6 +307,7 @@ namespace LyricsWPF
                 this.provider.Text = "";
                 this.currentTitle.Text = "";
                 this.provider.Text = "";
+                this.currentArtists.Text = "";
             });
         }
 

@@ -12,6 +12,7 @@ namespace LyricsWPF.Backend.Handler.Song
     {
         private string _title;
         private string[] _artists;
+        private string _fullArtists;
         private string _album;
         private long _time;
         private long _maxTime;
@@ -28,6 +29,7 @@ namespace LyricsWPF.Backend.Handler.Song
         {
             this._title = title;
             this._artists = artists;
+            this._fullArtists = GetArtistsSplit();
             this._maxTime = maxTime;
 
             this._time = 0;
@@ -62,6 +64,18 @@ namespace LyricsWPF.Backend.Handler.Song
             }
         }
 
+        private string GetArtistsSplit()
+        {
+            string artists = string.Empty;
+
+            for (int i = 0; i < this._artists.Length; i++)
+            {
+                artists += i == 0 ? this._artists[i] : ", " + this._artists[i];
+            }
+
+            return artists;
+        }
+
         public double GetPercentage()
         {
             return 100.0 * this._time / this._maxTime;
@@ -77,6 +91,11 @@ namespace LyricsWPF.Backend.Handler.Song
         {
             get => _artists;
             set => _artists = value;
+        }
+
+        public string FullArtists
+        {
+            get => _fullArtists;
         }
 
         public long Time

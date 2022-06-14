@@ -119,6 +119,10 @@
                                VerticalAlignment="Bottom" 
                                FontSize="17" />
 
+                    <TextBlock x:Name="currentArtists"
+                        Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                        Text="Artists" Height="45" HorizontalAlignment="Left" FontWeight="Bold" Margin="23,48,0,0" VerticalAlignment="Top" FontSize="16" />
+
                 </Grid>
             </TabItem>
             <TabItem>
@@ -348,7 +352,7 @@
                                                     materialDesign:ButtonAssist.CornerRadius="5"
                                                     IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Click="ButtonSpotifyDisconnect_Click" Cursor="Hand" HorizontalAlignment="Center" Padding="16,4,15,4" VerticalAlignment="Top" Grid.ColumnSpan="2" />
 
-                                            
+
                                             <materialDesign:PackIcon
                                                 Kind="Spotify"
                                                 Width="25"
