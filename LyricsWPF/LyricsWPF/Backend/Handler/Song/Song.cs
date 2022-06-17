@@ -10,12 +10,8 @@ namespace LyricsWPF.Backend.Handler.Song
 {
     public class Song
     {
-        private string _title;
-        private string[] _artists;
-        private string _fullArtists;
-        private string _album;
+        private SongMetadata _songMetadata;
         private long _time;
-        private long _maxTime;
         private LyricData _lyrics;
         private LyricPart _currentLyricPart;
         private LyricsRoll _currentLyricsRoll;
@@ -25,12 +21,9 @@ namespace LyricsWPF.Backend.Handler.Song
         private long _progressMS;
         private bool _paused;
 
-        public Song(string title, string[] artists, long maxTime)
+        public Song(string title, string album, string[] artists, long maxTime)
         {
-            this._title = title;
-            this._artists = artists;
-            this._fullArtists = GetArtistsSplit();
-            this._maxTime = maxTime;
+            this._songMetadata = new SongMetadata(title, album, artists, maxTime);
 
             this._time = 0;
             this._state = SongState.NO_LYRICS_AVAILABLE;
@@ -45,7 +38,7 @@ namespace LyricsWPF.Backend.Handler.Song
 
         public TimeSpan MaxProgressTimeSpan
         {
-            get { return TimeSpan.FromMilliseconds(this._maxTime); }
+            get { return TimeSpan.FromMilliseconds(this._songMetadata.MaxTime); }
         }
 
         public string ProgressString
@@ -64,38 +57,35 @@ namespace LyricsWPF.Backend.Handler.Song
             }
         }
 
-        private string GetArtistsSplit()
-        {
-            string artists = string.Empty;
-
-            for (int i = 0; i < this._artists.Length; i++)
-            {
-                artists += i == 0 ? this._artists[i] : ", " + this._artists[i];
-            }
-
-            return artists;
-        }
-
         public double GetPercentage()
         {
-            return 100.0 * this._time / this._maxTime;
+            return 100.0 * this._time / this._songMetadata.MaxTime;
+        }
+
+        public SongMetadata SongMetadata
+        {
+            get => _songMetadata;
+            set => _songMetadata = value;
         }
 
         public string Title
         {
-            get => _title;
-            set => _title = value;
+            get => this._songMetadata.Name;
         }
 
         public string[] Artists
         {
-            get => _artists;
-            set => _artists = value;
+            get => this._songMetadata.Artists;
         }
 
         public string FullArtists
         {
-            get => _fullArtists;
+            get => this._songMetadata.FullArtists;
+        }
+
+        public string Album
+        {
+            get => this._songMetadata.Album;
         }
 
         public long Time
@@ -106,8 +96,7 @@ namespace LyricsWPF.Backend.Handler.Song
 
         public long MaxTime
         {
-            get => _maxTime;
-            set => _maxTime = value;
+            get => this._songMetadata.MaxTime;
         }
 
         public LyricData Lyrics
@@ -143,12 +132,6 @@ namespace LyricsWPF.Backend.Handler.Song
         {
             get => _progressMS;
             set => _progressMS = value;
-        }
-        
-        public string Album
-        {
-            get => _album;
-            set => _album = value;
         }
 
         public LyricPart CurrentLyricPart

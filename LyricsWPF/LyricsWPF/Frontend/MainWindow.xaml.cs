@@ -125,7 +125,7 @@ namespace LyricsWPF
                 if (!DataValidator.ValidateData(song.Title, song.ProgressString, song.MaxProgressString))
                     continue;
 
-                //Title
+                //Name
                 await this.Dispatcher.InvokeAsync(() =>
                 {
                     this.currentTitle.Text = song.Title;

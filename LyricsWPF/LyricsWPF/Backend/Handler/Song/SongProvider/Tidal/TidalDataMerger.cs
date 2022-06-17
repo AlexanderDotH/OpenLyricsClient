@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Utils;
 using TidalLib;
 
@@ -29,10 +30,12 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
 
         public static Song UpdatePlayBack(Song song, Track track)
         {
-            song.Title = track.Title;
-            song.Album = track.Album.Title;
-            song.Artists = DataConverter.TidalArtistsToString(track.Artists);
-
+            song.SongMetadata = SongMetadata.ToSongMetadata(
+                track.Title, 
+                track.Album.Title, 
+                DataConverter.ConvertTo<Artist, string>(track.Artists.ToArray()), 
+                track.Duration);
+            
             return song;
         }
 
@@ -51,13 +54,12 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
         {
             Song song = new Song(
                 track.Title,
+                track.Album.Title,
                 DataConverter.TidalArtistsToString(track.Artists),
                 TimeSpan.FromSeconds(track.Duration).Milliseconds);
-            song.Album = track.Album.Title;
             song.ProgressMs = 0;
             song.Time = 0;
             song.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-            song.MaxTime = (int)TimeSpan.FromSeconds(track.Duration).TotalMilliseconds;
             song.Lyrics = null;
             song.CurrentLyricPart = null;
             song.State = SongState.SEARCHING_LYRICS;

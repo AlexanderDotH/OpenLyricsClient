@@ -58,7 +58,7 @@ namespace LyricsWPF.Backend.Handler.Song
                 //if (DataValidator.ValidateData(this._lastSong.Lyrics) &&
                 //    DataValidator.ValidateData(currentSong.Lyrics))
                 //{
-                //    if (!currentSong.Lyrics.SongName.Equals(currentSong.Title))
+                //    if (!currentSong.Lyrics.SongName.Equals(currentSong.Name))
                 //    {
                 //        this._lastSong = currentSong;
                 //        return true;

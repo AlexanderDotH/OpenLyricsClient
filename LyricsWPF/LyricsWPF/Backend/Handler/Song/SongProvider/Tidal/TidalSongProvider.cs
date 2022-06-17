@@ -164,7 +164,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
             if (!DataValidator.ValidateData(tidalTrack))
                 return null;
 
-            this._currentSong = TidalDataMerger.ConvertAndMerge(tidalTrack);
+            this._currentSong = TidalDataMerger.ValidateConvertAndMerge(tidalTrack);
 
             this._startTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             this._tidalProgressListener.Start();

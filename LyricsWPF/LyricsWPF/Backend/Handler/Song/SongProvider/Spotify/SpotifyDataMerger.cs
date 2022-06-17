@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LyricsWPF.Backend.Structure;
 using LyricsWPF.Backend.Utils;
 using SpotifyApi.NetCore;
 
@@ -67,8 +68,11 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 
         public static Song UpdateAndMerge(Song song, CurrentTrackPlaybackContext currentTrack)
         {
-            song.Title = currentTrack.Item.Name;
-            song.Artists = DataConverter.SpotifyArtistsToStrings(currentTrack.Item.Artists);
+            song.SongMetadata = SongMetadata.ToSongMetadata(
+                currentTrack.Item.Name, 
+                currentTrack.Item.Album.Name, 
+                DataConverter.SpotifyArtistsToStrings(currentTrack.Item.Artists), 
+                currentTrack.Item.DurationMs);
 
             if (!song.Paused)
             {
@@ -103,9 +107,9 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
         {
             Song song = new Song(
                 currentTrack.Item.Name,
+                currentTrack.Item.Album.Name,
                 DataConverter.SpotifyArtistsToStrings(currentTrack.Item.Artists),
                 currentTrack.Item.DurationMs);
-            song.Album = currentTrack.Item.Album.Name;
             song.ProgressMs = currentTrack.ProgressMs.Value;
             song.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             song.Lyrics = null;

@@ -48,7 +48,7 @@
 
                     <TextBlock x:Name="currentTitle"
                     Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                    Text="Title" Height="45" HorizontalAlignment="Left" FontWeight="Bold" Margin="20,20,0,0" VerticalAlignment="Top" />
+                    Text="Name" Height="45" HorizontalAlignment="Left" FontWeight="Bold" Margin="20,20,0,0" VerticalAlignment="Top" />
 
                     <TextBlock x:Name="firstLine"
                                Style="{StaticResource MaterialDesignHeadline4TextBlock}"
@@ -149,7 +149,7 @@
 
                     <TextBlock x:Name="currentFullTitle"
                                Style="{StaticResource MaterialDesignHeadline5TextBlock}"
-                               Text="Title" Height="45" HorizontalAlignment="Left" FontWeight="Bold" Margin="20,20,0,0" VerticalAlignment="Top" />
+                               Text="Name" Height="45" HorizontalAlignment="Left" FontWeight="Bold" Margin="20,20,0,0" VerticalAlignment="Top" />
 
                     <ScrollViewer
                         VerticalScrollBarVisibility="Auto"

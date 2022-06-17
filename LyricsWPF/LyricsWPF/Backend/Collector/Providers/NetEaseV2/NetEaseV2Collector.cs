@@ -66,6 +66,12 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                                     {
                                         NetEaseV2SongResponse songResponse = response.Result.Songs[j];
 
+                                        SongMetadata songMetadata = SongMetadata.ToSongMetadata(
+                                            songResponse.Name,
+                                            songResponse.Album.Name,
+                                            DataConverter.ConvertTo<NetEaseV2ArtistResponse, string>(songResponse.Artists),
+                                            songResponse.Duration);
+
                                         if (IsValidSong(songResponse, songRequestObject, retryPercentage))
                                         {
                                             int songId = songResponse.Id;
@@ -80,14 +86,14 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                                                     Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse> lyricElement = lyrics.Get(i);
                                                     if (lyricElement.Item2.Lrc.Lyric != "")
                                                     {
-                                                        return await ParseLyricResponse(lyricElement.Item2, songResponse.Name, songResponse.Album.Name, DataConverter.ToArtists(songResponse.Artists));
+                                                        return await ParseLyricResponse(lyricElement.Item2, songMetadata);
                                                     }
                                                 }
 
                                             }
                                             else if (songRequestObject.SelectioMode == SelectionMode.PERFORMANCE)
                                             {
-                                                return await ParseLyricResponse(lyricResponse, songResponse.Name, songResponse.Album.Name, DataConverter.ToArtists(songResponse.Artists));
+                                                return await ParseLyricResponse(lyricResponse, songMetadata);
                                             }
                                         }
 
@@ -134,7 +140,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                    Math.Abs(string1.Length - string2.Length);
         }
 
-        private async Task<LyricData> ParseLyricResponse(NetEaseV2LyricResponse lyricResponse, string songName, string album, string[] artists)
+        private async Task<LyricData> ParseLyricResponse(NetEaseV2LyricResponse lyricResponse, SongMetadata songMetadata)
         {
             if (DataValidator.ValidateData(lyricResponse) && 
                 DataValidator.ValidateData(lyricResponse.Code, lyricResponse.Klyric,
@@ -156,7 +162,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
 
                             if (DataValidator.ValidateData(lyricElements))
                             {
-                                return await LyricData.ConvertToData(lyricElements, songName, album, artists, this.CollectorName());
+                                return await LyricData.ConvertToData(lyricElements, songMetadata, this.CollectorName());
                             }
                         }
                     }

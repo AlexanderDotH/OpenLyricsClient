@@ -104,7 +104,7 @@ namespace LyricsWPF.Backend.Cache
                 }
             }
 
-            return new LyricData(LyricReturnCode.Failed);
+            return new LyricData(LyricReturnCode.Failed, SongMetadata.ToSongMetadata(songRequestObject));
         }
 
         public bool IsInCache(SongRequestObject songRequestObject)
@@ -132,6 +132,7 @@ namespace LyricsWPF.Backend.Cache
             append += MemoryUtils.GetSize(songRequestObject.SongName).ToString();
             append += MemoryUtils.GetSize(songRequestObject.Album).ToString();
             append += MemoryUtils.GetSize(songRequestObject.Artists).ToString();
+            append += MemoryUtils.GetSize(songRequestObject.SongDuration).ToString();
             append += MemoryUtils.GetSize(songRequestObject.FormattedSongName).ToString();
             append += MemoryUtils.GetSize(songRequestObject.FormattedSongAlbum).ToString();
             append += MemoryUtils.GetSize(songRequestObject.SongDuration).ToString();
@@ -149,22 +150,23 @@ namespace LyricsWPF.Backend.Cache
             string songName = json.SongName;
             string album = json.Album;
             string[] artists = json.Artists;
+            long duration = json.Duration;
 
-            return new LyricData(lyricReturnCode, songName, album, artists, lyricParts, lyricProvider, fullLyrics, lyricType);
+            return new LyricData(lyricReturnCode, SongMetadata.ToSongMetadata(songName, album, artists, duration), lyricParts, lyricProvider, fullLyrics, lyricType);
         }
 
         private JsonLyricData ConvertToJsonLyricData(LyricData lyricData)
         {
             return new JsonLyricData()
             {
-                SongName = lyricData.SongName,
+                SongName = lyricData.SongMetadata.Name,
                 LyricProvider = lyricData.LyricProvider,
                 LyricReturnCode = lyricData.LyricReturnCode,
                 LyricParts = lyricData.LyricParts,
                 FullLyrics = lyricData.FullLyrics,
                 LyricType = lyricData.LyricType,
-                Album = lyricData.Album,
-                Artists = lyricData.Artists
+                Album = lyricData.SongMetadata.Album,
+                Artists = lyricData.SongMetadata.Artists
             };
         }
     }

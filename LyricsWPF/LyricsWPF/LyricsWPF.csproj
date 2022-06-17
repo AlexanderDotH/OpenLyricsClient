@@ -369,6 +369,8 @@
     <Compile Include="Backend\Collector\CollectorComparer.cs" />
     <Compile Include="Backend\Collector\ICollector.cs" />
     <Compile Include="Backend\Collector\Providers\Musixmatch\MusixMatchCollector.cs" />
+    <Compile Include="Backend\Collector\Providers\Textyl\TextylCollector.cs" />
+    <Compile Include="Backend\Collector\Providers\Textyl\Json\TextylLyricReponse.cs" />
     <Compile Include="Backend\Events\EventType.cs" />
     <Compile Include="Backend\Handler\Services\Services\Tidal\TidalService.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\Tidal\TidalDataMerger.cs" />
@@ -386,6 +388,8 @@
     <Compile Include="Backend\Structure\Json\JsonTidalUser.cs" />
     <Compile Include="Backend\Structure\Json\JsonTidalUtmParameters.cs" />
     <Compile Include="Backend\Structure\Json\Playersignal.cs" />
+    <Compile Include="Backend\Structure\MusixMatchToken.cs" />
+    <Compile Include="Backend\Structure\SongMetadata.cs" />
     <Compile Include="Backend\Structure\TidalAccess.cs" />
     <Compile Include="Backend\Structure\Window.cs" />
     <Compile Include="Backend\Utils\FileUtils.cs" />

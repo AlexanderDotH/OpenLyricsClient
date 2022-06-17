@@ -18,6 +18,9 @@ namespace LyricsWPF.Backend.Structure
         [JsonProperty("Artists")]
         public string[] Artists { get; set; }
 
+        [JsonProperty("Duration")]
+        public long Duration { get; set; }
+
         [JsonProperty("Type")]
         public LyricType LyricType { get; set; }
 

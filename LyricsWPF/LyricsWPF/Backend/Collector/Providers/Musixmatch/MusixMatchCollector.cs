@@ -45,7 +45,12 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                 try
                 {
                     this._musixmatchToken = new MusixmatchToken();
-                    Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Add(this._musixmatchToken.Token);
+
+                    MusixMatchToken musixMatchToken = new MusixMatchToken();
+                    musixMatchToken.Token = this._musixmatchToken.Token;
+                    musixMatchToken.ExpirationDate = DateTimeOffset.Now.AddMinutes(20).ToUnixTimeMilliseconds();
+
+                    Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Add(musixMatchToken);
                     Core.INSTANCE.SettingManager.WriteSettings();
                 }
                 catch (Exception e) { }
@@ -64,27 +69,49 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                 await this._collectMusixMatchSuspensionToken.WaitForRelease();
                 await Task.Delay(15000);
 
+                bool settingsChanged = false;
+
                 try
                 {
-                    Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Add(new MusixmatchToken().Token);
-                    Core.INSTANCE.SettingManager.WriteSettings();
+                    MusixMatchToken musixMatchToken = new MusixMatchToken();
+                    musixMatchToken.Token = new MusixmatchToken().Token;
+                    musixMatchToken.ExpirationDate = DateTimeOffset.Now.AddMinutes(20).ToUnixTimeMilliseconds();
+
+                    Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Add(musixMatchToken);
+                    settingsChanged = true;
                 }
                 catch (Exception e) { }
+
+                //Check expiration date
+                for (int i = 0; i < Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Count; i++)
+                {
+                    MusixMatchToken token = Core.INSTANCE.SettingManager.Settings.MusixMatchTokens[i];
+
+                    if (DateTimeOffset.Now.ToUnixTimeMilliseconds() > token.ExpirationDate)
+                    {
+                        Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Remove(token);
+                        settingsChanged = true;
+                    }
+                }
+
+                if (settingsChanged) 
+                    Core.INSTANCE.SettingManager.WriteSettings();
+
             }
         }
 
         public async Task<LyricData> GetLyrics(SongRequestObject songRequestObject)
         {
             if (!DataValidator.ValidateData(songRequestObject))
-                return new LyricData(LyricReturnCode.Failed);
+                return new LyricData(LyricReturnCode.Failed, SongMetadata.ToSongMetadata(songRequestObject));
 
             if (!DataValidator.ValidateData(this._musixmatchToken))
-                return new LyricData(LyricReturnCode.Failed);
+                return new LyricData(LyricReturnCode.Failed, SongMetadata.ToSongMetadata(songRequestObject));
 
             MusixmatchClient musixmatchClient = new MusixmatchClient(GetRandomMusixMatchToken());
 
             if (!DataValidator.ValidateData(musixmatchClient))
-                return new LyricData(LyricReturnCode.Failed);
+                return new LyricData(LyricReturnCode.Failed, SongMetadata.ToSongMetadata(songRequestObject));
 
             GenericList<Track> tracks = await musixmatchClient.SongSearchAsync(
                 new TrackSearchParameters
@@ -104,9 +131,10 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                 {
                     return new LyricData(
                         LyricReturnCode.Success,
-                        track.TrackName,
-                        track.AlbumName,
-                        new string[] { track.ArtistName },
+                        SongMetadata.ToSongMetadata(track.TrackName,
+                            track.AlbumName,
+                            new string[] { track.ArtistName }, 
+                            track.TrackLength),
                         LyricType.INSTRUMENTAL);
                 }
 
@@ -125,9 +153,10 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                     {
                         return await LyricData.ConvertToData(
                             lyricElements, 
-                            track.TrackName,
-                            track.AlbumName,
-                            new string[] { track.ArtistName }, 
+                            SongMetadata.ToSongMetadata(track.TrackName,
+                                track.AlbumName,
+                                new string[] { track.ArtistName }, 
+                                track.TrackLength), 
                             this.CollectorName());
                     }
                 }
@@ -142,7 +171,7 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                 return null;
 
             return Core.INSTANCE.SettingManager.Settings.MusixMatchTokens[new Random().Next(0,
-                Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Count - 1)];
+                Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Count - 1)].Token;
         }
 
         public string CollectorName()

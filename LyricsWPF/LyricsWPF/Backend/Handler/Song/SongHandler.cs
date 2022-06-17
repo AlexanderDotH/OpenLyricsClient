@@ -113,7 +113,7 @@ namespace LyricsWPF.Backend.Handler.Song
             if (DataValidator.ValidateData(song) &&
                 DataValidator.ValidateData(song.Title, song.Time))
             {
-                this._debugger.Write("Title: " + song.Title, DebugType.INFO);
+                this._debugger.Write("Name: " + song.Title, DebugType.INFO);
                 this._debugger.Write("Time: " + song.Time, DebugType.INFO);
 
                 if (DataValidator.ValidateData(song.CurrentLyricPart) &&

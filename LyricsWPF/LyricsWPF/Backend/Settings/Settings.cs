@@ -17,6 +17,6 @@ namespace LyricsWPF.Backend.Settings
         public TidalAccess TidalAccess { get; set; }
         public List<RomanizeSelection> RomanizeSelection { get; set; }
         public SelectionMode LyricSelectionMode { get; set; }
-        public List<string> MusixMatchTokens { get; set; }
+        public List<MusixMatchToken> MusixMatchTokens { get; set; }
     }
 }

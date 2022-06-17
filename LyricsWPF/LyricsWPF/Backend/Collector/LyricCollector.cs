@@ -10,6 +10,7 @@ using DevBase.Generic;
 using LyricsWPF.Backend.Collector.Providers.Musixmatch;
 using LyricsWPF.Backend.Collector.Providers.NetEase;
 using LyricsWPF.Backend.Collector.Providers.NetEaseV2;
+using LyricsWPF.Backend.Collector.Providers.Textyl;
 using LyricsWPF.Backend.Exceptions;
 using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Structure;
@@ -27,6 +28,7 @@ namespace LyricsWPF.Backend.Collector
             this._lyricCollectors.Add(new NetEaseCollector());
             this._lyricCollectors.Add(new NetEaseV2Collector());
             this._lyricCollectors.Add(new MusixMatchCollector());
+            this._lyricCollectors.Add(new TextylCollector());
         }
 
         public async Task CollectLyrics(SongRequestObject songRequestObject)

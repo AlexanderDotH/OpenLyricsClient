@@ -63,7 +63,7 @@ namespace LyricsWPF.Backend.Settings
             settings.SpotifyAccess = (SpotifyAccess)DefaultSetting(EnumSetting.SPOTIFY);
             settings.RomanizeSelection = (List<RomanizeSelection>)DefaultSetting(EnumSetting.ROMANIZATION);
             settings.LyricSelectionMode = (SelectionMode)DefaultSetting(EnumSetting.LYRICS_SELECTION_MODE);
-            settings.MusixMatchTokens = (List<string>)DefaultSetting(EnumSetting.MUSIXMATCH_TOKENS);
+            settings.MusixMatchTokens = (List<MusixMatchToken>)DefaultSetting(EnumSetting.MUSIXMATCH_TOKENS);
 
             WriteSettings(settings);
 
@@ -115,7 +115,7 @@ namespace LyricsWPF.Backend.Settings
                 }
                 case EnumSetting.MUSIXMATCH_TOKENS:
                 {
-                    return new List<string>();
+                    return new List<MusixMatchToken>();
                 }
             }
 
