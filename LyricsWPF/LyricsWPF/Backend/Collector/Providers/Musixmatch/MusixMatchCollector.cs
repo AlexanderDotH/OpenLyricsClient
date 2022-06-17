@@ -48,7 +48,7 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
 
                     MusixMatchToken musixMatchToken = new MusixMatchToken();
                     musixMatchToken.Token = this._musixmatchToken.Token;
-                    musixMatchToken.ExpirationDate = DateTimeOffset.Now.AddMinutes(20).ToUnixTimeMilliseconds();
+                    musixMatchToken.ExpirationDate = DateTimeOffset.Now.AddMinutes(2).ToUnixTimeMilliseconds();
 
                     Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Add(musixMatchToken);
                     Core.INSTANCE.SettingManager.WriteSettings();
