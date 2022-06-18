@@ -51,8 +51,6 @@ namespace LyricsWPF.Backend.Collector
                     }
                 }
             }
-
-            GC.Collect();
         }
     }
 }

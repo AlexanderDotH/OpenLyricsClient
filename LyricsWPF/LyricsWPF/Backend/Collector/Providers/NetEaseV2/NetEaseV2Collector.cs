@@ -69,7 +69,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEaseV2
                                         SongMetadata songMetadata = SongMetadata.ToSongMetadata(
                                             songResponse.Name,
                                             songResponse.Album.Name,
-                                            DataConverter.ConvertTo<NetEaseV2ArtistResponse, string>(songResponse.Artists),
+                                            DataConverter.ToArtists(songResponse.Artists),
                                             songResponse.Duration);
 
                                         if (IsValidSong(songResponse, songRequestObject, retryPercentage))

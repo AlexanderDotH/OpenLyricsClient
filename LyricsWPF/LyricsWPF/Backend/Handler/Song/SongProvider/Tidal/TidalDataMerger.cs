@@ -33,7 +33,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
             song.SongMetadata = SongMetadata.ToSongMetadata(
                 track.Title, 
                 track.Album.Title, 
-                DataConverter.ConvertTo<Artist, string>(track.Artists.ToArray()), 
+                DataConverter.TidalArtistsToString(track.Artists), 
                 track.Duration);
             
             return song;

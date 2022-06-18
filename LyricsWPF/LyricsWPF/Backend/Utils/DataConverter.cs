@@ -12,18 +12,6 @@ namespace LyricsWPF.Backend.Utils
 {
     class DataConverter
     {
-        public static T[] ConvertTo<F,T>(F[] input)
-        {
-            T[] newArray = new T[input.Length];
-
-            for (int i = 0; i < input.Length; i++)
-            {
-                newArray[i] = (T)(object)input[i];
-            }
-
-            return newArray;
-        }
-
         public static string GetArtistsSplit(string[] artists)
         {
             string returnArtists = string.Empty;

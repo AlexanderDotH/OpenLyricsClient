@@ -23,6 +23,8 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
     {
         private Debugger<SpotifySongProvider> _debugger;
         private Song _currentSong;
+        private bool _firstTimeUpdate;
+        private long _substractionThreshold;
 
         private PlayerApi _playerApi;
         private string _accessToken;
@@ -42,6 +44,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 
             this._playerApi = new PlayerApi(new HttpClient(), Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken);
             this._accessToken = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken;
+            this._substractionThreshold = 0;
 
             this._service = Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
 
@@ -85,6 +88,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                         {
                             try
                             {
+
                                 if (currentSong != null)
                                 {
                                     if (currentSong.TimeStamp != 0)
@@ -96,8 +100,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 
                                         if (!currentSong.Paused)
                                         {
-                                            currentSong.Time = currentSong.ProgressMs + diff;
-                                            currentSong.TimeStamp = 0;
+                                            currentSong.Time = currentSong.ProgressMs + diff - currentSong.TimeThreshold;
                                         }
                                     }
                                 }

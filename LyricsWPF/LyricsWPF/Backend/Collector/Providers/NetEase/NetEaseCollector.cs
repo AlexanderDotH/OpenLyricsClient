@@ -79,7 +79,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
                                             SongMetadata songMetadata = SongMetadata.ToSongMetadata(
                                                 songResponse.Name,
                                                 songResponse.NetEaseAlbumResponse.Name,
-                                                DataConverter.ConvertTo<NetEaseArtistResponse, string>(songResponse.Artists),
+                                                DataConverter.ToArtists(songResponse.Artists),
                                                 songResponse.Duration);
 
                                             GenericList<Tuple<NetEaseSongResponse, NetEaseLyricResponse>> lyrics =

@@ -138,27 +138,37 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                         LyricType.INSTRUMENTAL);
                 }
 
-                SubtitleRawResponse response = await musixmatchClient.GetTrackSubtitlesRawAsync(track.TrackId, MusixmatchClient.SubtitleFormat.Musixmatch);
+                if (track.HasSubtitles == 0)
+                    continue;
 
-                FileFormatParser<LrcObject> fileFormatParser =
-                    new FileFormatParser<LrcObject>(
-                        new MmlParser<LrcObject>());
-
-                if (DataValidator.ValidateData(fileFormatParser))
+                try
                 {
-                    GenericList<LyricElement> lyricElements =
-                        fileFormatParser.FormatFromString(response.SubtitleBody).Lyrics;
+                    SubtitleRawResponse response = musixmatchClient.GetTrackSubtitlesRaw(track.TrackId, MusixmatchClient.SubtitleFormat.Musixmatch);
 
-                    if (DataValidator.ValidateData(lyricElements))
+                    FileFormatParser<LrcObject> fileFormatParser =
+                        new FileFormatParser<LrcObject>(
+                            new MmlParser<LrcObject>());
+
+                    if (DataValidator.ValidateData(fileFormatParser))
                     {
-                        return await LyricData.ConvertToData(
-                            lyricElements, 
-                            SongMetadata.ToSongMetadata(track.TrackName,
-                                track.AlbumName,
-                                new string[] { track.ArtistName }, 
-                                track.TrackLength), 
-                            this.CollectorName());
+                        GenericList<LyricElement> lyricElements =
+                            fileFormatParser.FormatFromString(response.SubtitleBody).Lyrics;
+
+                        if (DataValidator.ValidateData(lyricElements))
+                        {
+                            return await LyricData.ConvertToData(
+                                lyricElements,
+                                SongMetadata.ToSongMetadata(track.TrackName,
+                                    track.AlbumName,
+                                    new string[] { track.ArtistName },
+                                    track.TrackLength),
+                                this.CollectorName());
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    this._debugger.Write(e);
                 }
             }
 

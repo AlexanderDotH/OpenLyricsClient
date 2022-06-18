@@ -17,14 +17,21 @@ namespace LyricsWPF.Backend.Handler.Song
         private LyricsRoll _currentLyricsRoll;
         private SongState _state;
 
+        private bool _firstUpdate;
+
         private long _timeStamp;
         private long _progressMS;
+        private long _startTime;
+        private long _timeThreshold;
         private bool _paused;
 
         public Song(string title, string album, string[] artists, long maxTime)
         {
             this._songMetadata = new SongMetadata(title, album, artists, maxTime);
 
+            this._startTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            this._firstUpdate = true;
+            this._timeThreshold = 0;
             this._time = 0;
             this._state = SongState.NO_LYRICS_AVAILABLE;
 
@@ -59,7 +66,18 @@ namespace LyricsWPF.Backend.Handler.Song
 
         public double GetPercentage()
         {
-            return 100.0 * this._time / this._songMetadata.MaxTime;
+            double maxTime = this._songMetadata.MaxTime;
+            double time = this._time;
+
+            if (time == 0 || maxTime == 0)
+                return 0;
+
+            double divide = time / maxTime;
+
+            if (Double.IsNaN(divide))
+                return 0;
+
+            return 100.0 * divide;
         }
 
         public SongMetadata SongMetadata
@@ -124,14 +142,34 @@ namespace LyricsWPF.Backend.Handler.Song
 
         public long TimeStamp
         {
-            get => _timeStamp;
-            set => _timeStamp = value;
+            get => this._timeStamp;
+            set
+            {
+                this._timeStamp = value;
+
+                if (this._firstUpdate)
+                {
+                    this._timeThreshold = (long)(Math.Abs(this._startTime - DateTimeOffset.Now.ToUnixTimeMilliseconds()));
+                    this._timeThreshold *= (long)(this._timeThreshold * 0.0095);
+
+                    this._startTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                    this._firstUpdate = false;
+                }
+            }
         }
 
         public long ProgressMs
         {
             get => _progressMS;
-            set => _progressMS = value;
+            set
+            {
+                _progressMS = value;
+            } 
+        }
+
+        public long StartTime
+        {
+            get => _startTime;
         }
 
         public LyricPart CurrentLyricPart
@@ -144,6 +182,11 @@ namespace LyricsWPF.Backend.Handler.Song
             {
                 this._currentLyricPart = value;
             }
+        }
+
+        public long TimeThreshold
+        {
+            get => _timeThreshold;
         }
 
         public LyricsRoll CurrentLyricsRoll

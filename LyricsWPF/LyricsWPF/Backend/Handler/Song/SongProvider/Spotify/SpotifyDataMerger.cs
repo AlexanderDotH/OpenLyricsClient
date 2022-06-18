@@ -32,7 +32,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
             {
                 song.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
-                if (playbackContext.ProgressMs.HasValue)
+                if (playbackContext.ProgressMs.HasValue) 
                     song.ProgressMs = playbackContext.ProgressMs.Value;
             }
 
@@ -76,7 +76,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
 
             if (!song.Paused)
             {
-                //song.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                song.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
                 if (currentTrack.ProgressMs.HasValue)
                     song.ProgressMs = currentTrack.ProgressMs.Value;
@@ -110,8 +110,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                 currentTrack.Item.Album.Name,
                 DataConverter.SpotifyArtistsToStrings(currentTrack.Item.Artists),
                 currentTrack.Item.DurationMs);
-            song.ProgressMs = currentTrack.ProgressMs.Value;
-            song.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            song.ProgressMs = 0;
             song.Lyrics = null;
             song.CurrentLyricPart = null;
             song.State = SongState.SEARCHING_LYRICS;
