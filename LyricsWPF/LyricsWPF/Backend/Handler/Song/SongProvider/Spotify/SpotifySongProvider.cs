@@ -127,7 +127,7 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                 if (!this._service.IsConnected())
                     continue;
 
-                await Task.Delay(250);
+                await Task.Delay(150);
 
                 if (DataValidator.ValidateData(this._playerApi) &&
                     DataValidator.ValidateData(this._currentSong))

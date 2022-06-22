@@ -48,6 +48,7 @@ namespace LyricsWPF.Backend.Collector
                     if (lyricData.LyricReturnCode == LyricReturnCode.Success)
                     {
                         Core.INSTANCE.CacheManager.WriteToCache(songRequestObject, lyricData);
+                        return;
                     }
                 }
             }

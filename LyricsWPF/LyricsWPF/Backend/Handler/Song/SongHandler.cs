@@ -111,10 +111,12 @@ namespace LyricsWPF.Backend.Handler.Song
         private void PrintSongState(Song song)
         {
             if (DataValidator.ValidateData(song) &&
-                DataValidator.ValidateData(song.Title, song.Time))
+                DataValidator.ValidateData(song.Title, song.Time, song.TimeThreshold))
             {
                 this._debugger.Write("Name: " + song.Title, DebugType.INFO);
                 this._debugger.Write("Time: " + song.Time, DebugType.INFO);
+                this._debugger.Write("Threshold: " + song.TimeThreshold, DebugType.INFO);
+
 
                 if (DataValidator.ValidateData(song.CurrentLyricPart) &&
                     DataValidator.ValidateData(song.CurrentLyricPart.Part, song.CurrentLyricPart.Time))

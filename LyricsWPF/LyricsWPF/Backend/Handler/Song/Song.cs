@@ -146,15 +146,6 @@ namespace LyricsWPF.Backend.Handler.Song
             set
             {
                 this._timeStamp = value;
-
-                if (this._firstUpdate)
-                {
-                    this._timeThreshold = (long)(Math.Abs(this._startTime - DateTimeOffset.Now.ToUnixTimeMilliseconds()));
-                    this._timeThreshold *= (long)(this._timeThreshold * 0.0095);
-
-                    this._startTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                    this._firstUpdate = false;
-                }
             }
         }
 
@@ -164,6 +155,15 @@ namespace LyricsWPF.Backend.Handler.Song
             set
             {
                 _progressMS = value;
+
+                if (this._firstUpdate)
+                {
+                    this._timeThreshold = (long)(Math.Abs(this._startTime - DateTimeOffset.Now.ToUnixTimeMilliseconds()));
+                    this._timeThreshold *= (long)(this._timeThreshold * 0.0106);
+
+                    this._startTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                    this._firstUpdate = false;
+                }
             } 
         }
 

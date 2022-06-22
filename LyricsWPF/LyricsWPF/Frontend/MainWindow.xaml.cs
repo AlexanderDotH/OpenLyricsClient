@@ -90,7 +90,7 @@ namespace LyricsWPF
         {
             while (!Core.IsDisposed())
             {
-                await Task.Delay(1);
+                await Task.Delay(250);
                 await this._showProgressSuspensionToken.WaitForRelease();
 
                 Song song = Core.INSTANCE.SongHandler.CurrentSong;
@@ -165,7 +165,7 @@ namespace LyricsWPF
             while (!Core.IsDisposed())
             {
                 await this._showLyricSuspensionToken.WaitForRelease();
-                await Task.Delay(1);
+                await Task.Delay(50);
 
                 Song song = Core.INSTANCE.SongHandler.CurrentSong;
 
