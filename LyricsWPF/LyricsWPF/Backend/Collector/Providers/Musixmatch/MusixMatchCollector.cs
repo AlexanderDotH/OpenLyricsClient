@@ -114,15 +114,44 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
             if (!DataValidator.ValidateData(musixmatchClient))
                 return new LyricData(LyricReturnCode.Failed, SongMetadata.ToSongMetadata(songRequestObject));
 
-            GenericList<Track> tracks = await musixmatchClient.SongSearchAsync(
-                new TrackSearchParameters
+            GenericList<Track> tracks = null;
+
+            if (songRequestObject.SelectioMode == SelectionMode.PERFORMANCE)
             {
-                Album = songRequestObject.FormattedSongAlbum, 
-                Artist = songRequestObject.GetArtistsSplit(),
-                Title = songRequestObject.FormattedSongName,
-                HasSubtitles = true,
-                Sort = TrackSearchParameters.SortStrategy.TrackRatingAsc
-            });
+                tracks = await musixmatchClient.SongSearchAsync(
+                    new TrackSearchParameters
+                    {
+                        Album = songRequestObject.FormattedSongAlbum,
+                        Title = songRequestObject.FormattedSongName,
+                        Artist = songRequestObject.GetArtistsSplit(),
+                        HasSubtitles = true
+                    });
+            }
+            else
+            {
+                tracks = await musixmatchClient.SongSearchAsync(
+                    new TrackSearchParameters
+                    {
+                        Album = songRequestObject.FormattedSongAlbum,
+                        Title = songRequestObject.FormattedSongName,
+                        Artist = songRequestObject.GetArtistsSplit(),
+                        HasSubtitles = true
+                    });
+
+                if (!DataValidator.ValidateData(tracks) || DataValidator.ValidateData(tracks) && tracks.Length == 0)
+                {
+                    tracks = await musixmatchClient.SongSearchAsync(
+                        new TrackSearchParameters
+                        {
+                            Album = songRequestObject.FormattedSongAlbum,
+                            Title = songRequestObject.FormattedSongName,
+                            HasSubtitles = true
+                        });
+                }
+            }
+
+            if (!DataValidator.ValidateData(tracks))
+                return new LyricData(LyricReturnCode.Failed, SongMetadata.ToSongMetadata(songRequestObject));
 
             for (int i = 0; i < tracks.Length; i++)
             {
@@ -197,7 +226,17 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
             if (!IsSimilar(songRequestObject.SongName, track.TrackName))
                 return false;
 
-            return true;
+            for (int i = 0; i < songRequestObject.Artists.Length; i++)
+            {
+                string artist = songRequestObject.Artists[i];
+
+                if (track.ArtistName.Contains(artist))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         //Untested it should make everything a bit more strict
