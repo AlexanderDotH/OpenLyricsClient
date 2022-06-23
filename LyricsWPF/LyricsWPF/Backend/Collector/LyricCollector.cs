@@ -47,11 +47,15 @@ namespace LyricsWPF.Backend.Collector
                 {
                     if (lyricData.LyricReturnCode == LyricReturnCode.Success)
                     {
-                        Core.INSTANCE.CacheManager.WriteToCache(songRequestObject, lyricData);
+                        if (!Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
+                        {
+                            Core.INSTANCE.CacheManager.WriteToCache(songRequestObject, lyricData);
+                        }
                         return;
                     }
                 }
             }
+            return;
         }
     }
 }

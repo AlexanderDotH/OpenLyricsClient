@@ -9,6 +9,7 @@ using DevBaseFormat;
 using DevBaseFormat.Formats.LrcFormat;
 using DevBaseFormat.Formats.MmlFormat;
 using DevBaseFormat.Structure;
+using LyricsWPF.Backend.Collector.Providers.NetEaseV2.Json;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Handler.Song;
 using LyricsWPF.Backend.Structure;
@@ -75,7 +76,7 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
                 {
                     MusixMatchToken musixMatchToken = new MusixMatchToken();
                     musixMatchToken.Token = new MusixmatchToken().Token;
-                    musixMatchToken.ExpirationDate = DateTimeOffset.Now.AddMinutes(20).ToUnixTimeMilliseconds();
+                    musixMatchToken.ExpirationDate = DateTimeOffset.Now.AddMinutes(2).ToUnixTimeMilliseconds();
 
                     Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Add(musixMatchToken);
                     settingsChanged = true;
@@ -127,6 +128,9 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
             {
                 Track track = tracks[i];
 
+                if (!IsValidSong(track, songRequestObject))
+                    continue;
+
                 if (track.Instrumental == 1)
                 {
                     return new LyricData(
@@ -173,6 +177,34 @@ namespace LyricsWPF.Backend.Collector.Providers.Musixmatch
             }
 
             return null;
+        }
+
+        private bool IsValidSong(Track track, SongRequestObject songRequestObject)
+        {
+            if (!DataValidator.ValidateData(track) ||
+                !DataValidator.ValidateData(songRequestObject))
+                return false;
+
+            if (IsSimilar(songRequestObject.FormattedSongName, track.TrackName) != IsSimilar(songRequestObject.FormattedSongAlbum, track.AlbumName))
+            {
+                if (!IsSimilar(songRequestObject.FormattedSongAlbum, track.AlbumName))
+                    return false;
+            }
+
+            if (!IsSimilar(songRequestObject.FormattedSongName, track.TrackName))
+                return false;
+
+            if (!IsSimilar(songRequestObject.SongName, track.TrackName))
+                return false;
+
+            return true;
+        }
+
+        //Untested it should make everything a bit more strict
+        private bool IsSimilar(string string1, string string2)
+        {
+            return MathUtils.CalculateLevenshteinDistance(string1, string2) >=
+                   Math.Abs(string1.Length - string2.Length);
         }
 
         private string GetRandomMusixMatchToken()

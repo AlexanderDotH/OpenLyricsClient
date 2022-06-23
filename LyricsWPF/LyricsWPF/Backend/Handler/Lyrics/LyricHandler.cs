@@ -98,7 +98,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
 
                     LyricData lyricData = Core.INSTANCE.CacheManager.GetDataByRequest(songRequestObject);
 
-                    if (Core.INSTANCE.CacheManager.IsInCache(songRequestObject) && 
+                    if (DataValidator.ValidateData(lyricData) && 
                         lyricData.LyricReturnCode == LyricReturnCode.Success)
                     {
                         song.Lyrics = lyricData;

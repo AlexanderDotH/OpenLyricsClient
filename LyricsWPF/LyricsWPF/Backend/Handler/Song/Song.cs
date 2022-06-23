@@ -109,7 +109,16 @@ namespace LyricsWPF.Backend.Handler.Song
         public long Time
         {
             get => _time;
-            set => _time = value;
+            set
+            {
+                if (value < 0)
+                    this._time = 0;
+
+                if (value > this._songMetadata.MaxTime)
+                    this._time = this._songMetadata.MaxTime;
+
+                this._time = value;
+            }
         }
 
         public long MaxTime

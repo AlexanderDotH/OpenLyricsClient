@@ -210,7 +210,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
         private async Task<NetEaseSearchResponse> SearchTrack(SongRequestObject songRequestObject)
         {
             string requestUrl = Uri.EscapeUriString(string.Format(
-                "{0}/search/get?s={2}&type=1&offset=0&sub=false&limit=25",
+                "{0}/search/get?s={2}&type=1&offset=0&sub=false&limit=10",
                 this._baseUrl, songRequestObject.GetArtistsSplit(), songRequestObject.SongName));
 
             this._debugger.Write("Full track search URL: " + requestUrl, DebugType.DEBUG);
@@ -253,7 +253,7 @@ namespace LyricsWPF.Backend.Collector.Providers.NetEase
 
         public int ProviderQuality()
         {
-            return (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.PERFORMANCE ? 8 : 2);
+            return (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.PERFORMANCE ? 8 : 5);
         }
     }
 }
