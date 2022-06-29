@@ -18,7 +18,7 @@ using LyricsWPF.Backend.Settings;
 using LyricsWPF.Backend.Structure;
 using LyricsWPF.Frontend.ItemSources;
 using MaterialDesignThemes.Wpf;
-using SelectionMode = LyricsWPF.Backend.Collector.SelectionMode;
+using SelectionMode = LyricsWPF.Backend.Collector.Lyrics.SelectionMode;
 using Window = System.Windows.Window;
 
 namespace LyricsWPF

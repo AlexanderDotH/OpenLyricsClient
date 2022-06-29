@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DevBase.Generic;
 using DevBase.IO;
 using LyricsWPF.Backend.Collector;
+using LyricsWPF.Backend.Collector.Lyrics;
 using LyricsWPF.Backend.Romanisation;
 using LyricsWPF.Backend.Structure;
 using Newtonsoft.Json;

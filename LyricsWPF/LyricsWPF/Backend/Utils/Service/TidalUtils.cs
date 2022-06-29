@@ -112,19 +112,26 @@ namespace LyricsWPF.Backend.Utils.Service
             string authToken = Convert.ToBase64String(Encoding.Default.GetBytes(clientID + ":" + clientSecret));
             requestData.AddAuthMethod(new Auth(authToken, EnumAuthType.BASIC));
 
-            ResponseData response = await new Request(requestData).GetResponseAsync();
+            JsonTidalAccountRefreshAccess accountAccess = null;
 
-            if (response.StatusCode != HttpStatusCode.OK)
-                return null;
+            try
+            {
+                ResponseData response = await new Request(requestData).GetResponseAsync();
 
-            if (response.GetContentAsString().Contains("authorization_pending"))
-                return null;
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return null;
 
-            JsonTidalAccountRefreshAccess accountAccess =
-                new JsonDeserializer<JsonTidalAccountRefreshAccess>().Deserialize(response.GetContentAsString());
+                if (response.GetContentAsString().Contains("authorization_pending"))
+                    return null;
 
-            if (accountAccess == null)
-                return null;
+                accountAccess =
+                    new JsonDeserializer<JsonTidalAccountRefreshAccess>().Deserialize(response.GetContentAsString());
+
+                if (accountAccess == null)
+                    return null;
+            }
+            catch (Exception e)
+            { }
 
             return accountAccess;
         }

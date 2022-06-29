@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DevBase.Async.Task;
 using LyricsWPF.Backend.Collector;
+using LyricsWPF.Backend.Collector.Lyrics;
 using LyricsWPF.Backend.Debug;
 using LyricsWPF.Backend.Events.EventArgs;
 using LyricsWPF.Backend.Handler.Song;

@@ -7,6 +7,7 @@ using System.Security.RightsManagement;
 using System.Text;
 using System.Threading.Tasks;
 using LyricsWPF.Backend.Collector;
+using LyricsWPF.Backend.Collector.Lyrics;
 
 namespace LyricsWPF.Backend.Handler.Song
 {

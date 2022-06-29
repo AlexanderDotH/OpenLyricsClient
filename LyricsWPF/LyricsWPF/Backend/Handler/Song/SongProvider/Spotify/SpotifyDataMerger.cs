@@ -101,7 +101,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                 currentTrack.Item.Album.Name,
                 DataConverter.SpotifyArtistsToStrings(currentTrack.Item.Artists),
                 currentTrack.Item.DurationMs);
-            //song.ProgressMs = 0;
             song.Lyrics = null;
             song.CurrentLyricPart = null;
             song.State = SongState.SEARCHING_LYRICS;

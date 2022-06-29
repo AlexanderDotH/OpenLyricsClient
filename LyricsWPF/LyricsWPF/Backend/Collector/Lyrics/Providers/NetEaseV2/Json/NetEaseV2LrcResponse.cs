@@ -1,0 +1,13 @@
+﻿using Newtonsoft.Json;
+
+namespace LyricsWPF.Backend.Collector.Lyrics.Providers.NetEaseV2.Json
+{
+    class NetEaseV2LrcResponse
+    {
+        [JsonProperty("version")]
+        public int Version { get; set; }
+
+        [JsonProperty("lyric")]
+        public string Lyric { get; set; }
+    }
+}

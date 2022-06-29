@@ -4,8 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LyricsWPF.Backend.Collector.Providers.NetEase.Json;
-using LyricsWPF.Backend.Collector.Providers.NetEaseV2.Json;
+using LyricsWPF.Backend.Collector.Lyrics.Providers.NetEase.Json;
+using LyricsWPF.Backend.Collector.Lyrics.Providers.NetEaseV2.Json;
 using SpotifyApi.NetCore;
 
 namespace LyricsWPF.Backend.Utils

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using LyricsWPF.Backend;
@@ -14,21 +15,20 @@ namespace LyricsWPF
     /// </summary>
     public partial class App : Application
     {
-        public bool DoHandle { get; set; }
-        private void Application_DispatcherUnhandledException(object sender,
-            System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            if (this.DoHandle)
-            {
-                MessageBox.Show(e.Exception.Message, "Exception Caught",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-                e.Handled = true;
-            }
-            else
-            {
-                MessageBox.Show("Application is going to close! ", "Uncaught Exception");
-                e.Handled = false;
-            }
+            StringBuilder exception = new StringBuilder();
+            exception.AppendLine(e.Exception.Message);
+            exception.AppendLine("------------");
+            exception.AppendLine(e.Exception.Source);
+            exception.AppendLine("------------");
+            exception.AppendLine("At: " + e.Exception.TargetSite.Name);
+            exception.AppendLine("------------");
+            exception.AppendLine(e.Exception.ToString());
+
+            CrashWindow crashWindow = new CrashWindow(exception.ToString());
+            crashWindow.Show();
+            e.Handled = true;
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)

@@ -40,7 +40,7 @@ namespace LyricsWPF.Backend.Handler.Song
 
         public TimeSpan ProgressTimeSpan
         {
-            get { return TimeSpan.FromMilliseconds(this._time); }
+            get { return TimeSpan.FromMilliseconds(this._progressMS); }
         }
 
         public TimeSpan MaxProgressTimeSpan
@@ -67,7 +67,7 @@ namespace LyricsWPF.Backend.Handler.Song
         public double GetPercentage()
         {
             double maxTime = this._songMetadata.MaxTime;
-            double time = this._time;
+            double time = this._progressMS;
 
             if (time == 0 || maxTime == 0)
                 return 0;
@@ -165,20 +165,16 @@ namespace LyricsWPF.Backend.Handler.Song
             {
                 _progressMS = value;
 
-                if (this._firstUpdate)
-                {
-                    this._timeThreshold = (long)(Math.Abs(this._startTime - DateTimeOffset.Now.ToUnixTimeMilliseconds()));
-                    this._timeThreshold *= (long)(this._timeThreshold * 0.0106);
-
-                    this._startTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                    this._firstUpdate = false;
-                }
+                this._timeThreshold = (long)(Math.Abs(this._startTime - DateTimeOffset.Now.ToUnixTimeMilliseconds()));
+                this._timeThreshold *= (long)(this._timeThreshold * 0.01);
+                this._startTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             } 
         }
 
         public long StartTime
         {
             get => _startTime;
+            set => _startTime = value;
         }
 
         public LyricPart CurrentLyricPart
@@ -196,6 +192,7 @@ namespace LyricsWPF.Backend.Handler.Song
         public long TimeThreshold
         {
             get => _timeThreshold;
+            set => _timeThreshold = value;
         }
 
         public LyricsRoll CurrentLyricsRoll

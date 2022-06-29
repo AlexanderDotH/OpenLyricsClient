@@ -26,7 +26,7 @@ using LyricsWPF.Backend.Structure.Enum;
 using LyricsWPF.Backend.Utils;
 using LyricsWPF.Frontend.ItemSources;
 using MaterialDesignThemes.Wpf;
-using SelectionMode = LyricsWPF.Backend.Collector.SelectionMode;
+using SelectionMode = LyricsWPF.Backend.Collector.Lyrics.SelectionMode;
 
 namespace LyricsWPF
 {
@@ -47,6 +47,11 @@ namespace LyricsWPF
 
             SetupMainActivity();
             SetupSettingActivity();
+
+            if (Core.INSTANCE.SongHandler.CurrentSong.Paused)
+            {
+
+            }
         }
 
         #region Window
@@ -139,23 +144,26 @@ namespace LyricsWPF
                 if (!DataValidator.ValidateData(song.Lyrics))
                     continue;
 
-                if (!DataValidator.ValidateData(song.State))
-                    continue;
-
-                if (!DataValidator.ValidateData(song.Lyrics.LyricProvider))
-                    continue;
-
-                if (song.State == SongState.SEARCHING_LYRICS)
-                    continue;
-
-                if (song.State == SongState.HAS_LYRICS_AVAILABLE)
+                lock (song.Lyrics)
                 {
-                    //Lyric provider
-                    await this.Dispatcher.InvokeAsync(() =>
+                    if (!DataValidator.ValidateData(song.State))
+                        continue;
+
+                    if (!DataValidator.ValidateData(song.Lyrics.LyricProvider))
+                        continue;
+
+                    if (song.State == SongState.SEARCHING_LYRICS)
+                        continue;
+
+                    if (song.State == SongState.HAS_LYRICS_AVAILABLE)
                     {
-                        this.provider.Text = "Powered by " + song.Lyrics.LyricProvider;
-                        this.fullLyricText.Text = song.Lyrics.FullLyrics;
-                    });
+                        //Lyric provider
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            this.provider.Text = "Powered by " + song.Lyrics.LyricProvider;
+                            this.fullLyricText.Text = song.Lyrics.FullLyrics;
+                        });
+                    }
                 }
             }
         }
