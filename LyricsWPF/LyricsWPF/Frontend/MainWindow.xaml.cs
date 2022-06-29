@@ -47,11 +47,6 @@ namespace LyricsWPF
 
             SetupMainActivity();
             SetupSettingActivity();
-
-            if (Core.INSTANCE.SongHandler.CurrentSong.Paused)
-            {
-
-            }
         }
 
         #region Window
