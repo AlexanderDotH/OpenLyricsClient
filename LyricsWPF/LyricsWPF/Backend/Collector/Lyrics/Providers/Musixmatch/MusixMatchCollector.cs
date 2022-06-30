@@ -69,8 +69,11 @@ namespace LyricsWPF.Backend.Collector.Lyrics.Providers.Musixmatch
 
                 try
                 {
+                    if (!DataValidator.ValidateData(this._musixmatchToken))
+                        continue;
+
                     MusixMatchToken musixMatchToken = new MusixMatchToken();
-                    musixMatchToken.Token = new MusixmatchToken().Token;
+                    musixMatchToken.Token = await this._musixmatchToken.IssueNewTokenAsync();
                     musixMatchToken.ExpirationDate = DateTimeOffset.Now.AddMinutes(2).ToUnixTimeMilliseconds();
 
                     Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Add(musixMatchToken);

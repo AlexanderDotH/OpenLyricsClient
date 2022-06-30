@@ -105,7 +105,7 @@ namespace LyricsWPF.Backend.Handler.Lyrics
                         song.Lyrics = lyricData;
                         song.State = SongState.HAS_LYRICS_AVAILABLE;
                     }
-                    else if (song.State != SongState.SEARCHING_LYRICS)
+                    else if (song.State == SongState.SEARCHING_FINISHED)
                     {
                         song.Lyrics = null;
                         song.State = SongState.NO_LYRICS_AVAILABLE;

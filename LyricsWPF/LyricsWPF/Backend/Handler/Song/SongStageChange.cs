@@ -43,12 +43,12 @@ namespace LyricsWPF.Backend.Handler.Song
                 
                 short msSection = (short)(currentSong.MaxTime * 0.01);
 
-                if (currentSong.Time > msSection)
+                if (currentSong.ProgressMs > msSection)
                 {
                     this._timeCheck = true;
                 }
 
-                if (currentSong.Time < msSection && _timeCheck)
+                if (currentSong.ProgressMs < msSection && _timeCheck)
                 {
                     this._lastSong = currentSong;
                     this._timeCheck = false;

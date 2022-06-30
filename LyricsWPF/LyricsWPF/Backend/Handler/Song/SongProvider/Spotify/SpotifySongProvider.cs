@@ -102,6 +102,10 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Spotify
                                         {
                                             currentSong.Time = currentSong.ProgressMs + diff - currentSong.TimeThreshold;
                                         }
+                                        else
+                                        {
+                                            currentSong.Time = currentSong.ProgressMs;
+                                        }
                                     }
                                 }
                             }
