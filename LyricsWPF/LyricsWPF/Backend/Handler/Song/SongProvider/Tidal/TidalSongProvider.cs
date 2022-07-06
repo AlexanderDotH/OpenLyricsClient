@@ -23,7 +23,6 @@ namespace LyricsWPF.Backend.Handler.Song.SongProvider.Tidal
 {
     class TidalSongProvider : ISongProvider
     {
-
         private Song _currentSong;
         private TidalProgressListener _tidalProgressListener;
 

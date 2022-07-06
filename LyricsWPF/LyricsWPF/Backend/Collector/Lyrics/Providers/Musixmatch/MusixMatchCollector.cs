@@ -22,36 +22,12 @@ namespace LyricsWPF.Backend.Collector.Lyrics.Providers.Musixmatch
     {
         private Debugger<MusixMatchCollector> _debugger;
 
-        private MusixmatchToken _musixmatchToken;
-
         private TaskSuspensionToken _collectMusixMatchSuspensionToken;
 
         public MusixMatchCollector()
         {
             this._debugger = new Debugger<MusixMatchCollector>(this);
-
-            this._musixmatchToken = null;
-
-            if (Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Count > 0)
-            {
-                this._musixmatchToken = new MusixmatchToken(GetRandomMusixMatchToken(), ApiContext.Desktop);
-            }
-            else
-            {
-                try
-                {
-                    this._musixmatchToken = new MusixmatchToken();
-
-                    MusixMatchToken musixMatchToken = new MusixMatchToken();
-                    musixMatchToken.Token = this._musixmatchToken.Token;
-                    musixMatchToken.ExpirationDate = DateTimeOffset.Now.AddMinutes(2).ToUnixTimeMilliseconds();
-
-                    Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Add(musixMatchToken);
-                    Core.INSTANCE.SettingManager.WriteSettings();
-                }
-                catch (Exception e) { }
-            }
-
+            
             Core.INSTANCE.TaskRegister.RegisterTask(
                 out this._collectMusixMatchSuspensionToken, 
                 new Task(async () => await this.CollectMusixMatchTokensTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
@@ -63,20 +39,16 @@ namespace LyricsWPF.Backend.Collector.Lyrics.Providers.Musixmatch
             while (!Core.IsDisposed())
             {
                 await this._collectMusixMatchSuspensionToken.WaitForRelease();
-                await Task.Delay(15000);
 
                 bool settingsChanged = false;
 
                 try
                 {
-                    if (!DataValidator.ValidateData(this._musixmatchToken))
-                        continue;
+                    string token = await new MusixmatchToken("").IssueNewTokenAsync();
+                    long expiresIn = DateTimeOffset.Now.AddMinutes(2).ToUnixTimeMilliseconds();
 
-                    MusixMatchToken musixMatchToken = new MusixMatchToken();
-                    musixMatchToken.Token = await this._musixmatchToken.IssueNewTokenAsync();
-                    musixMatchToken.ExpirationDate = DateTimeOffset.Now.AddMinutes(2).ToUnixTimeMilliseconds();
+                    Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Add(MusixMatchToken.ToToken(token, expiresIn));
 
-                    Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Add(musixMatchToken);
                     settingsChanged = true;
                 }
                 catch (Exception e) { }
@@ -96,6 +68,7 @@ namespace LyricsWPF.Backend.Collector.Lyrics.Providers.Musixmatch
                 if (settingsChanged) 
                     Core.INSTANCE.SettingManager.WriteSettings();
 
+                await Task.Delay(15000);
             }
         }
 
@@ -104,10 +77,12 @@ namespace LyricsWPF.Backend.Collector.Lyrics.Providers.Musixmatch
             if (!DataValidator.ValidateData(songRequestObject))
                 return new LyricData(LyricReturnCode.Failed, SongMetadata.ToSongMetadata(songRequestObject));
 
-            if (!DataValidator.ValidateData(this._musixmatchToken))
+            string token = GetRandomMusixMatchToken();
+
+            if (!DataValidator.ValidateData(token))
                 return new LyricData(LyricReturnCode.Failed, SongMetadata.ToSongMetadata(songRequestObject));
 
-            MusixmatchClient musixmatchClient = new MusixmatchClient(GetRandomMusixMatchToken());
+            MusixmatchClient musixmatchClient = new MusixmatchClient(token);
 
             if (!DataValidator.ValidateData(musixmatchClient))
                 return new LyricData(LyricReturnCode.Failed, SongMetadata.ToSongMetadata(songRequestObject));

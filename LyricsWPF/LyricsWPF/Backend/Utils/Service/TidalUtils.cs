@@ -99,7 +99,7 @@ namespace LyricsWPF.Backend.Utils.Service
 
             GenericList<FormKeypair> formData = new GenericList<FormKeypair>();
             formData.Add(new FormKeypair("client_id", clientID));
-            formData.Add(new FormKeypair("device_code", tidalAccess.RefreshToken));
+            formData.Add(new FormKeypair("refresh_token", tidalAccess.RefreshToken));
             formData.Add(new FormKeypair("grant_type", "refresh_token"));
             formData.Add(new FormKeypair("scope", "r_usr+w_usr+w_sub"));
 

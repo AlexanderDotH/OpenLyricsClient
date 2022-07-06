@@ -69,7 +69,6 @@ namespace LyricsWPF.Backend.Handler.Services.Services.Tidal
                             if (!DataValidator.ValidateData(refresh))
                                 continue;
 
-
                             Core.INSTANCE.SettingManager.Settings.TidalAccess.AccessToken = refresh.AccessToken;
                             Core.INSTANCE.SettingManager.Settings.TidalAccess.ExpirationDate = DateTimeOffset.Now.Add(TimeSpan.FromSeconds(refresh.ExpiresIn))
                                 .ToUnixTimeMilliseconds(); ;
