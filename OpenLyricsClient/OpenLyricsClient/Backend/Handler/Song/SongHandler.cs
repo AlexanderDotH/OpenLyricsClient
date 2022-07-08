@@ -98,7 +98,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
                 await this._songInformationSuspensionToken.WaitForRelease();
 
                 await Task.Delay(10);
-                //PrintSongState(GetCurrentSong());
+                PrintSongState(GetCurrentSong());
             }
         }
 

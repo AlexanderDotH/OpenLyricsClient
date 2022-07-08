@@ -35,7 +35,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
 
         public TimeSpan ProgressTimeSpan
         {
-            get { return TimeSpan.FromMilliseconds(this._progressMS); }
+            get { return TimeSpan.FromMilliseconds(this._time); }
         }
 
         public TimeSpan MaxProgressTimeSpan
@@ -62,7 +62,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
         public double GetPercentage()
         {
             double maxTime = this._songMetadata.MaxTime;
-            double time = this._progressMS;
+            double time = this._time;
 
             if (time == 0 || maxTime == 0)
                 return 0;
@@ -163,6 +163,9 @@ namespace OpenLyricsClient.Backend.Handler.Song
                 this._timeThreshold = (long)(Math.Abs(this._startTime - DateTimeOffset.Now.ToUnixTimeMilliseconds()));
                 this._timeThreshold *= (long)(this._timeThreshold * 0.01);
                 this._startTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+
+                if (this._timeThreshold > 550)
+                    this._timeThreshold = 550;
             } 
         }
 

@@ -148,8 +148,6 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                                     {
                                         LyricPart nextPart = currentSong.Lyrics.LyricParts[i + 1];
 
-                                        // I thing this is the issue
-                                        // What did I do?: nothing, cause I don´t now how to fix it
                                         if (DataValidator.ValidateData(currentPart) &&
                                             DataValidator.ValidateData(currentPart.Part) &&
                                             DataValidator.ValidateData(currentPart.Time) &&

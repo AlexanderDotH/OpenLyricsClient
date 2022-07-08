@@ -42,8 +42,6 @@ namespace OpenLyricsClient.Backend
         {
             INSTANCE = this;
 
-            double a = 10 / -1;
-
             this._debugger = new Debugger<Core>(this);
 
             _disposed = false;
