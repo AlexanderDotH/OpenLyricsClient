@@ -10,10 +10,6 @@ Fix song change detection in listening party
  
  Auto color based on the album color
  
- Merge Settings UI to main window
- 
- Clean main window code base
- 
  learn how to make mvvm
  
  Show album
