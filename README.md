@@ -10,7 +10,7 @@ Fix song change detection in listening party
  
  Auto color based on the album color
  
- Mearn how to make mvvm
+ earn how to make mvvm
  
  Show album
  
