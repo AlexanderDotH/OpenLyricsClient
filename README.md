@@ -1,4 +1,4 @@
-# LyricsWPF
+# OpenLyricsClient
 
 A fast and reliable lyrics synchronisation tool for music lovers and singing enthusiasts.
 
@@ -6,7 +6,7 @@ A fast and reliable lyrics synchronisation tool for music lovers and singing ent
 # TODO:
 Fix song change detection in listening party
 
- Make auto latency for bluetooth devices to get the correnct lyric offset
+ Make auto latency for bluetooth devices to get the current lyric offset
  
  Auto color based on the album color
  
