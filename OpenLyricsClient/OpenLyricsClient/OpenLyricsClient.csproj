@@ -340,6 +340,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -367,14 +368,17 @@
     </ApplicationDefinition>
     <Compile Include="Backend\Cache\CacheEntry.cs" />
     <Compile Include="Backend\Cache\CacheManager.cs" />
+    <Compile Include="Backend\Collector\Artwork\IArtworkCollector.cs" />
     <Compile Include="Backend\Collector\Lyrics\CollectorComparer.cs" />
-    <Compile Include="Backend\Collector\Lyrics\ICollector.cs" />
+    <Compile Include="Backend\Collector\Lyrics\ILyricsCollector.cs" />
     <Compile Include="Backend\Collector\Lyrics\Providers\Musixmatch\MusixMatchCollector.cs" />
     <Compile Include="Backend\Collector\Lyrics\Providers\Textyl\TextylCollector.cs" />
     <Compile Include="Backend\Collector\Lyrics\Providers\Textyl\Json\TextylLyricReponse.cs" />
     <Compile Include="Backend\Debugger\Debugger.cs" />
     <Compile Include="Backend\Debugger\DebugType.cs" />
     <Compile Include="Backend\Events\EventType.cs" />
+    <Compile Include="Backend\Handler\Artwork\Artwork.cs" />
+    <Compile Include="Backend\Handler\Artwork\ArtworkHandler.cs" />
     <Compile Include="Backend\Handler\Services\Services\Tidal\TidalService.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\Tidal\TidalDataMerger.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\Tidal\TidalProgressListener.cs" />
@@ -562,9 +566,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Backend\Collector\Artwork\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\Icons\tidal.ico" />
   </ItemGroup>
