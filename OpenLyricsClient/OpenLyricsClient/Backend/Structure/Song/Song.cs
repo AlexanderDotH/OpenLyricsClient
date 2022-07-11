@@ -1,7 +1,7 @@
 ﻿using System;
-using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Backend.Structure.Lyrics;
 
-namespace OpenLyricsClient.Backend.Handler.Song
+namespace OpenLyricsClient.Backend.Structure.Song
 {
     public class Song
     {

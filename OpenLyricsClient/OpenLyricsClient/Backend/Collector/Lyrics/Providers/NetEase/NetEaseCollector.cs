@@ -11,6 +11,8 @@ using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase.Json;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Backend.Structure.Lyrics;
+using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase

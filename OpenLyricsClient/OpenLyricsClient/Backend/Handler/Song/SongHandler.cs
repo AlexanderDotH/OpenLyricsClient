@@ -68,7 +68,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
                 if (DataValidator.ValidateData(this._songStageChange) && 
                     DataValidator.ValidateData(this._songProviderChooser))
                 {
-                    Song currentSong = GetCurrentSong();
+                    Structure.Song.Song currentSong = GetCurrentSong();
 
                     if (this._songStageChange.HasSongChanged(currentSong))
                     {
@@ -79,7 +79,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
                         if (!DataValidator.ValidateData(songProvider))
                             continue;
 
-                        Song song = await songProvider.UpdateCurrentPlaybackTrack();
+                        Structure.Song.Song song = await songProvider.UpdateCurrentPlaybackTrack();
 
                         //                                      Idk why but it works
                         if (DataValidator.ValidateData(song) && this._songStageChange.HasSongChanged(song))
@@ -102,7 +102,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
             }
         }
 
-        private void PrintSongState(Song song)
+        private void PrintSongState(Structure.Song.Song song)
         {
             if (DataValidator.ValidateData(song) &&
                 DataValidator.ValidateData(song.Title, song.Time, song.TimeThreshold))
@@ -125,7 +125,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
             return this._songProviders.FindEntry(enumSongProvider);
         }
 
-        private Song GetCurrentSong()
+        private Structure.Song.Song GetCurrentSong()
         {
             if (DataValidator.ValidateData(this._songProviderChooser))
             {
@@ -156,7 +156,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
             songChangedEventHandler?.Invoke(this, songChangedEventArgs);
         }
 
-        public Song CurrentSong
+        public Structure.Song.Song CurrentSong
         {
             get => GetCurrentSong();
         }

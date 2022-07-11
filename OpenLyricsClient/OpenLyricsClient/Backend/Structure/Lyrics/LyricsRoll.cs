@@ -1,4 +1,4 @@
-﻿namespace OpenLyricsClient.Backend.Structure
+﻿namespace OpenLyricsClient.Backend.Structure.Lyrics
 {
     public class LyricsRoll
     {

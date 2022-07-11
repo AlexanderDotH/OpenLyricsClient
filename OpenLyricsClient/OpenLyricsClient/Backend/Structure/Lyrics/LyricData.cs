@@ -4,8 +4,9 @@ using System.Threading.Tasks;
 using DevBase.Generic;
 using DevBaseFormat.Structure;
 using OpenLyricsClient.Backend.Handler.Song;
+using OpenLyricsClient.Backend.Structure.Song;
 
-namespace OpenLyricsClient.Backend.Structure
+namespace OpenLyricsClient.Backend.Structure.Lyrics
 {
     public class LyricData
     {
@@ -33,7 +34,7 @@ namespace OpenLyricsClient.Backend.Structure
         public static async Task<LyricData> ConvertToData(GenericList<LyricElement> lyrics, SongMetadata songMetadata, string lyricProvider)
         {
             if (lyrics == null || lyrics.Length == 0)
-                return new LyricData(LyricReturnCode.Failed, songMetadata);
+                return new LyricData(LyricReturnCode.FAILED, songMetadata);
 
             Romanisation.Romanization romanization = new Romanisation.Romanization();
 
@@ -50,7 +51,7 @@ namespace OpenLyricsClient.Backend.Structure
                 stringBuilder.Append(await romanization.Romanize(currentLine) + Environment.NewLine);
             }
 
-            return new LyricData(LyricReturnCode.Success, songMetadata, lyricParts, lyricProvider, stringBuilder.ToString(), LyricType.TEXT);
+            return new LyricData(LyricReturnCode.SUCCESS, songMetadata, lyricParts, lyricProvider, stringBuilder.ToString(), LyricType.TEXT);
         }
 
         public LyricReturnCode LyricReturnCode

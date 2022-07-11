@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OpenLyricsClient.Backend.Handler.Artwork
 {
-    internal class ArtworkHandler
+    public class ArtworkHandler
     {
     }
 }

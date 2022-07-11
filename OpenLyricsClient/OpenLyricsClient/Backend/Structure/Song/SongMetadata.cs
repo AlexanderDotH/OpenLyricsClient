@@ -1,7 +1,6 @@
-﻿using OpenLyricsClient.Backend.Handler.Song;
-using OpenLyricsClient.Backend.Utils;
+﻿using OpenLyricsClient.Backend.Utils;
 
-namespace OpenLyricsClient.Backend.Structure
+namespace OpenLyricsClient.Backend.Structure.Song
 {
     public class SongMetadata
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
 using TidalLib;
 
@@ -7,7 +8,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Tidal
 {
     public class TidalDataMerger
     {
-        public static Song ValidateUpdatePlayBack(Song song, Track track)
+        public static Structure.Song.Song ValidateUpdatePlayBack(Structure.Song.Song song, Track track)
         {
             if (!DataValidator.ValidateData(song))
                 return song;
@@ -24,7 +25,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Tidal
             return UpdatePlayBack(song, track);
         }
 
-        public static Song UpdatePlayBack(Song song, Track track)
+        public static Structure.Song.Song UpdatePlayBack(Structure.Song.Song song, Track track)
         {
             song.SongMetadata = SongMetadata.ToSongMetadata(
                 track.Title, 
@@ -35,7 +36,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Tidal
             return song;
         }
 
-        public static Song ValidateConvertAndMerge(Track track)
+        public static Structure.Song.Song ValidateConvertAndMerge(Track track)
         {
             if (!DataValidator.ValidateData(track))
                 return null;
@@ -46,9 +47,9 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Tidal
             return ConvertAndMerge(track);
         }
 
-        public static Song ConvertAndMerge(Track track)
+        public static Structure.Song.Song ConvertAndMerge(Track track)
         {
-            Song song = new Song(
+            Structure.Song.Song song = new Structure.Song.Song(
                 track.Title,
                 track.Album.Title,
                 DataConverter.TidalArtistsToString(track.Artists),

@@ -1,6 +1,6 @@
 ﻿using OpenLyricsClient.Backend.Collector.Lyrics;
 
-namespace OpenLyricsClient.Backend.Handler.Song
+namespace OpenLyricsClient.Backend.Structure.Song
 {
     public class SongRequestObject
     {

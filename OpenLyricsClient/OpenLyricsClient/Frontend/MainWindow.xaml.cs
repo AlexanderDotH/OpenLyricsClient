@@ -11,6 +11,8 @@ using OpenLyricsClient.Backend.Romanisation;
 using OpenLyricsClient.Backend.Settings;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Enum;
+using OpenLyricsClient.Backend.Structure.Lyrics;
+using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.Frontend.ItemSources;
 using SelectionMode = OpenLyricsClient.Backend.Collector.Lyrics.SelectionMode;

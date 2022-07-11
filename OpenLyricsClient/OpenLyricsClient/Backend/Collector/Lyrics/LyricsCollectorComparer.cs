@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Backend.Structure.Lyrics;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics
 {

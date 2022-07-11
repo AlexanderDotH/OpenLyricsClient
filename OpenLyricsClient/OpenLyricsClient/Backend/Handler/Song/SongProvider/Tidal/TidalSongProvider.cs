@@ -15,7 +15,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Tidal
 {
     class TidalSongProvider : ISongProvider
     {
-        private Song _currentSong;
+        private Structure.Song.Song _currentSong;
         private TidalProgressListener _tidalProgressListener;
 
         private IService _tidalService;
@@ -142,7 +142,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Tidal
             }
         }
 
-        public async Task<Song> UpdateCurrentPlaybackTrack()
+        public async Task<Structure.Song.Song> UpdateCurrentPlaybackTrack()
         {
             if (!this._tidalService.IsConnected())
                 return null;
@@ -208,7 +208,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Tidal
             return null;
         }
 
-        public Song GetCurrentSong()
+        public Structure.Song.Song GetCurrentSong()
         {
             return this._currentSong;
         }

@@ -6,6 +6,8 @@ using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Backend.Structure.Lyrics;
+using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics
@@ -37,7 +39,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
 
                 if (DataValidator.ValidateData(lyricData))
                 {
-                    if (lyricData.LyricReturnCode == LyricReturnCode.Success)
+                    if (lyricData.LyricReturnCode == LyricReturnCode.SUCCESS)
                     {
                         if (!Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
                         {

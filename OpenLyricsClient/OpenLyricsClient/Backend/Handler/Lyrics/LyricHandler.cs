@@ -10,6 +10,8 @@ using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Romanisation;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Enum;
+using OpenLyricsClient.Backend.Structure.Lyrics;
+using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Handler.Lyrics
@@ -75,7 +77,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                 await this._applyLyricSuspensionToken.WaitForRelease();
                 await Task.Delay(100);
 
-                Song.Song song = _songHandler.CurrentSong;
+                Structure.Song.Song song = _songHandler.CurrentSong;
 
                 if (DataValidator.ValidateData(song) &&
                     DataValidator.ValidateData(song.Title) &&
@@ -99,7 +101,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                     LyricData lyricData = Core.INSTANCE.CacheManager.GetDataByRequest(songRequestObject);
 
                     if (DataValidator.ValidateData(lyricData) && 
-                        lyricData.LyricReturnCode == LyricReturnCode.Success)
+                        lyricData.LyricReturnCode == LyricReturnCode.SUCCESS)
                     {
                         song.Lyrics = lyricData;
                         song.State = SongState.HAS_LYRICS_AVAILABLE;
@@ -122,7 +124,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
                 if (DataValidator.ValidateData(this._songHandler))
                 {
-                    Song.Song currentSong = this._songHandler.CurrentSong;
+                    Structure.Song.Song currentSong = this._songHandler.CurrentSong;
 
                     if (DataValidator.ValidateData(currentSong) &&
                         DataValidator.ValidateData(currentSong.Time) &&
@@ -183,7 +185,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                 await this._manageLyricsRollSuspensionToken.WaitForRelease();
                 await Task.Delay(35);
 
-                Song.Song song = this._songHandler.CurrentSong;
+                Structure.Song.Song song = this._songHandler.CurrentSong;
 
                 if (DataValidator.ValidateData(song) &&
                     DataValidator.ValidateData(song.CurrentLyricPart) &&

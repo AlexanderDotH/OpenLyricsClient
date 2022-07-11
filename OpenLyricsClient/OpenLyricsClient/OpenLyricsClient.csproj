@@ -368,7 +368,9 @@
     </ApplicationDefinition>
     <Compile Include="Backend\Cache\CacheEntry.cs" />
     <Compile Include="Backend\Cache\CacheManager.cs" />
+    <Compile Include="Backend\Collector\Artwork\ArtworkCollector.cs" />
     <Compile Include="Backend\Collector\Artwork\IArtworkCollector.cs" />
+    <Compile Include="Backend\Collector\Artwork\Providers\Genius\GeniusCollector.cs" />
     <Compile Include="Backend\Collector\Lyrics\CollectorComparer.cs" />
     <Compile Include="Backend\Collector\Lyrics\ILyricsCollector.cs" />
     <Compile Include="Backend\Collector\Lyrics\Providers\Musixmatch\MusixMatchCollector.cs" />
@@ -377,7 +379,7 @@
     <Compile Include="Backend\Debugger\Debugger.cs" />
     <Compile Include="Backend\Debugger\DebugType.cs" />
     <Compile Include="Backend\Events\EventType.cs" />
-    <Compile Include="Backend\Handler\Artwork\Artwork.cs" />
+    <Compile Include="Backend\Structure\Artwork\Artwork.cs" />
     <Compile Include="Backend\Handler\Artwork\ArtworkHandler.cs" />
     <Compile Include="Backend\Handler\Services\Services\Tidal\TidalService.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\Tidal\TidalDataMerger.cs" />
@@ -385,6 +387,7 @@
     <Compile Include="Backend\Handler\Song\SongProvider\Tidal\TidalSongProvider.cs" />
     <Compile Include="Backend\Helper\WindowLogger.cs" />
     <Compile Include="Backend\Settings\EnumSetting.cs" />
+    <Compile Include="Backend\Structure\Artwork\ArtworkReturnCode.cs" />
     <Compile Include="Backend\Structure\Enum\EnumRegisterTypes.cs" />
     <Compile Include="Backend\Structure\Json\JsonLyricData.cs" />
     <Compile Include="Backend\Structure\Json\JsonTidalAccess.cs" />
@@ -396,7 +399,7 @@
     <Compile Include="Backend\Structure\Json\JsonTidalUtmParameters.cs" />
     <Compile Include="Backend\Structure\Json\Playersignal.cs" />
     <Compile Include="Backend\Structure\MusixMatchToken.cs" />
-    <Compile Include="Backend\Structure\SongMetadata.cs" />
+    <Compile Include="Backend\Structure\Song\SongMetadata.cs" />
     <Compile Include="Backend\Structure\TidalAccess.cs" />
     <Compile Include="Backend\Structure\Window.cs" />
     <Compile Include="Backend\Utils\FileUtils.cs" />
@@ -476,8 +479,8 @@
     <Compile Include="Backend\Handler\Song\SongProvider\SongProviderChooser.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\Spotify\SpotifyDataMerger.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\Spotify\SpotifySongProvider.cs" />
-    <Compile Include="Backend\Handler\Song\SongRequestObject.cs" />
-    <Compile Include="Backend\Handler\Song\SongState.cs" />
+    <Compile Include="Backend\Structure\Song\SongRequestObject.cs" />
+    <Compile Include="Backend\Structure\Song\SongState.cs" />
     <Compile Include="Backend\Listener\Listener.cs" />
     <Compile Include="Backend\Handler\Lyrics\LyricHandler.cs" />
     <Compile Include="Backend\Handler\Services\ServiceHandler.cs" />
@@ -486,14 +489,14 @@
     <Compile Include="Backend\Romanisation\Romanization.cs" />
     <Compile Include="Backend\Romanisation\RomanizeSelection.cs" />
     <Compile Include="Backend\Settings\SettingManager.cs" />
-    <Compile Include="Backend\Handler\Song\Song.cs" />
+    <Compile Include="Backend\Structure\Song\Song.cs" />
     <Compile Include="Backend\Handler\Song\SongStageChange.cs" />
     <Compile Include="Backend\Settings\Settings.cs" />
-    <Compile Include="Backend\Structure\LyricData.cs" />
-    <Compile Include="Backend\Structure\LyricPart.cs" />
-    <Compile Include="Backend\Structure\LyricReturnCode.cs" />
-    <Compile Include="Backend\Structure\LyricsRoll.cs" />
-    <Compile Include="Backend\Structure\LyricType.cs" />
+    <Compile Include="Backend\Structure\Lyrics\LyricData.cs" />
+    <Compile Include="Backend\Structure\Lyrics\LyricPart.cs" />
+    <Compile Include="Backend\Structure\Lyrics\LyricReturnCode.cs" />
+    <Compile Include="Backend\Structure\Lyrics\LyricsRoll.cs" />
+    <Compile Include="Backend\Structure\Lyrics\LyricType.cs" />
     <Compile Include="Backend\Structure\SpotifyAccess.cs" />
     <Compile Include="Backend\Utils\DataConverter.cs" />
     <Compile Include="Backend\Utils\DataTransformer.cs" />

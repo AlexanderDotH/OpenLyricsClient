@@ -13,7 +13,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
     class SpotifySongProvider : ISongProvider
     {
         private Debugger<SpotifySongProvider> _debugger;
-        private Song _currentSong;
+        private Structure.Song.Song _currentSong;
         private bool _firstTimeUpdate;
         private long _substractionThreshold;
 
@@ -73,7 +73,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
                 {
                     try
                     {
-                        Song currentSong = this._currentSong;
+                        Structure.Song.Song currentSong = this._currentSong;
 
                         lock (currentSong)
                         {
@@ -181,7 +181,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
         }
 
         //Song changed -> get new song
-        public async Task<Song> UpdateCurrentPlaybackTrack()
+        public async Task<Structure.Song.Song> UpdateCurrentPlaybackTrack()
         {
             if (!this._service.IsConnected())
                 return null;
@@ -195,7 +195,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
 
                     if (DataValidator.ValidateData(currentTrack))
                     {
-                        Song song = SpotifyDataMerger.ValidateConvertAndMerge(currentTrack);
+                        Structure.Song.Song song = SpotifyDataMerger.ValidateConvertAndMerge(currentTrack);
                         this._currentSong = song;
                         this._debugger.Write("Song has been changed", DebugType.INFO);
                         return song;
@@ -231,7 +231,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
                 EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK);
         }
 
-        public Song GetCurrentSong()
+        public Structure.Song.Song GetCurrentSong()
         {
             return this._currentSong;
         }

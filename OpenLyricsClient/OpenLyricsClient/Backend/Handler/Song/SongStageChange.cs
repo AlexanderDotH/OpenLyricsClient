@@ -4,7 +4,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
 {
     class SongStageChange
     {
-        private Song _lastSong;
+        private Structure.Song.Song _lastSong;
         private bool _timeCheck = false;
 
         public SongStageChange()
@@ -12,7 +12,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
         }
 
 
-        public bool HasSongChanged(Song currentSong)
+        public bool HasSongChanged(Structure.Song.Song currentSong)
         {
             if (DataValidator.ValidateData(currentSong))
             {
@@ -72,7 +72,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
             return false;
         }
 
-        public bool HasSongStateChanged(Song currentSong)
+        public bool HasSongStateChanged(Structure.Song.Song currentSong)
         {
             double msSection = (int)currentSong.MaxTime * 0.1;
 

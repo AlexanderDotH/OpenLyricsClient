@@ -9,6 +9,8 @@ using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl.Json;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Backend.Structure.Lyrics;
+using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
@@ -30,7 +32,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
             TextylLyricReponse[] lyrics = await FetchLyrics(songRequestObject);
 
             if (lyrics == null)
-                return new LyricData(LyricReturnCode.Failed, SongMetadata.ToSongMetadata(songRequestObject));
+                return new LyricData(LyricReturnCode.FAILED, SongMetadata.ToSongMetadata(songRequestObject));
 
             GenericList<LyricElement> lyricElements = new GenericList<LyricElement>();
 

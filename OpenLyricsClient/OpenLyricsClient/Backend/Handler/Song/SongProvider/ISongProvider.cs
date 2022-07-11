@@ -4,9 +4,9 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
 {
     interface ISongProvider
     {
-        Song GetCurrentSong();
+        Structure.Song.Song GetCurrentSong();
         EnumSongProvider GetEnum();
-        Task<Song> UpdateCurrentPlaybackTrack();
+        Task<Structure.Song.Song> UpdateCurrentPlaybackTrack();
         void Dispose();
     }
 }

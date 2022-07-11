@@ -13,6 +13,8 @@ using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Enum;
+using OpenLyricsClient.Backend.Structure.Lyrics;
+using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
@@ -74,17 +76,17 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
         public async Task<LyricData> GetLyrics(SongRequestObject songRequestObject)
         {
             if (!DataValidator.ValidateData(songRequestObject))
-                return new LyricData(LyricReturnCode.Failed, SongMetadata.ToSongMetadata(songRequestObject));
+                return new LyricData(LyricReturnCode.FAILED, SongMetadata.ToSongMetadata(songRequestObject));
 
             string token = GetRandomMusixMatchToken();
 
             if (!DataValidator.ValidateData(token))
-                return new LyricData(LyricReturnCode.Failed, SongMetadata.ToSongMetadata(songRequestObject));
+                return new LyricData(LyricReturnCode.FAILED, SongMetadata.ToSongMetadata(songRequestObject));
 
             MusixmatchClient musixmatchClient = new MusixmatchClient(token);
 
             if (!DataValidator.ValidateData(musixmatchClient))
-                return new LyricData(LyricReturnCode.Failed, SongMetadata.ToSongMetadata(songRequestObject));
+                return new LyricData(LyricReturnCode.FAILED, SongMetadata.ToSongMetadata(songRequestObject));
 
             GenericList<Track> tracks = null;
 
@@ -123,7 +125,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
             }
 
             if (!DataValidator.ValidateData(tracks))
-                return new LyricData(LyricReturnCode.Failed, SongMetadata.ToSongMetadata(songRequestObject));
+                return new LyricData(LyricReturnCode.FAILED, SongMetadata.ToSongMetadata(songRequestObject));
 
             for (int i = 0; i < tracks.Length; i++)
             {
@@ -135,7 +137,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
                 if (track.Instrumental == 1)
                 {
                     return new LyricData(
-                        LyricReturnCode.Success,
+                        LyricReturnCode.SUCCESS,
                         SongMetadata.ToSongMetadata(track.TrackName,
                             track.AlbumName,
                             new string[] { track.ArtistName }, 

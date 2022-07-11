@@ -1,4 +1,4 @@
-﻿namespace OpenLyricsClient.Backend.Handler.Song
+﻿namespace OpenLyricsClient.Backend.Structure.Song
 {
     public enum SongState
     {

@@ -1,22 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace OpenLyricsClient.Backend.Handler.Artwork
+namespace OpenLyricsClient.Backend.Structure.Artwork
 {
     public class Artwork
     {
         private byte[] _data;
+        private ArtworkReturnCode _returnCode;
 
-        public Artwork(byte[] data)
+        public Artwork(byte[] data, ArtworkReturnCode returnCode)
         {
             this._data = data;
+            this._returnCode = returnCode;
         }
+
+        public Artwork() : this(null, ArtworkReturnCode.FAILED) { }
 
         public string ArtworkAsBase64String
         {
@@ -59,6 +60,16 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                 MemoryStream stream = new MemoryStream(this._data);
                 value.Save(stream, ImageFormat.Png);
             }
+        }
+
+        public byte[] Data
+        {
+            get => this._data;
+        }
+
+        public ArtworkReturnCode ReturnCode
+        {
+            get => this._returnCode;
         }
     }
 }

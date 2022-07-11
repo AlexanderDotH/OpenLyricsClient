@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
 using SpotifyApi.NetCore;
 
@@ -7,7 +8,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
 {
     class SpotifyDataMerger
     {
-        public static Song ValidateUpdatePlayBack(Song song, CurrentPlaybackContext playbackContext)
+        public static Structure.Song.Song ValidateUpdatePlayBack(Structure.Song.Song song, CurrentPlaybackContext playbackContext)
         {
             if (DataValidator.ValidateData(song) &&
                 DataValidator.ValidateData(playbackContext) &&
@@ -20,7 +21,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             return song;
         }
 
-        public static Song UpdatePlayBack(Song song, CurrentPlaybackContext playbackContext)
+        public static Structure.Song.Song UpdatePlayBack(Structure.Song.Song song, CurrentPlaybackContext playbackContext)
         {
             song.Paused = !playbackContext.IsPlaying;
 
@@ -35,7 +36,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             return song;
         }
 
-        public static Song ValidateUpdateAndMerge(Song song, CurrentTrackPlaybackContext currentTrack)
+        public static Structure.Song.Song ValidateUpdateAndMerge(Structure.Song.Song song, CurrentTrackPlaybackContext currentTrack)
         {
             if (DataValidator.ValidateData(song) &&
                 DataValidator.ValidateData(
@@ -62,7 +63,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             return song;
         }
 
-        public static Song UpdateAndMerge(Song song, CurrentTrackPlaybackContext currentTrack)
+        public static Structure.Song.Song UpdateAndMerge(Structure.Song.Song song, CurrentTrackPlaybackContext currentTrack)
         {
             song.SongMetadata = SongMetadata.ToSongMetadata(
                 currentTrack.Item.Name, 
@@ -72,7 +73,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             return song;
         }
 
-        public static Song ValidateConvertAndMerge(CurrentTrackPlaybackContext currentTrack)
+        public static Structure.Song.Song ValidateConvertAndMerge(CurrentTrackPlaybackContext currentTrack)
         {
             if (DataValidator.ValidateData(currentTrack) &&
                 DataValidator.ValidateData(currentTrack.Timestamp) &&
@@ -90,9 +91,9 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             return null;
         }
 
-        public static Song ConvertAndMerge(CurrentTrackPlaybackContext currentTrack)
+        public static Structure.Song.Song ConvertAndMerge(CurrentTrackPlaybackContext currentTrack)
         {
-            Song song = new Song(
+            Structure.Song.Song song = new Structure.Song.Song(
                 currentTrack.Item.Name,
                 currentTrack.Item.Album.Name,
                 DataConverter.SpotifyArtistsToStrings(currentTrack.Item.Artists),

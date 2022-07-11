@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using OpenLyricsClient.Backend.Structure.Lyrics;
 
 namespace OpenLyricsClient.Backend.Structure.Json
 {

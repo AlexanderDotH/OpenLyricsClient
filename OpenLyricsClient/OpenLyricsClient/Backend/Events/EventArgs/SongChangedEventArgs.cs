@@ -1,4 +1,6 @@
 ﻿using OpenLyricsClient.Backend.Handler.Song;
+using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Backend.Structure.Song;
 
 namespace OpenLyricsClient.Backend.Events.EventArgs
 {

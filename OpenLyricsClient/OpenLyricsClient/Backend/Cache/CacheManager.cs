@@ -8,6 +8,8 @@ using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Json;
+using OpenLyricsClient.Backend.Structure.Lyrics;
+using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Cache
@@ -105,7 +107,7 @@ namespace OpenLyricsClient.Backend.Cache
                 }
             }
 
-            return new LyricData(LyricReturnCode.Failed, SongMetadata.ToSongMetadata(songRequestObject));
+            return new LyricData(LyricReturnCode.FAILED, SongMetadata.ToSongMetadata(songRequestObject));
         }
 
         public bool IsInCache(SongRequestObject songRequestObject)
