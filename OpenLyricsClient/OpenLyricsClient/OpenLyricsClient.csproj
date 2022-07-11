@@ -372,6 +372,8 @@
     <Compile Include="Backend\Collector\Lyrics\Providers\Musixmatch\MusixMatchCollector.cs" />
     <Compile Include="Backend\Collector\Lyrics\Providers\Textyl\TextylCollector.cs" />
     <Compile Include="Backend\Collector\Lyrics\Providers\Textyl\Json\TextylLyricReponse.cs" />
+    <Compile Include="Backend\Debugger\Debugger.cs" />
+    <Compile Include="Backend\Debugger\DebugType.cs" />
     <Compile Include="Backend\Events\EventType.cs" />
     <Compile Include="Backend\Handler\Services\Services\Tidal\TidalService.cs" />
     <Compile Include="Backend\Handler\Song\SongProvider\Tidal\TidalDataMerger.cs" />
@@ -456,8 +458,6 @@
     <Compile Include="Backend\Collector\Lyrics\Providers\NetEase\Json\NetEaseTransUserResponse.cs" />
     <Compile Include="Backend\Collector\Lyrics\Providers\NetEase\NetEaseCollector.cs" />
     <Compile Include="Backend\Core.cs" />
-    <Compile Include="Backend\Debug\Debugger.cs" />
-    <Compile Include="Backend\Debug\DebugType.cs" />
     <Compile Include="Backend\Events\EventHandler\SongChangedEventHandler.cs" />
     <Compile Include="Backend\Events\EventArgs\SongChangedEventArgs.cs" />
     <Compile Include="Backend\Exceptions\LyricNotCollectableException.cs" />

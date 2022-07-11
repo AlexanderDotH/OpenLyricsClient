@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using DevBase.Async.Task;
-using OpenLyricsClient.Backend.Debug;
+using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Services.Services;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Enum;

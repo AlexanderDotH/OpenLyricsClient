@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DevBase.Async.Task;
 using OpenLyricsClient.Backend.Collector.Lyrics;
-using OpenLyricsClient.Backend.Debug;
+using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Romanisation;

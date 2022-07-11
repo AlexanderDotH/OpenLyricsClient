@@ -8,7 +8,7 @@ using DevBaseFormat;
 using DevBaseFormat.Formats.LrcFormat;
 using DevBaseFormat.Structure;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2.Json;
-using OpenLyricsClient.Backend.Debug;
+using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Utils;

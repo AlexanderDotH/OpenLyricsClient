@@ -6,7 +6,7 @@ using DevBase.Web.RequestData;
 using DevBase.Web.ResponseData;
 using DevBaseFormat.Structure;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl.Json;
-using OpenLyricsClient.Backend.Debug;
+using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Utils;

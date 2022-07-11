@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DevBase.Async.Task;
 using DevBase.Generic;
 using DevBase.Typography;
-using OpenLyricsClient.Backend.Debug;
+using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Services.Services;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Utils;

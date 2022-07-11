@@ -4,7 +4,7 @@ using DevBase.Generic;
 using DevBase.IO;
 using DevBase.Utilities;
 using Newtonsoft.Json;
-using OpenLyricsClient.Backend.Debug;
+using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Json;

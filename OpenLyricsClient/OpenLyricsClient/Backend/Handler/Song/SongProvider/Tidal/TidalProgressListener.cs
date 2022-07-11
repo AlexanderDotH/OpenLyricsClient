@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using DevBase.Async.Task;
-using OpenLyricsClient.Backend.Debug;
+using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.Backend.Utils.Service;

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using DevBase.Async.Task;
 using DevBase.Generic;
 using Microsoft.Extensions.Configuration;
-using OpenLyricsClient.Backend.Debug;
+using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Structure.Enum;
 using SpotifyApi.NetCore.Authorization;
 

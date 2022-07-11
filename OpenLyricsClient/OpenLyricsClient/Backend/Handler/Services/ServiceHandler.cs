@@ -1,6 +1,6 @@
 ﻿using System;
 using DevBase.Generic;
-using OpenLyricsClient.Backend.Debug;
+using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Services.Services;
 using OpenLyricsClient.Backend.Handler.Services.Services.Spotify;
 using OpenLyricsClient.Backend.Handler.Services.Services.Tidal;

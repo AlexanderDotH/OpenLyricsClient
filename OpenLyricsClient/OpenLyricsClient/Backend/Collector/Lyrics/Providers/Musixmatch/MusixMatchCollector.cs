@@ -9,7 +9,7 @@ using MusixmatchClientLib;
 using MusixmatchClientLib.API.Model.Types;
 using MusixmatchClientLib.Auth;
 using MusixmatchClientLib.Types;
-using OpenLyricsClient.Backend.Debug;
+using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Enum;

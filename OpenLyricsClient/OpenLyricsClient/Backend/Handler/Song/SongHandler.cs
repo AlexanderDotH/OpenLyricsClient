@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using DevBase.Async.Task;
 using DevBase.Generic;
-using OpenLyricsClient.Backend.Debug;
+using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Events.EventHandler;
