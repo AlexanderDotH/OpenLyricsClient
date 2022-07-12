@@ -37,22 +37,23 @@ namespace OpenLyricsClient.Backend
         private TaskRegister _taskRegister;
 
         private WindowLogger _windowLogger;
+        private Environment.Environment _environment;
 
         public Core()
         {
             INSTANCE = this;
 
-            this._debugger = new Debugger<Core>(this);
-
             _disposed = false;
             this._cancellationTokenSource = new CancellationTokenSource();
 
-            this._taskRegister = new TaskRegister();
+            this._debugger = new Debugger<Core>(this);
+            this._environment = Backend.Environment.Environment.FindEnvironmentFile(System.Environment.GetCommandLineArgs());
 
+            this._taskRegister = new TaskRegister();
 
             this._windowLogger = new WindowLogger();
 
-            this._settingManager = new SettingManager(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Lyrics\\");
+            this._settingManager = new SettingManager(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\Lyrics\\");
             this._cacheManager = new CacheManager();
 
             this._serviceHandler = new ServiceHandler();
@@ -106,6 +107,11 @@ namespace OpenLyricsClient.Backend
         public CancellationTokenSource CancellationTokenSource
         {
             get { return this._cancellationTokenSource; }
+        }
+
+        public Environment.Environment Environment
+        {
+            get => this._environment;
         }
 
         public static bool IsDisposed()

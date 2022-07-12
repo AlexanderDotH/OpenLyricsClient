@@ -19,7 +19,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase
 {
     class NetEaseCollector : ICollector
     {
-        private string _baseUrl;
+        private readonly string _baseUrl;
 
         private Debugger<NetEaseCollector> _debugger;
 

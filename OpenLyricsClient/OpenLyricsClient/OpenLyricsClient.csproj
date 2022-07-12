@@ -378,6 +378,8 @@
     <Compile Include="Backend\Collector\Lyrics\Providers\Textyl\Json\TextylLyricReponse.cs" />
     <Compile Include="Backend\Debugger\Debugger.cs" />
     <Compile Include="Backend\Debugger\DebugType.cs" />
+    <Compile Include="Backend\Environment\Environment.cs" />
+    <Compile Include="Backend\Environment\EnvironmentType.cs" />
     <Compile Include="Backend\Events\EventType.cs" />
     <Compile Include="Backend\Structure\Artwork\Artwork.cs" />
     <Compile Include="Backend\Handler\Artwork\ArtworkHandler.cs" />

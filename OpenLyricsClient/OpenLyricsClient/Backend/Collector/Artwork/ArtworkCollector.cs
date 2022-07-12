@@ -34,7 +34,7 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
                 
             }
 
-            return 
+            return null;
         }
 
     }

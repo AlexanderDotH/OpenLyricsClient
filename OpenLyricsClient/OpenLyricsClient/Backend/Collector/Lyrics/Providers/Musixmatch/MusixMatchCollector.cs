@@ -50,6 +50,8 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
 
                     Core.INSTANCE.SettingManager.Settings.MusixMatchTokens.Add(MusixMatchToken.ToToken(token, expiresIn));
 
+                    this._debugger.Write("Requested new musixmatch token", DebugType.INFO);
+
                     settingsChanged = true;
                 }
                 catch (Exception e) { }
@@ -124,8 +126,16 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
                 }
             }
 
+
+
             if (!DataValidator.ValidateData(tracks))
+            {
+                this._debugger.Write("Track not found", DebugType.ERROR);
                 return new LyricData(LyricReturnCode.FAILED, SongMetadata.ToSongMetadata(songRequestObject));
+            }
+
+
+            this._debugger.Write(string.Format("Found {0} tracks", tracks.Length), DebugType.INFO);
 
             for (int i = 0; i < tracks.Length; i++)
             {
@@ -145,7 +155,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
                         LyricType.INSTRUMENTAL);
                 }
 
-                if (track.HasSubtitles == 0)
+                if (track.HasSubtitles == 0) 
                     continue;
 
                 try
@@ -160,6 +170,8 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
                     {
                         GenericList<LyricElement> lyricElements =
                             fileFormatParser.FormatFromString(response.SubtitleBody).Lyrics;
+
+                        this._debugger.Write(string.Format("Found lyrics for {0}", track.TrackName), DebugType.INFO);
 
                         if (DataValidator.ValidateData(lyricElements))
                         {
@@ -213,7 +225,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
             return false;
         }
 
-        //Untested it should make everything a bit more strict
+        //Untested! I should make everything a bit more strict
         private bool IsSimilar(string string1, string string2)
         {
             return MathUtils.CalculateLevenshteinDistance(string1, string2) >=

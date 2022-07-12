@@ -17,7 +17,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
 {
     public class TextylCollector : ICollector
     {
-        private string _baseUrl;
+        private readonly string _baseUrl;
         private Debugger<TextylCollector> _debugger;
 
         public TextylCollector()

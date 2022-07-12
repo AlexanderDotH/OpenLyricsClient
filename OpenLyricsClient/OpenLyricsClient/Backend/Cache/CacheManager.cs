@@ -145,7 +145,6 @@ namespace OpenLyricsClient.Backend.Cache
 
         private LyricData ConvertToLyricData(JsonLyricData json)
         {
-            LyricReturnCode lyricReturnCode = json.LyricReturnCode;
             LyricPart[] lyricParts = json.LyricParts;
             string lyricProvider = json.LyricProvider;
             string fullLyrics = json.FullLyrics;
@@ -155,7 +154,7 @@ namespace OpenLyricsClient.Backend.Cache
             string[] artists = json.Artists;
             long duration = json.Duration;
 
-            return new LyricData(lyricReturnCode, SongMetadata.ToSongMetadata(songName, album, artists, duration), lyricParts, lyricProvider, fullLyrics, lyricType);
+            return new LyricData(LyricReturnCode.SUCCESS, SongMetadata.ToSongMetadata(songName, album, artists, duration), lyricParts, lyricProvider, fullLyrics, lyricType);
         }
 
         private JsonLyricData ConvertToJsonLyricData(LyricData lyricData)
@@ -163,8 +162,8 @@ namespace OpenLyricsClient.Backend.Cache
             return new JsonLyricData()
             {
                 SongName = lyricData.SongMetadata.Name,
+                Duration = lyricData.SongMetadata.MaxTime,
                 LyricProvider = lyricData.LyricProvider,
-                LyricReturnCode = lyricData.LyricReturnCode,
                 LyricParts = lyricData.LyricParts,
                 FullLyrics = lyricData.FullLyrics,
                 LyricType = lyricData.LyricType,

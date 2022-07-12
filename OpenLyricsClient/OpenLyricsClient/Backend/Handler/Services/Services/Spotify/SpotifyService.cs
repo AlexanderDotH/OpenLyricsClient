@@ -4,8 +4,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using DevBase.Async.Task;
 using DevBase.Generic;
+using DevBaseFormat;
+using DevBaseFormat.Formats.EnvFormat;
+using DevBaseFormat.Structure;
 using Microsoft.Extensions.Configuration;
 using OpenLyricsClient.Backend.Debugger;
+using OpenLyricsClient.Backend.Environment;
 using OpenLyricsClient.Backend.Structure.Enum;
 using SpotifyApi.NetCore.Authorization;
 
@@ -28,8 +32,8 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
             //Please dont steal me
             ConfigurationManager configurationManager = new ConfigurationManager();
-            configurationManager["SpotifyApiClientId"] = "5506575c84334b25978bda35ee43e6fd";
-            configurationManager["SpotifyApiClientSecret"] = "0896c04d78374ff2ad51a2c4f4c857ed";
+            configurationManager["SpotifyApiClientId"] = Core.INSTANCE.Environment.Get(EnvironmentType.SPOTIFY_CLIENT_ID);
+            configurationManager["SpotifyApiClientSecret"] = Core.INSTANCE.Environment.Get(EnvironmentType.SPOTIFY_SECRET_KEY);
             configurationManager["SpotifyAuthRedirectUri"] = "http://localhost:8080/callback";
             this._configurationManager = configurationManager;
 

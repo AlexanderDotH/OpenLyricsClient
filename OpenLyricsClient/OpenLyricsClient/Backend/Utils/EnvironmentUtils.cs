@@ -7,7 +7,7 @@ namespace OpenLyricsClient.Backend.Utils
     {
         public static bool IsDebugLogEnabled()
         {
-            return Environment.GetCommandLineArgs().Contains("--enable-command-output");
+            return System.Environment.GetCommandLineArgs().Contains("--enable-command-output");
         }
     }
 }

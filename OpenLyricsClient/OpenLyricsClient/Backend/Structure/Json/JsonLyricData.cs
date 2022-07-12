@@ -23,9 +23,6 @@ namespace OpenLyricsClient.Backend.Structure.Json
         [JsonProperty("Provider")]
         public string LyricProvider { get; set; }
 
-        [JsonProperty("ReturnCode")]
-        public LyricReturnCode LyricReturnCode { get; set; }
-
         [JsonProperty("Parts")]
         public LyricPart[] LyricParts { get; set; }
 

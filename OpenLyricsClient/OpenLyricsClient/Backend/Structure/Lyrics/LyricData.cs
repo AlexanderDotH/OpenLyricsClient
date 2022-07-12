@@ -48,7 +48,7 @@ namespace OpenLyricsClient.Backend.Structure.Lyrics
 
                 lyricParts[i] = new LyricPart(lyrics.Get(i).TimeStamp, currentLine);
 
-                stringBuilder.Append(await romanization.Romanize(currentLine) + Environment.NewLine);
+                stringBuilder.Append(await romanization.Romanize(currentLine) + System.Environment.NewLine);
             }
 
             return new LyricData(LyricReturnCode.SUCCESS, songMetadata, lyricParts, lyricProvider, stringBuilder.ToString(), LyricType.TEXT);
