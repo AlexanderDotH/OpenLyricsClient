@@ -22,7 +22,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
             this._lyricCollectors.Add(new NetEaseCollector());
             this._lyricCollectors.Add(new NetEaseV2Collector());
             this._lyricCollectors.Add(new MusixMatchCollector());
-            this._lyricCollectors.Add(new TextylCollector());
+            //this._lyricCollectors.Add(new TextylCollector());
         }
 
         public async Task CollectLyrics(SongRequestObject songRequestObject)
