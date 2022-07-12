@@ -252,30 +252,32 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
         public void OnSongChanged(Object sender, SongChangedEventArgs songChangedEventArgs)
         {
-            if (songChangedEventArgs.EventType != EventType.POST)
+            if (songChangedEventArgs.EventType == EventType.PRE)
                 return;
 
             Task.Factory.StartNew(async () =>
             {
-                if (DataValidator.ValidateData(this._songHandler) && 
-                    DataValidator.ValidateData(this._songHandler.CurrentSong) &&
-                    this._songHandler.CurrentSong.Lyrics == null)
+                if (DataValidator.ValidateData(songChangedEventArgs) && 
+                    DataValidator.ValidateData(songChangedEventArgs.Song))
                 {
+                    SongRequestObject songRequestObject = new SongRequestObject(
+                        songChangedEventArgs.Song.Title,
+                        SongFormatter.FormatSongName(songChangedEventArgs.Song.Title),
+                        songChangedEventArgs.Song.Artists,
+                        songChangedEventArgs.Song.MaxTime,
+                        songChangedEventArgs.Song.Album,
+                        SongFormatter.FormatSongAlbum(songChangedEventArgs.Song.Album),
+                        Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
+
+                    if (Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
+                        return;
+
                     Stopwatch stopwatch = new Stopwatch();
                     stopwatch.Start();
 
-                    SongRequestObject songRequestObject = new SongRequestObject(
-                        this._songHandler.CurrentSong.Title,
-                        SongFormatter.FormatSongName(this._songHandler.CurrentSong.Title),
-                        this._songHandler.CurrentSong.Artists,
-                        this._songHandler.CurrentSong.MaxTime,
-                        this._songHandler.CurrentSong.Album,
-                        SongFormatter.FormatSongAlbum(this._songHandler.CurrentSong.Album),
-                        Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
-
-                    this._songHandler.CurrentSong.State = SongState.SEARCHING_LYRICS;
+                    songChangedEventArgs.Song.State = SongState.SEARCHING_LYRICS;
                     await this._lyricCollector.CollectLyrics(songRequestObject);
-                    this._songHandler.CurrentSong.State = SongState.SEARCHING_FINISHED;
+                    songChangedEventArgs.Song.State = SongState.SEARCHING_FINISHED;
 
                     this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
                 }

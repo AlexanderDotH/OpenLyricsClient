@@ -41,13 +41,11 @@ namespace OpenLyricsClient.Backend.Environment
 
         public static Environment FindEnvironmentFile(string[] args)
         {
-            GenericList<string> lines = new GenericList<string>(args);
-
             for (int i = 0; i < args.Length; i++)
             {
                 string arg = args[i];
 
-                if (arg.Contains("envFile"))
+                if (arg.Contains("--envFile"))
                 {
                     string[] split = arg.Split('=');
                     if (split.Length > 1)
