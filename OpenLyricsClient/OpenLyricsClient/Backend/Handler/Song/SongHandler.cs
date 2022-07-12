@@ -29,6 +29,8 @@ namespace OpenLyricsClient.Backend.Handler.Song
 
         public event SongChangedEventHandler SongChanged;
 
+        private Structure.Song.Song _currentSong;
+
         public SongHandler()
         {
             this._debugger = new Debugger<SongHandler>(this);
@@ -69,23 +71,26 @@ namespace OpenLyricsClient.Backend.Handler.Song
                     DataValidator.ValidateData(this._songProviderChooser))
                 {
                     Structure.Song.Song currentSong = GetCurrentSong();
-
+                    
                     if (this._songStageChange.HasSongChanged(currentSong))
                     {
-                        BeforeSongChanged(new SongChangedEventArgs(currentSong, EventType.PRE));
+                        SongChangedEvent(new SongChangedEventArgs(currentSong, EventType.PRE));
 
+                        //
                         ISongProvider songProvider = GetSongProvider(this._songProviderChooser.GetSongProvider());
-
                         if (!DataValidator.ValidateData(songProvider))
                             continue;
 
                         Structure.Song.Song song = await songProvider.UpdateCurrentPlaybackTrack();
+                        //
 
-                        //                                      Idk why but it works
-                        if (DataValidator.ValidateData(song) && this._songStageChange.HasSongChanged(song))
-                        {
-                            AfterSongChanged(new SongChangedEventArgs(song, EventType.POST));
-                        }
+                        if (!DataValidator.ValidateData(song))
+                            continue;
+
+                        this._songStageChange.LastSong = song;
+                        SongChangedEvent(new SongChangedEventArgs(song, EventType.POST));
+
+                        
                     }
                 }
             }
@@ -147,21 +152,15 @@ namespace OpenLyricsClient.Backend.Handler.Song
 
         public void RequestNewSong()
         {
-            BeforeSongChanged(new SongChangedEventArgs(null, EventType.PRE));
+            SongChangedEvent(new SongChangedEventArgs(null, EventType.PRE));
         }
 
-        protected virtual void AfterSongChanged(SongChangedEventArgs songChangedEventArgs)
+        protected virtual void SongChangedEvent(SongChangedEventArgs songChangedEventArgs)
         {
             SongChangedEventHandler songChangedEventHandler = SongChanged;
             songChangedEventHandler?.Invoke(this, songChangedEventArgs);
         }
-
-        protected virtual void BeforeSongChanged(SongChangedEventArgs songChangedEventArgs)
-        {
-            SongChangedEventHandler songChangedEventHandler = SongChanged;
-            songChangedEventHandler?.Invoke(this, songChangedEventArgs);
-        }
-
+        
         public Structure.Song.Song CurrentSong
         {
             get => GetCurrentSong();

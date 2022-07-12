@@ -78,17 +78,17 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
         public async Task<LyricData> GetLyrics(SongRequestObject songRequestObject)
         {
             if (!DataValidator.ValidateData(songRequestObject))
-                return new LyricData(LyricReturnCode.FAILED, SongMetadata.ToSongMetadata(songRequestObject));
+                return new LyricData();
 
             string token = GetRandomMusixMatchToken();
 
             if (!DataValidator.ValidateData(token))
-                return new LyricData(LyricReturnCode.FAILED, SongMetadata.ToSongMetadata(songRequestObject));
+                return new LyricData();
 
             MusixmatchClient musixmatchClient = new MusixmatchClient(token);
 
             if (!DataValidator.ValidateData(musixmatchClient))
-                return new LyricData(LyricReturnCode.FAILED, SongMetadata.ToSongMetadata(songRequestObject));
+                return new LyricData();
 
             GenericList<Track> tracks = null;
 
@@ -126,14 +126,11 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
                 }
             }
 
-
-
             if (!DataValidator.ValidateData(tracks))
             {
                 this._debugger.Write("Track not found", DebugType.ERROR);
-                return new LyricData(LyricReturnCode.FAILED, SongMetadata.ToSongMetadata(songRequestObject));
+                return new LyricData();
             }
-
 
             this._debugger.Write(string.Format("Found {0} tracks", tracks.Length), DebugType.INFO);
 

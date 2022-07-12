@@ -120,12 +120,18 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase
                                     retryPercentage = (int)Math.Ceiling(i * RETRY_DURATION_MULTIPLIER);
                                 }
                             }
+                            else
+                            {
+                                return new LyricData();
+                            }
                         }
                     }
                 }
+
+                return new LyricData();
             }
 
-            return null;
+            return new LyricData();
         }
 
         private async Task<LyricData> ParseLyricResponse(NetEaseLyricResponse lyricResponse, SongMetadata songMetadata)
@@ -156,7 +162,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase
                 }
             }
 
-            return null;
+            return new LyricData();
         }
 
 

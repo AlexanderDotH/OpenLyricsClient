@@ -71,8 +71,6 @@ namespace OpenLyricsClient.Frontend
                 out this._showProgressSuspensionToken,
                 new Task(async () => await this.ShowProgressTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.SHOW_PROGRESS);
-
-
         }
 
         private async Task ShowProgressTask()
@@ -89,8 +87,6 @@ namespace OpenLyricsClient.Frontend
 
                 if (!DataValidator.ValidateData(song.Time, song.MaxTime))
                     continue;
-
-
 
                 await this.Dispatcher.InvokeAsync(() =>
                 {
@@ -128,26 +124,23 @@ namespace OpenLyricsClient.Frontend
                 if (!DataValidator.ValidateData(song.Lyrics))
                     continue;
 
-                lock (song.Lyrics)
+                if (!DataValidator.ValidateData(song.State))
+                    continue;
+
+                if (!DataValidator.ValidateData(song.Lyrics.LyricProvider))
+                    continue;
+
+                if (song.State == SongState.SEARCHING_LYRICS)
+                    continue;
+
+                if (song.State == SongState.HAS_LYRICS_AVAILABLE)
                 {
-                    if (!DataValidator.ValidateData(song.State))
-                        continue;
-
-                    if (!DataValidator.ValidateData(song.Lyrics.LyricProvider))
-                        continue;
-
-                    if (song.State == SongState.SEARCHING_LYRICS)
-                        continue;
-
-                    if (song.State == SongState.HAS_LYRICS_AVAILABLE)
+                    //Lyric provider
+                    this.Dispatcher.Invoke(() =>
                     {
-                        //Lyric provider
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            this.provider.Text = "Powered by " + song.Lyrics.LyricProvider;
-                            this.fullLyricText.Text = song.Lyrics.FullLyrics;
-                        });
-                    }
+                        this.provider.Text = "Powered by " + song.Lyrics.LyricProvider;
+                        this.fullLyricText.Text = song.Lyrics.FullLyrics;
+                    });
                 }
             }
         }
@@ -167,44 +160,52 @@ namespace OpenLyricsClient.Frontend
                 if (!DataValidator.ValidateData(song.State))
                     continue;
 
-                if (song.State != SongState.HAS_LYRICS_AVAILABLE)
+                //if (song.State != SongState.HAS_LYRICS_AVAILABLE)
+                //{
+                //    await this.Dispatcher.InvokeAsync(() =>
+                //    {
+                //        this.firstLine.Text = "";
+                //        this.secondLine.Text = "";
+                //        this.thirdLine.Text = song.State.ToString();
+                //        this.fourthLine.Text = "";
+                //        this.fifthLine.Text = "";
+                //    });
+                //}
+
+                if (song.State == SongState.SEARCHING_LYRICS)
                 {
-                    if (song.State == SongState.NO_LYRICS_AVAILABLE)
+                    await this.Dispatcher.InvokeAsync(() =>
                     {
-                        await this.Dispatcher.InvokeAsync(() =>
-                        {
-                            this.firstLine.Text = "";
-                            this.secondLine.Text = "";
-                            this.thirdLine.Text = "Lyrics not found";
-                            this.fourthLine.Text = "";
-                            this.fifthLine.Text = "";
-                        });
-                    }
-                    else if (song.State == SongState.SEARCHING_LYRICS)
-                    {
-                        await this.Dispatcher.InvokeAsync(() =>
-                        {
-                            this.firstLine.Text = "";
-                            this.secondLine.Text = "";
-                            this.thirdLine.Text = "Searching lyrics...";
-                            this.fourthLine.Text = "";
-                            this.fifthLine.Text = "";
-                        });
-                    }
+                        this.firstLine.Text = "";
+                        this.secondLine.Text = "";
+                        this.thirdLine.Text = "Searching lyrics...";
+                        this.fourthLine.Text = "";
+                        this.fifthLine.Text = "";
+                    });
                 }
-                else
+
+                if (song.State == SongState.NO_LYRICS_AVAILABLE)
                 {
-                    if (song.State == SongState.SEARCHING_FINISHED)
+                    await this.Dispatcher.InvokeAsync(() =>
                     {
-                        await this.Dispatcher.InvokeAsync(() =>
-                        {
-                            this.firstLine.Text = "";
-                            this.secondLine.Text = "";
-                            this.thirdLine.Text = "♪";
-                            this.fourthLine.Text = "";
-                            this.fifthLine.Text = "";
-                        });
-                    }
+                        this.firstLine.Text = "";
+                        this.secondLine.Text = "";
+                        this.thirdLine.Text = "Lyrics not found";
+                        this.fourthLine.Text = "";
+                        this.fifthLine.Text = "";
+                    });
+                }
+
+                if (song.State == SongState.HAS_LYRICS_AVAILABLE)
+                {
+                    await this.Dispatcher.InvokeAsync(() =>
+                    {
+                        this.firstLine.Text = "";
+                        this.secondLine.Text = "";
+                        this.thirdLine.Text = "♪";
+                        this.fourthLine.Text = "";
+                        this.fifthLine.Text = "";
+                    });
                 }
 
                 if (!DataValidator.ValidateData(song.Lyrics, song.CurrentLyricsRoll))
@@ -298,8 +299,9 @@ namespace OpenLyricsClient.Frontend
                 this.fifthLine.Text = "";
                 this.provider.Text = "";
                 this.currentTitle.Text = "";
-                this.provider.Text = "";
                 this.currentArtists.Text = "";
+                this.provider.Text = "";
+                this.fullLyricText.Text = "";
             });
         }
 

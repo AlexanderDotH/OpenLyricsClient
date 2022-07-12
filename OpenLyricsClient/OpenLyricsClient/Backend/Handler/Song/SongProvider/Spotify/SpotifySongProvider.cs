@@ -14,8 +14,6 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
     {
         private Debugger<SpotifySongProvider> _debugger;
         private Structure.Song.Song _currentSong;
-        private bool _firstTimeUpdate;
-        private long _substractionThreshold;
 
         private PlayerApi _playerApi;
         private string _accessToken;
@@ -35,7 +33,6 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
 
             this._playerApi = new PlayerApi(new HttpClient(), Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken);
             this._accessToken = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken;
-            this._substractionThreshold = 0;
 
             this._service = Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
 

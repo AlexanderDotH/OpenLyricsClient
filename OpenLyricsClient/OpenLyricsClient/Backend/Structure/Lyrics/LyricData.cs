@@ -27,6 +27,8 @@ namespace OpenLyricsClient.Backend.Structure.Lyrics
             this._songMetadata = songMetadata;
         }
 
+        public LyricData(LyricReturnCode lyricReturnCode = LyricReturnCode.FAILED) : this(lyricReturnCode, null, null, null, null, LyricType.NONE) { }
+
         public LyricData(LyricReturnCode lyricReturnCode, SongMetadata songMetadata) : this(lyricReturnCode, songMetadata, null, null, null, LyricType.NONE) {}
 
         public LyricData(LyricReturnCode lyricReturnCode, SongMetadata songMetadata, LyricType lyricType) : this(lyricReturnCode, songMetadata, null, null, null, lyricType) { }
@@ -34,7 +36,7 @@ namespace OpenLyricsClient.Backend.Structure.Lyrics
         public static async Task<LyricData> ConvertToData(GenericList<LyricElement> lyrics, SongMetadata songMetadata, string lyricProvider)
         {
             if (lyrics == null || lyrics.Length == 0)
-                return new LyricData(LyricReturnCode.FAILED, songMetadata);
+                return new LyricData();
 
             Romanisation.Romanization romanization = new Romanisation.Romanization();
 
@@ -48,6 +50,7 @@ namespace OpenLyricsClient.Backend.Structure.Lyrics
 
                 lyricParts[i] = new LyricPart(lyrics.Get(i).TimeStamp, currentLine);
 
+                //I dont like this
                 stringBuilder.Append(await romanization.Romanize(currentLine) + System.Environment.NewLine);
             }
 

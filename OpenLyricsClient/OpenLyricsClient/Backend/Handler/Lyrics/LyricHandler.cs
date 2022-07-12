@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DevBase.Async.Task;
 using OpenLyricsClient.Backend.Collector.Lyrics;
 using OpenLyricsClient.Backend.Debugger;
+using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Romanisation;
@@ -88,6 +89,8 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                     DataValidator.ValidateData(this._lyricCollector) &&
                     DataValidator.ValidateData(Core.INSTANCE.CacheManager))
                 {
+                    if (song.State != SongState.SEARCHING_FINISHED)
+                        continue;
 
                     SongRequestObject songRequestObject = new SongRequestObject(
                         song.Title,
@@ -106,7 +109,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                         song.Lyrics = lyricData;
                         song.State = SongState.HAS_LYRICS_AVAILABLE;
                     }
-                    else if (song.State == SongState.SEARCHING_FINISHED)
+                    else
                     {
                         song.Lyrics = null;
                         song.State = SongState.NO_LYRICS_AVAILABLE;
@@ -194,7 +197,6 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
                     song.State == SongState.HAS_LYRICS_AVAILABLE)
                 {
-
                     try
                     {
                         LyricData lyrics = song.Lyrics;
@@ -250,12 +252,12 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
         public void OnSongChanged(Object sender, SongChangedEventArgs songChangedEventArgs)
         {
+            if (songChangedEventArgs.EventType != EventType.POST)
+                return;
+
             Task.Factory.StartNew(async () =>
             {
-                if (DataValidator.ValidateData(songChangedEventArgs.Song) &&
-                    DataValidator.ValidateData(songChangedEventArgs.Song.Title,
-                        songChangedEventArgs.Song.Artists, songChangedEventArgs.Song.MaxTime, songChangedEventArgs.Song.Album) &&
-                    DataValidator.ValidateData(this._songHandler) && 
+                if (DataValidator.ValidateData(this._songHandler) && 
                     DataValidator.ValidateData(this._songHandler.CurrentSong) &&
                     this._songHandler.CurrentSong.Lyrics == null)
                 {
@@ -263,17 +265,17 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                     stopwatch.Start();
 
                     SongRequestObject songRequestObject = new SongRequestObject(
-                        songChangedEventArgs.Song.Title,
-                        SongFormatter.FormatSongName(songChangedEventArgs.Song.Title),
-                        songChangedEventArgs.Song.Artists,
-                        songChangedEventArgs.Song.MaxTime,
-                        songChangedEventArgs.Song.Album,
-                        SongFormatter.FormatSongAlbum(songChangedEventArgs.Song.Album),
+                        this._songHandler.CurrentSong.Title,
+                        SongFormatter.FormatSongName(this._songHandler.CurrentSong.Title),
+                        this._songHandler.CurrentSong.Artists,
+                        this._songHandler.CurrentSong.MaxTime,
+                        this._songHandler.CurrentSong.Album,
+                        SongFormatter.FormatSongAlbum(this._songHandler.CurrentSong.Album),
                         Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
 
-                    songChangedEventArgs.Song.State = SongState.SEARCHING_LYRICS;
+                    this._songHandler.CurrentSong.State = SongState.SEARCHING_LYRICS;
                     await this._lyricCollector.CollectLyrics(songRequestObject);
-                    songChangedEventArgs.Song.State = SongState.SEARCHING_FINISHED;
+                    this._songHandler.CurrentSong.State = SongState.SEARCHING_FINISHED;
 
                     this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
                 }

@@ -31,8 +31,8 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
         {
             TextylLyricReponse[] lyrics = await FetchLyrics(songRequestObject);
 
-            if (lyrics == null)
-                return new LyricData(LyricReturnCode.FAILED, SongMetadata.ToSongMetadata(songRequestObject));
+            if (!DataValidator.ValidateData(lyrics))
+                return new LyricData();
 
             GenericList<LyricElement> lyricElements = new GenericList<LyricElement>();
 
@@ -60,7 +60,13 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
             if (response.GetContentAsString().Contains("No lyrics available"))
                 return null;
 
-            return new JsonDeserializer<TextylLyricReponse[]>().Deserialize(response.GetContentAsString());
+            TextylLyricReponse[] reponse =
+                new JsonDeserializer<TextylLyricReponse[]>().Deserialize(response.GetContentAsString());
+
+            if (reponse != null)
+                return reponse;
+
+            return null;
         }
 
         public string CollectorName()

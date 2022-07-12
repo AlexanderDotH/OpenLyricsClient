@@ -22,7 +22,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
             this._lyricCollectors.Add(new NetEaseCollector());
             this._lyricCollectors.Add(new NetEaseV2Collector());
             this._lyricCollectors.Add(new MusixMatchCollector());
-            this._lyricCollectors.Add(new TextylCollector());
+            //this._lyricCollectors.Add(new TextylCollector());
         }
 
         public async Task CollectLyrics(SongRequestObject songRequestObject)
@@ -34,22 +34,24 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
 
             for (int i = 0; i < this._lyricCollectors.Length; i++)
             {
+                if (Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
+                    break;
+
                 ICollector collector = this._lyricCollectors.Get(i);
                 LyricData lyricData = await collector.GetLyrics(songRequestObject);
 
-                if (DataValidator.ValidateData(lyricData))
+                if (!DataValidator.ValidateData(lyricData))
+                    continue;
+
+                if (lyricData.LyricReturnCode != LyricReturnCode.SUCCESS)
+                    continue;
+
+                if (!Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
                 {
-                    if (lyricData.LyricReturnCode == LyricReturnCode.SUCCESS)
-                    {
-                        if (!Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
-                        {
-                            Core.INSTANCE.CacheManager.WriteToCache(songRequestObject, lyricData);
-                        }
-                        return;
-                    }
+                    Core.INSTANCE.CacheManager.WriteToCache(songRequestObject, lyricData);
+                    break;
                 }
             }
-            return;
         }
     }
 }

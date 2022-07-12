@@ -94,14 +94,24 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
 
                                         retryPercentage += (int)Math.Ceiling(i * RETRY_DURATION_MULTIPLIER);
                                     }
+
+                                    return new LyricData();
                                 }
+
+                                return new LyricData();
+                            }
+                            else
+                            {
+                                return new LyricData();
                             }
                         }
                     }
                 }
+
+                return new LyricData();
             }
 
-            return null;
+            return new LyricData();
         }
 
         private bool IsValidSong(NetEaseV2SongResponse songResponse, SongRequestObject songRequestObject, double percentage)
@@ -164,7 +174,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
                 }
             }
 
-            return null;
+            return new LyricData();
         }
 
         private async Task<NetEaseV2SearchResponse> SearchTrack(SongRequestObject songRequestObject)

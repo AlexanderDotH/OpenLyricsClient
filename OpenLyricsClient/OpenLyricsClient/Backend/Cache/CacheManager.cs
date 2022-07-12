@@ -107,7 +107,7 @@ namespace OpenLyricsClient.Backend.Cache
                 }
             }
 
-            return new LyricData(LyricReturnCode.FAILED, SongMetadata.ToSongMetadata(songRequestObject));
+            return new LyricData(LyricReturnCode.FAILED);
         }
 
         public bool IsInCache(SongRequestObject songRequestObject)
