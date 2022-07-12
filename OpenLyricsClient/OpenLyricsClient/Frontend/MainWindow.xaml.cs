@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using DevBase.Async.Task;
 using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Romanisation;
@@ -44,14 +45,16 @@ namespace OpenLyricsClient.Frontend
         {
             this.fullLyricText.Text = @"";
 
-            this.currentFullTitle.Text = string.Empty;
-            this.currentTitle.Text = string.Empty;
-            this.currentArtists.Text = string.Empty;
-            this.provider.Text = string.Empty;
-
             this.firstLine.Text = string.Empty;
             this.secondLine.Text = string.Empty;
             this.thirdLine.Text = string.Empty;
+            this.fourthLine.Text = string.Empty;
+            this.fifthLine.Text = string.Empty;
+            this.provider.Text = string.Empty;
+            this.currentTitle.Text = string.Empty;
+            this.currentArtists.Text = string.Empty;
+            this.provider.Text = string.Empty;
+            this.fullLyricText.Text = string.Empty;
 
             this.pgSongProgress.Value = 0;
 
@@ -196,7 +199,7 @@ namespace OpenLyricsClient.Frontend
                     });
                 }
 
-                if (song.State == SongState.HAS_LYRICS_AVAILABLE)
+                if (song.State == SongState.HAS_LYRICS_AVAILABLE && !DataValidator.ValidateData(song.CurrentLyricsRoll))
                 {
                     await this.Dispatcher.InvokeAsync(() =>
                     {
@@ -290,6 +293,9 @@ namespace OpenLyricsClient.Frontend
 
         private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
         {
+            if (songchangedevent.EventType != EventType.POST)
+                return;
+
             this.Dispatcher.Invoke(() =>
             {
                 this.firstLine.Text = "";

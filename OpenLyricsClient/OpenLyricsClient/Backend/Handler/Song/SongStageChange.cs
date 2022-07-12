@@ -19,20 +19,21 @@ namespace OpenLyricsClient.Backend.Handler.Song
                 if (this._lastSong == null)
                 {
                     this._timeCheck = false;
+                    this._lastSong = currentSong;
                     return true;
                 }
 
                 if (currentSong.Title != this._lastSong.Title)
                 {
                     this._timeCheck = false;
-
+                    this._lastSong = currentSong;
                     return true;
                 }
 
                 if (this._lastSong.MaxTime != currentSong.MaxTime)
                 {
                     this._timeCheck = false;
-
+                    this._lastSong = currentSong;
                     return true;
                 }
 
@@ -47,6 +48,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
                 if (currentSong.ProgressMs < msSection && _timeCheck)
                 {
                     this._timeCheck = false;
+                    this._lastSong = currentSong;
                     return true;
                 }
 
@@ -78,12 +80,6 @@ namespace OpenLyricsClient.Backend.Handler.Song
             }
 
             return false;
-        }
-
-        public Structure.Song.Song LastSong
-        {
-            get => _lastSong;
-            set => _lastSong = value;
         }
     }
 }

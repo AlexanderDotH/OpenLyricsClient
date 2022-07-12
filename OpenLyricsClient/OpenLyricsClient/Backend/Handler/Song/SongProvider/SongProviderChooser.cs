@@ -52,7 +52,6 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
             while (!this._disposed)
             {
                 await this._taskSuspensionToken.WaitForRelease();
-                await Task.Delay(500);
 
                 if (!DataValidator.ValidateData(Core.INSTANCE.WindowLogger))
                     continue;
@@ -105,6 +104,9 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
                         SuspendProvider(EnumSongProvider.SPOTIFY);
                     }
                 }
+
+                await Task.Delay(1000);
+
             }
         }
 

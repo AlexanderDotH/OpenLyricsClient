@@ -29,8 +29,6 @@ namespace OpenLyricsClient.Backend.Handler.Song
 
         public event SongChangedEventHandler SongChanged;
 
-        private Structure.Song.Song _currentSong;
-
         public SongHandler()
         {
             this._debugger = new Debugger<SongHandler>(this);
@@ -65,13 +63,14 @@ namespace OpenLyricsClient.Backend.Handler.Song
             {
                 await this._manageCurrentSongSuspensionToken.WaitForRelease();
 
-                await Task.Delay(100);
+                await Task.Delay(50);
 
                 if (DataValidator.ValidateData(this._songStageChange) && 
                     DataValidator.ValidateData(this._songProviderChooser))
                 {
                     Structure.Song.Song currentSong = GetCurrentSong();
                     
+                    //POST WIRD NICHT IMMER AUSGEFÜHRT
                     if (this._songStageChange.HasSongChanged(currentSong))
                     {
                         SongChangedEvent(new SongChangedEventArgs(currentSong, EventType.PRE));
@@ -87,10 +86,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
                         if (!DataValidator.ValidateData(song))
                             continue;
 
-                        this._songStageChange.LastSong = song;
                         SongChangedEvent(new SongChangedEventArgs(song, EventType.POST));
-
-                        
                     }
                 }
             }
