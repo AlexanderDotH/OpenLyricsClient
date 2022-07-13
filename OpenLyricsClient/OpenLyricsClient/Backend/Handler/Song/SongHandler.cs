@@ -84,7 +84,6 @@ namespace OpenLyricsClient.Backend.Handler.Song
                         //
 
                         SongChangedEvent(new SongChangedEventArgs(song, EventType.POST));
-                        this._songStageChange.Update(song);
                     }
                 }
             }
