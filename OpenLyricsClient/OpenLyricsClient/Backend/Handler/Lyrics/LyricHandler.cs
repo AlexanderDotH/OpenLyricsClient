@@ -90,19 +90,21 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                     DataValidator.ValidateData(this._lyricCollector) &&
                     DataValidator.ValidateData(Core.INSTANCE.CacheManager))
                 {
-                    SongRequestObject songRequestObject = new SongRequestObject(
-                        song.Title,
-                        SongFormatter.FormatSongName(song.Title),
-                        song.Artists,
-                        song.MaxTime,
-                        song.Album,
-                        SongFormatter.FormatSongAlbum(song.Album),
-                        Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
+                    SongRequestObject songRequestObject = SongRequestObject.FromSong(song);
 
                     LyricData lyricData = Core.INSTANCE.CacheManager.GetDataByRequest(songRequestObject);
 
                     if (!DataValidator.ValidateData(lyricData))
                         continue;
+
+                    if (DataValidator.ValidateData(lyricData.SongMetadata))
+                    {
+                        if (lyricData.SongMetadata.Name != song.Title &&
+                            lyricData.SongMetadata.Album != song.Album)
+                        {
+                            song.Lyrics = null;
+                        }
+                    }
 
                     if (lyricData.LyricReturnCode == LyricReturnCode.SUCCESS)
                     {

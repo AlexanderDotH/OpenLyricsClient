@@ -83,15 +83,8 @@ namespace OpenLyricsClient.Backend.Handler.Song
                         Structure.Song.Song song = await songProvider.UpdateCurrentPlaybackTrack();
                         //
 
-                        if (!DataValidator.ValidateData(song))
-                            continue;
-
-                        this._songStageChange.Reset();
-                        if (this._songStageChange.HasSongChanged(song))
-                        {
-                            song.Lyrics = null;
-                            SongChangedEvent(new SongChangedEventArgs(song, EventType.POST));
-                        }
+                        SongChangedEvent(new SongChangedEventArgs(song, EventType.POST));
+                        this._songStageChange.Update(song);
                     }
                 }
             }
