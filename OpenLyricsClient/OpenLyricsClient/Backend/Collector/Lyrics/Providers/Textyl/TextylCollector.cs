@@ -31,7 +31,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
         {
             TextylLyricReponse[] lyrics = await FetchLyrics(songRequestObject);
 
-            if (!DataValidator.ValidateData(lyrics) || lyrics.Length == 0)
+            if (!DataValidator.ValidateData(lyrics))
                 return new LyricData();
 
             GenericList<LyricElement> lyricElements = new GenericList<LyricElement>();
@@ -48,30 +48,23 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
 
         public async Task<TextylLyricReponse[]> FetchLyrics(SongRequestObject songRequestObject)
         {
-            string requestUrl = string.Format("{0}/lyrics?q={1}", this._baseUrl,
-                songRequestObject.FormattedSongName);
+            string requestUrl = Uri.EscapeUriString(string.Format("{0}/lyrics?q={1}", this._baseUrl,
+                songRequestObject.FormattedSongName));
 
             this._debugger.Write("Textyl request: " + requestUrl, DebugType.INFO);
 
-            try
-            {
-                RequestData requestData = new RequestData(requestUrl);
-                Request request = new Request(requestData);
-                ResponseData response = await request.GetResponseAsync();
+            RequestData requestData = new RequestData(requestUrl);
+            Request request = new Request(requestData);
+            ResponseData response = await request.GetResponseAsync();
 
-                if (response.GetContentAsString().Contains("No lyrics available"))
-                    return null;
+            if (response.GetContentAsString().Contains("No lyrics available"))
+                return null;
 
-                TextylLyricReponse[] reponse =
-                    new JsonDeserializer<TextylLyricReponse[]>().Deserialize(response.GetContentAsString());
+            TextylLyricReponse[] reponse =
+                new JsonDeserializer<TextylLyricReponse[]>().Deserialize(response.GetContentAsString());
 
-                if (reponse != null)
-                    return reponse;
-            }
-            catch (Exception e)
-            {
-                this._debugger.Write(e);
-            }
+            if (reponse != null)
+                return reponse;
 
             return null;
         }
