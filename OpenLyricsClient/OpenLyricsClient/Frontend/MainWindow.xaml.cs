@@ -293,19 +293,22 @@ namespace OpenLyricsClient.Frontend
 
         private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
         {
-            this.Dispatcher.Invoke(() =>
+            if (songchangedevent.EventType == EventType.PRE)
             {
-                this.firstLine.Text = "";
-                this.secondLine.Text = "";
-                this.thirdLine.Text = "";
-                this.fourthLine.Text = "";
-                this.fifthLine.Text = "";
-                this.provider.Text = "";
-                this.currentTitle.Text = "";
-                this.currentArtists.Text = "";
-                this.provider.Text = "";
-                this.fullLyricText.Text = "";
-            });
+                this.Dispatcher.Invoke(() =>
+                {
+                    this.firstLine.Text = "";
+                    this.secondLine.Text = "";
+                    this.thirdLine.Text = "";
+                    this.fourthLine.Text = "";
+                    this.fifthLine.Text = "";
+                    this.provider.Text = "";
+                    this.currentTitle.Text = "";
+                    this.currentArtists.Text = "";
+                    this.provider.Text = "";
+                    this.fullLyricText.Text = "";
+                });
+            }
         }
 
         //private void Button_Click(object sender, RoutedEventArgs e)
