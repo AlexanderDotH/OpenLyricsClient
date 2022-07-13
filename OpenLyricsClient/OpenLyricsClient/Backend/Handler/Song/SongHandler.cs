@@ -86,8 +86,10 @@ namespace OpenLyricsClient.Backend.Handler.Song
                         if (!DataValidator.ValidateData(song))
                             continue;
 
+                        this._songStageChange.Reset();
                         if (this._songStageChange.HasSongChanged(song))
                         {
+                            song.Lyrics = null;
                             SongChangedEvent(new SongChangedEventArgs(song, EventType.POST));
                         }
                     }

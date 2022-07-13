@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenLyricsClient.Backend.Collector.Lyrics;
+using OpenLyricsClient.Backend.Handler.Song;
 
 namespace OpenLyricsClient.Backend.Structure.Song
 {
@@ -23,6 +24,20 @@ namespace OpenLyricsClient.Backend.Structure.Song
             _album = album;
             _formattedSongAlbum = formattedSongAlbum;
             _selectioMode = selectioMode;
+        }
+
+        public static SongRequestObject FromSong(Song song)
+        {
+            SongRequestObject songRequestObject = new SongRequestObject(
+                song.Title,
+                SongFormatter.FormatSongName(song.Title),
+                song.Artists,
+                song.MaxTime,
+                song.Album,
+                SongFormatter.FormatSongAlbum(song.Album),
+                Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
+
+            return songRequestObject;
         }
 
         public string FormattedSongAlbum

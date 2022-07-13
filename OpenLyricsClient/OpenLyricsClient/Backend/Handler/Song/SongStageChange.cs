@@ -36,7 +36,6 @@ namespace OpenLyricsClient.Backend.Handler.Song
                     this._lastSong = currentSong;
                     return true;
                 }
-
                 
                 short msSection = (short)(currentSong.MaxTime * 0.01);
 
@@ -73,6 +72,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
         public void Reset()
         {
             this._lastSong = null;
+            this._timeCheck = true;
         }
     }
 }

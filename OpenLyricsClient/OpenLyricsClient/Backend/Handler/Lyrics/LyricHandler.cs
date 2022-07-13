@@ -255,14 +255,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
             if (songChangedEventArgs.EventType == EventType.PRE &&
                 DataValidator.ValidateData(this._songHandler.CurrentSong))
             {
-                SongRequestObject songRequestObject = new SongRequestObject(
-                    this._songHandler.CurrentSong.Title,
-                    SongFormatter.FormatSongName(this._songHandler.CurrentSong.Title),
-                    this._songHandler.CurrentSong.Artists,
-                    this._songHandler.CurrentSong.MaxTime,
-                    this._songHandler.CurrentSong.Album,
-                    SongFormatter.FormatSongAlbum(this._songHandler.CurrentSong.Album),
-                    Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
+                SongRequestObject songRequestObject = SongRequestObject.FromSong(this._songHandler.CurrentSong);
 
                 LyricData lyricData = Core.INSTANCE.CacheManager.GetDataByRequest(songRequestObject);
 
@@ -280,14 +273,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                     if (DataValidator.ValidateData(songChangedEventArgs) &&
                         DataValidator.ValidateData(songChangedEventArgs.Song))
                     {
-                        SongRequestObject songRequestObject = new SongRequestObject(
-                            songChangedEventArgs.Song.Title,
-                            SongFormatter.FormatSongName(songChangedEventArgs.Song.Title),
-                            songChangedEventArgs.Song.Artists,
-                            songChangedEventArgs.Song.MaxTime,
-                            songChangedEventArgs.Song.Album,
-                            SongFormatter.FormatSongAlbum(songChangedEventArgs.Song.Album),
-                            Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
+                        SongRequestObject songRequestObject = SongRequestObject.FromSong(songChangedEventArgs.Song);
 
                         if (Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
                             return;
