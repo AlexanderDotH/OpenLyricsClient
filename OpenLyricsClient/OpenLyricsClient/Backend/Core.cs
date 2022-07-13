@@ -53,7 +53,7 @@ namespace OpenLyricsClient.Backend
 
             this._windowLogger = new WindowLogger();
 
-            this._settingManager = new SettingManager(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\Lyrics\\");
+            this._settingManager = new SettingManager(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\OpenLyricsClient\\");
             this._cacheManager = new CacheManager();
 
             this._serviceHandler = new ServiceHandler();

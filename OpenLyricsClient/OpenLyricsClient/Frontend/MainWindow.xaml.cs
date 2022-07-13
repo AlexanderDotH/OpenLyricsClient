@@ -293,9 +293,6 @@ namespace OpenLyricsClient.Frontend
 
         private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
         {
-            if (songchangedevent.EventType != EventType.POST)
-                return;
-
             this.Dispatcher.Invoke(() =>
             {
                 this.firstLine.Text = "";

@@ -85,13 +85,11 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                     DataValidator.ValidateData(song.Artists) &&
                     DataValidator.ValidateData(song.MaxTime) &&
                     DataValidator.ValidateData(song.Album) &&
+                    DataValidator.ValidateData(song.SongMetadata) &&
                     DataValidator.ValidateData(Core.INSTANCE.SettingManager.Settings.LyricSelectionMode) &&
                     DataValidator.ValidateData(this._lyricCollector) &&
                     DataValidator.ValidateData(Core.INSTANCE.CacheManager))
                 {
-                    if (song.State != SongState.SEARCHING_FINISHED)
-                        continue;
-
                     SongRequestObject songRequestObject = new SongRequestObject(
                         song.Title,
                         SongFormatter.FormatSongName(song.Title),
@@ -103,13 +101,15 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
                     LyricData lyricData = Core.INSTANCE.CacheManager.GetDataByRequest(songRequestObject);
 
-                    if (DataValidator.ValidateData(lyricData) && 
-                        lyricData.LyricReturnCode == LyricReturnCode.SUCCESS)
+                    if (!DataValidator.ValidateData(lyricData))
+                        continue;
+
+                    if (lyricData.LyricReturnCode == LyricReturnCode.SUCCESS)
                     {
                         song.Lyrics = lyricData;
                         song.State = SongState.HAS_LYRICS_AVAILABLE;
                     }
-                    else
+                    else if (lyricData.LyricReturnCode == LyricReturnCode.FAILED)
                     {
                         song.Lyrics = null;
                         song.State = SongState.NO_LYRICS_AVAILABLE;
@@ -252,36 +252,57 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
         public void OnSongChanged(Object sender, SongChangedEventArgs songChangedEventArgs)
         {
-            if (songChangedEventArgs.EventType == EventType.PRE)
-                return;
-
-            Task.Factory.StartNew(async () =>
+            if (songChangedEventArgs.EventType == EventType.PRE &&
+                DataValidator.ValidateData(this._songHandler.CurrentSong))
             {
-                if (DataValidator.ValidateData(songChangedEventArgs) && 
-                    DataValidator.ValidateData(songChangedEventArgs.Song))
+                SongRequestObject songRequestObject = new SongRequestObject(
+                    this._songHandler.CurrentSong.Title,
+                    SongFormatter.FormatSongName(this._songHandler.CurrentSong.Title),
+                    this._songHandler.CurrentSong.Artists,
+                    this._songHandler.CurrentSong.MaxTime,
+                    this._songHandler.CurrentSong.Album,
+                    SongFormatter.FormatSongAlbum(this._songHandler.CurrentSong.Album),
+                    Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
+
+                LyricData lyricData = Core.INSTANCE.CacheManager.GetDataByRequest(songRequestObject);
+
+                if (DataValidator.ValidateData(lyricData))
                 {
-                    SongRequestObject songRequestObject = new SongRequestObject(
-                        songChangedEventArgs.Song.Title,
-                        SongFormatter.FormatSongName(songChangedEventArgs.Song.Title),
-                        songChangedEventArgs.Song.Artists,
-                        songChangedEventArgs.Song.MaxTime,
-                        songChangedEventArgs.Song.Album,
-                        SongFormatter.FormatSongAlbum(songChangedEventArgs.Song.Album),
-                        Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
-
-                    if (Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
-                        return;
-
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
-
-                    songChangedEventArgs.Song.State = SongState.SEARCHING_LYRICS;
-                    await this._lyricCollector.CollectLyrics(songRequestObject);
-                    songChangedEventArgs.Song.State = SongState.SEARCHING_FINISHED;
-
-                    this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
+                    if (lyricData.LyricReturnCode == LyricReturnCode.FAILED)
+                        Core.INSTANCE.CacheManager.RemoveDataByRequest(songRequestObject);
                 }
-            });
+            }
+
+            if (songChangedEventArgs.EventType == EventType.POST)
+            {
+                Task.Factory.StartNew(async () =>
+                {
+                    if (DataValidator.ValidateData(songChangedEventArgs) &&
+                        DataValidator.ValidateData(songChangedEventArgs.Song))
+                    {
+                        SongRequestObject songRequestObject = new SongRequestObject(
+                            songChangedEventArgs.Song.Title,
+                            SongFormatter.FormatSongName(songChangedEventArgs.Song.Title),
+                            songChangedEventArgs.Song.Artists,
+                            songChangedEventArgs.Song.MaxTime,
+                            songChangedEventArgs.Song.Album,
+                            SongFormatter.FormatSongAlbum(songChangedEventArgs.Song.Album),
+                            Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
+
+                        if (Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
+                            return;
+
+                        Stopwatch stopwatch = new Stopwatch();
+                        stopwatch.Start();
+
+                        songChangedEventArgs.Song.State = SongState.SEARCHING_LYRICS;
+                        await this._lyricCollector.CollectLyrics(songRequestObject);
+                        songChangedEventArgs.Song.State = SongState.SEARCHING_FINISHED;
+
+                        this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
+                    }
+                });
+            }
         }
 
         public void Dispose()

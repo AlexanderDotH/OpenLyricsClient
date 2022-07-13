@@ -86,7 +86,10 @@ namespace OpenLyricsClient.Backend.Handler.Song
                         if (!DataValidator.ValidateData(song))
                             continue;
 
-                        SongChangedEvent(new SongChangedEventArgs(song, EventType.POST));
+                        if (this._songStageChange.HasSongChanged(song))
+                        {
+                            SongChangedEvent(new SongChangedEventArgs(song, EventType.POST));
+                        }
                     }
                 }
             }
@@ -148,6 +151,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
 
         public void RequestNewSong()
         {
+            this._songStageChange.Reset();
             SongChangedEvent(new SongChangedEventArgs(null, EventType.PRE));
         }
 

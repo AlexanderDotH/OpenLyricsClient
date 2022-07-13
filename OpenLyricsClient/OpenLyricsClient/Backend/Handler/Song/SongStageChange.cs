@@ -70,16 +70,9 @@ namespace OpenLyricsClient.Backend.Handler.Song
             return false;
         }
 
-        public bool HasSongStateChanged(Structure.Song.Song currentSong)
+        public void Reset()
         {
-            double msSection = (int)currentSong.MaxTime * 0.1;
-
-            if (!MathUtils.IsDoubleInRange(currentSong.Time - msSection, currentSong.Time + msSection, currentSong.Time))
-            {
-                return true;
-            }
-
-            return false;
+            this._lastSong = null;
         }
     }
 }

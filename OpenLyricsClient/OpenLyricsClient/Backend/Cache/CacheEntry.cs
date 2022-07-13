@@ -7,6 +7,7 @@ using OpenLyricsClient.Backend.Structure.Song;
 
 namespace OpenLyricsClient.Backend.Cache
 {
+    [Serializable]
     public class CacheEntry
     {
         private long _id;

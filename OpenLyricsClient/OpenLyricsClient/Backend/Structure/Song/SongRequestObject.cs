@@ -1,7 +1,9 @@
-﻿using OpenLyricsClient.Backend.Collector.Lyrics;
+﻿using System;
+using OpenLyricsClient.Backend.Collector.Lyrics;
 
 namespace OpenLyricsClient.Backend.Structure.Song
 {
+    [Serializable]
     public class SongRequestObject
     {
         private string _songName;
