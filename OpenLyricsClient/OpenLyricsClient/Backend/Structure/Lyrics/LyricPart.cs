@@ -1,5 +1,8 @@
-﻿namespace OpenLyricsClient.Backend.Structure.Lyrics
+﻿using System;
+
+namespace OpenLyricsClient.Backend.Structure.Lyrics
 {
+    [Serializable]
     public class LyricPart
     {
         private long _time;

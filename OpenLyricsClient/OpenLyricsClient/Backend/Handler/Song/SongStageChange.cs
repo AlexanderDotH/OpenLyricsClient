@@ -37,6 +37,15 @@ namespace OpenLyricsClient.Backend.Handler.Song
                     return true;
                 }
 
+                if (DataValidator.ValidateData(this._lastSong.Lyrics, currentSong.Lyrics))
+                {
+                    if (this._lastSong.Lyrics != currentSong.Lyrics)
+                    {
+                        this._timeCheck = false;
+                        this._lastSong = currentSong;
+                        return true;
+                    }
+                }
                 
                 short msSection = (short)(currentSong.MaxTime * 0.01);
 
@@ -70,16 +79,15 @@ namespace OpenLyricsClient.Backend.Handler.Song
             return false;
         }
 
-        public bool HasSongStateChanged(Structure.Song.Song currentSong)
+        public void Reset()
         {
-            double msSection = (int)currentSong.MaxTime * 0.1;
+            this._lastSong = null;
+            this._timeCheck = true;
+        }
 
-            if (!MathUtils.IsDoubleInRange(currentSong.Time - msSection, currentSong.Time + msSection, currentSong.Time))
-            {
-                return true;
-            }
-
-            return false;
+        public void Update(Structure.Song.Song song)
+        {
+            this._lastSong = song;
         }
     }
 }

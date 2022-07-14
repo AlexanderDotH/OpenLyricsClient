@@ -1,5 +1,8 @@
-﻿namespace OpenLyricsClient.Backend.Structure.Lyrics
+﻿using System;
+
+namespace OpenLyricsClient.Backend.Structure.Lyrics
 {
+    [Serializable]
     public class LyricsRoll
     {
         private LyricPart _partOne;

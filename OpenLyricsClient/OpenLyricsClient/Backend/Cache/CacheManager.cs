@@ -71,6 +71,12 @@ namespace OpenLyricsClient.Backend.Cache
             }
         }
 
+        public void AddToCache(SongRequestObject songRequestObject, LyricData cacheData)
+        {
+            long id = CalculateID(songRequestObject);
+            this._cache.Add(new CacheEntry(id, cacheData));
+        }
+
         public void ClearCache()
         {
             Core.INSTANCE.SongHandler.RequestNewSong();
@@ -92,6 +98,22 @@ namespace OpenLyricsClient.Backend.Cache
             }
         }
 
+        public void RemoveDataByRequest(SongRequestObject songRequestObject)
+        {
+            for (int i = 0; i < this._cache.Length; i++)
+            {
+                CacheEntry cacheEntry = this._cache.Get(i);
+
+                if (!DataValidator.ValidateData(cacheEntry))
+                    continue;
+
+                if (cacheEntry.Id == CalculateID(songRequestObject))
+                {
+                    this._cache.Remove(cacheEntry);
+                }
+            }
+        }
+
         public LyricData GetDataByRequest(SongRequestObject songRequestObject)
         {
             for (int i = 0; i < this._cache.Length; i++)
@@ -107,7 +129,7 @@ namespace OpenLyricsClient.Backend.Cache
                 }
             }
 
-            return new LyricData(LyricReturnCode.FAILED);
+            return null;
         }
 
         public bool IsInCache(SongRequestObject songRequestObject)
@@ -161,14 +183,14 @@ namespace OpenLyricsClient.Backend.Cache
         {
             return new JsonLyricData()
             {
-                SongName = lyricData.SongMetadata.Name,
-                Duration = lyricData.SongMetadata.MaxTime,
+                SongName = lyricData.SongMetadata == null ? string.Empty : lyricData.SongMetadata.Name,
+                Duration = lyricData.SongMetadata == null ? 0 : lyricData.SongMetadata.MaxTime,
+                Album = lyricData.SongMetadata == null ? string.Empty : lyricData.SongMetadata.Album,
+                Artists = lyricData.SongMetadata == null ? new string[] {""} : lyricData.SongMetadata.Artists,
                 LyricProvider = lyricData.LyricProvider,
                 LyricParts = lyricData.LyricParts,
                 FullLyrics = lyricData.FullLyrics,
-                LyricType = lyricData.LyricType,
-                Album = lyricData.SongMetadata.Album,
-                Artists = lyricData.SongMetadata.Artists
+                LyricType = lyricData.LyricType
             };
         }
     }

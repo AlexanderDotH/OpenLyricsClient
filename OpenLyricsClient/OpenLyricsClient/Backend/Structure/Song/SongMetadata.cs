@@ -1,7 +1,9 @@
-﻿using OpenLyricsClient.Backend.Utils;
+﻿using System;
+using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Structure.Song
 {
+    [Serializable]
     public class SongMetadata
     {
         private string _name;

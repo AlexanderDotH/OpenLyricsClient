@@ -23,7 +23,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
         public TextylCollector()
         {
             this._debugger = new Debugger<TextylCollector>(this);
-            
+
             this._baseUrl = "https://api.textyl.co/api";
         }
 

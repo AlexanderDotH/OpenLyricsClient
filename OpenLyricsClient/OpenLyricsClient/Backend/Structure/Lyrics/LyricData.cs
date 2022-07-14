@@ -8,6 +8,7 @@ using OpenLyricsClient.Backend.Structure.Song;
 
 namespace OpenLyricsClient.Backend.Structure.Lyrics
 {
+    [Serializable]
     public class LyricData
     {
         private LyricReturnCode _lyricReturnCode;

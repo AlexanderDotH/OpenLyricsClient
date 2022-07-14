@@ -49,9 +49,12 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
                 if (!Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
                 {
                     Core.INSTANCE.CacheManager.WriteToCache(songRequestObject, lyricData);
-                    break;
+                    return;
                 }
             }
+
+            if (!Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
+                Core.INSTANCE.CacheManager.AddToCache(songRequestObject, new LyricData());
         }
     }
 }

@@ -83,9 +83,6 @@ namespace OpenLyricsClient.Backend.Handler.Song
                         Structure.Song.Song song = await songProvider.UpdateCurrentPlaybackTrack();
                         //
 
-                        if (!DataValidator.ValidateData(song))
-                            continue;
-
                         SongChangedEvent(new SongChangedEventArgs(song, EventType.POST));
                     }
                 }
@@ -151,6 +148,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
 
         public void RequestNewSong()
         {
+            this._songStageChange.Reset();
             SongChangedEvent(new SongChangedEventArgs(null, EventType.PRE));
         }
 

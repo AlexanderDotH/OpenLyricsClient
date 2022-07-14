@@ -19,7 +19,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
 
         private Debugger<SongProviderChooser> _debugger;
 
-        private readonly object[] _spotifyTypes = new Object[]
+        private readonly object[] _spotifyTypes = new object[]
         {
             EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK,
             EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATESONGDATA,
@@ -27,7 +27,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
             EnumRegisterTypes.SPOTIFY_REFRESHTOKEN
         };
 
-        private readonly object[] _tidalTypes = new Object[]
+        private readonly object[] _tidalTypes = new object[]
         {
             EnumRegisterTypes.TIDALSONGPROVIDER_LOGIN,
             EnumRegisterTypes.TIDALSONGPROVIDER_UPDATECURRENTTRACK,

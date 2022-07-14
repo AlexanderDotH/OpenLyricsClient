@@ -85,31 +85,33 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                     DataValidator.ValidateData(song.Artists) &&
                     DataValidator.ValidateData(song.MaxTime) &&
                     DataValidator.ValidateData(song.Album) &&
+                    DataValidator.ValidateData(song.SongMetadata) &&
                     DataValidator.ValidateData(Core.INSTANCE.SettingManager.Settings.LyricSelectionMode) &&
                     DataValidator.ValidateData(this._lyricCollector) &&
                     DataValidator.ValidateData(Core.INSTANCE.CacheManager))
                 {
-                    if (song.State != SongState.SEARCHING_FINISHED)
-                        continue;
-
-                    SongRequestObject songRequestObject = new SongRequestObject(
-                        song.Title,
-                        SongFormatter.FormatSongName(song.Title),
-                        song.Artists,
-                        song.MaxTime,
-                        song.Album,
-                        SongFormatter.FormatSongAlbum(song.Album),
-                        Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
+                    SongRequestObject songRequestObject = SongRequestObject.FromSong(song);
 
                     LyricData lyricData = Core.INSTANCE.CacheManager.GetDataByRequest(songRequestObject);
 
-                    if (DataValidator.ValidateData(lyricData) && 
-                        lyricData.LyricReturnCode == LyricReturnCode.SUCCESS)
+                    if (!DataValidator.ValidateData(lyricData))
+                        continue;
+
+                    if (DataValidator.ValidateData(lyricData.SongMetadata))
+                    {
+                        if (lyricData.SongMetadata.Name != song.Title &&
+                            lyricData.SongMetadata.Album != song.Album)
+                        {
+                            song.Lyrics = null;
+                        }
+                    }
+
+                    if (lyricData.LyricReturnCode == LyricReturnCode.SUCCESS)
                     {
                         song.Lyrics = lyricData;
                         song.State = SongState.HAS_LYRICS_AVAILABLE;
                     }
-                    else
+                    else if (lyricData.LyricReturnCode == LyricReturnCode.FAILED)
                     {
                         song.Lyrics = null;
                         song.State = SongState.NO_LYRICS_AVAILABLE;
@@ -252,36 +254,43 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
         public void OnSongChanged(Object sender, SongChangedEventArgs songChangedEventArgs)
         {
-            if (songChangedEventArgs.EventType == EventType.PRE)
-                return;
-
-            Task.Factory.StartNew(async () =>
+            if (songChangedEventArgs.EventType == EventType.PRE &&
+                DataValidator.ValidateData(this._songHandler.CurrentSong))
             {
-                if (DataValidator.ValidateData(songChangedEventArgs) && 
-                    DataValidator.ValidateData(songChangedEventArgs.Song))
+                SongRequestObject songRequestObject = SongRequestObject.FromSong(this._songHandler.CurrentSong);
+
+                LyricData lyricData = Core.INSTANCE.CacheManager.GetDataByRequest(songRequestObject);
+
+                if (DataValidator.ValidateData(lyricData))
                 {
-                    SongRequestObject songRequestObject = new SongRequestObject(
-                        songChangedEventArgs.Song.Title,
-                        SongFormatter.FormatSongName(songChangedEventArgs.Song.Title),
-                        songChangedEventArgs.Song.Artists,
-                        songChangedEventArgs.Song.MaxTime,
-                        songChangedEventArgs.Song.Album,
-                        SongFormatter.FormatSongAlbum(songChangedEventArgs.Song.Album),
-                        Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
-
-                    if (Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
-                        return;
-
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
-
-                    songChangedEventArgs.Song.State = SongState.SEARCHING_LYRICS;
-                    await this._lyricCollector.CollectLyrics(songRequestObject);
-                    songChangedEventArgs.Song.State = SongState.SEARCHING_FINISHED;
-
-                    this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
+                    if (lyricData.LyricReturnCode == LyricReturnCode.FAILED)
+                        Core.INSTANCE.CacheManager.RemoveDataByRequest(songRequestObject);
                 }
-            });
+            }
+
+            if (songChangedEventArgs.EventType == EventType.POST)
+            {
+                Task.Factory.StartNew(async () =>
+                {
+                    if (DataValidator.ValidateData(songChangedEventArgs) &&
+                        DataValidator.ValidateData(songChangedEventArgs.Song))
+                    {
+                        SongRequestObject songRequestObject = SongRequestObject.FromSong(songChangedEventArgs.Song);
+
+                        if (Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
+                            return;
+
+                        Stopwatch stopwatch = new Stopwatch();
+                        stopwatch.Start();
+
+                        songChangedEventArgs.Song.State = SongState.SEARCHING_LYRICS;
+                        await this._lyricCollector.CollectLyrics(songRequestObject);
+                        songChangedEventArgs.Song.State = SongState.SEARCHING_FINISHED;
+
+                        this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
+                    }
+                });
+            }
         }
 
         public void Dispose()
