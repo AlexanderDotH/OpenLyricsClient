@@ -116,6 +116,9 @@ namespace OpenLyricsClient.Backend.Handler.Song
                 this._debugger.Write("Progress in sec: " + song.ProgressMs / 1000, DebugType.INFO);
                 this._debugger.Write("Progress in ms: " + song.ProgressMs, DebugType.INFO);
                 this._debugger.Write("----------------------", DebugType.INFO);
+                this._debugger.Write("Diff in ms: " + Math.Abs(song.ProgressMs - song.Time), DebugType.INFO);
+                this._debugger.Write("----------------------", DebugType.INFO);
+
                 this._debugger.Write("Threshold: " + song.TimeThreshold, DebugType.INFO);
                 this._debugger.Write("----------------------", DebugType.INFO);
 

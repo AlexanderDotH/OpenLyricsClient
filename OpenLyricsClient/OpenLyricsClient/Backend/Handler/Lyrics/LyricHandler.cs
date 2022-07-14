@@ -144,7 +144,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                                 if (i == currentSong.Lyrics.LyricParts.Length)
                                 {
                                     currentSong.CurrentLyricPart =
-                                        currentSong.Lyrics.LyricParts[currentSong.Lyrics.LyricParts.Length - 1];
+                                        currentSong.Lyrics.LyricParts[currentSong.Lyrics.LyricParts.Length];
                                     continue;
                                 }
                                 else
