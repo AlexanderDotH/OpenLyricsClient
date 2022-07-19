@@ -211,18 +211,24 @@ namespace OpenLyricsClient.Frontend
                     });
                 }
 
-                if (!DataValidator.ValidateData(song.Lyrics, song.CurrentLyricsRoll))
+                if (!DataValidator.ValidateData(song.Lyrics) &&
+                    !DataValidator.ValidateData(song.Lyrics.LyricType) &&
+                    !DataValidator.ValidateData(song.CurrentLyricsRoll))
                     continue;
 
                 if (song.Lyrics.LyricType == LyricType.INSTRUMENTAL)
                 {
-                    this.firstLine.Text = "";
-                    this.secondLine.Text = "";
-                    this.thirdLine.Text = "♪ Instrumental ♪";
-                    this.fourthLine.Text = "";
-                    this.fifthLine.Text = "";
+                    await this.Dispatcher.InvokeAsync(() =>
+                    {
+                        this.firstLine.Text = "";
+                        this.secondLine.Text = "";
+                        this.thirdLine.Text = "♪ Instrumental ♪";
+                        this.fourthLine.Text = "";
+                        this.fifthLine.Text = "";
+                    });
                 }
-                else if (song.Lyrics.LyricType == LyricType.TEXT)
+
+                if (song.Lyrics.LyricType == LyricType.TEXT)
                 {
                     LyricsRoll lyricsRoll = song.CurrentLyricsRoll;
 
@@ -296,19 +302,19 @@ namespace OpenLyricsClient.Frontend
             if (songchangedevent.EventType != EventType.POST)
                 return;
 
-            //this.Dispatcher.Invoke(() =>
-            //{
-            //    this.firstLine.Text = "";
-            //    this.secondLine.Text = "";
-            //    this.thirdLine.Text = "";
-            //    this.fourthLine.Text = "";
-            //    this.fifthLine.Text = "";
-            //    this.provider.Text = "";
-            //    this.currentTitle.Text = "";
-            //    this.currentArtists.Text = "";
-            //    this.provider.Text = "";
-            //    this.fullLyricText.Text = "";
-            //});
+            this.Dispatcher.Invoke(() =>
+            {
+                this.firstLine.Text = "";
+                this.secondLine.Text = "";
+                this.thirdLine.Text = "";
+                this.fourthLine.Text = "";
+                this.fifthLine.Text = "";
+                this.provider.Text = "";
+                this.currentTitle.Text = "";
+                this.currentArtists.Text = "";
+                this.provider.Text = "";
+                this.fullLyricText.Text = "";
+            });
         }
 
         //private void Button_Click(object sender, RoutedEventArgs e)
