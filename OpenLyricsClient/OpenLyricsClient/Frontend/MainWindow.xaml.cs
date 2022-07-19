@@ -211,9 +211,13 @@ namespace OpenLyricsClient.Frontend
                     });
                 }
 
-                if (!DataValidator.ValidateData(song.Lyrics) &&
-                    !DataValidator.ValidateData(song.Lyrics.LyricType) &&
-                    !DataValidator.ValidateData(song.CurrentLyricsRoll))
+                if (!DataValidator.ValidateData(song.Lyrics))
+                    continue;
+
+                if (!DataValidator.ValidateData(song.Lyrics.LyricType))
+                    continue;
+                
+                if (!DataValidator.ValidateData(song.CurrentLyricsRoll))
                     continue;
 
                 if (song.Lyrics.LyricType == LyricType.INSTRUMENTAL)
