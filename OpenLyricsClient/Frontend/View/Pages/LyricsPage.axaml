@@ -1,0 +1,164 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             xmlns:colorpicker="clr-namespace:AvaloniaColorPicker;assembly=AvaloniaColorPicker"
+             xmlns:model="clr-namespace:OpenLyricsClient.Frontend.Controls.Model"
+             mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
+             Background="{DynamicResource PrimaryBackgroundBrush}"
+             Name="PG_LyricsPage"
+             x:Class="OpenLyricsClient.Frontend.View.Pages.LyricsPage">
+    
+    <UserControl.Styles>
+        
+        <Style Selector="StackPanel">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Width" Duration="0:0:0.2"></DoubleTransition>
+                    <DoubleTransition Property="Height" Duration="0:0:0.2"></DoubleTransition>
+                </Transitions>
+            </Setter>
+        </Style>
+        
+        <Style Selector="TextBlock.progress_text">
+            <Setter Property="Opacity" Value="1"></Setter>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.2"></DoubleTransition>
+                </Transitions>
+            </Setter>
+        </Style>
+        
+        <Style Selector="styles|Card.height_transition">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Height" Duration="0:0:0.2"></DoubleTransition>
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="styles|Card.height_transition:pointerover">
+            <Setter Property="Height" Value="60"></Setter>
+        </Style>
+    </UserControl.Styles>
+    
+    <Grid>
+        <TextBlock 
+            Text="Lyrics"
+            FontWeight="Bold"
+            FontSize="18"
+            HorizontalAlignment="Left"
+            Margin="12, 12, 0, 0"></TextBlock>
+        
+        <styles:Card Name="CRD_SongInfo" 
+            Width="{Binding ElementName=UGRD_SongInfo, Path=Width}"
+            MinWidth="100"
+            Height="{Binding ElementName=STPNL_SongInfo, Path=Height}"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Right"
+            Margin="0,15,15,0"
+            Background="{DynamicResource SecondaryBackgroundBrush}">
+
+            <StackPanel
+                        Name="STPNL_SongInfo"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top">
+                
+                <TextBlock Name="TXT_Title"
+                           Text="SongTitle"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Top"
+                           FontWeight="Bold"
+                           FontSize="20"></TextBlock>
+                
+                <TextBlock Name="TXT_Artists" 
+                           Text="By Artist, Artist, Artist"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Top"
+                           Margin="0,3,0,0"
+                           FontSize="12"></TextBlock>
+            </StackPanel>
+        </styles:Card>
+        
+        <Grid 
+            HorizontalAlignment="Left"
+            Width="500">
+            
+            <Border Width="320"
+                    Height="320"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Margin="0, 0,0,60"
+                    CornerRadius="6">
+                <Border.Background>
+                    <ImageBrush Stretch="UniformToFill" Source="../../../Assets/dummy_cover.jpg"></ImageBrush>
+                </Border.Background>
+            </Border>
+            
+            <TextBlock Text="AlbumName"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Margin="0, 335,0,0"
+                       FontSize="15"></TextBlock>
+        </Grid>
+        
+        <Grid HorizontalAlignment="Stretch"
+              Margin="500,0,0,0">
+            
+            <Panel HorizontalAlignment="Left" 
+                   VerticalAlignment="Center"
+                   Name="PNL_Loading"
+                   Margin="0,0,0,0">
+                  <model:SearchingAnimation></model:SearchingAnimation>
+            </Panel>
+        </Grid>
+        
+        <Grid
+              VerticalAlignment="Bottom"
+              Height="50">
+            
+            <styles:Card Classes="height_transition"
+                         Background="{DynamicResource SecondaryBackgroundBrush}"
+                         VerticalAlignment="Bottom"
+                         Margin="10,0,10,10"
+                         PointerMoved="InputElement_OnPointerMoved"
+                         PointerLeave="InputElement_OnPointerLeave">
+               <Grid>
+                   <ProgressBar Foreground="{DynamicResource PrimaryColorBrush}"
+                                Background="{DynamicResource SecondaryColorBrush}"
+                                BorderBrush="{DynamicResource SecondaryColorBrush}"
+                                VerticalAlignment="Bottom"
+                                Height="5"
+                                Minimum="0"
+                                Maximum="100"
+                                Value="10"
+                                Margin="10, 0,10,10"></ProgressBar>
+                
+                   <TextBlock Classes="progress_text" 
+                              Name="TXT_TimeFrom"
+                              Text="0:00" 
+                              VerticalAlignment="Bottom"
+                              HorizontalAlignment="Left"
+                              Opacity="0"
+                              Margin="12, 0,10,22"
+                              FontSize="14">
+                   </TextBlock>
+                   
+                   <TextBlock Classes="progress_text"
+                              Name="TXT_TimeTo"
+                              Text="10:00" 
+                              VerticalAlignment="Bottom"
+                              HorizontalAlignment="Right"
+                              Opacity="0"
+                              Margin="0, 0,12,22"
+                              FontSize="14"></TextBlock>
+               </Grid>
+                
+            </styles:Card>
+        </Grid>
+        
+        
+    </Grid>
+</UserControl>
