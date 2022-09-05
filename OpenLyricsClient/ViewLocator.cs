@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using System;
-using OpenLyricsClient.Frontend.View.ViewModels;
+using OpenLyricsClient.Models.ViewModels;
 
 namespace OpenLyricsClient
 {
