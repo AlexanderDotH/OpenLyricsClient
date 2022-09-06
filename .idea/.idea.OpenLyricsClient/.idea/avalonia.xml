@@ -7,7 +7,12 @@
         <entry key="OpenLyricsClient/Controls/Model/Fenneg.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
         <entry key="OpenLyricsClient/Controls/View/SearchingAnimation.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
         <entry key="OpenLyricsClient/Controls/View/dwad.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
+        <entry key="OpenLyricsClient/Frontend/Controls/View/ComboBox.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
+        <entry key="OpenLyricsClient/Frontend/Controls/View/Combobox.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
+        <entry key="OpenLyricsClient/Frontend/Controls/View/GroupBox.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
         <entry key="OpenLyricsClient/Frontend/Controls/View/SearchingAnimation.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
+        <entry key="OpenLyricsClient/Frontend/Styles/GroupBox.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
+        <entry key="OpenLyricsClient/Frontend/View/Pages/FullLyricsPage.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
         <entry key="OpenLyricsClient/Frontend/View/Pages/LyricsPage.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
         <entry key="OpenLyricsClient/Frontend/View/Pages/SettingsPage.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
         <entry key="OpenLyricsClient/Frontend/View/Views/MainWindow.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />

@@ -50,6 +50,7 @@ namespace OpenLyricsClient.Backend
             _loaded = false;
 
             _disposed = false;
+            
             this._cancellationTokenSource = new CancellationTokenSource();
 
             this._debugger = new Debugger<Core>(this);
@@ -69,6 +70,8 @@ namespace OpenLyricsClient.Backend
             this._songHandler = new SongHandler();
             this._lyricHandler = new LyricHandler(this._songHandler);
 
+            SpotifyApi.NetCore.Logger.LoggingEnabled = false;
+            
             _loaded = true;
         }
 

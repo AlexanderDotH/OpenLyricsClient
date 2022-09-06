@@ -6,6 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{DynamicResource PrimaryBackgroundBrush}"
              x:Class="OpenLyricsClient.Frontend.View.Pages.FullLyricsPage">
+    
     <Grid>
         
         <TextBlock 
@@ -14,6 +15,7 @@
             FontSize="18"
             HorizontalAlignment="Left"
             Margin="12, 12, 0, 0"></TextBlock>
+        
         
     </Grid>
 </UserControl>

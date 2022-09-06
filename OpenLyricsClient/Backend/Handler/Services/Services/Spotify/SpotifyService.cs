@@ -11,7 +11,6 @@ using DevBaseFormat;
 using DevBaseFormat.Formats.EnvFormat;
 using DevBaseFormat.Structure;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.EnvironmentVariables;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Environment;
 using OpenLyricsClient.Backend.Structure.Enum;

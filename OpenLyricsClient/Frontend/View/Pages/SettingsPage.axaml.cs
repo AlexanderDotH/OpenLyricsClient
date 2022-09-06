@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using OpenLyricsClient.Models.Pages;
 
 namespace OpenLyricsClient.Frontend.View.Pages;
 

@@ -3,9 +3,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:view="clr-namespace:OpenLyricsClient.Models.Pages"
+             xmlns:model="clr-namespace:OpenLyricsClient.Frontend.Controls.Model"
+             xmlns:views="clr-namespace:OpenLyricsClient.Frontend.View.Views"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{DynamicResource PrimaryBackgroundBrush}"
              x:Class="OpenLyricsClient.Frontend.View.Pages.SettingsPage">
+    
+    <Design.DataContext>
+        <view:ApplicationExpanderViewModel/>
+    </Design.DataContext>
     
     <Grid>
         
@@ -16,5 +23,164 @@
             HorizontalAlignment="Left"
             Margin="12, 12, 0, 0"></TextBlock>
         
+        <ScrollViewer 
+            VerticalAlignment="Top"
+            Margin="0,40,0,0"
+            HorizontalScrollBarVisibility="Auto" 
+            VerticalScrollBarVisibility="Auto">
+            
+            <StackPanel VerticalAlignment="Top" 
+                        Margin="20,0,20,0">
+                <Expander Header="Application Settings"
+                          VerticalAlignment="Top"
+                          IsExpanded="True"
+                          Background="{DynamicResource SecondaryBackgroundBrush}"
+                          ExpandDirection="Down">
+                    
+                    <StackPanel>
+                        <model:GroupBox
+                            HeaderBrush="{DynamicResource PrimaryColorBrush}" 
+                            Width="200" 
+                            Height="125" 
+                            Margin="10,0,0,10"
+                            VerticalAlignment="Top" 
+                            HorizontalAlignment="Left"
+                            Background="{DynamicResource PrimaryBackgroundBrush}"
+                            HeaderText="Romanize">
+                            <StackPanel>
+                                <CheckBox Content="Japanese to Romanji"
+                                          Background="{DynamicResource PrimaryColorBrush}"
+                                          IsChecked="True"
+                                          Margin="10,0,0,0"></CheckBox>
+                                
+                                <CheckBox Content="Korean to Romanji"
+                                          Background="{DynamicResource PrimaryColorBrush}"
+                                          IsChecked="True"
+                                          Margin="10,5,0,0"></CheckBox>
+                                
+                                <CheckBox Content="Russia to Latin"
+                                          Background="{DynamicResource PrimaryColorBrush}"
+                                          IsChecked="True"
+                                          Margin="10,5,0,0"></CheckBox>
+                            </StackPanel>
+                        </model:GroupBox>
+                        
+                        <model:GroupBox
+                            HeaderBrush="{DynamicResource PrimaryColorBrush}" 
+                            Width="200" 
+                            Height="105" 
+                            Margin="10,0,0,10"
+                            VerticalAlignment="Top" 
+                            HorizontalAlignment="Left"
+                            Background="{DynamicResource PrimaryBackgroundBrush}"
+                            HeaderText="Lyrics Selection">
+                            <StackPanel>
+                                <ComboBox Classes="Custom"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center"
+                                          PlaceholderText="Selection Mode"
+                                          Width="180"
+                                          Background="{DynamicResource SecondaryBackgroundBrush}"
+                                          Foreground="White"
+                                          Margin="10,5,0,0"
+                                          >
+                                    <ComboBoxItem Content="Quality"></ComboBoxItem>
+                                    <ComboBoxItem Content="Performance"></ComboBoxItem>
+                                </ComboBox>
+                            </StackPanel>
+                        </model:GroupBox>
+                    </StackPanel>
+                    
+                    
+                </Expander>
+                
+                <Expander Header="Connection Settings"
+                          VerticalAlignment="Top"
+                          IsExpanded="True"
+                          Background="{DynamicResource SecondaryBackgroundBrush}"
+                          ExpandDirection="Down">
+                    
+                    <StackPanel>
+                        <model:GroupBox
+                            HeaderBrush="#1ED760" 
+                            Width="200" 
+                            Height="165" 
+                            Margin="10,0,0,10"
+                            VerticalAlignment="Top" 
+                            HorizontalAlignment="Left"
+                            Background="{DynamicResource PrimaryBackgroundBrush}"
+                            HeaderText="Spotify">
+                            <Grid>
+                                <TextBlock Text="Connect with Spotify"
+                                           FontSize="14"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top"
+                                           Margin="0,10,0,0"/>
+                                <Button Width="180" 
+                                        Height="30" 
+                                        Background="#1ED760"
+                                        Foreground="{DynamicResource PrimaryFontColorBrush}"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        Margin="0,45,0,0"
+                                        Content="Connect"/>
+                                <Button Width="180" 
+                                        Height="30" 
+                                        Background="#FF4040"
+                                        Foreground="{DynamicResource PrimaryFontColorBrush}"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        Margin="0,82,0,0"
+                                        Content="Disconnect"/>
+                               
+                            </Grid>
+                        </model:GroupBox>
+                    </StackPanel>
+                    
+                    
+                </Expander>
+                
+                <Expander Header="Advanced Settings"
+                          VerticalAlignment="Top"
+                          IsExpanded="True"
+                          Background="{DynamicResource SecondaryBackgroundBrush}"
+                          ExpandDirection="Down">
+                    
+                    <StackPanel>
+                        <model:GroupBox
+                            HeaderBrush="{DynamicResource PrimaryColorBrush}" 
+                            Width="200" 
+                            Height="127" 
+                            Margin="10,0,0,10"
+                            VerticalAlignment="Top" 
+                            HorizontalAlignment="Left"
+                            Background="{DynamicResource PrimaryBackgroundBrush}"
+                            HeaderText="Advanced">
+                            <Grid>
+                                <Button Width="180" 
+                                        Height="30" 
+                                        Background="{DynamicResource PrimaryColorBrush}"
+                                        Foreground="{DynamicResource PrimaryFontColorBrush}"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        Margin="0,5,0,0"
+                                        Content="Clear cache"/>
+                                <Button Width="180" 
+                                        Height="30" 
+                                        Background="{DynamicResource PrimaryColorBrush}"
+                                        Foreground="{DynamicResource PrimaryFontColorBrush}"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        Margin="0,42,0,0"
+                                        Content="Refresh Lyrics"/>
+                               
+                            </Grid>
+                        </model:GroupBox>
+                    </StackPanel>
+                    
+                    
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

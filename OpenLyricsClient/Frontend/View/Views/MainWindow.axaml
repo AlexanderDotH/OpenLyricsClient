@@ -6,7 +6,7 @@
         xmlns:icon="using:Material.Icons.Avalonia"
         xmlns:pages="clr-namespace:OpenLyricsClient.Frontend.View.Pages"
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
-        xmlns:viewModels="clr-namespace:OpenLyricsClient.Models.ViewModels"
+        xmlns:views="clr-namespace:OpenLyricsClient.Models.Views"
         mc:Ignorable="d"
         Width="1500"
         Height="800"
@@ -17,7 +17,7 @@
         Title="OpenLyricsClient">
 
     <Design.DataContext>
-        <viewModels:MainWindowViewModel/>
+        <views:MainWindowViewModel/>
     </Design.DataContext>
 
     <Window.Styles>
