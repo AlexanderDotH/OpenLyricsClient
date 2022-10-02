@@ -221,7 +221,7 @@
                      Height="40"
                      VerticalAlignment="Top"
                      HorizontalAlignment="Right"
-                     Margin="0,10,105,0"
+                     Margin="0,10,100,0"
                      Background="{DynamicResource SecondaryBackgroundBrush}">
             <Grid Margin="0,0,0,0">
                 <styles:FloatingButton Background="#0389ff"
