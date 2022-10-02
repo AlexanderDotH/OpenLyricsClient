@@ -12,4 +12,9 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003APathGeometry_002Ecs_002Fl_003AC_0021_003FUsers_003FAlex_003FAppData_003FRoaming_003FJetBrains_003FRider2022_002E2_003Fresharper_002Dhost_003FSourcesCache_003Fe5c8fd4a3e746e47bb6fd5b8658ccb86d232f8c59b3e0b4bda52ba5e618d9_003FPathGeometry_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AAvaloniaObject_002Ecs_002Fl_003AC_0021_003FUsers_003FAlex_003FAppData_003FRoaming_003FJetBrains_003FRider2022_002E2_003Fresharper_002Dhost_003FSourcesCache_003Fcb2f03d4479eceb38bf4e4ea81f6de2c8c4b571d86b54a7cbf37f2253455e_003FAvaloniaObject_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003APolylineGeometry_002Ecs_002Fl_003AC_0021_003FUsers_003FAlex_003FAppData_003FRoaming_003FJetBrains_003FRider2022_002E2_003Fresharper_002Dhost_003FSourcesCache_003F8447d1847abf7c48e04b18f16c33739ceccd72cf54d29344ab26155716a4bb_003FPolylineGeometry_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
-	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer /&gt;</s:String></wpf:ResourceDictionary>
+	<s:String x:Key="/Default/CodeInspection/PencilsConfiguration/ActualSeverity/@EntryValue">INFO</s:String>
+	<s:String x:Key="/Default/CodeInspection/PencilsConfiguration/FiltersState/=CodeStyle/@EntryIndexedValue">On</s:String>
+	<s:String x:Key="/Default/CodeInspection/PencilsConfiguration/FiltersState/=NamingFilter/@EntryIndexedValue">On</s:String>
+	<s:String x:Key="/Default/CodeInspection/PencilsConfiguration/FiltersState/=SpellingFilter/@EntryIndexedValue">On</s:String>
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer /&gt;</s:String>
+	</wpf:ResourceDictionary>

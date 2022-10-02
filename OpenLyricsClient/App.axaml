@@ -19,6 +19,8 @@
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/Controls/View/SearchingAnimation.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/Controls/View/GroupBox.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/Controls/View/ComboBox.axaml"/>
+        <StyleInclude Source="avares://OpenLyricsClient/Frontend/Controls/View/ScrollView.axaml"/>
+        <StyleInclude Source="avares://OpenLyricsClient/Frontend/Styles/Grid.axaml"/>
 
         <Style>
             <Style.Resources>

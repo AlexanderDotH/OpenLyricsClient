@@ -1,6 +1,10 @@
+using System.Runtime.InteropServices;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using CefNet.WinApi;
 
 namespace OpenLyricsClient.Frontend.View.Views
 {
@@ -84,6 +88,11 @@ namespace OpenLyricsClient.Frontend.View.Views
             this.BTN_LyricsButton.Foreground = App.Current.FindResource("SecondaryFontColorBrush") as SolidColorBrush;
             this.BTN_FullTextButton.Foreground = App.Current.FindResource("SecondaryFontColorBrush") as SolidColorBrush;
             this.BTN_SettingsButton.Foreground = App.Current.FindResource("SecondaryFontColorBrush") as SolidColorBrush;
+        }
+
+        private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            this.BeginMoveDrag(e);
         }
     }
 }

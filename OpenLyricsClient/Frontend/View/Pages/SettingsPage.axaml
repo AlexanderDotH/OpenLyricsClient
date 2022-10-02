@@ -14,8 +14,7 @@
         <view:ApplicationExpanderViewModel/>
     </Design.DataContext>
     
-    <Grid>
-        
+    <Grid Name="undragable">
         <TextBlock 
             Text="Settings"
             FontWeight="Bold"
@@ -73,6 +72,7 @@
                             VerticalAlignment="Top" 
                             HorizontalAlignment="Left"
                             Background="{DynamicResource PrimaryBackgroundBrush}"
+
                             HeaderText="Lyrics Selection">
                             <StackPanel>
                                 <ComboBox Classes="Custom"
