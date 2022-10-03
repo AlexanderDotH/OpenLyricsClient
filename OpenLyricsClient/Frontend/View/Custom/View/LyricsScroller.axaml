@@ -6,7 +6,7 @@
              x:Class="OpenLyricsClient.Frontend.View.Custom.View.LyricsScroller">
     
     <Grid>
-        <ScrollViewer Name="CTRL_Viewer">
+        <ScrollViewer Name="CTRL_Viewer" ScrollChanged="CTRL_Viewer_OnScrollChanged" >
             <ItemsRepeater Name="CTRL_Repeater" Items="{Binding Lyrics}">
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate>

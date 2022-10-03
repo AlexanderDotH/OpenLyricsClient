@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
@@ -26,7 +27,8 @@ public partial class LyricsPage : UserControl
     private LyricsScroller _cstmLyricsDisplay;
     
     private TaskSuspensionToken _displayLyricsSuspensionToken;
-    
+    private TaskSuspensionToken _syncLyricsSuspensionToken;
+
     public LyricsPage()
     {
         InitializeComponent();
@@ -35,35 +37,17 @@ public partial class LyricsPage : UserControl
         this._txtTimeTo = this.Get<TextBlock>(nameof(TXT_TimeTo));
         this._cstmLyricsDisplay = this.Get<LyricsScroller>(nameof(LRC_Display));
 
-        LyricData lyrics = new LyricData(LyricReturnCode.SUCCESS);
-        lyrics.LyricParts = new LyricPart[]
-        {
-            new LyricPart(0, "Ich never nick nick up"),
-            new LyricPart(1, "Nickgers in der nacht"),
-            new LyricPart(2, "Schau, was hab ich mit den nicks gemacht"),
-            new LyricPart(3, "Denn nicks sind immer nackt"),
-            new LyricPart(4, "Yeah, Yeah, Yeah"),
-            new LyricPart(5, "Yeah, Yeah, Yeah"),
-            new LyricPart(6, "..."),
-            new LyricPart(7, "Ich habe nicks im Keller"),
-            new LyricPart(8, "Der eine ist baumfäller"),
-            new LyricPart(9, "Der andere ist fallensteller"),
-            new LyricPart(10, "Der andere ist ein teller"),
-            new LyricPart(11, "..."),
-            new LyricPart(12, "Yeah, Yeah, Yeah"),
-            new LyricPart(13, "Yeah, Yeah, Yeah"),
-            new LyricPart(14, "..."),
-            new LyricPart(15, "Turn up"),
-            new LyricPart(16, "Nick"),
-        };
-
-
         Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
         
         Core.INSTANCE.TaskRegister.RegisterTask(
             out _displayLyricsSuspensionToken, 
             new Task(async () => await DisplayLyricsTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
             EnumRegisterTypes.SHOW_LYRICS);
+        
+        Core.INSTANCE.TaskRegister.RegisterTask(
+            out _syncLyricsSuspensionToken, 
+            new Task(async () => await SyncLyricsTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
+            EnumRegisterTypes.SYNC_LYRICS);
     }
 
     private async Task DisplayLyricsTask()
@@ -88,6 +72,31 @@ public partial class LyricsPage : UserControl
         }
     }
     
+    private async Task SyncLyricsTask()
+    {
+        while (!Core.IsDisposed())
+        {
+            await Task.Delay(1);
+            await this._syncLyricsSuspensionToken.WaitForRelease();
+
+            Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
+            
+            if (!DataValidator.ValidateData(currentSong)) 
+                continue;
+            
+            if (!DataValidator.ValidateData(currentSong.Lyrics))
+                continue;
+            
+            if (!DataValidator.ValidateData(currentSong.CurrentLyricPart))
+                continue;
+
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                this._cstmLyricsDisplay.CurrentLyricPart = currentSong.CurrentLyricPart;
+            });
+        }
+    }
+    
     private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
     {
         if (songchangedevent.EventType != EventType.POST)
@@ -98,7 +107,6 @@ public partial class LyricsPage : UserControl
             this._cstmLyricsDisplay.Reset();
         });
     }
-
 
     private void InitializeComponent()
     {
@@ -115,13 +123,6 @@ public partial class LyricsPage : UserControl
     {
         this._txtTimeFrom.Opacity = 0;
         this._txtTimeTo.Opacity = 0;
-    }
-    int currentLine = 0;
-
-    private void Button_OnClick(object? sender, RoutedEventArgs e)
-    {
-        this.Get<LyricsScroller>(nameof(LRC_Display)).SelectedLine = currentLine;
-        currentLine++;
     }
 
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)

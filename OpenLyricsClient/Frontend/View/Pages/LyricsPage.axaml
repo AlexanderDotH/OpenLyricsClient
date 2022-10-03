@@ -102,9 +102,6 @@
                        HorizontalAlignment="Center"
                        Margin="0, 335,0,0"
                        FontSize="15"></TextBlock>
-            
-            <Button Width="100" Height="20" Click="Button_OnClick" VerticalAlignment="Center" HorizontalAlignment="Center"></Button>
-
         </Grid>
         <Grid 
               Height="320"
