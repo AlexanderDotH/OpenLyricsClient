@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Structure.Lyrics
 {
@@ -7,24 +8,31 @@ namespace OpenLyricsClient.Backend.Structure.Lyrics
     {
         private long _time;
         private string _part;
+        private long lyricID;
 
         public LyricPart(long time, string part)
         {
-            _time = time;
-            _part = part;
+            this._time = time;
+            this._part = part;
+
+            this.lyricID = LyricsUtils.CalculateID(time, part);
         }
 
         public long Time
         {
-            get => _time;
-            set => _time = value;
+            get => this._time;
+            set => this._time = value;
         }
 
         public string Part
         {
-            get => _part;
-            set => _part = value;
+            get => this._part;
+            set => this._part = value;
         }
 
+        public long LyricId
+        {
+            get => lyricID;
+        }
     }
 }

@@ -1,11 +1,21 @@
-﻿using Avalonia.Controls;
+﻿using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using CefNet.CApi;
+using DevBase.Async.Task;
+using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Events;
+using OpenLyricsClient.Backend.Events.EventArgs;
+using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Frontend.View.Custom;
+using OpenLyricsClient.Backend.Structure.Song;
+using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Frontend.View.Custom.View;
+using OpenLyricsClient.Frontend.View.Views;
 
 namespace OpenLyricsClient.Frontend.View.Pages;
 
@@ -13,6 +23,9 @@ public partial class LyricsPage : UserControl
 {
     private TextBlock _txtTimeFrom;
     private TextBlock _txtTimeTo;
+    private LyricsScroller _cstmLyricsDisplay;
+    
+    private TaskSuspensionToken _displayLyricsSuspensionToken;
     
     public LyricsPage()
     {
@@ -20,6 +33,7 @@ public partial class LyricsPage : UserControl
 
         this._txtTimeFrom = this.Get<TextBlock>(nameof(TXT_TimeFrom));
         this._txtTimeTo = this.Get<TextBlock>(nameof(TXT_TimeTo));
+        this._cstmLyricsDisplay = this.Get<LyricsScroller>(nameof(LRC_Display));
 
         LyricData lyrics = new LyricData(LyricReturnCode.SUCCESS);
         lyrics.LyricParts = new LyricPart[]
@@ -43,9 +57,48 @@ public partial class LyricsPage : UserControl
             new LyricPart(16, "Nick"),
         };
 
-        this.Get<LyricsDisplay>(nameof(LRC_Display)).LyricData = lyrics;
 
+        Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
+        
+        Core.INSTANCE.TaskRegister.RegisterTask(
+            out _displayLyricsSuspensionToken, 
+            new Task(async () => await DisplayLyricsTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
+            EnumRegisterTypes.SHOW_LYRICS);
     }
+
+    private async Task DisplayLyricsTask()
+    {
+        while (!Core.IsDisposed())
+        {
+            await Task.Delay(1);
+            await this._displayLyricsSuspensionToken.WaitForRelease();
+
+            Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
+            
+            if (!DataValidator.ValidateData(currentSong)) 
+                continue;
+            
+            if (!DataValidator.ValidateData(currentSong.Lyrics))
+                continue;
+
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                this._cstmLyricsDisplay.LyricData = currentSong.Lyrics;
+            });
+        }
+    }
+    
+    private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
+    {
+        if (songchangedevent.EventType != EventType.POST)
+            return;
+
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            this._cstmLyricsDisplay.Reset();
+        });
+    }
+
 
     private void InitializeComponent()
     {
@@ -63,9 +116,16 @@ public partial class LyricsPage : UserControl
         this._txtTimeFrom.Opacity = 0;
         this._txtTimeTo.Opacity = 0;
     }
+    int currentLine = 0;
 
     private void Button_OnClick(object? sender, RoutedEventArgs e)
     {
-        this.Get<LyricsDisplay>(nameof(LRC_Display)).SelectedLine++;
+        this.Get<LyricsScroller>(nameof(LRC_Display)).SelectedLine = currentLine;
+        currentLine++;
+    }
+
+    private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        MainWindow.Instance.BeginMoveDrag(e);
     }
 }

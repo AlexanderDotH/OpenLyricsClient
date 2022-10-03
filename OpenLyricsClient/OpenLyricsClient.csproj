@@ -63,6 +63,10 @@
       <DependentUpon>FullLyricsPage.axaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Frontend\View\Custom\View\LyricsScroller.axaml.cs">
+      <DependentUpon>LyricsScroller.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DevBase">

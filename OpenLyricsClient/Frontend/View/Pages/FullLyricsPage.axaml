@@ -7,7 +7,7 @@
              Background="{DynamicResource PrimaryBackgroundBrush}"
              x:Class="OpenLyricsClient.Frontend.View.Pages.FullLyricsPage">
     
-    <Grid>
+    <Grid PointerPressed="InputElement_OnPointerPressed">
         
         <TextBlock 
             Text="Full Text"

@@ -28,7 +28,7 @@
         </Style>
     </Window.Styles>
     
-    <Grid>
+    <Grid PointerPressed="InputElement_OnPointerPressed">
         <DockPanel HorizontalAlignment="Left"
                    Width="55">
             <StackPanel
@@ -106,7 +106,8 @@
                 
             </StackPanel>
             
-            <DockPanel Classes="noshadow" 
+            <DockPanel PointerPressed="InputElement_OnPointerPressed"
+                       Classes="noshadow" 
                        VerticalAlignment="Bottom" 
                        HorizontalAlignment="Right"
                        Background="{DynamicResource SecondaryBackgroundBrush}"
@@ -170,14 +171,6 @@
 
             </Carousel>
         </DockPanel>
-        
-        <Grid 
-            Height="60" 
-            Background="Transparent"
-            Margin="55,0,0,0"
-            IsHitTestVisible="True"
-            VerticalAlignment="Top"
-            PointerPressed="InputElement_OnPointerPressed"/>
         
         <styles:Card Name="CRD_WindowDecoration" 
                      Width="85"

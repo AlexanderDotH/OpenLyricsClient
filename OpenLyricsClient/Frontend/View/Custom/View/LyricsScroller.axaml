@@ -1,0 +1,31 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OpenLyricsClient.Frontend.View.Custom.View.LyricsScroller">
+    
+    <Grid>
+        <ScrollViewer Name="CTRL_Viewer">
+            <ItemsRepeater Name="CTRL_Repeater" Items="{Binding Lyrics}">
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Part}"
+                                   TextWrapping="Wrap"
+                                   FontWeight="Bold"
+                                   FontSize="30"
+                                   Foreground="#646464">
+                            <TextBlock.Transitions>
+                                <Transitions>
+                                    <BrushTransition Property="Foreground"
+                                                     Easing="CircularEaseOut"
+                                                     Duration="0:0:0.500"></BrushTransition>
+                                </Transitions>
+                            </TextBlock.Transitions>
+                        </TextBlock>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

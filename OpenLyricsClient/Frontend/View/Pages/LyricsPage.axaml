@@ -6,7 +6,7 @@
              xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
              xmlns:colorpicker="clr-namespace:AvaloniaColorPicker;assembly=AvaloniaColorPicker"
              xmlns:model="clr-namespace:OpenLyricsClient.Frontend.Controls.Model"
-             xmlns:custom="clr-namespace:OpenLyricsClient.Frontend.View.Custom"
+             xmlns:custom="clr-namespace:OpenLyricsClient.Frontend.View.Custom.View"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{DynamicResource PrimaryBackgroundBrush}"
              Name="PG_LyricsPage"
@@ -45,7 +45,7 @@
         </Style>
     </UserControl.Styles>
     
-    <Grid >
+    <Grid PointerPressed="InputElement_OnPointerPressed">
         <TextBlock 
             Text="Lyrics"
             FontWeight="Bold"
@@ -111,9 +111,8 @@
               VerticalAlignment="Center"
               Margin="500,0,0,60">
             
-            <custom:LyricsDisplay 
+            <custom:LyricsScroller 
                 Name="LRC_Display" 
-                ScrollSpeed="3"
                 SelectedLineBrush="#FFFFFF" 
                 UnSelectedLineBrush="#646464"/>
             

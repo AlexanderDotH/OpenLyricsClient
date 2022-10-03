@@ -11,6 +11,10 @@ namespace OpenLyricsClient.Frontend.View.Views
     public partial class MainWindow : Window
     {
 
+        private static MainWindow INSTANCE;
+
+        private bool _windowDragable;
+        
         //Pages
         private Carousel _pageSelector;
 
@@ -22,6 +26,9 @@ namespace OpenLyricsClient.Frontend.View.Views
         public MainWindow()
         {
             InitializeComponent();
+
+            INSTANCE = this;
+            this._windowDragable = true;
 
             this._pageSelector = this.Get<Carousel>(nameof(PageSelection));
             
@@ -59,18 +66,21 @@ namespace OpenLyricsClient.Frontend.View.Views
                 {
                     UnselectAll();
                     SelectButton(this.BTN_LyricsButton);
+                    this._windowDragable = true;
                     break;
                 }
                 case 1:
                 {
                     UnselectAll();
                     SelectButton(this.BTN_FullTextButton);
+                    this._windowDragable = true;
                     break;
                 }
                 case 2:
                 {
                     UnselectAll();
                     SelectButton(this.BTN_SettingsButton);
+                    this._windowDragable = false;
                     break;
                 }
             }
@@ -90,9 +100,15 @@ namespace OpenLyricsClient.Frontend.View.Views
             this.BTN_SettingsButton.Foreground = App.Current.FindResource("SecondaryFontColorBrush") as SolidColorBrush;
         }
 
+        public static MainWindow Instance
+        {
+            get => INSTANCE;
+        }
+        
         private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
         {
-            this.BeginMoveDrag(e);
+            if (this._windowDragable)
+                this.BeginMoveDrag(e);
         }
     }
 }
