@@ -41,7 +41,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Tidal
 
             this._tokenSource = new CancellationTokenSource();
 
-            Core.INSTANCE.TaskRegister.RegisterTask(
+            Core.INSTANCE.TaskRegister.Register(
                 out this._findAddressSuspensionToken, 
                 new Task(async t => await Listener(), 
                     Core.INSTANCE.CancellationTokenSource.Token), EnumRegisterTypes.TIDALPROGRESSLISTENER_FINDADDRESS);

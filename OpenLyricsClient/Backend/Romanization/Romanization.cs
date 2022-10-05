@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using HangeulRomanizer;
 using Kawazu;
+using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
 using Romanization;
 
@@ -76,6 +77,21 @@ namespace OpenLyricsClient.Backend.Romanization
             for (int i = 0; i < texts.Length; i++)
             {
                 romanized[i] = await this.Romanize(texts[i]);
+            }
+
+            return romanized;
+        }
+        
+        public async Task<LyricPart[]> Romanize(LyricPart[] parts)
+        {
+            if (!DataValidator.ValidateData(parts))
+                return null;
+
+            LyricPart[] romanized = new LyricPart[parts.Length];
+
+            for (int i = 0; i < parts.Length; i++)
+            {
+                romanized[i] = new LyricPart(parts[i].Time, await this.Romanize(parts[i].Part));
             }
 
             return romanized;

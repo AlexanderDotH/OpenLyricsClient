@@ -14,24 +14,8 @@ namespace OpenLyricsClient
         [STAThread]
         public static void Main(string[] args)
         {
-            try
-            {
-                new Core();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            
-            try
-            {
-                BuildAvaloniaApp()
-                    .StartWithClassicDesktopLifetime(args);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            BuildAvaloniaApp()
+                .StartWithClassicDesktopLifetime(args);
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.
@@ -39,6 +23,7 @@ namespace OpenLyricsClient
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .LogToTrace()
+                .AfterSetup(t => new Core())
                 .UseReactiveUI();
     }
 }

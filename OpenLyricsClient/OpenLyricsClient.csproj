@@ -9,7 +9,6 @@
   </PropertyGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
-    <Folder Include="Backend" />
     <None Remove=".gitignore" />
   </ItemGroup>
   <ItemGroup>
@@ -26,6 +25,7 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.18" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
+    <PackageReference Include="Avalonia.X11" Version="0.10.18" />
     <PackageReference Include="AvaloniaColorPicker" Version="1.3.4" />
     <PackageReference Include="CefNet.Avalonia" Version="105.3.22248.142" />
     <PackageReference Include="Kawazu" Version="1.1.4" />
@@ -90,5 +90,11 @@
     <Reference Include="SpotifyApi.NetCore">
       <HintPath>..\Libraries\SpotifyApi.NetCore.dll</HintPath>
     </Reference>
+    <Reference Include="XWindowManager">
+      <HintPath>..\Libraries\XWindowManager.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Frontend\View\Pages\Model" />
   </ItemGroup>
 </Project>

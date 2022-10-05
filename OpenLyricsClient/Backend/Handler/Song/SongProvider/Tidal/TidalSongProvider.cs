@@ -53,17 +53,17 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Tidal
 
             this._startTime = 0;
 
-            Core.INSTANCE.TaskRegister.RegisterTask(
+            Core.INSTANCE.TaskRegister.Register(
                 out _loginTaskSuspensionToken,
                 new Task(async () => await LoginTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
                 EnumRegisterTypes.TIDALSONGPROVIDER_LOGIN);
 
-            Core.INSTANCE.TaskRegister.RegisterTask(
+            Core.INSTANCE.TaskRegister.Register(
                 out _updateCurrentTrackSuspensionToken,
                 new Task(async () => await UpdateCurrentTrack(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.TIDALSONGPROVIDER_UPDATECURRENTTRACK);
 
-            Core.INSTANCE.TaskRegister.RegisterTask(
+            Core.INSTANCE.TaskRegister.Register(
                 out this._updateTimeSuspensionToken,
                 new Task(async () => await UpdateTimeTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.TIDALSONGPROVIDER_UPDATETIME);

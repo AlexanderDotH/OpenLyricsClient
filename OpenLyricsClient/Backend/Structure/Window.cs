@@ -2,7 +2,6 @@
 {
     public class Window
     {
-
         private string _windowTitle;
         private string _processName;
 

@@ -36,17 +36,17 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
 
             this._service = Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
 
-            Core.INSTANCE.TaskRegister.RegisterTask(
+            Core.INSTANCE.TaskRegister.Register(
                 out _updatePlaybackSuspensionToken,
                 new Task(async () => await UpdatePlaybackTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK);
 
-            Core.INSTANCE.TaskRegister.RegisterTask(
+            Core.INSTANCE.TaskRegister.Register(
                 out _updateSongDataSuspensionToken,
                 new Task(async () => await UpdateSongDataTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATESONGDATA);
 
-            Core.INSTANCE.TaskRegister.RegisterTask(
+            Core.INSTANCE.TaskRegister.Register(
                 out _timeSyncSuspensionToken,
                 new Task(async () => await TimeSyncTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC);

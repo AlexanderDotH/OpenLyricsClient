@@ -41,14 +41,14 @@ namespace OpenLyricsClient.Backend.Handler.Song
 
             this._songStageChange = new SongStageChange();
 
-            Core.INSTANCE.TaskRegister.RegisterTask(
+            Core.INSTANCE.TaskRegister.Register(
                 out _manageCurrentSongSuspensionToken,
                 new Task(async () => await ManageCurrentSong(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
                 EnumRegisterTypes.SONGHANDLER_MANAGECURRENTSONG);
 
             if (EnvironmentUtils.IsDebugLogEnabled())
             {
-                Core.INSTANCE.TaskRegister.RegisterTask(
+                Core.INSTANCE.TaskRegister.Register(
                     out _songInformationSuspensionToken,
                     new Task(async () => await SongInformation(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                     EnumRegisterTypes.SONGHANDLER_SONGINFORMATION);

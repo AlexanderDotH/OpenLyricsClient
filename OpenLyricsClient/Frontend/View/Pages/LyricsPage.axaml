@@ -103,7 +103,7 @@
                        Margin="0, 335,0,0"
                        FontSize="15"></TextBlock>
         </Grid>
-        <Grid 
+        <Grid Name="GRD_Presenter"
               Height="320"
               VerticalAlignment="Center"
               Margin="500,0,0,60">
@@ -111,7 +111,8 @@
             <custom:LyricsScroller 
                 Name="LRC_Display" 
                 SelectedLineBrush="#FFFFFF" 
-                UnSelectedLineBrush="#646464"/>
+                UnSelectedLineBrush="#646464"
+                ItemMargin="0,0,0,10"/>
             
             <!--<Panel HorizontalAlignment="Left" 
                    VerticalAlignment="Center"

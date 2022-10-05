@@ -33,7 +33,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Tidal
 
             this._tidalClient = new TidalClient();
 
-            Core.INSTANCE.TaskRegister.RegisterTask(
+            Core.INSTANCE.TaskRegister.Register(
                 out _refreshTokenSuspensionToken,
                 new Task(async () => await RefreshToken(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.None), 
                 EnumRegisterTypes.TIDAL_REFRESHTOKEN);

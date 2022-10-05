@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Avalonia;
 using DevBase.Generic;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Utils;
@@ -39,16 +40,24 @@ namespace OpenLyricsClient.Backend.Helper
             }
 
             IntPtr pointer = IntPtr.Zero;
-
+            Window w = null;
+            
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 pointer = WinAPI.GetForegroundWindow();
+                w = WindowUtils.GetWindowByPointer(pointer, processName);
             }
 
-            Window w = WindowUtils.GetWindowByPointer(pointer, processName);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                w = Utils.X11.GetFocusedWindow();
+            }
+            
+            if (!DataValidator.ValidateData(w))
+                return false;
 
             if (w != null) {
-                if (w.ProcessName == processName)
+                if (w.ProcessName.ToLower().Equals(processName.ToLower()))
                 {
                     this._lastWindow = w;
                     return true;

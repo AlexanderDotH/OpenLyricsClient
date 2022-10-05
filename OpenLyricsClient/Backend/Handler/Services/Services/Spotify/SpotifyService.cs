@@ -50,7 +50,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             HttpClient httpClient = new HttpClient();
             this._userAccountsService = new UserAccountsService(httpClient, _configurationManager);
 
-            Core.INSTANCE.TaskRegister.RegisterTask(
+            Core.INSTANCE.TaskRegister.Register(
                 out _refreshTokenSuspensionToken,
                 new Task(async () => await RefreshToken(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.None),
                 EnumRegisterTypes.SPOTIFY_REFRESHTOKEN);

@@ -41,7 +41,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
             this._debugger = new Debugger<SongProviderChooser>(this);
             this._currentSongProvider = EnumSongProvider.NONE;
 
-            Core.INSTANCE.TaskRegister.RegisterTask(
+            Core.INSTANCE.TaskRegister.Register(
                 out _taskSuspensionToken, 
                 new Task(async () => await SongProviderChooserTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
                 EnumRegisterTypes.SONG_PROVIDER_CHOOSER);

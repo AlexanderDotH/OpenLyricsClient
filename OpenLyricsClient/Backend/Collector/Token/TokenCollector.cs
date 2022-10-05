@@ -23,7 +23,7 @@ namespace OpenLyricsClient.Backend.Collector.Token
             this._tokenCollector = new GenericList<ITokenCollector>();
             this._tokenCollector.Add(new MusixmatchTokenCollector());
 
-            Core.INSTANCE.TaskRegister.RegisterTask(
+            Core.INSTANCE.TaskRegister.Register(
                 out _collectTokenSuspensionToken,
                 new Task(async () => await this.TokenCollectionTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.COLLECT_TOKENS);

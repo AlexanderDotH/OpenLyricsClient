@@ -49,17 +49,17 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
             this._cancellationTokenSource = new CancellationTokenSource();
 
-            Core.INSTANCE.TaskRegister.RegisterTask(
+            Core.INSTANCE.TaskRegister.Register(
                 out _manageLyricSuspensionToken, 
                 new Task(async () => await ManageLyrics(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
                 EnumRegisterTypes.MANAGE_LYRICS);
 
-            Core.INSTANCE.TaskRegister.RegisterTask(
+            Core.INSTANCE.TaskRegister.Register(
                 out _manageLyricsRollSuspensionToken,
                 new Task(async () => await ManageLyricsRoll(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.MANAGE_LYRICS_ROLL);
 
-            Core.INSTANCE.TaskRegister.RegisterTask(
+            Core.INSTANCE.TaskRegister.Register(
                 out _applyLyricSuspensionToken,
                 new Task(async () => await ApplyLyricsToSong(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.APPLY_LYRICS_TO_SONG);
