@@ -14,7 +14,9 @@ using Avalonia.Controls.Platform;
 using Avalonia.DesignerSupport;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
+using Avalonia.Rendering;
 using Avalonia.Threading;
 using Avalonia.Utilities;
 using DevBase.Async.Task;
@@ -26,6 +28,7 @@ using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Frontend.Controls.Model;
 using SharpDX.DirectInput;
 using Squalr.Engine.Utils.Extensions;
 
@@ -53,8 +56,7 @@ public partial class LyricsScroller : UserControl
 
     private ObservableCollection<LyricPart> _lyricParts;
     private LyricPart _lyricPart;
-
-    private TaskSuspensionToken _syncScrollerSuspensionToken;
+    
     private double _scrollFrom;
     private double _currentScrollOffset;
     private double _scrollTo;
@@ -66,6 +68,8 @@ public partial class LyricsScroller : UserControl
     private ScrollViewer _scrollViewer;
     private ItemsRepeater _itemsRepeater;
 
+    private SleepLoopRenderTimer _renderTimer;
+    
     public LyricsScroller()
     {
         InitializeComponent();
@@ -81,55 +85,49 @@ public partial class LyricsScroller : UserControl
         this._isInSycedMode = true;
         this._isFirstSync = true;
 
-        Core.INSTANCE.TaskRegister.Register(
-            out _syncScrollerSuspensionToken, 
-            new Task(async () => await SyncScrollerTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
-            EnumRegisterTypes.SYNC_SCROLLER);
+        this._renderTimer = new SleepLoopRenderTimer(500);
+        this._renderTimer.Tick += RenderTimerOnTick;
     }
-    
+
+    private void RenderTimerOnTick(TimeSpan obj)
+    {
+        if (_isInSycedMode)
+            SetThreadPos(_currentScrollOffset);
+        
+        /*if (this._isFirstSync && this._lyricParts != null && this._lyricPart != null)
+        {
+            SetThreadPos(_scrollTo);
+            this._currentScrollOffset = this._scrollTo;
+            this._isFirstSync = false;
+        }*/
+
+        int divider = 15;
+        
+        if (_currentScrollOffset < _scrollTo)
+        {
+            double step = Math.Abs(_scrollFrom - _scrollTo) / divider;
+            _currentScrollOffset += step;
+            _scrollFrom = _currentScrollOffset;
+        }
+        else
+        {
+            double step = Math.Abs(_scrollFrom - _scrollTo) / divider;
+            _currentScrollOffset -= step;
+            _scrollFrom = _currentScrollOffset;
+        }
+    }
+
+    private void SetThreadPos(Double y)
+    {
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            this._scrollViewer.Offset = new Vector(0, y);
+        });
+    }
+
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
-    }
-
-    private async Task SyncScrollerTask()
-    {
-        while (!Core.IsDisposed())
-        {
-            await this._syncScrollerSuspensionToken.WaitForRelease();
-
-            await Task.Delay(1);
-            
-            if (!_isInSycedMode)
-                continue;
-
-            if (!MathUtils.IsDoubleInRange(_currentScrollOffset - 2, _currentScrollOffset + 2, _scrollTo) && _isInSycedMode)
-            {
-                await Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    this._scrollViewer.Offset = new Vector(0, _currentScrollOffset);
-                });
-            }
-
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                if (this._isFirstSync && this._lyricParts != null && this._lyricPart != null)
-                {
-                    this._scrollViewer.Offset = new Vector(0, _scrollTo);
-                    this._currentScrollOffset = this._scrollTo;
-                    this._isFirstSync = false;
-                }
-            });
-
-            if (_currentScrollOffset < _scrollTo)
-            {
-                _currentScrollOffset += 1;
-            }
-            else
-            {
-                _currentScrollOffset -= 1;
-            }
-        }
     }
 
     private void SetCurrentPosition(int selectedLine)
@@ -314,10 +312,10 @@ public partial class LyricsScroller : UserControl
     private void CTRL_Viewer_OnScrollChanged(object? sender, ScrollChangedEventArgs e)
     {
         var nick = e.ExtentDelta.SquaredLength + e.OffsetDelta.SquaredLength;
-
-        if (nick > 10000000)
+        Console.WriteLine(nick);
+        if (nick > 5000)
         {
-            this._isFirstSync = true;
+            //this._isInSycedMode = false;
             return;
         }
 

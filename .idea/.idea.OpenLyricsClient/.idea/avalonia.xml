@@ -7,6 +7,7 @@
         <entry key="OpenLyricsClient/Controls/Model/Fenneg.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
         <entry key="OpenLyricsClient/Controls/View/SearchingAnimation.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
         <entry key="OpenLyricsClient/Controls/View/dwad.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
+        <entry key="OpenLyricsClient/Frontend/Controls/View/AnimatedScrollView.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
         <entry key="OpenLyricsClient/Frontend/Controls/View/ComboBox.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
         <entry key="OpenLyricsClient/Frontend/Controls/View/Combobox.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />
         <entry key="OpenLyricsClient/Frontend/Controls/View/GroupBox.axaml" value="OpenLyricsClient/OpenLyricsClient.csproj" />

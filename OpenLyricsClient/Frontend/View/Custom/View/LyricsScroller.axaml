@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:view="clr-namespace:OpenLyricsClient.Frontend.View.Custom.View"
+             xmlns:model="clr-namespace:OpenLyricsClient.Frontend.Controls.Model"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              LyricPart="{Binding CurrentLyricPart, Mode=TwoWay}"
              LyricParts="{Binding CurrentLyricParts, Mode=TwoWay}"
