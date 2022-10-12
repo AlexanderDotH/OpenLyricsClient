@@ -46,7 +46,7 @@ namespace OpenLyricsClient.Backend.Cache
             {
                 AFileObject ifo = files.Get(i);
 
-                long id = Convert.ToInt64(ifo.FileInfo.Name.Replace(CACHE_EXTENSION, string.Empty));
+                string id = ifo.FileInfo.Name.Replace(CACHE_EXTENSION, string.Empty);
 
                 JsonLyricData jsonLyricData =
                     new JsonDeserializer<JsonLyricData>().Deserialize(AFile.ReadFile(ifo.FileInfo).ToStringData());
@@ -59,7 +59,7 @@ namespace OpenLyricsClient.Backend.Cache
 
         public void WriteToCache(SongRequestObject songRequestObject, LyricData cacheData)
         {
-            long id = CalculateID(songRequestObject);
+            string id = CalculateID(songRequestObject);
             string idAsString = Convert.ToString(id);
 
             string filePath = CACHE_PATH + idAsString + CACHE_EXTENSION;
@@ -73,7 +73,7 @@ namespace OpenLyricsClient.Backend.Cache
 
         public void AddToCache(SongRequestObject songRequestObject, LyricData cacheData)
         {
-            long id = CalculateID(songRequestObject);
+            string id = CalculateID(songRequestObject);
             this._cache.Add(new CacheEntry(id, cacheData));
         }
 
@@ -150,19 +150,18 @@ namespace OpenLyricsClient.Backend.Cache
             return false;
         }
 
-        private long CalculateID(SongRequestObject songRequestObject)
+        private string CalculateID(SongRequestObject songRequestObject)
         {
             string append = string.Empty;
 
-            append += MemoryUtils.GetSize(songRequestObject.SongName).ToString();
-            append += MemoryUtils.GetSize(songRequestObject.Album).ToString();
-            append += MemoryUtils.GetSize(songRequestObject.Artists).ToString();
-            append += MemoryUtils.GetSize(songRequestObject.SongDuration).ToString();
-            append += MemoryUtils.GetSize(songRequestObject.FormattedSongName).ToString();
-            append += MemoryUtils.GetSize(songRequestObject.FormattedSongAlbum).ToString();
-            append += MemoryUtils.GetSize(songRequestObject.SongDuration).ToString();
+            append += songRequestObject.SongName;
+            append += songRequestObject.Album;
+            append += songRequestObject.Artists;
+            append += songRequestObject.FormattedSongName;
+            append += songRequestObject.FormattedSongAlbum;
+            append += songRequestObject.SongDuration;
 
-            return Convert.ToInt64(append);
+            return CryptoUtils.ToMD5(append);
         }
 
         private LyricData ConvertToLyricData(JsonLyricData json)
