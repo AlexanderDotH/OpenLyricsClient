@@ -21,11 +21,11 @@
             FontWeight="Bold"
             FontSize="18"
             HorizontalAlignment="Left"
-            Margin="12, 12, 0, 0"></TextBlock>
+            Margin="12, 12, 0, 0"/>
         
         <ScrollViewer
             VerticalAlignment="Top"
-            Margin="0,40,0,0"
+            Margin="0,60,0,0"
             HorizontalScrollBarVisibility="Auto" 
             VerticalScrollBarVisibility="Auto">
             

@@ -31,7 +31,6 @@
                 <SolidColorBrush x:Key="PrimaryBackgroundBrush" Color="#161616"></SolidColorBrush>
                 <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="#1E1E1E"></SolidColorBrush>
                 <SolidColorBrush x:Key="ImageMask" Color="#f10000"></SolidColorBrush>
-
             </Style.Resources>
         </Style>
     </Application.Styles>

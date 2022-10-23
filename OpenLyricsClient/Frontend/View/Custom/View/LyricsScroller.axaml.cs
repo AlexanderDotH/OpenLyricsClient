@@ -68,6 +68,9 @@ public partial class LyricsScroller : UserControl
     private ScrollViewer _scrollViewer;
     private ItemsRepeater _itemsRepeater;
 
+    private Grid _gradientTop;
+    private Grid _gradientBottom;
+    
     private SleepLoopRenderTimer _renderTimer;
     
     public LyricsScroller()
@@ -78,6 +81,9 @@ public partial class LyricsScroller : UserControl
         
         this._scrollViewer = this.Get<ScrollViewer>(nameof(CTRL_Viewer));
         this._itemsRepeater = this.Get<ItemsRepeater>(nameof(CTRL_Repeater));
+            
+        this._gradientTop = this.Get<Grid>(nameof(GradientTop));
+        this._gradientBottom = this.Get<Grid>(nameof(GradientBottom));
 
         this._scrollFrom = 0;
         this._currentScrollOffset = 0;
@@ -93,7 +99,7 @@ public partial class LyricsScroller : UserControl
     {
         if (_isInSycedMode)
             SetThreadPos(_currentScrollOffset);
-        
+
         /*if (this._isFirstSync && this._lyricParts != null && this._lyricPart != null)
         {
             SetThreadPos(_scrollTo);
@@ -122,6 +128,15 @@ public partial class LyricsScroller : UserControl
         Dispatcher.UIThread.InvokeAsync(() =>
         {
             this._scrollViewer.Offset = new Vector(0, y);
+
+            if (y < 10)
+            {
+                this._gradientTop.Opacity = 0;
+            }
+            else
+            {
+                this._gradientTop.Opacity = 1;
+            }
         });
     }
 

@@ -9,8 +9,13 @@
              LyricParts="{Binding CurrentLyricParts, Mode=TwoWay}"
              x:Class="OpenLyricsClient.Frontend.View.Custom.View.LyricsScroller">
     
-    <Grid>
+    <Grid Background="{DynamicResource PrimaryBackgroundBrush}"
+        >
+        
+       
+        
         <ScrollViewer Name="CTRL_Viewer" ScrollChanged="CTRL_Viewer_OnScrollChanged" >
+            
             <ItemsRepeater Name="CTRL_Repeater" Items="{Binding CurrentLyricParts}">
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate>
@@ -32,5 +37,46 @@
                 </ItemsRepeater.ItemTemplate>
             </ItemsRepeater>
         </ScrollViewer>
+        
+        <Grid Name="GradientTop"
+              Height="20" 
+              VerticalAlignment="Top" 
+              Margin="0,0,15,0" 
+              Opacity="1">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="50%,0%" EndPoint="50%, 100%" >
+                    <GradientStop Offset="0" Color="#161616" />
+                    <GradientStop Offset="1" />
+                </LinearGradientBrush>
+            </Grid.Background>
+            <Grid.Transitions>
+                <Transitions>
+                    <DoubleTransition 
+                        Property="Opacity" 
+                        Duration="0:0:0.4" 
+                        Easing="CircularEaseOut"/>
+                </Transitions>
+            </Grid.Transitions>
+        </Grid>
+        
+        <Grid Name="GradientBottom"
+              Height="20" 
+              VerticalAlignment="Bottom" 
+              Margin="0,0,15,0">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="50%,0%" EndPoint="50%, 100%" >
+                    <GradientStop Offset="0" />
+                    <GradientStop Offset="1" Color="#161616" />
+                </LinearGradientBrush>
+            </Grid.Background>
+            <Grid.Transitions>
+                <Transitions>
+                    <DoubleTransition 
+                        Property="Opacity" 
+                        Duration="0:0:0.4" 
+                        Easing="CircularEaseOut"/>
+                </Transitions>
+            </Grid.Transitions>
+        </Grid>
     </Grid>
 </UserControl>

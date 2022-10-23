@@ -45,7 +45,7 @@
         </Style>
     </UserControl.Styles>
     
-    <Grid PointerPressed="InputElement_OnPointerPressed">
+    <Grid PointerPressed="InputElement_OnPointerPressed" Name="GRD_Page">
         <TextBlock 
             Text="Lyrics"
             FontWeight="Bold"
@@ -104,9 +104,8 @@
                        FontSize="15"></TextBlock>
         </Grid>
         <Grid Name="GRD_Presenter"
-              Height="320"
-              VerticalAlignment="Center"
-              Margin="500,0,0,60">
+              VerticalAlignment="Top"
+              Margin="500,120,5,50">
             
             <custom:LyricsScroller 
                 Name="LRC_Display" 

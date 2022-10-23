@@ -10,7 +10,6 @@ namespace OpenLyricsClient.Frontend.View.Views
 {
     public partial class MainWindow : Window
     {
-
         private static MainWindow INSTANCE;
 
         private bool _windowDragable;
