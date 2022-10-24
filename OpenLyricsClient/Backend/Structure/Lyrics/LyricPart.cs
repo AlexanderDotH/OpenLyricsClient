@@ -8,14 +8,11 @@ namespace OpenLyricsClient.Backend.Structure.Lyrics
     {
         private long _time;
         private string _part;
-        private long lyricID;
 
         public LyricPart(long time, string part)
         {
             this._time = time;
             this._part = part;
-
-            this.lyricID = LyricsUtils.CalculateID(time, part);
         }
 
         public long Time
@@ -28,11 +25,6 @@ namespace OpenLyricsClient.Backend.Structure.Lyrics
         {
             get => this._part;
             set => this._part = value;
-        }
-
-        public long LyricId
-        {
-            get => lyricID;
         }
     }
 }

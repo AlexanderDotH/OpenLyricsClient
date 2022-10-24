@@ -9,30 +9,15 @@
              LyricParts="{Binding CurrentLyricParts, Mode=TwoWay}"
              x:Class="OpenLyricsClient.Frontend.View.Custom.View.LyricsScroller">
     
-    <Grid Background="{DynamicResource PrimaryBackgroundBrush}"
-        >
-        
-       
-        
+    <Grid Background="{DynamicResource PrimaryBackgroundBrush}">
         <ScrollViewer Name="CTRL_Viewer" ScrollChanged="CTRL_Viewer_OnScrollChanged" >
-            
             <ItemsRepeater Name="CTRL_Repeater" Items="{Binding CurrentLyricParts}">
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Part}"
-                                   TextWrapping="Wrap"
-                                   FontWeight="Bold"
-                                   FontSize="30"
-                                   Margin="0,0,0,10"
-                                   Foreground="#646464">
-                            <TextBlock.Transitions>
-                                <Transitions>
-                                    <BrushTransition Property="Foreground"
-                                                     Easing="CircularEaseOut"
-                                                     Duration="0:0:0.500"></BrushTransition>
-                                </Transitions>
-                            </TextBlock.Transitions>
-                        </TextBlock>
+                        <model:LyricsCard 
+                            Text="{Binding Part}" 
+                            HorizontalAlignment="Left"
+                            Margin="0,0,0,10"></model:LyricsCard>
                     </DataTemplate>
                 </ItemsRepeater.ItemTemplate>
             </ItemsRepeater>

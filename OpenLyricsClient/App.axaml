@@ -20,6 +20,7 @@
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/Controls/View/GroupBox.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/Controls/View/ComboBox.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/Controls/View/AnimatedScrollView.axaml"/>
+        <StyleInclude Source="avares://OpenLyricsClient/Frontend/Controls/View/LyricsCard.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/Styles/Grid.axaml"/>
 
         <Style>

@@ -1,0 +1,99 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:model="clr-namespace:OpenLyricsClient.Frontend.Controls.Model">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <model:LyricsCard  Text="CurrentLine" ></model:LyricsCard>
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+
+    <!-- Add Styles Here -->
+    <Style Selector="model|LyricsCard">
+        <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}"/>
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Percentage" Easing="CircularEaseOut" Duration="0:0:0.4" ></DoubleTransition>
+            </Transitions>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <Border Name="PART_BackgroundBorder"
+                            HorizontalAlignment="Left"
+                            Width="{TemplateBinding Percentage}" 
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                    </Border>
+                    
+                    <TextBlock Name="PART_TextBlock1"
+                               HorizontalAlignment="Left"
+                               Text="{TemplateBinding Text}"
+                               TextWrapping="Wrap"
+                               FontWeight="Bold"
+                               FontSize="30"
+                               Margin="5,0,5,5"
+                               Foreground="#646464">
+                        <TextBlock.Transitions>
+                            <Transitions>
+                                <BrushTransition Property="Foreground"
+                                                 Easing="CircularEaseOut"
+                                                 Duration="0:0:0.500"></BrushTransition>
+                            </Transitions>
+                        </TextBlock.Transitions>
+                    </TextBlock>
+                    
+                    <Viewbox HorizontalAlignment="Left" 
+                             VerticalAlignment="Top"
+                             Stretch="None" 
+                             Width="{TemplateBinding Percentage}">
+                        <TextBlock Name="PART_TextBlock"
+                                   VerticalAlignment="Top"
+                                   HorizontalAlignment="Left"
+                                   Text="{TemplateBinding Text}"
+                                   TextWrapping="Wrap"
+                                   FontWeight="Bold"
+                                   FontSize="30"
+                                   OpacityMask="Pink"
+                                   Margin="5,0,5,5"
+                                   Foreground="White">
+                            <TextBlock.Transitions>
+                                <Transitions>
+                                    <BrushTransition Property="Foreground"
+                                                     Easing="CircularEaseOut"
+                                                     Duration="0:0:0.500"></BrushTransition>
+                                </Transitions>
+                            </TextBlock.Transitions>
+                        </TextBlock>
+                    </Viewbox>
+                    <!--<Panel Name="PART_LowerPanel" HorizontalAlignment="Left" >
+                        
+                    </Panel>
+                    
+                    <Panel Name="PART_UpperPanel" 
+                           HorizontalAlignment="Left"
+                           Width="{TemplateBinding Percentage}">
+                        <TextBlock Name="PART_TextBlock"
+                                   HorizontalAlignment="Left"
+                                   Text="{TemplateBinding Text}"
+                                   TextWrapping="NoWrap"
+                                   OpacityMask="Pink"
+                                   FontWeight="Bold"
+                                   FontSize="30"
+                                   Margin="5,0,5,5"
+                                   Foreground="White">
+                            <TextBlock.Transitions>
+                                <Transitions>
+                                    <BrushTransition Property="Foreground"
+                                                     Easing="CircularEaseOut"
+                                                     Duration="0:0:0.500"></BrushTransition>
+                                </Transitions>
+                            </TextBlock.Transitions>
+                        </TextBlock>
+                    </Panel>-->
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

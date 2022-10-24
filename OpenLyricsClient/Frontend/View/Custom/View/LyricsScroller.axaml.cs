@@ -31,6 +31,7 @@ using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.Frontend.Controls.Model;
 using SharpDX.DirectInput;
 using Squalr.Engine.Utils.Extensions;
+using TextAlignment = Avalonia.Media.TextAlignment;
 
 namespace OpenLyricsClient.Frontend.View.Custom.View;
 
@@ -56,6 +57,7 @@ public partial class LyricsScroller : UserControl
 
     private ObservableCollection<LyricPart> _lyricParts;
     private LyricPart _lyricPart;
+    private LyricsCard _card;
     
     private double _scrollFrom;
     private double _currentScrollOffset;
@@ -99,7 +101,7 @@ public partial class LyricsScroller : UserControl
     {
         if (_isInSycedMode)
             SetThreadPos(_currentScrollOffset);
-
+        
         /*if (this._isFirstSync && this._lyricParts != null && this._lyricPart != null)
         {
             SetThreadPos(_scrollTo);
@@ -137,6 +139,15 @@ public partial class LyricsScroller : UserControl
             {
                 this._gradientTop.Opacity = 1;
             }
+
+            if (DataValidator.ValidateData(this._card))
+            {
+                if (this.DataContext is LyricsScrollerViewModel)
+                {
+                    LyricsScrollerViewModel context = (LyricsScrollerViewModel)this.DataContext;
+                    this._card.Percentage = (double)context.Percentage;
+                }
+            }
         });
     }
 
@@ -157,13 +168,22 @@ public partial class LyricsScroller : UserControl
             
             if (i == selectedLine)
             {
-                SetTextBlockColor(child, SelectedLineBrush);
+                if (child is LyricsCard)
+                {
+                    this._card = (LyricsCard)child;
+                }
+                
                 break;
             }
             else
             {
-                position += GetVisualSize(i, ItemMargin.Bottom);
-                SetTextBlockColor(child, UnSelectedLineBrush);
+                position += GetVisualSize(i, ItemMargin.Bottom + 5);
+                
+                if (child is LyricsCard)
+                {
+                    LyricsCard card = (LyricsCard)child;
+                    card.Percentage = -1;
+                }
             }
         }
 
@@ -179,7 +199,7 @@ public partial class LyricsScroller : UserControl
         {
             if (i >= 0 && i <= this._lyricParts.Count)
             {
-                sze += GetVisualSize(i, ItemMargin.Bottom);
+                sze += GetVisualSize(i, ItemMargin.Bottom + 5);
             }
         }
         
@@ -188,24 +208,20 @@ public partial class LyricsScroller : UserControl
 
     private double GetVisualSize(int selectedIndex, double gapSize)
     {
-        IControl ctrl = this._itemsRepeater.TryGetElement(selectedIndex);
-
-        if (DataValidator.ValidateData(ctrl))
+        if (this._lyricParts != null && 
+            selectedIndex >= 0 && 
+            selectedIndex <= this._lyricParts.Count)
         {
-            if (ctrl is TextBlock)
-            {
-                TextBlock block = (TextBlock)ctrl;
-                return block.TextLayout.Size.Height + gapSize;
-            }            
+            return GetBounds(this._lyricParts[selectedIndex].Part).Height + gapSize;
         }
-
-        return 36 + gapSize;
+        
+        return GetBounds("Sample Line").Height + gapSize;
     }
     
     private void SetTextBlockColor(IControl textBlock, Brush color)
     {
-        if (textBlock is TextBlock)
-            ((TextBlock)textBlock).Foreground = color;
+        if (textBlock is LyricsCard)
+            ((LyricsCard)textBlock).Foreground = color;
     }
 
     private void TryUnselectAll()
@@ -223,7 +239,7 @@ public partial class LyricsScroller : UserControl
 
             if (DataValidator.ValidateData(ctrl))
             {
-                if (ctrl is TextBlock)
+                if (ctrl is LyricsCard)
                 {
                     SetTextBlockColor(ctrl, UnSelectedLineBrush);
                 }            
@@ -248,6 +264,14 @@ public partial class LyricsScroller : UserControl
         {
             this._scrollViewer.Offset = new Vector(0, 0);
         }
+    }
+    
+    public Rect GetBounds(string input)
+    {
+        FormattedText text = new FormattedText(input,
+            new Typeface(FontFamily.Parse("avares://Material.Styles/Fonts/Roboto#Roboto"), FontStyle.Normal, FontWeight.Bold), 30, TextAlignment.Left,
+            TextWrapping.WrapWithOverflow, Size.Empty);
+        return text.Bounds;
     }
 
     public int SelectedLine
@@ -289,7 +313,7 @@ public partial class LyricsScroller : UserControl
                 if (this._lyricParts[i] == value)
                 {
                     SelectedLine = i;
-                    _lyricPart = value;
+                    this._lyricPart = value;
                     SetAndRaise(LyricPartProperty, ref _lyricPart, value);
                 }
             }
@@ -344,6 +368,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
 
     public ObservableCollection<LyricPart> _lyricParts;
     private LyricPart _lyricPart;
+    private double _percentage;
 
     public LyricsScrollerViewModel()
     {
@@ -362,6 +387,12 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             Core.INSTANCE.TaskRegister.Register(
                 out _syncLyricsSuspensionToken,
                 new Task(async () => await SyncLyricsTask(), Core.INSTANCE.CancellationTokenSource.Token,
+                    TaskCreationOptions.LongRunning),
+                EnumRegisterTypes.SYNC_LYRICS);
+            
+            Core.INSTANCE.TaskRegister.Register(
+                out _syncLyricsSuspensionToken,
+                new Task(async () => await SyncLyricsPercentageTask(), Core.INSTANCE.CancellationTokenSource.Token,
                     TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.SYNC_LYRICS);
         }
@@ -411,6 +442,44 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
         }
     }
     
+    private async Task SyncLyricsPercentageTask()
+    {
+        while (!Core.IsDisposed())
+        {
+            await Task.Delay(1);
+            await this._syncLyricsSuspensionToken.WaitForRelease();
+
+            Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
+
+            if (!DataValidator.ValidateData(currentSong))
+                continue;
+
+            if (!DataValidator.ValidateData(currentSong.Lyrics))
+                continue;
+
+            if (!DataValidator.ValidateData(currentSong.CurrentLyricPart))
+                continue;
+
+            for (var i = 0; i < this._lyricParts.Count; i++)
+            {
+                if (this._lyricParts[i] == currentSong.CurrentLyricPart)
+                {
+                    if (i + 1 < this._lyricParts.Count)
+                    {
+                        LyricPart nextPart = this._lyricParts[i + 1];
+                        
+                        long time = nextPart.Time - currentSong.CurrentLyricPart.Time;
+                        long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
+                        double change = Math.Round((double)(100 * currentTime) / time);
+                        
+                        Percentage = change;
+                    }
+                }
+            }
+            
+        }
+    }
+    
     private bool AreListsEqual(ObservableCollection<LyricPart> lyricPartsList1, LyricPart[] lyricPartsList2)
     {
         if (lyricPartsList2.Length != lyricPartsList1.Count)
@@ -454,6 +523,16 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
         {
             _lyricPart = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentLyricPart"));
+        }
+    }
+    
+    public double Percentage
+    {
+        get => _percentage;
+        set
+        {
+            _percentage = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Percentage"));
         }
     }
 
