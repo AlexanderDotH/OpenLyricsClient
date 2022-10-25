@@ -124,8 +124,6 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
                         GenericList<LyricElement> lyricElements =
                             fileFormatParser.FormatFromString(response.SubtitleBody).Lyrics;
 
-                        File.WriteAllText("C:\\Users\\Alex\\RiderProjects\\DevBase\\DevBaseTests\\DevBaseFormatData\\LRC\\" + track.TrackName + ".lrc", response.SubtitleBody);
-                        
                         this._debugger.Write(string.Format("Found lyrics for {0}", track.TrackName), DebugType.INFO);
 
                         if (DataValidator.ValidateData(lyricElements))
