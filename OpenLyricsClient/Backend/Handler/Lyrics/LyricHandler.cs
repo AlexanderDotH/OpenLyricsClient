@@ -139,34 +139,31 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                             {
                                 LyricPart currentPart = currentSong.Lyrics.LyricParts[i];
 
-                                if (i == currentSong.Lyrics.LyricParts.Length)
+                                if (i + 1 < currentSong.Lyrics.LyricParts.Length)
                                 {
-                                    currentSong.CurrentLyricPart =
-                                        currentSong.Lyrics.LyricParts[currentSong.Lyrics.LyricParts.Length];
-                                    continue;
-                                }
-                                else
-                                {
-                                    if (i + 1 < currentSong.Lyrics.LyricParts.Length)
+                                    LyricPart nextPart = currentSong.Lyrics.LyricParts[i + 1];
+
+                                    if (DataValidator.ValidateData(currentPart) &&
+                                        DataValidator.ValidateData(currentPart.Part) &&
+                                        DataValidator.ValidateData(currentPart.Time) &&
+                                        DataValidator.ValidateData(nextPart) &&
+                                        DataValidator.ValidateData(nextPart.Part) &&
+                                        DataValidator.ValidateData(nextPart.Time))
                                     {
-                                        LyricPart nextPart = currentSong.Lyrics.LyricParts[i + 1];
-
-                                        if (DataValidator.ValidateData(currentPart) &&
-                                            DataValidator.ValidateData(currentPart.Part) &&
-                                            DataValidator.ValidateData(currentPart.Time) &&
-                                            DataValidator.ValidateData(nextPart) &&
-                                            DataValidator.ValidateData(nextPart.Part) &&
-                                            DataValidator.ValidateData(nextPart.Time))
+                                        if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, currentSong.Time + LYRIC_OFFSET))
                                         {
-                                            if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, currentSong.Time + LYRIC_OFFSET))
-                                            {
-                                                currentSong.CurrentLyricPart = currentPart;
-                                                continue;
-                                            }
+                                            currentSong.CurrentLyricPart = currentPart;
+                                            continue;
                                         }
-
                                     }
-
+                                }
+                                else 
+                                {
+                                    if (MathUtils.IsInRange(currentPart.Time, currentSong.SongMetadata.MaxTime, currentSong.Time + LYRIC_OFFSET))
+                                    {
+                                        currentSong.CurrentLyricPart = currentPart;
+                                        continue;
+                                    }
                                 }
                             }
                         }

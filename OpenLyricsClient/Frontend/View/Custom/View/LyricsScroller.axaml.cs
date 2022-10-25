@@ -365,6 +365,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
 {
     private TaskSuspensionToken _displayLyricsSuspensionToken;
     private TaskSuspensionToken _syncLyricsSuspensionToken;
+    private TaskSuspensionToken _syncLyricsPercentageSuspensionToken;
 
     public ObservableCollection<LyricPart> _lyricParts;
     private LyricPart _lyricPart;
@@ -391,10 +392,10 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
                 EnumRegisterTypes.SYNC_LYRICS);
             
             Core.INSTANCE.TaskRegister.Register(
-                out _syncLyricsSuspensionToken,
+                out _syncLyricsPercentageSuspensionToken,
                 new Task(async () => await SyncLyricsPercentageTask(), Core.INSTANCE.CancellationTokenSource.Token,
                     TaskCreationOptions.LongRunning),
-                EnumRegisterTypes.SYNC_LYRICS);
+                EnumRegisterTypes.SYNC_LYRICS_PERCENTAGE);
         }
     }
 
@@ -447,7 +448,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
         while (!Core.IsDisposed())
         {
             await Task.Delay(1);
-            await this._syncLyricsSuspensionToken.WaitForRelease();
+            await this._syncLyricsPercentageSuspensionToken.WaitForRelease();
 
             Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
 
@@ -469,6 +470,14 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
                         LyricPart nextPart = this._lyricParts[i + 1];
                         
                         long time = nextPart.Time - currentSong.CurrentLyricPart.Time;
+                        long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
+                        double change = Math.Round((double)(100 * currentTime) / time);
+                        
+                        Percentage = change;
+                    }
+                    else
+                    {
+                        long time = currentSong.SongMetadata.MaxTime - currentSong.CurrentLyricPart.Time;
                         long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
                         double change = Math.Round((double)(100 * currentTime) / time);
                         

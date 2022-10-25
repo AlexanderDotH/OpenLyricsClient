@@ -39,6 +39,8 @@ namespace OpenLyricsClient.Backend.Structure.Lyrics
 
             LyricPart[] lyricParts = new LyricPart[lyrics.Length];
 
+            LyricPart lastPart = null;
+            
             for (int i = 0; i < lyrics.Length; i++)
             {
                 string currentLine = SongFormatter.FormatString(lyrics.Get(i).Line);

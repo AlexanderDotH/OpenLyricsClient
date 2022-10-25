@@ -19,7 +19,7 @@
         </Setter>
         <Setter Property="Template">
             <ControlTemplate>
-                <Grid>
+                <Grid Name="PART_Grid">
                     <Border Name="PART_BackgroundBorder"
                             HorizontalAlignment="Left"
                             Width="{TemplateBinding Percentage}" 
@@ -47,6 +47,7 @@
                     <Viewbox HorizontalAlignment="Left" 
                              VerticalAlignment="Top"
                              Stretch="None" 
+                             
                              Width="{TemplateBinding Percentage}">
                         <TextBlock Name="PART_TextBlock"
                                    VerticalAlignment="Top"
@@ -55,7 +56,6 @@
                                    TextWrapping="Wrap"
                                    FontWeight="Bold"
                                    FontSize="30"
-                                   OpacityMask="Pink"
                                    Margin="5,0,5,5"
                                    Foreground="White">
                             <TextBlock.Transitions>

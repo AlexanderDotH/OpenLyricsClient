@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using DevBase.Async.Task;
 using DevBase.Generic;
 using DevBaseFormat;
+using DevBaseFormat.Formats.LrcFormat;
 using DevBaseFormat.Formats.MmlFormat;
 using DevBaseFormat.Structure;
 using MusixmatchClientLib;
@@ -111,17 +113,19 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
 
                 try
                 {
-                    SubtitleRawResponse response = await musixmatchClient.GetTrackSubtitlesRawAsync(track.TrackId, MusixmatchClient.SubtitleFormat.Musixmatch);
+                    SubtitleRawResponse response = await musixmatchClient.GetTrackSubtitlesRawAsync(track.TrackId, MusixmatchClient.SubtitleFormat.Lrc);
 
                     FileFormatParser<LrcObject> fileFormatParser =
                         new FileFormatParser<LrcObject>(
-                            new MmlParser<LrcObject>());
+                            new LrcParser<LrcObject>());
 
                     if (DataValidator.ValidateData(fileFormatParser))
                     {
                         GenericList<LyricElement> lyricElements =
                             fileFormatParser.FormatFromString(response.SubtitleBody).Lyrics;
 
+                        File.WriteAllText("C:\\Users\\Alex\\RiderProjects\\DevBase\\DevBaseTests\\DevBaseFormatData\\LRC\\" + track.TrackName + ".lrc", response.SubtitleBody);
+                        
                         this._debugger.Write(string.Format("Found lyrics for {0}", track.TrackName), DebugType.INFO);
 
                         if (DataValidator.ValidateData(lyricElements))
