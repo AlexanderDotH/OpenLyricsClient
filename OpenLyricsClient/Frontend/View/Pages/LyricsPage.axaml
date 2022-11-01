@@ -10,6 +10,7 @@
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{DynamicResource PrimaryBackgroundBrush}"
              Name="PG_LyricsPage"
+             EffectiveViewportChanged="Layoutable_OnEffectiveViewportChanged"
              x:Class="OpenLyricsClient.Frontend.View.Pages.LyricsPage">
     
     <UserControl.Styles>
@@ -45,7 +46,7 @@
         </Style>
     </UserControl.Styles>
     
-    <Grid PointerPressed="InputElement_OnPointerPressed" Name="GRD_Page">
+    <Grid PointerPressed="InputElement_OnPointerPressed" Name="GRD_Page" >
         <TextBlock 
             Text="Lyrics"
             FontWeight="Bold"
@@ -110,8 +111,10 @@
             <custom:LyricsScroller 
                 Name="LRC_Display" 
                 SelectedLineBrush="#FFFFFF" 
+                LyricsFontSize="30"
+                LyricsFontWeight="Bold"
                 UnSelectedLineBrush="#646464"
-                ItemMargin="0,0,0,10"/>
+                ItemMargin="0,0,0,50"/>
             
             <!--<Panel HorizontalAlignment="Left" 
                    VerticalAlignment="Center"

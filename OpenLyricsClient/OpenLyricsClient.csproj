@@ -95,6 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Frontend\Structure" />
     <Folder Include="Frontend\View\Pages\Model" />
   </ItemGroup>
 </Project>

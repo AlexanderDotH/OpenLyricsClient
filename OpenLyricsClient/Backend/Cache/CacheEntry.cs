@@ -18,7 +18,7 @@ namespace OpenLyricsClient.Backend.Cache
         {
             this.cacheData = cacheData;
 
-            if (songRequestObject != null)
+            if (DataValidator.ValidateData(songRequestObject))
             {
                 string append = string.Empty;
 

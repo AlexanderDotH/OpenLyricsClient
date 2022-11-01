@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Globalization;
 using System.Linq.Expressions;
 using Avalonia;
@@ -9,6 +8,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
 using OpenLyricsClient.Backend.Utils;
+using Brush = Avalonia.Media.Brush;
 using FontFamily = Avalonia.Media.FontFamily;
 using FontStyle = Avalonia.Media.FontStyle;
 using Size = Avalonia.Size;
@@ -23,24 +23,36 @@ public class LyricsCard : TemplatedControl
     public static readonly StyledProperty<double> PercentageProperty =
         AvaloniaProperty.Register<LyricsCard, double>(nameof(Percentage));
     
+    public static readonly StyledProperty<Brush> SelectedLineBrushProperty =
+        AvaloniaProperty.Register<UserControl, Brush>(nameof(SelectedLineBrush));
+
+    public static readonly StyledProperty<Brush> UnSelectedLineBrushProperty =
+        AvaloniaProperty.Register<UserControl, Brush>(nameof(UnSelectedLineBrush));
+    
+    public static readonly StyledProperty<FontWeight> FontWeightProperty =
+        AvaloniaProperty.Register<LyricsCard, FontWeight>(nameof(FontWeight));
+    
+    public static readonly StyledProperty<int> FontSizeProperty =
+        AvaloniaProperty.Register<LyricsCard, int>(nameof(FontSize));
+    
+    public static readonly StyledProperty<int> SpacingProperty =
+        AvaloniaProperty.Register<LyricsCard, int>(nameof(Spacing));
+    
     private TextBlock _presenterBlock;
     private TextBlock _greyBlock;
     private Border _border;
 
+    public LyricsCard()
+    {
+
+    }
+    
     public Rect GetBounds()
     {
         FormattedText text = new FormattedText(Text,
-            new Typeface(FontFamily.Parse("avares://Material.Styles/Fonts/Roboto#Roboto"), FontStyle.Normal, FontWeight.Bold), 30, TextAlignment.Left,
-            TextWrapping.Wrap, Size.Empty);
+            new Typeface(FontFamily.Parse("avares://Material.Styles/Fonts/Roboto#Roboto"), FontStyle.Normal, FontWeight <= 0 ? FontWeight.Bold : FontWeight), FontSize, TextAlignment.Left,
+            TextWrapping.Wrap, this.DesiredSize);
         return text.Bounds;
-    }
-    
-    public Rect GetBounds(string text)
-    {
-        FormattedText formattedText = new FormattedText(text,
-            new Typeface(FontFamily.Parse("avares://Material.Styles/Fonts/Roboto#Roboto"), FontStyle.Normal, FontWeight.Bold), 30, TextAlignment.Left,
-            TextWrapping.Wrap, Size.Empty);
-        return formattedText.Bounds;
     }
 
     public string Text
@@ -62,6 +74,9 @@ public class LyricsCard : TemplatedControl
             {
                 SetValue(PercentageProperty, Math.Round(((GetBounds().Width) / 100) * value) + 12);
 
+                if (this.FontWeight == 0)
+                    return;
+                
                 if (DataValidator.ValidateData(this._presenterBlock, this._greyBlock, this._border))
                 {
                     if (DataValidator.ValidateData(this._presenterBlock.TextLayout, this._greyBlock.TextLayout))
@@ -75,6 +90,36 @@ public class LyricsCard : TemplatedControl
                 }
             }
         }
+    }
+    
+    public FontWeight FontWeight
+    {
+        get { return GetValue(FontWeightProperty); }
+        set { SetValue(FontWeightProperty, value); }
+    }
+    
+    public int FontSize
+    {
+        get { return GetValue(FontSizeProperty); }
+        set { SetValue(FontSizeProperty, value); }
+    }
+    
+    public int Spacing
+    {
+        get { return GetValue(SpacingProperty); }
+        set { SetValue(SpacingProperty, value); }
+    }
+    
+    public Brush SelectedLineBrush
+    {
+        get { return GetValue(SelectedLineBrushProperty); }
+        set { SetValue(SelectedLineBrushProperty, value); }
+    }
+    
+    public Brush UnSelectedLineBrush
+    {
+        get { return GetValue(UnSelectedLineBrushProperty); }
+        set { SetValue(UnSelectedLineBrushProperty, value); }
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)

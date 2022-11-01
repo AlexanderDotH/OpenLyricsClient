@@ -13,6 +13,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Platform;
 using Avalonia.DesignerSupport;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
@@ -21,9 +22,11 @@ using Avalonia.Threading;
 using Avalonia.Utilities;
 using DevBase.Async.Task;
 using DynamicData;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
+using OpenLyricsClient.Backend.Helper;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
@@ -38,22 +41,28 @@ namespace OpenLyricsClient.Frontend.View.Custom.View;
 public partial class LyricsScroller : UserControl
 {
     public static readonly StyledProperty<int> SelectedLineProperty =
-        AvaloniaProperty.Register<UserControl, int>(nameof(SelectedLine));
+        AvaloniaProperty.Register<LyricsScroller, int>(nameof(SelectedLine));
 
     public static readonly StyledProperty<Brush> SelectedLineBrushProperty =
-        AvaloniaProperty.Register<UserControl, Brush>(nameof(SelectedLineBrush));
+        AvaloniaProperty.Register<LyricsScroller, Brush>(nameof(SelectedLineBrush));
 
     public static readonly StyledProperty<Brush> UnSelectedLineBrushProperty =
-        AvaloniaProperty.Register<UserControl, Brush>(nameof(UnSelectedLineBrush));
+        AvaloniaProperty.Register<LyricsScroller, Brush>(nameof(UnSelectedLineBrush));
     
     public static readonly StyledProperty<Thickness> ItemMarginProperty =
-        AvaloniaProperty.Register<UserControl, Thickness>(nameof(ItemMargin));
+        AvaloniaProperty.Register<LyricsScroller, Thickness>(nameof(ItemMargin));
     
     public static readonly DirectProperty<LyricsScroller, LyricPart> LyricPartProperty = 
         AvaloniaProperty.RegisterDirect<LyricsScroller, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
     
     public static readonly DirectProperty<LyricsScroller, ObservableCollection<LyricPart>> LyricPartsProperty = 
         AvaloniaProperty.RegisterDirect<LyricsScroller, ObservableCollection<LyricPart>>(nameof(LyricParts), o => o.LyricParts, (o, v) => o.LyricParts = v);
+
+    public static readonly StyledProperty<FontWeight> LyricsFontWeightProperty =
+        AvaloniaProperty.Register<LyricsScroller, FontWeight>(nameof(LyricsFontWeight));
+    
+    public static readonly StyledProperty<int> LyricsFontSizeProperty =
+        AvaloniaProperty.Register<LyricsScroller, int>(nameof(LyricsFontSize));
 
     private ObservableCollection<LyricPart> _lyricParts;
     private LyricPart _lyricPart;
@@ -77,10 +86,13 @@ public partial class LyricsScroller : UserControl
     
     public LyricsScroller()
     {
+        LyricsFontSize = 30;
+        LyricsFontWeight = FontWeight.Bold;
+        
         InitializeComponent();
 
         this.DataContext = new LyricsScrollerViewModel();
-        
+
         this._scrollViewer = this.Get<ScrollViewer>(nameof(CTRL_Viewer));
         this._itemsRepeater = this.Get<ItemsRepeater>(nameof(CTRL_Repeater));
             
@@ -159,9 +171,7 @@ public partial class LyricsScroller : UserControl
     private void SetCurrentPosition(int selectedLine)
     {
         double position = 0;
-        
-        TryUnselectAll();
-        
+
         for (int i = 0; i < this._lyricParts.Count; i++)
         {
             var child = this._itemsRepeater.TryGetElement(i);
@@ -177,7 +187,7 @@ public partial class LyricsScroller : UserControl
             }
             else
             {
-                position += GetVisualSize(i, ItemMargin.Bottom + 5);
+                position += GetRenderedSize(i).Height;
                 
                 if (child is LyricsCard)
                 {
@@ -188,65 +198,44 @@ public partial class LyricsScroller : UserControl
         }
 
         this._scrollFrom = this._scrollTo;
-        this._scrollTo = CalcOffsetInViewPoint(position);
+        this._scrollTo = CalcOffsetInViewPoint(selectedLine, position);
     }
 
-    private double CalcOffsetInViewPoint(double selectedLine)
+    private double CalcOffsetInViewPoint(int index, double currentSize)
     {
-        double sze = 0;
-        
-        for (int i = SelectedLine - 1; i < SelectedLine; i++)
+        double viewPortHeight = this._scrollViewer.Viewport.Height / 2;
+
+        double x = 0;
+        int currentPos = index;
+
+        double nextValue = 0;
+        while ((nextValue + x + GetRenderedSize(currentPos).Height) < viewPortHeight)
         {
-            if (i >= 0 && i <= this._lyricParts.Count)
-            {
-                sze += GetVisualSize(i, ItemMargin.Bottom + 5);
-            }
+            nextValue = x + GetRenderedSize(currentPos).Height;
+            x = nextValue;
+
+            if (currentPos - 1 >= 0)
+                currentPos--;
         }
-        
-        return selectedLine - sze;
+
+        return currentSize - x;
     }
 
-    private double GetVisualSize(int selectedIndex, double gapSize)
+    private Size GetRenderedSize(int index)
     {
-        if (this._lyricParts != null && 
-            selectedIndex >= 0 && 
-            selectedIndex <= this._lyricParts.Count)
-        {
-            return GetBounds(this._lyricParts[selectedIndex].Part).Height + gapSize;
-        }
+        if (index < 0)
+            return new Size(0, 0);
         
-        return GetBounds("Sample Line").Height + gapSize;
-    }
-    
-    private void SetTextBlockColor(IControl textBlock, Brush color)
-    {
-        if (textBlock is LyricsCard)
-            ((LyricsCard)textBlock).Foreground = color;
+        FormattedText text = new FormattedText(this._lyricParts[index].Part,
+            new Typeface(FontFamily.Parse(
+                "avares://Material.Styles/Fonts/Roboto#Roboto, Noto Sans, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Helvetica, Cantarell, Ubuntu, Arial, Hiragino Kaku Gothic Pro, MS UI Gothic, MS PMincho, Microsoft JhengHei, Microsoft JhengHei UI, Microsoft YaHei New, Microsoft Yahei, SimHei"), 
+                FontStyle.Normal, this.LyricsFontWeight), this.LyricsFontSize, TextAlignment.Left,
+            TextWrapping.Wrap, new Size(this._itemsRepeater.DesiredSize.Width, 0));
+
+        Size returnVal = new Size(text.Bounds.Width, Math.Floor(text.Bounds.Height + ItemMargin.Bottom + 5));
+        return returnVal;
     }
 
-    private void TryUnselectAll()
-    {
-        int totalCount = -1;
-        
-        this._itemsRepeater.TryGetTotalCount(out totalCount);
-        
-        if (totalCount == -1)
-            return;
-        
-        for (int i = 0; i < totalCount; i++)
-        {
-            IControl ctrl = this._itemsRepeater.TryGetElement(i);
-
-            if (DataValidator.ValidateData(ctrl))
-            {
-                if (ctrl is LyricsCard)
-                {
-                    SetTextBlockColor(ctrl, UnSelectedLineBrush);
-                }            
-            }
-        }
-    }
-    
     public void Reset()
     {
         this._scrollFrom = 0;
@@ -266,14 +255,21 @@ public partial class LyricsScroller : UserControl
         }
     }
     
-    public Rect GetBounds(string input)
+    public void Reload()
     {
-        FormattedText text = new FormattedText(input,
-            new Typeface(FontFamily.Parse("avares://Material.Styles/Fonts/Roboto#Roboto"), FontStyle.Normal, FontWeight.Bold), 30, TextAlignment.Left,
-            TextWrapping.WrapWithOverflow, Size.Empty);
-        return text.Bounds;
-    }
+        this._itemsRepeater.Children.Clear();
 
+        if (this.DataContext is LyricsScrollerViewModel)
+        {
+            LyricsScrollerViewModel context = (LyricsScrollerViewModel)this.DataContext;
+            this._itemsRepeater.Children.Clear();
+            
+            SetAndRaise(LyricPartsProperty, ref _lyricParts,  null); 
+            SetAndRaise(LyricPartsProperty, ref _lyricParts,  context.CurrentLyricParts); 
+
+        }
+    }
+    
     public int SelectedLine
     {
         get { return GetValue(SelectedLineProperty); }
@@ -343,6 +339,18 @@ public partial class LyricsScroller : UserControl
         get { return GetValue(ItemMarginProperty); }
         set { SetValue(ItemMarginProperty, value); }
     }
+    
+    public FontWeight LyricsFontWeight
+    {
+        get { return GetValue(LyricsFontWeightProperty); }
+        set { SetValue(LyricsFontWeightProperty, value); }
+    }
+    
+    public int LyricsFontSize
+    {
+        get { return GetValue(LyricsFontSizeProperty); }
+        set { SetValue(LyricsFontSizeProperty, value); }
+    }
 
     private void CTRL_Viewer_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
@@ -371,10 +379,15 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
     private LyricPart _lyricPart;
     private double _percentage;
 
+    private RomanizationHelper _romanizationHelper;
+
     public LyricsScrollerViewModel()
     {
+        this._romanizationHelper = new RomanizationHelper();
+        
         if (!AvaloniaUtils.IsInPreviewerMode())
         {
+            
             this._lyricParts = new ObservableCollection<LyricPart>();
 
             Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
@@ -406,18 +419,34 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             await Task.Delay(1);
             await this._displayLyricsSuspensionToken.WaitForRelease();
 
-            Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
-
-            if (!DataValidator.ValidateData(currentSong))
-                continue;
-
-            if (!DataValidator.ValidateData(currentSong.Lyrics))
-                continue;
-
-            if (!AreListsEqual(this.CurrentLyricParts, currentSong.Lyrics.LyricParts))
+            await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                this.CurrentLyricParts =  new ObservableCollection<LyricPart>(currentSong.Lyrics.LyricParts);
-            }
+                Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
+
+                if (!DataValidator.ValidateData(currentSong))
+                {
+                    this.CurrentLyricParts =  new ObservableCollection<LyricPart>();
+                    return;
+                }
+
+                if (!DataValidator.ValidateData(currentSong.Lyrics))
+                {
+                    this.CurrentLyricParts =  new ObservableCollection<LyricPart>();
+                    return;
+                }
+
+                if (!DataValidator.ValidateData(currentSong.Lyrics.LyricParts))
+                {
+                    this.CurrentLyricParts =  new ObservableCollection<LyricPart>();
+                    return;
+                }
+
+                if (!AreListsEqual(this.CurrentLyricParts, currentSong.Lyrics.LyricParts))
+                {
+                    this.CurrentLyricParts =  new ObservableCollection<LyricPart>(
+                        await this._romanizationHelper.RomanizeArray(currentSong.Lyrics.LyricParts));
+                }
+            });
         }
     }
 
@@ -440,6 +469,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
                 continue;
 
             this.CurrentLyricPart = currentSong.CurrentLyricPart;
+            this.CurrentLyricPart.Part = await this._romanizationHelper.RomanizeString(this.CurrentLyricPart.Part);
         }
     }
     
@@ -461,6 +491,9 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             if (!DataValidator.ValidateData(currentSong.CurrentLyricPart))
                 continue;
 
+            if (!DataValidator.ValidateData(this._lyricParts))
+                continue;
+            
             for (var i = 0; i < this._lyricParts.Count; i++)
             {
                 if (this._lyricParts[i] == currentSong.CurrentLyricPart)
@@ -491,6 +524,9 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
     
     private bool AreListsEqual(ObservableCollection<LyricPart> lyricPartsList1, LyricPart[] lyricPartsList2)
     {
+        if (!DataValidator.ValidateData(lyricPartsList1) || !DataValidator.ValidateData(lyricPartsList2))
+            return false;
+        
         if (lyricPartsList2.Length != lyricPartsList1.Count)
             return false;
         

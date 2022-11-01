@@ -30,7 +30,22 @@ namespace OpenLyricsClient.Backend.Helper
 
             return builder.ToString();
         }
+        
+        public async Task<LyricPart[]> RomanizeArray(LyricPart[] lyrics)
+        {
+            for (int i = 0; i < lyrics.Length; i++)
+            {
+                lyrics[i].Part = await this._romanization.Romanize(lyrics[i].Part);
+            }
 
+            return lyrics;
+        }
+
+        public async Task<string> RomanizeString(string lyric)
+        {
+            return await this._romanization.Romanize(lyric);
+        }
+        
         public async Task<LyricsRoll> RomanizeRoll(LyricsRoll roll)
         {
             string[] romanized = await this._romanization.Romanize(roll.PartOne.Part, roll.PartTwo.Part, roll.PartThree.Part, roll.PartFour.Part, roll.PartFive.Part);

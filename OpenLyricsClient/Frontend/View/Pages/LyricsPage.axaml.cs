@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -36,6 +37,7 @@ public partial class LyricsPage : UserControl
 
         this._txtTimeFrom = this.Get<TextBlock>(nameof(TXT_TimeFrom));
         this._txtTimeTo = this.Get<TextBlock>(nameof(TXT_TimeTo));
+        this._cstmLyricsDisplay = this.Get<LyricsScroller>(nameof(LRC_Display));
     }
 
     private void InitializeComponent()
@@ -58,5 +60,13 @@ public partial class LyricsPage : UserControl
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         MainWindow.Instance.BeginMoveDrag(e);
+    }
+
+    private void Layoutable_OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
+    {
+        if (this._cstmLyricsDisplay != null)
+        {
+            this._cstmLyricsDisplay.Reload();
+        }
     }
 }

@@ -7,6 +7,10 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              LyricPart="{Binding CurrentLyricPart, Mode=TwoWay}"
              LyricParts="{Binding CurrentLyricParts, Mode=TwoWay}"
+             LyricsFontSize="{Binding LyricsFontSize, Mode=TwoWay}"
+             LyricsFontWeight="{Binding LyricsFontWeight, Mode=TwoWay}"
+             UnSelectedLineBrush="{Binding UnSelectedLineBrush}"
+             SelectedLineBrush="{Binding SelectedLineBrush}"
              x:Class="OpenLyricsClient.Frontend.View.Custom.View.LyricsScroller">
     
     <Grid Background="{DynamicResource PrimaryBackgroundBrush}">
@@ -18,7 +22,11 @@
                             Text="{Binding Part}" 
                             HorizontalAlignment="Left"
                             Percentage="-1"
-                            Margin="0,0,0,10"></model:LyricsCard>
+                            UnSelectedLineBrush="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type view:LyricsScroller}}, Path=UnSelectedLineBrush, Mode=TwoWay}"
+                            SelectedLineBrush="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type view:LyricsScroller}}, Path=SelectedLineBrush, Mode=TwoWay}"
+                            FontWeight="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type view:LyricsScroller}}, Path=LyricsFontWeight, Mode=TwoWay}"
+                            FontSize="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type view:LyricsScroller}}, Path=LyricsFontSize, Mode=TwoWay}"
+                            Margin="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type view:LyricsScroller}}, Path=ItemMargin, Mode=TwoWay}"></model:LyricsCard>
                     </DataTemplate>
                 </ItemsRepeater.ItemTemplate>
             </ItemsRepeater>

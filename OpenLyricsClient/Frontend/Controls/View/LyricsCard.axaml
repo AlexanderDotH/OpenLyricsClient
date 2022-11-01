@@ -31,10 +31,10 @@
                                HorizontalAlignment="Left"
                                Text="{TemplateBinding Text}"
                                TextWrapping="Wrap"
-                               FontWeight="Bold"
-                               FontSize="30"
+                               FontWeight="{TemplateBinding FontWeight}"
+                               FontSize="{TemplateBinding FontSize}"
                                Margin="5,0,5,5"
-                               Foreground="#646464">
+                               Foreground="{TemplateBinding UnSelectedLineBrush}">
                         <TextBlock.Transitions>
                             <Transitions>
                                 <BrushTransition Property="Foreground"
@@ -47,17 +47,16 @@
                     <Viewbox HorizontalAlignment="Left" 
                              VerticalAlignment="Top"
                              Stretch="None" 
-                             
                              Width="{TemplateBinding Percentage}">
                         <TextBlock Name="PART_TextBlock"
                                    VerticalAlignment="Top"
                                    HorizontalAlignment="Left"
                                    Text="{TemplateBinding Text}"
                                    TextWrapping="Wrap"
-                                   FontWeight="Bold"
-                                   FontSize="30"
+                                   FontWeight="{TemplateBinding FontWeight}"
+                                   FontSize="{TemplateBinding FontSize}"
                                    Margin="5,0,5,5"
-                                   Foreground="White">
+                                   Foreground="{TemplateBinding SelectedLineBrush}">
                             <TextBlock.Transitions>
                                 <Transitions>
                                     <BrushTransition Property="Foreground"
