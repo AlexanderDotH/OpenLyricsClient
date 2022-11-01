@@ -128,18 +128,34 @@
             </Panel>-->
         </Grid>
         
-        <Button 
-            assists:ButtonAssist.CornerRadius="10"
-            assists:ShadowAssist.ShadowDepth="Depth5"
-            UseLayoutRounding="True"
-            Width="40"
-            Height="40" 
-            Background="{DynamicResource SecondaryBackgroundBrush}"
-            VerticalAlignment="Bottom"
-            HorizontalAlignment="Right"
-            Margin="0,0,30,80"
-            Click="Button_OnClick">
-            <avalonia:MaterialIcon CornerRadius="20" Kind="Refresh" Width="24" Height="24" />
+        <Button Name="BTN_SyncMode"
+                IsEnabled="{Binding ElementName=LRC_Display, Path=!IsSynced, Mode=OneWay}"
+                assists:ButtonAssist.CornerRadius="10"
+                assists:ShadowAssist.ShadowDepth="Depth5"
+                UseLayoutRounding="True"
+                Width="45"
+                Height="45" 
+                Background="{DynamicResource SecondaryBackgroundBrush}"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Right"
+                Margin="0,0,30,80"
+                Click="Button_OnClick">
+            <Button.Content>
+                <avalonia:MaterialIcon CornerRadius="20" Kind="Refresh" Width="24" Height="24" />
+            </Button.Content>
+            <Button.Transitions>
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.7" Easing="CircularEaseOut"></DoubleTransition>
+                </Transitions>
+            </Button.Transitions>
+            <Button.Styles>
+                <Style Selector="Button[IsEnabled=true]">
+                    <Setter Property="Opacity" Value="1"></Setter>
+                </Style>
+                <Style Selector="Button[IsEnabled=False]">
+                    <Setter Property="Opacity" Value="0"></Setter>
+                </Style>
+            </Button.Styles>
         </Button>
         
         <Grid VerticalAlignment="Bottom"

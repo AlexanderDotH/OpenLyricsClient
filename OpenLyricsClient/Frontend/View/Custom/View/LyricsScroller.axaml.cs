@@ -63,6 +63,9 @@ public partial class LyricsScroller : UserControl
     
     public static readonly StyledProperty<int> LyricsFontSizeProperty =
         AvaloniaProperty.Register<LyricsScroller, int>(nameof(LyricsFontSize));
+    
+    public static readonly StyledProperty<bool> IsSyncedProperty =
+        AvaloniaProperty.Register<LyricsScroller, bool>(nameof(IsSynced));
 
     private ObservableCollection<LyricPart> _lyricParts;
     private LyricPart _lyricPart;
@@ -73,7 +76,6 @@ public partial class LyricsScroller : UserControl
     private double _scrollTo;
 
     private bool _isFirstSync;
-    private bool _isInSycedMode;
     private int _scrollCount;
     
     private ScrollViewer _scrollViewer;
@@ -99,7 +101,7 @@ public partial class LyricsScroller : UserControl
         this._scrollFrom = 0;
         this._currentScrollOffset = 0;
         this._scrollTo = 0;
-        this._isInSycedMode = true;
+        this.IsSynced = true;
         this._isFirstSync = true;
         this._scrollCount = -2;
 
@@ -109,8 +111,7 @@ public partial class LyricsScroller : UserControl
 
     private void RenderTimerOnTick(TimeSpan obj)
     {
-        if (_isInSycedMode)
-            SetThreadPos(_currentScrollOffset);
+        SetThreadPos(_currentScrollOffset);
         
         /*if (this._isFirstSync && this._lyricParts != null && this._lyricPart != null)
         {
@@ -139,7 +140,7 @@ public partial class LyricsScroller : UserControl
     {
         Dispatcher.UIThread.InvokeAsync(() =>
         {
-            if (this._isInSycedMode)
+            if (this.IsSynced)
                 this._scrollViewer.Offset = new Vector(0, y);
 
             if (y < 10)
@@ -279,6 +280,15 @@ public partial class LyricsScroller : UserControl
             SetCurrentPosition(value);
         }
     }
+    
+    public bool IsSynced
+    {
+        get { return GetValue(IsSyncedProperty); }
+        set
+        {
+            SetValue(IsSyncedProperty, value);
+        }
+    }
 
     public ObservableCollection<LyricPart> LyricParts
     {
@@ -328,12 +338,6 @@ public partial class LyricsScroller : UserControl
         set { SetValue(UnSelectedLineBrushProperty, value); }
     }
 
-    public bool IsInSycedMode
-    {
-        get => _isInSycedMode;
-        set => _isInSycedMode = value;
-    }
-    
     public Thickness ItemMargin
     {
         get { return GetValue(ItemMarginProperty); }
@@ -365,13 +369,13 @@ public partial class LyricsScroller : UserControl
             this._scrollCount++;
 
         if (this._scrollCount >= 0)
-            this._isInSycedMode = false;
+            this.IsSynced = false;
     }
 
     public void ResyncOffset()
     {
         this._scrollCount = -2;
-        this._isInSycedMode = true;
+        this.IsSynced = true;
     }
 }
 
