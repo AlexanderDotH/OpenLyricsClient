@@ -73,8 +73,8 @@ public partial class LyricsScroller : UserControl
     private double _scrollTo;
 
     private bool _isFirstSync;
-
     private bool _isInSycedMode;
+    private int _scrollCount;
     
     private ScrollViewer _scrollViewer;
     private ItemsRepeater _itemsRepeater;
@@ -86,9 +86,6 @@ public partial class LyricsScroller : UserControl
     
     public LyricsScroller()
     {
-        LyricsFontSize = 30;
-        LyricsFontWeight = FontWeight.Bold;
-        
         InitializeComponent();
 
         this.DataContext = new LyricsScrollerViewModel();
@@ -104,6 +101,7 @@ public partial class LyricsScroller : UserControl
         this._scrollTo = 0;
         this._isInSycedMode = true;
         this._isFirstSync = true;
+        this._scrollCount = -2;
 
         this._renderTimer = new SleepLoopRenderTimer(500);
         this._renderTimer.Tick += RenderTimerOnTick;
@@ -141,7 +139,8 @@ public partial class LyricsScroller : UserControl
     {
         Dispatcher.UIThread.InvokeAsync(() =>
         {
-            this._scrollViewer.Offset = new Vector(0, y);
+            if (this._isInSycedMode)
+                this._scrollViewer.Offset = new Vector(0, y);
 
             if (y < 10)
             {
@@ -355,17 +354,23 @@ public partial class LyricsScroller : UserControl
     private void CTRL_Viewer_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
     }
-
+    
     private void CTRL_Viewer_OnScrollChanged(object? sender, ScrollChangedEventArgs e)
     {
-        var nick = e.ExtentDelta.SquaredLength + e.OffsetDelta.SquaredLength;
-        Console.WriteLine(nick);
-        if (nick > 5000)
-        {
-            //this._isInSycedMode = false;
-            return;
-        }
+        double diff = Math.Floor(Math.Abs(_currentScrollOffset - _scrollTo));
+        double delta = Math.Floor(e.OffsetDelta.Y);
 
+        if (delta > diff)
+            _scrollCount++;
+
+        if (this._scrollCount >= 0)
+            this._isInSycedMode = false;
+    }
+
+    public void ResyncOffset()
+    {
+        this._scrollCount = -2;
+        this._isInSycedMode = true;
     }
 }
 

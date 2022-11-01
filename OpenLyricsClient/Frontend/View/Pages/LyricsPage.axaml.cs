@@ -69,4 +69,12 @@ public partial class LyricsPage : UserControl
             this._cstmLyricsDisplay.Reload();
         }
     }
+
+    private void Button_OnClick(object? sender, RoutedEventArgs e)
+    {
+        if (this._cstmLyricsDisplay != null)
+        {
+            this._cstmLyricsDisplay.ResyncOffset();
+        }
+    }
 }

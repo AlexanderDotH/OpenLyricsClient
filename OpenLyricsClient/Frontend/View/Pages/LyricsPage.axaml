@@ -7,6 +7,8 @@
              xmlns:colorpicker="clr-namespace:AvaloniaColorPicker;assembly=AvaloniaColorPicker"
              xmlns:model="clr-namespace:OpenLyricsClient.Frontend.Controls.Model"
              xmlns:custom="clr-namespace:OpenLyricsClient.Frontend.View.Custom.View"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{DynamicResource PrimaryBackgroundBrush}"
              Name="PG_LyricsPage"
@@ -116,6 +118,8 @@
                 UnSelectedLineBrush="#646464"
                 ItemMargin="0,0,0,50"/>
             
+           
+            
             <!--<Panel HorizontalAlignment="Left" 
                    VerticalAlignment="Center"
                    Name="PNL_Loading"
@@ -123,6 +127,20 @@
                   <model:SearchingAnimation></model:SearchingAnimation>
             </Panel>-->
         </Grid>
+        
+        <Button 
+            assists:ButtonAssist.CornerRadius="10"
+            assists:ShadowAssist.ShadowDepth="Depth5"
+            UseLayoutRounding="True"
+            Width="40"
+            Height="40" 
+            Background="{DynamicResource SecondaryBackgroundBrush}"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Right"
+            Margin="0,0,30,80"
+            Click="Button_OnClick">
+            <avalonia:MaterialIcon CornerRadius="20" Kind="Refresh" Width="24" Height="24" />
+        </Button>
         
         <Grid VerticalAlignment="Bottom"
               Height="50">
