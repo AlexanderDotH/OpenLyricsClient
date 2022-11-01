@@ -358,8 +358,8 @@ public partial class LyricsScroller : UserControl
     
     private void CTRL_Viewer_OnScrollChanged(object? sender, ScrollChangedEventArgs e)
     {
-        double diff = Math.Abs(this._currentScrollOffset - this._scrollTo);
-        double delta = Math.Floor(e.OffsetDelta.Y);
+        double diff = Math.Ceiling(Math.Abs(this._currentScrollOffset - this._scrollTo));
+        double delta = e.OffsetDelta.Y * 0.8;
         
         if (delta > diff)
             this._scrollCount++;

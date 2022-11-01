@@ -123,7 +123,7 @@ namespace OpenLyricsClient.Backend.Cache
                 if (!DataValidator.ValidateData(cacheEntry))
                     continue;
 
-                if (cacheEntry.Id == CalculateID(songRequestObject))
+                if (cacheEntry.Id.Equals(CalculateID(songRequestObject)))
                 {
                     return cacheEntry.CacheData;
                 }
