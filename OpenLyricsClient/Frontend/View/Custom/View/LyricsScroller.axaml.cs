@@ -266,8 +266,7 @@ public partial class LyricsScroller : UserControl
             this._itemsRepeater.Children.Clear();
             
             SetAndRaise(LyricPartsProperty, ref _lyricParts,  null); 
-            SetAndRaise(LyricPartsProperty, ref _lyricParts,  context.CurrentLyricParts); 
-
+            SetAndRaise(LyricPartsProperty, ref _lyricParts,  context.CurrentLyricParts);
         }
     }
     
@@ -359,7 +358,7 @@ public partial class LyricsScroller : UserControl
     
     private void CTRL_Viewer_OnScrollChanged(object? sender, ScrollChangedEventArgs e)
     {
-        double diff = Math.Abs(_currentScrollOffset - _scrollTo);
+        double diff = Math.Abs(this._currentScrollOffset - this._scrollTo);
         double delta = Math.Floor(e.OffsetDelta.Y);
         
         if (delta > diff)
