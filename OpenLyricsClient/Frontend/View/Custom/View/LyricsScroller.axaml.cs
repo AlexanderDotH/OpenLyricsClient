@@ -74,6 +74,7 @@ public partial class LyricsScroller : UserControl
     private double _scrollFrom;
     private double _currentScrollOffset;
     private double _scrollTo;
+    private double _oldScrollY;
 
     private bool _isFirstSync;
     private int _scrollCount;
@@ -104,6 +105,7 @@ public partial class LyricsScroller : UserControl
         this.IsSynced = true;
         this._isFirstSync = true;
         this._scrollCount = -2;
+        this._oldScrollY = 0;
 
         this._renderTimer = new SleepLoopRenderTimer(500);
         this._renderTimer.Tick += RenderTimerOnTick;
@@ -138,11 +140,15 @@ public partial class LyricsScroller : UserControl
 
     private void SetThreadPos(Double y)
     {
+        this._oldScrollY = this._scrollViewer.Offset.Y;
+
         Dispatcher.UIThread.InvokeAsync(() =>
         {
             if (this.IsSynced)
+            {
                 this._scrollViewer.Offset = new Vector(0, y);
-
+            }
+            
             if (y < 10)
             {
                 this._gradientTop.Opacity = 0;
@@ -362,8 +368,8 @@ public partial class LyricsScroller : UserControl
     
     private void CTRL_Viewer_OnScrollChanged(object? sender, ScrollChangedEventArgs e)
     {
-        double diff = Math.Ceiling(Math.Abs(this._currentScrollOffset - this._scrollTo));
-        double delta = e.OffsetDelta.Y * 0.8;
+        double diff = Math.Ceiling(Math.Abs(this._scrollViewer.Offset.Y - this._scrollTo));
+        double delta = Math.Abs(e.OffsetDelta.Y * 0.8);
         
         if (delta > diff)
             this._scrollCount++;
