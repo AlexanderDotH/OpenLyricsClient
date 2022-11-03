@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using DevBase.Async.Task;
@@ -14,6 +15,7 @@ using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
+using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Frontend.Models.Custom;
 
@@ -37,6 +39,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
         {
             
             this._lyricParts = new ObservableCollection<LyricPart>();
+            this.CurrentLyricParts =  new ObservableCollection<LyricPart>();
 
             Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
 
@@ -73,23 +76,22 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
 
                 if (!DataValidator.ValidateData(currentSong))
                 {
-                    this.CurrentLyricParts =  new ObservableCollection<LyricPart>();
                     return;
                 }
 
                 if (!DataValidator.ValidateData(currentSong.Lyrics))
-                {
-                    this.CurrentLyricParts =  new ObservableCollection<LyricPart>();
                     return;
-                }
 
                 if (!DataValidator.ValidateData(currentSong.Lyrics.LyricParts))
+                    return;
+
+                if (!DataValidator.ValidateData(this.CurrentLyricParts))
                 {
-                    this.CurrentLyricParts =  new ObservableCollection<LyricPart>();
+                    this.CurrentLyricParts = new ObservableCollection<LyricPart>();
                     return;
                 }
 
-                if (!AreListsEqual(this.CurrentLyricParts, currentSong.Lyrics.LyricParts))
+                if (!(AreListsEqual(this.CurrentLyricParts, currentSong.Lyrics.LyricParts)))
                 {
                     this.CurrentLyricParts =  new ObservableCollection<LyricPart>(
                         await this._romanizationHelper.RomanizeArray(currentSong.Lyrics.LyricParts));

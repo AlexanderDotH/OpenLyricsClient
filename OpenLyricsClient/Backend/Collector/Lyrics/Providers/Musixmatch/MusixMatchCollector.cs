@@ -31,6 +31,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
             this._debugger = new Debugger<MusixMatchCollector>(this);
         }
         
+        
         public async Task<LyricData> GetLyrics(SongRequestObject songRequestObject)
         {
             if (!DataValidator.ValidateData(songRequestObject))

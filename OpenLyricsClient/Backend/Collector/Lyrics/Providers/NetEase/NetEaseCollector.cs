@@ -66,9 +66,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase
 
                                         if (DataValidator.ValidateData(songResponse) && DataValidator.ValidateData(
                                                 songResponse.Name, songResponse.Artists, songResponse.Alias,
-                                                songResponse.CopyrightId, songResponse.Duration, songResponse.Fee,
-                                                songResponse.Ftype, songResponse.Id, songResponse.Mark,
-                                                songResponse.Mvid, songResponse.NetEaseAlbumResponse,
+                                                songResponse.Duration, songResponse.Id, songResponse.NetEaseAlbumResponse,
                                                 songResponse.Alias, songResponse.Status))
                                         {
                                             SongMetadata songMetadata = SongMetadata.ToSongMetadata(
@@ -77,12 +75,12 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase
                                                 DataConverter.ToArtists(songResponse.Artists),
                                                 songResponse.Duration);
 
-                                            GenericList<Tuple<NetEaseSongResponse, NetEaseLyricResponse>> lyrics =
-                                                new GenericList<Tuple<NetEaseSongResponse, NetEaseLyricResponse>>();
-
                                             if (!IsSongValid(songResponse, songRequestObject, retryPercentage))
                                                 continue;
 
+                                            GenericList<Tuple<NetEaseSongResponse, NetEaseLyricResponse>> lyrics =
+                                                new GenericList<Tuple<NetEaseSongResponse, NetEaseLyricResponse>>();
+                                            
                                             int songId = songResponse.Id;
                                             NetEaseLyricResponse lyricResponse = await GetLyricsFromEndpoint(songId);
 
@@ -94,15 +92,12 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase
                                                 if (songRequestObject.SelectioMode == SelectionMode.QUALITY)
                                                 {
                                                     lyrics.Add(new Tuple<NetEaseSongResponse, NetEaseLyricResponse>(songResponse, lyricResponse));
-                                                    
+
                                                     for (int k = 0; k < lyrics.Length; k++)
                                                     {
-                                                        Tuple<NetEaseSongResponse, NetEaseLyricResponse> lyricElement = lyrics.Get(i);
-                                                        if (lyricElement.Item2.NetEaseLrcResponse.Lyric != "")
+                                                        Tuple<NetEaseSongResponse, NetEaseLyricResponse> lyricElement = lyrics.Get(k);
+                                                        if (!IsGarbage(lyricElement.Item2))
                                                         {
-                                                            if (!IsGarbage(lyricElement.Item2))
-                                                                continue; 
-
                                                             return await ParseLyricResponse(lyricElement.Item2, songMetadata);
                                                         }
                                                     }
@@ -112,6 +107,10 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase
                                                     return await ParseLyricResponse(lyricResponse, songMetadata);
                                                 }
                                             }
+                                        }
+                                        else
+                                        {
+                                            return new LyricData();
                                         }
                                     }
 
@@ -148,42 +147,30 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase
             if (!MatchDuration(songResponse, songRequestObject.SongDuration, percentage))
                 return false;
 
+            if (!MatchArtists(songResponse, DataConverter.ToArtists(songResponse.Artists), 100))
+                return false;
+
             return true;
         }
 
         private bool IsGarbage(NetEaseLyricResponse lyrics)
         {
-            AString value = new AString(lyrics.NetEaseLrcResponse.Lyric);
+            AString values = new AString(lyrics.NetEaseLrcResponse.Lyric);
 
-            GenericList<string> lines = value.AsList();
-
-            int checksConfirmed = 0;
-
-            if (lines.Length < 2)
-                return false;
-
-            if (Regex.IsMatch(lines.Get(0), DevBaseFormat.Structure.RegexHolder.REGEX_GARBAGE))
-                checksConfirmed++;
-
-            int lastValid = 0;
+            GenericList<string> lines = values.AsList();
 
             for (int i = 0; i < lines.Length; i++)
             {
-                string s = lines.Get(i);
+                string element = lines.Get(i);
 
-                if (Regex.IsMatch(s, DevBaseFormat.Structure.RegexHolder.REGEX_GARBAGE))
-                    continue;
-
-                lastValid = i;
+                if (!Regex.IsMatch(element, 
+                        DevBaseFormat.Structure.RegexHolder.REGEX_GARBAGE))
+                {
+                    return false;
+                }
             }
 
-            if (lastValid >= lines.Length)
-                return false;
-
-            if (!lines.Get(lastValid).Equals(string.Empty))
-                checksConfirmed++;
-
-            return checksConfirmed == 2;
+            return true;
         }
 
         private async Task<LyricData> ParseLyricResponse(NetEaseLyricResponse lyricResponse, SongMetadata songMetadata)
@@ -302,7 +289,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase
 
         public int ProviderQuality()
         {
-            return (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.PERFORMANCE ? 8 : 5);
+            return (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.PERFORMANCE ? 4 : 3);
         }
     }
 }

@@ -71,8 +71,8 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
                                             DataConverter.ToArtists(songResponse.Artists),
                                             songResponse.Duration);
 
-                                        if (Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
-                                            break;
+                                        /*if (Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
+                                            break;*/
 
                                         if (IsValidSong(songResponse, songRequestObject, retryPercentage))
                                         {
@@ -86,11 +86,8 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
                                                 for (int k = 0; k < lyrics.Length; k++)
                                                 {
                                                     Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse> lyricElement = lyrics.Get(i);
-                                                    if (lyricElement.Item2.Lrc.Lyric != "")
+                                                    if (!IsGarbage(lyricElement.Item2))
                                                     {
-                                                        if (!IsGarbage(lyricElement.Item2))
-                                                            continue;
-
                                                         return await ParseLyricResponse(lyricElement.Item2, songMetadata);
                                                     }
                                                 }
@@ -189,37 +186,22 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
 
         private bool IsGarbage(NetEaseV2LyricResponse lyrics)
         {
-            AString value = new AString(lyrics.Lrc.Lyric);
+            AString values = new AString(lyrics.Lrc.Lyric);
 
-            GenericList<string> lines = value.AsList();
-
-            int checksConfirmed = 0;
-
-            if (lines.Length < 2)
-                return false;
-
-            if (Regex.IsMatch(lines.Get(0), DevBaseFormat.Structure.RegexHolder.REGEX_GARBAGE))
-                checksConfirmed++;
-
-            int lastValid = 0;
+            GenericList<string> lines = values.AsList();
 
             for (int i = 0; i < lines.Length; i++)
             {
-                string s = lines.Get(i);
+                string element = lines.Get(i);
 
-                if (Regex.IsMatch(s, DevBaseFormat.Structure.RegexHolder.REGEX_GARBAGE))
-                    continue;
-
-                lastValid = i;
+                if (!Regex.IsMatch(element, 
+                        DevBaseFormat.Structure.RegexHolder.REGEX_GARBAGE))
+                {
+                    return false;
+                }
             }
 
-            if (lastValid >= lines.Length)
-                return false;
-
-            if (!lines.Get(lastValid).Equals(string.Empty))
-                checksConfirmed++;
-
-            return checksConfirmed == 2;
+            return true;
         }
 
         private async Task<NetEaseV2SearchResponse> SearchTrack(SongRequestObject songRequestObject)
@@ -317,7 +299,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
 
         public int ProviderQuality()
         {
-            return (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.PERFORMANCE ? 2 : 3);
+            return (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.PERFORMANCE ? 8 : 5);
 
         }
     }

@@ -140,7 +140,7 @@
                 Margin="0,0,30,80"
                 Click="Button_OnClick">
             <Button.Content>
-                <avalonia:MaterialIcon CornerRadius="20" Kind="Refresh" Width="24" Height="24" />
+                <avalonia:MaterialIcon CornerRadius="20" Kind="ArrowVerticalLock" Width="24" Height="24" />
             </Button.Content>
             <Button.Transitions>
                 <Transitions>
