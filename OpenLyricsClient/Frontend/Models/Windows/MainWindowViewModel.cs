@@ -1,13 +1,10 @@
 using System;
-using System.IO;
 using System.Reactive;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using ReactiveUI;
-using SharpDX.DirectInput;
 
-namespace OpenLyricsClient.Models.Views
+namespace OpenLyricsClient.Frontend.Models.Windows
 {
     public class MainWindowViewModel : ViewModelBase
     {

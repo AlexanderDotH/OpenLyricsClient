@@ -6,20 +6,20 @@
         xmlns:icon="using:Material.Icons.Avalonia"
         xmlns:pages="clr-namespace:OpenLyricsClient.Frontend.View.Pages"
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
-        xmlns:views="clr-namespace:OpenLyricsClient.Models.Views"
+        xmlns:windows="clr-namespace:OpenLyricsClient.Frontend.Models.Windows"
         mc:Ignorable="d"
         Width="1500"
         Height="800"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="PreferSystemChrome"
-        x:Class="OpenLyricsClient.Frontend.View.Views.MainWindow"
+        x:Class="OpenLyricsClient.Frontend.View.Windows.MainWindow"
         Background="{DynamicResource PrimaryBackgroundBrush}"
         WindowStartupLocation="CenterScreen"
         Icon="/Assets/avalonia-logo.ico"
         Title="OpenLyricsClient">
 
     <Design.DataContext>
-        <views:MainWindowViewModel/>
+        <windows:MainWindowViewModel/>
     </Design.DataContext>
 
     <Window.Styles>

@@ -3,16 +3,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
-             xmlns:view="clr-namespace:OpenLyricsClient.Models.Pages"
-             xmlns:model="clr-namespace:OpenLyricsClient.Frontend.Controls.Model"
-             xmlns:views="clr-namespace:OpenLyricsClient.Frontend.View.Views"
+             xmlns:pages="clr-namespace:OpenLyricsClient.Frontend.Models.Pages"
+             xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{DynamicResource PrimaryBackgroundBrush}"
              PointerPressed="InputElement_OnPointerPressed"
              x:Class="OpenLyricsClient.Frontend.View.Pages.SettingsPage">
     
     <Design.DataContext>
-        <view:ApplicationExpanderViewModel/>
+        <pages:SettingsPageViewModel/>
     </Design.DataContext>
     
     <Grid>
@@ -38,7 +37,7 @@
                           ExpandDirection="Down">
                     
                     <StackPanel>
-                        <model:GroupBox
+                        <elements:GroupBox
                             HeaderBrush="{DynamicResource PrimaryColorBrush}" 
                             Width="200" 
                             Height="125" 
@@ -63,9 +62,9 @@
                                           IsChecked="True"
                                           Margin="10,5,0,0"></CheckBox>
                             </StackPanel>
-                        </model:GroupBox>
+                        </elements:GroupBox>
                         
-                        <model:GroupBox
+                        <elements:GroupBox
                             HeaderBrush="{DynamicResource PrimaryColorBrush}" 
                             Width="200" 
                             Height="105" 
@@ -90,7 +89,7 @@
                                     <ComboBoxItem Content="Performance"></ComboBoxItem>
                                 </ComboBox>
                             </StackPanel>
-                        </model:GroupBox>
+                        </elements:GroupBox>
                     </StackPanel>
                     
                     
@@ -103,7 +102,7 @@
                           ExpandDirection="Down">
                     
                     <StackPanel>
-                        <model:GroupBox
+                        <elements:GroupBox
                             HeaderBrush="#1ED760" 
                             Width="200" 
                             Height="165" 
@@ -136,7 +135,7 @@
                                         Content="Disconnect"/>
                                
                             </Grid>
-                        </model:GroupBox>
+                        </elements:GroupBox>
                     </StackPanel>
                     
                     
@@ -149,7 +148,7 @@
                           ExpandDirection="Down">
                     
                     <StackPanel>
-                        <model:GroupBox
+                        <elements:GroupBox
                             HeaderBrush="{DynamicResource PrimaryColorBrush}" 
                             Width="200" 
                             Height="127" 
@@ -177,7 +176,7 @@
                                         Content="Refresh Lyrics"/>
                                
                             </Grid>
-                        </model:GroupBox>
+                        </elements:GroupBox>
                     </StackPanel>
                     
                     

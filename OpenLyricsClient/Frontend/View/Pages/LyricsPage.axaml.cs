@@ -1,24 +1,11 @@
-﻿using System.Diagnostics;
-using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media;
-using Avalonia.Threading;
-using CefNet.CApi;
 using DevBase.Async.Task;
-using OpenLyricsClient.Backend;
-using OpenLyricsClient.Backend.Events;
-using OpenLyricsClient.Backend.Events.EventArgs;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
-using OpenLyricsClient.Frontend.View.Custom.View;
-using OpenLyricsClient.Frontend.View.Views;
+using OpenLyricsClient.Frontend.View.Windows;
+using LyricsScroller = OpenLyricsClient.Frontend.View.Custom.LyricsScroller;
 
 namespace OpenLyricsClient.Frontend.View.Pages;
 

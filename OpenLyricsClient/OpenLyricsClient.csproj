@@ -41,7 +41,6 @@
     <UpToDateCheckInput Remove="Views\MainWindow.axaml" />
   </ItemGroup>
   <ItemGroup>
-    <AdditionalFiles Include="Frontend\Controls\View\SearchingAnimation.axaml" />
     <AdditionalFiles Include="Frontend\View\Pages\FullLyricsPage.axaml" />
     <AdditionalFiles Include="Frontend\View\Pages\LyricsPage.axaml" />
     <AdditionalFiles Include="Frontend\View\Pages\SettingsPage.axaml" />
@@ -63,7 +62,7 @@
       <DependentUpon>FullLyricsPage.axaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Frontend\View\Custom\View\LyricsScroller.axaml.cs">
+    <Compile Update="Frontend\View\Custom\LyricsScroller.axaml.cs">
       <DependentUpon>LyricsScroller.axaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -95,7 +94,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Frontend\Structure" />
-    <Folder Include="Frontend\View\Pages\Model" />
+    <Folder Include="External" />
   </ItemGroup>
 </Project>

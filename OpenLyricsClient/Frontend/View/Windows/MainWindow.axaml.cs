@@ -6,7 +6,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using CefNet.WinApi;
 
-namespace OpenLyricsClient.Frontend.View.Views
+namespace OpenLyricsClient.Frontend.View.Windows
 {
     public partial class MainWindow : Window
     {

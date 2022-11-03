@@ -1,11 +1,8 @@
 ﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Material.Styles;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace OpenLyricsClient.Frontend.Controls.Model;
+namespace OpenLyricsClient.Frontend.Models.Elements;
 
 public class GroupBox : Card
 {

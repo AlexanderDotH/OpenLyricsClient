@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using OpenLyricsClient.Models.Views;
+﻿using System.Collections.ObjectModel;
 
-namespace OpenLyricsClient.Models.Pages;
+namespace OpenLyricsClient.Frontend.Models.Pages;
 
-public class ApplicationExpanderViewModel : ViewModelBase
+public class SettingsPageViewModel : ViewModelBase
 {
     private ObservableCollection<string> _lyricsSelectionMode;
 
-    public ApplicationExpanderViewModel()
+    public SettingsPageViewModel()
     {
     }
 

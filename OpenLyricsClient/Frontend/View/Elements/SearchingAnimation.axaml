@@ -1,6 +1,6 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:base="clr-namespace:OpenLyricsClient.Frontend.Controls.Model">
+        xmlns:base="clr-namespace:OpenLyricsClient.Frontend.Models.Elements">
     
     <Style Selector="base|SearchingAnimation">
         <Setter Property="Width" Value="250"></Setter>

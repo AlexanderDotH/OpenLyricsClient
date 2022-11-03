@@ -1,5 +1,5 @@
 ﻿using Avalonia.Controls.Primitives;
 
-namespace OpenLyricsClient.Frontend.Controls.Model;
+namespace OpenLyricsClient.Frontend.Models.Elements;
 
 public class SearchingAnimation : TemplatedControl { }

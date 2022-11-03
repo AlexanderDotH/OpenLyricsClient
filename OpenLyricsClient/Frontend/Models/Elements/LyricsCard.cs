@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Globalization;
-using System.Linq.Expressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Layout;
 using Avalonia.Media;
-using Avalonia.Media.TextFormatting;
 using OpenLyricsClient.Backend.Utils;
 using Brush = Avalonia.Media.Brush;
 using FontFamily = Avalonia.Media.FontFamily;
 using FontStyle = Avalonia.Media.FontStyle;
-using Size = Avalonia.Size;
 
-namespace OpenLyricsClient.Frontend.Controls.Model;
+namespace OpenLyricsClient.Frontend.Models.Elements;
 
 public class LyricsCard : TemplatedControl
 {

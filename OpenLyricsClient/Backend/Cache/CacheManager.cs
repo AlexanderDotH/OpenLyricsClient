@@ -67,8 +67,9 @@ namespace OpenLyricsClient.Backend.Cache
             if (!File.Exists(filePath))
             {
                 File.WriteAllText(filePath, JsonConvert.SerializeObject(ConvertToJsonLyricData(cacheData), Formatting.Indented));
-                this._cache.Add(new CacheEntry(id, cacheData));
             }
+            
+            this._cache.Add(new CacheEntry(id, cacheData));
         }
 
         public void AddToCache(SongRequestObject songRequestObject, LyricData cacheData)

@@ -14,13 +14,13 @@
     
     <Application.Styles>
         <StyleInclude Source="avares://Material.Avalonia/Material.Avalonia.Templates.xaml" />
-        <StyleInclude Source="avares://Material.Icons.Avalonia/App.xaml"></StyleInclude>
+        <StyleInclude Source="avares://Material.Icons.Avalonia/App.xaml"/>
         <StyleInclude Source="avares://AsyncImageLoader.Avalonia/AdvancedImage.axaml" />
-        <StyleInclude Source="avares://OpenLyricsClient/Frontend/Controls/View/SearchingAnimation.axaml"/>
-        <StyleInclude Source="avares://OpenLyricsClient/Frontend/Controls/View/GroupBox.axaml"/>
-        <StyleInclude Source="avares://OpenLyricsClient/Frontend/Controls/View/ComboBox.axaml"/>
-        <StyleInclude Source="avares://OpenLyricsClient/Frontend/Controls/View/AnimatedScrollView.axaml"/>
-        <StyleInclude Source="avares://OpenLyricsClient/Frontend/Controls/View/LyricsCard.axaml"/>
+        <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/SearchingAnimation.axaml"/>
+        <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/GroupBox.axaml"/>
+        <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/ComboBox.axaml"/>
+        <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/AnimatedScrollView.axaml"/>
+        <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/LyricsCard.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/Styles/Grid.axaml"/>
 
         <Style>

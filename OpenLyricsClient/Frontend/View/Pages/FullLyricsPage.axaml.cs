@@ -2,7 +2,7 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
-using OpenLyricsClient.Frontend.View.Views;
+using OpenLyricsClient.Frontend.View.Windows;
 
 namespace OpenLyricsClient.Frontend.View.Pages;
 

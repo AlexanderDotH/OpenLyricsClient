@@ -1,15 +1,15 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:model="clr-namespace:OpenLyricsClient.Frontend.Controls.Model">
+        xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements">
     <Design.PreviewWith>
         <Border Padding="20">
-            <model:LyricsCard  Text="CurrentLine" ></model:LyricsCard>
+            <elements:LyricsCard  Text="CurrentLine" ></elements:LyricsCard>
             <!-- Add Controls for Previewer Here -->
         </Border>
     </Design.PreviewWith>
 
     <!-- Add Styles Here -->
-    <Style Selector="model|LyricsCard">
+    <Style Selector="elements|LyricsCard">
         <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}"/>
         <Setter Property="CornerRadius" Value="5"/>
         <Setter Property="Transitions">

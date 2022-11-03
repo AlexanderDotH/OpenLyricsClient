@@ -1,8 +1,8 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using OpenLyricsClient.Frontend.View.Views;
-using OpenLyricsClient.Models.Views;
+using OpenLyricsClient.Frontend.Models.Windows;
+using OpenLyricsClient.Frontend.View.Windows;
 
 namespace OpenLyricsClient
 {

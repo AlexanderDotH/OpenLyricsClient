@@ -2,14 +2,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
-        xmlns:base="clr-namespace:OpenLyricsClient.Frontend.Controls.Model">
+        xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements">
     <Design.PreviewWith>
         <Border Padding="20">
-            <base:GroupBox Width="100" Height="100"></base:GroupBox>
+            <elements:GroupBox Width="100" Height="100"></elements:GroupBox>
         </Border>
     </Design.PreviewWith>
     
-    <Style Selector="base|GroupBox">
+    <Style Selector="elements|GroupBox">
         <Setter Property="assists:ShadowAssist.ShadowDepth" Value="Depth2"/>
         <Setter Property="CornerRadius" Value="4"/>
         <Setter Property="HeaderBrush" Value="{DynamicResource PrimaryColorBrush}"></Setter>
@@ -28,14 +28,14 @@
                     </Border>
                     
                     <Border
-                        Background="{TemplateBinding base:GroupBox.HeaderBrush}"
+                        Background="{TemplateBinding elements:GroupBox.HeaderBrush}"
                             Height="35"
                             Margin="0,0,0,0"
                             VerticalAlignment="Top"
                             CornerRadius="{TemplateBinding CornerRadius}"
                             assists:ShadowAssist.ShadowDepth="{TemplateBinding assists:ShadowAssist.ShadowDepth}">
                         
-                        <TextBlock Text="{ TemplateBinding base:GroupBox.HeaderText}"
+                        <TextBlock Text="{ TemplateBinding elements:GroupBox.HeaderText}"
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Center"
                                    Margin="10,0,0,0"

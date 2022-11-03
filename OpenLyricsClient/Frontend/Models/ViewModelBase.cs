@@ -1,6 +1,6 @@
 using ReactiveUI;
 
-namespace OpenLyricsClient.Models.Views
+namespace OpenLyricsClient.Frontend.Models
 {
     public class ViewModelBase : ReactiveObject
     {
