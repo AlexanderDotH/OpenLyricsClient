@@ -146,6 +146,7 @@ public partial class LyricsScroller : UserControl
         {
             if (this.IsSynced)
             {
+                this._oldScrollY = this._scrollViewer.Offset.Y;
                 this._scrollViewer.Offset = new Vector(0, y);
             }
             
@@ -368,10 +369,10 @@ public partial class LyricsScroller : UserControl
     
     private void CTRL_Viewer_OnScrollChanged(object? sender, ScrollChangedEventArgs e)
     {
-        double diff = Math.Ceiling(Math.Abs(this._scrollViewer.Offset.Y - this._scrollTo));
-        double delta = Math.Abs(e.OffsetDelta.Y * 0.8);
+        double diff = Math.Ceiling(Math.Abs(this._scrollViewer.Offset.Y - this._oldScrollY));
+        double delta = Math.Abs(e.OffsetDelta.Y);
         
-        if (delta > diff)
+        if (delta > diff && e.OffsetDelta.Y % 50 == 0)
             this._scrollCount++;
 
         if (this._scrollCount >= 0)
