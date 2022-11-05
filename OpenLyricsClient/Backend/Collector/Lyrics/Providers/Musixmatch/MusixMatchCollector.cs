@@ -54,8 +54,8 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
                 tracks = await musixmatchClient.SongSearchAsync(
                     new TrackSearchParameters
                     {
-                        Album = songRequestObject.FormattedSongAlbum,
-                        Title = songRequestObject.FormattedSongName,
+                        Album = songRequestObject.Album,
+                        Title = songRequestObject.SongName,
                         Artist = songRequestObject.GetArtistsSplit(),
                         HasSubtitles = true
                     });
@@ -65,8 +65,8 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
                 tracks = await musixmatchClient.SongSearchAsync(
                     new TrackSearchParameters
                     {
-                        Album = songRequestObject.FormattedSongAlbum,
-                        Title = songRequestObject.FormattedSongName,
+                        Album = songRequestObject.Album,
+                        Title = songRequestObject.SongName,
                         Artist = songRequestObject.GetArtistsSplit(),
                         HasSubtitles = true
                     });

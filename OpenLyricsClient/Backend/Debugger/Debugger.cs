@@ -23,31 +23,13 @@ namespace OpenLyricsClient.Backend.Debugger
             if (!EnvironmentUtils.IsDebugLogEnabled())
                 return;
 
-            switch (debugType)
-            {
-                case DebugType.INFO:
-                {
-                    Print(message, debugType);
-                    break;
-                }
-                case DebugType.DEBUG:
-                {
-                    if (Core.DEBUG_MODE)
-                        Print(message, debugType);
-                    break;
-                }
-                case DebugType.ERROR:
-                {
-                    Print(message, debugType);
-                    break;
-                }
-
-            }
+            Print(message, debugType);
         }
 
         private void Print(string message, DebugType debugType)
         {
-            Debug.WriteLine(string.Format("{0} : {2} : {1}", this._type.GetType().Name, message, debugType.ToString()));
+            if (Core.DEBUG_MODE)
+                Debug.WriteLine(string.Format("{3} : {0} : {2} : {1}", this._type.GetType().Name, message, debugType.ToString(), DateTime.Now.TimeOfDay.ToString()));
         }
     }
 }

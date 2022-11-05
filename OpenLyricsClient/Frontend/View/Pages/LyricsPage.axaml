@@ -8,8 +8,10 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              xmlns:custom1="clr-namespace:OpenLyricsClient.Frontend.View.Custom"
+             xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{DynamicResource PrimaryBackgroundBrush}"
+             Foreground="{DynamicResource PrimaryFontColorBrush}"
              Name="PG_LyricsPage"
              EffectiveViewportChanged="Layoutable_OnEffectiveViewportChanged"
              x:Class="OpenLyricsClient.Frontend.View.Pages.LyricsPage">
@@ -105,6 +107,7 @@
                        Margin="0, 335,0,0"
                        FontSize="15"></TextBlock>
         </Grid>
+        
         <Grid Name="GRD_Presenter"
               VerticalAlignment="Top"
               Margin="500,120,5,50">
@@ -123,7 +126,7 @@
                    VerticalAlignment="Center"
                    Name="PNL_Loading"
                    Margin="0,0,0,0">
-                  <model:SearchingAnimation></model:SearchingAnimation>
+                  <elements:SearchingAnimation></elements:SearchingAnimation>
             </Panel>-->
         </Grid>
         
@@ -156,6 +159,7 @@
                 </Style>
             </Button.Styles>
         </Button>
+        
         
         <Grid VerticalAlignment="Bottom"
               Height="50">

@@ -1,6 +1,8 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using OpenLyricsClient.Backend;
 using OpenLyricsClient.Frontend.View.Windows;
 
 namespace OpenLyricsClient.Frontend.View.Pages;
@@ -25,5 +27,10 @@ public partial class SettingsPage : UserControl
     {
         if (!this._comboboxMode.IsDropDownOpen)
             MainWindow.Instance.BeginMoveDrag(e);
+    }
+
+    private void Button_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Core.INSTANCE.ServiceHandler.AuthorizeService("Spotify");
     }
 }

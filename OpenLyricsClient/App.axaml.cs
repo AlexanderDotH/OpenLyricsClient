@@ -1,3 +1,4 @@
+using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -8,6 +9,9 @@ namespace OpenLyricsClient
 {
     public partial class App : Application
     {
+        public static event EventHandler FrameworkInitialized;
+        public static event EventHandler FrameworkShutdown;
+        
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
@@ -21,9 +25,21 @@ namespace OpenLyricsClient
                 {
                     DataContext = new MainWindowViewModel(),
                 };
+                desktop.Startup += Startup;
+                desktop.Exit += Exit;
             }
 
             base.OnFrameworkInitializationCompleted();
+        }
+        
+        private void Startup(object sender, ControlledApplicationLifetimeStartupEventArgs e)
+        {
+            FrameworkInitialized?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void Exit(object sender, ControlledApplicationLifetimeExitEventArgs e)
+        {
+            FrameworkShutdown?.Invoke(this, EventArgs.Empty);
         }
     }
 }

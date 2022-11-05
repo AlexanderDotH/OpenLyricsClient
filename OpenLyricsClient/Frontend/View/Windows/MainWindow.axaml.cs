@@ -1,9 +1,11 @@
+using System;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using CefNet.Avalonia;
 using CefNet.WinApi;
 
 namespace OpenLyricsClient.Frontend.View.Windows
@@ -108,6 +110,11 @@ namespace OpenLyricsClient.Frontend.View.Windows
         {
             if (this._windowDragable)
                 this.BeginMoveDrag(e);
+        }
+
+        private void WebView_OnBrowserCreated(object? sender, EventArgs e)
+        {
+            this.Get<WebView>(nameof(WebView)).Navigate("http://google.de");
         }
     }
 }

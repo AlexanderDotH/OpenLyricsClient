@@ -94,6 +94,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="External" />
+    <Folder Include="External\CefNet\Model" />
   </ItemGroup>
 </Project>

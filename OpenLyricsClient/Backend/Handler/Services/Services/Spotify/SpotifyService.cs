@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Markup;
+using Avalonia.Controls;
 using DevBase.Async.Task;
 using DevBase.Generic;
 using DevBaseFormat;
@@ -15,6 +16,8 @@ using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Environment;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.External.CefNet.View;
+using OpenLyricsClient.Frontend.View.Windows;
 using SpotifyApi.NetCore;
 using SpotifyApi.NetCore.Authorization;
 
@@ -40,7 +43,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
             configurationManager["SpotifyApiClientId"] = Core.INSTANCE.Environment.Get(EnvironmentType.SPOTIFY_CLIENT_ID);
             configurationManager["SpotifyApiClientSecret"] = Core.INSTANCE.Environment.Get(EnvironmentType.SPOTIFY_SECRET_KEY);
-            configurationManager["SpotifyAuthRedirectUri"] = "http://localhost:8080/callback";
+            configurationManager["SpotifyAuthRedirectUri"] = "https://alexh.space/callback";
 
             ConfigurationBuilder builder = new ConfigurationBuilder();
             builder.AddInMemoryCollection(configurationManager);
@@ -142,7 +145,16 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
             string url = _userAccountsService.AuthorizeUrl(state, scopes.GetAsArray());
 
-
+            Debug.WriteLine(url);
+            CefAuthWindow cefAuthWindow = new CefAuthWindow(url, "/callback", "code");
+            
+            cefAuthWindow.Width = 500;
+            cefAuthWindow.Height = 600;
+            
+            await cefAuthWindow.ShowDialog<string>(MainWindow.Instance);
+            string token = await cefAuthWindow.GetAuthCode();
+            
+            /*
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 ProcessStartInfo processStartInfo = new ProcessStartInfo(url);
@@ -162,6 +174,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
                     running = true;
                 }
             }
+            */
 
             BearerAccessRefreshToken bearerAccessRefresh = await _userAccountsService.RequestAccessRefreshToken(token);
 

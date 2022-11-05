@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using DevBase.Async.Task;
+using JetBrains.Annotations;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
@@ -91,11 +92,24 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
                     return;
                 }
 
-                if (!(AreListsEqual(this.CurrentLyricParts, currentSong.Lyrics.LyricParts)))
+                bool changed = false;
+                
+                lock (this.CurrentLyricParts)
+                {
+                    if (!(AreListsEqual(this.CurrentLyricParts, currentSong.Lyrics.LyricParts)))
+                    {
+                        this.CurrentLyricParts =  new ObservableCollection<LyricPart>(currentSong.Lyrics.LyricParts);
+                        changed = true;
+                    }
+                }
+
+                if (changed)
                 {
                     this.CurrentLyricParts =  new ObservableCollection<LyricPart>(
                         await this._romanizationHelper.RomanizeArray(currentSong.Lyrics.LyricParts));
                 }
+                
+                
             });
         }
     }

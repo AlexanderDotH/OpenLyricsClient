@@ -7,6 +7,7 @@
              xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{DynamicResource PrimaryBackgroundBrush}"
+             Foreground="{DynamicResource PrimaryFontColorBrush}"
              PointerPressed="InputElement_OnPointerPressed"
              x:Class="OpenLyricsClient.Frontend.View.Pages.SettingsPage">
     
@@ -34,6 +35,7 @@
                           VerticalAlignment="Top"
                           IsExpanded="True"
                           Background="{DynamicResource SecondaryBackgroundBrush}"
+                          Foreground="{DynamicResource PrimaryFontColorBrush}"
                           ExpandDirection="Down">
                     
                     <StackPanel>
@@ -49,16 +51,19 @@
                             <StackPanel>
                                 <CheckBox Content="Japanese to Romanji"
                                           Background="{DynamicResource PrimaryColorBrush}"
+                                          Foreground="{DynamicResource PrimaryFontColorBrush}"
                                           IsChecked="True"
                                           Margin="10,0,0,0"></CheckBox>
                                 
                                 <CheckBox Content="Korean to Romanji"
                                           Background="{DynamicResource PrimaryColorBrush}"
+                                          Foreground="{DynamicResource PrimaryFontColorBrush}"
                                           IsChecked="True"
                                           Margin="10,5,0,0"></CheckBox>
                                 
                                 <CheckBox Content="Russia to Latin"
                                           Background="{DynamicResource PrimaryColorBrush}"
+                                          Foreground="{DynamicResource PrimaryFontColorBrush}"
                                           IsChecked="True"
                                           Margin="10,5,0,0"></CheckBox>
                             </StackPanel>
@@ -82,7 +87,7 @@
                                           PlaceholderText="Selection Mode"
                                           Width="180"
                                           Background="{DynamicResource SecondaryBackgroundBrush}"
-                                          Foreground="White"
+                                          Foreground="{DynamicResource PrimaryFontColorBrush}"
                                           Margin="10,5,0,0"
                                           >
                                     <ComboBoxItem Content="Quality"></ComboBoxItem>
@@ -99,8 +104,8 @@
                           VerticalAlignment="Top"
                           IsExpanded="True"
                           Background="{DynamicResource SecondaryBackgroundBrush}"
+                          Foreground="{DynamicResource PrimaryFontColorBrush}"
                           ExpandDirection="Down">
-                    
                     <StackPanel>
                         <elements:GroupBox
                             HeaderBrush="#1ED760" 
@@ -124,6 +129,7 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
                                         Margin="0,45,0,0"
+                                        Click="Button_OnClick"
                                         Content="Connect"/>
                                 <Button Width="180" 
                                         Height="30" 
@@ -145,6 +151,7 @@
                           VerticalAlignment="Top"
                           IsExpanded="True"
                           Background="{DynamicResource SecondaryBackgroundBrush}"
+                          Foreground="{DynamicResource PrimaryFontColorBrush}"
                           ExpandDirection="Down">
                     
                     <StackPanel>

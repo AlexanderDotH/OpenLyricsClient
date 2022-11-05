@@ -2,7 +2,9 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.ReactiveUI;
 using System;
+using CefNet;
 using OpenLyricsClient.Backend;
+using OpenLyricsClient.External.CefNet.Utils;
 
 namespace OpenLyricsClient
 {
@@ -23,7 +25,18 @@ namespace OpenLyricsClient
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .LogToTrace()
-                .AfterSetup(t => new Core())
+                .AfterSetup(t =>
+                {
+                    new Core();
+                    
+                    CefSetup cefSetup = new CefSetup();
+                    cefSetup.SetupCef();
+                    
+                    App.FrameworkShutdown += (sender, args) =>
+                    {
+                        cefSetup.CefNetApplication.Shutdown();
+                    };
+                })
                 .UseReactiveUI();
     }
 }

@@ -7,6 +7,7 @@
         xmlns:pages="clr-namespace:OpenLyricsClient.Frontend.View.Pages"
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         xmlns:windows="clr-namespace:OpenLyricsClient.Frontend.Models.Windows"
+        xmlns:avalonia="clr-namespace:CefNet.Avalonia;assembly=CefNet.Avalonia"
         mc:Ignorable="d"
         Width="1500"
         Height="800"
@@ -29,6 +30,7 @@
     </Window.Styles>
     
     <Grid PointerPressed="InputElement_OnPointerPressed">
+        
         <DockPanel HorizontalAlignment="Left"
                    Width="55">
             <StackPanel
