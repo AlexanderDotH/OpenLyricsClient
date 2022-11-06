@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using DevBaseApi.Apis.Tidal.Structure.Json;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase.Json;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2.Json;
-using SpotifyApi.NetCore;
+using SpotifyAPI.Web;
 
 namespace OpenLyricsClient.Backend.Utils
 {
@@ -33,11 +33,11 @@ namespace OpenLyricsClient.Backend.Utils
             return artistsAsStrings;
         }
 
-        public static string[] SpotifyArtistsToStrings(Artist[] artists)
+        public static string[] SpotifyArtistsToStrings(List<SimpleArtist> artists)
         {
-            string[] artistsAsStrings = new string[artists.Length];
+            string[] artistsAsStrings = new string[artists.Count];
 
-            for (int i = 0; i < artists.Length; i++)
+            for (int i = 0; i < artists.Count; i++)
             {
                 artistsAsStrings[i] = artists[i].Name;
             }

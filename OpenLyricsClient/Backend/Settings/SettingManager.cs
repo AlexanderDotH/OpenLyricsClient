@@ -8,7 +8,6 @@ using OpenLyricsClient.Backend.Collector.Lyrics;
 using OpenLyricsClient.Backend.Romanization;
 using OpenLyricsClient.Backend.Structure;
 using SharpDX.Text;
-using SpotifyApi.NetCore.Authorization;
 
 namespace OpenLyricsClient.Backend.Settings
 {
@@ -76,16 +75,10 @@ namespace OpenLyricsClient.Backend.Settings
                 {
                     SpotifyAccess spotifyAccess = new SpotifyAccess();
 
-                    BearerAccessToken bearerAccessToken = new BearerAccessToken();
-                    bearerAccessToken.AccessToken = "null";
-                    bearerAccessToken.ExpiresIn = 0;
-                    bearerAccessToken.Scope = "playlist-read-private playlist-read-collaborative streaming user-follow-read user-library-read user-read-private user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played";
-
-                    spotifyAccess.BearerAccess = bearerAccessToken;
-
+                    spotifyAccess.AccessToken = "null";
                     spotifyAccess.IsSpotifyConnected = false;
                     spotifyAccess.RefreshToken = string.Empty;
-                    spotifyAccess.SpotifyExpireTime = DateTime.Now;
+                    spotifyAccess.SpotifyExpireTime = (int)DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
                     return spotifyAccess;
                 }

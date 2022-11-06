@@ -8,6 +8,7 @@ using System.Windows.Markup;
 using Avalonia.Controls;
 using DevBase.Async.Task;
 using DevBase.Generic;
+using DevBaseApi.Apis.OpenLyricsClient.Structure.Json;
 using DevBaseFormat;
 using DevBaseFormat.Formats.EnvFormat;
 using DevBaseFormat.Structure;
@@ -18,14 +19,13 @@ using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.External.CefNet.View;
 using OpenLyricsClient.Frontend.View.Windows;
-using SpotifyApi.NetCore;
-using SpotifyApi.NetCore.Authorization;
+using SpotifyAPI.Web;
 
 namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 {
     class SpotifyService : IService
     {
-        private UserAccountsService _userAccountsService;
+        private SpotifyClient _spotifyClient;
         private IConfiguration _configurationManager;
 
         private string _baseAuthUrl;
@@ -42,22 +42,10 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             this._disposed = false;
 
             this._baseAuthUrl = "https://www.openlyricsclient.com/connect/spotify/begin";
-            this._redirectUrl = "https://www.openlyricsclient.com/connect/spotify/complete"; 
+            this._redirectUrl = "https://www.openlyricsclient.com/connect/spotify/complete";
+
+            this._spotifyClient = new SpotifyClient(Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken);
             
-            //Please dont steal me
-            Dictionary<string, string> configurationManager = new Dictionary<string, string>();
-            configurationManager["SpotifyApiClientId"] = "5506575c84334b25978bda35ee43e6fd";
-            configurationManager["SpotifyApiClientSecret"] = "notset";
-            configurationManager["SpotifyAuthRedirectUri"] = this._redirectUrl;
-
-            ConfigurationBuilder builder = new ConfigurationBuilder();
-            builder.AddInMemoryCollection(configurationManager);
-
-            this._configurationManager = builder.Build();
-
-            HttpClient httpClient = new HttpClient();
-            this._userAccountsService = new AccountsService(httpClient, _configurationManager);
-
             Core.INSTANCE.TaskRegister.Register(
                 out _refreshTokenSuspensionToken,
                 new Task(async () => await RefreshToken(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.None),
@@ -73,11 +61,11 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
                 if (Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected)
                 {
-                    if (Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess != null)
+                    if (Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken != null)
                     {
-                        DateTime expire = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime;
+                        int expire = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime;
 
-                        if (DateTime.Now > expire)
+                        if (DateTimeOffset.Now.ToUnixTimeMilliseconds() > expire)
                         {
                             await RefreshTokenRequest();
                             this._debugger.Write("Refreshed Spotify Token", DebugType.DEBUG);
@@ -89,7 +77,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
         public bool IsConnected()
         {
-            return Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected && Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess != null;
+            return Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected && Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken != null;
         }
 
         public async Task<bool> TestConnection()
@@ -100,10 +88,8 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             if (!DataValidator.ValidateData(Core.INSTANCE.SettingManager.Settings.SpotifyAccess))
                 return false;
 
-            CurrentPlaybackContext currentPlayback =
-                await new PlayerApi(new HttpClient(), GetAccessToken()).GetCurrentPlaybackInfo();
-
-            return DataValidator.ValidateData(currentPlayback) && currentPlayback.IsPlaying;
+            CurrentlyPlayingContext currentlyPlayingContext = await new SpotifyClient(GetAccessToken()).Player.GetCurrentPlayback();
+            return DataValidator.ValidateData(currentlyPlayingContext) && currentlyPlayingContext.IsPlaying;
         }
 
         public string GetAccessToken()
@@ -113,17 +99,21 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
                 await RefreshTokenRequest();
 
             }).Wait(Core.INSTANCE.CancellationTokenSource.Token);
-            return Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken;
+            return Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken;
         }
 
         private async Task RefreshTokenRequest()
         {
             try
             {
-                BearerAccessToken bearerAccess = await _userAccountsService.RefreshUserAccessToken(Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken);
-                Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess = bearerAccess;
-                Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime =
-                    DateTimeOffset.Now.DateTime.AddHours(1);
+                DevBaseApi.Apis.OpenLyricsClient.OpenLyricsClient api =
+                    new DevBaseApi.Apis.OpenLyricsClient.OpenLyricsClient();
+
+                JsonOpenLyricsClientAccess access =
+                        await api.GetAccessToken(Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken);
+                
+                Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken = access.AccessToken;
+                Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime = access.ExpiresIn;
                 Core.INSTANCE.SettingManager.WriteSettings();
             }
             catch (Exception e)
@@ -134,7 +124,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
         public async Task StartAuthorization()
         {
-            CefAuthWindow cefAuthWindow = new CefAuthWindow(this._baseAuthUrl, "/callback", "code");
+            CefAuthWindow cefAuthWindow = new CefAuthWindow("https://www.openlyricsclient.com/connect/spotify/begin", "/complete");
             
             cefAuthWindow.Width = 500;
             cefAuthWindow.Height = 600;
@@ -164,12 +154,12 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             }
             */
 
-            BearerAccessRefreshToken bearerAccessRefresh = await _userAccountsService.RequestAccessRefreshToken(token);
+            /*BearerAccessRefreshToken bearerAccessRefresh = await _userAccountsService.RequestAccessRefreshToken(token);
 
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken = bearerAccessRefresh.RefreshToken;
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess = bearerAccessRefresh;
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected = true;
-            Core.INSTANCE.SettingManager.WriteSettings();
+            Core.INSTANCE.SettingManager.WriteSettings();*/
         }
 
         string IService.ServiceName()

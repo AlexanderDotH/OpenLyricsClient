@@ -13,10 +13,8 @@ namespace OpenLyricsClient.External.CefNet.View;
 
 public partial class CefAuthWindow : Window
 {
-
     private string _authURL;
     private string _authCompleteIDentifier;
-    private string _searchFor;
     
     private bool _isComplete;
     private string _returnValue;
@@ -27,7 +25,6 @@ public partial class CefAuthWindow : Window
     {
         this._authURL = "https://google.de";
         this._authCompleteIDentifier = "/callback";
-        this._searchFor = "code";
         
         this._isComplete = false;
         this._returnValue = string.Empty;
@@ -38,11 +35,10 @@ public partial class CefAuthWindow : Window
 #endif
     }
     
-    public CefAuthWindow(string authUrl, string authCompleteIDentifier, string searchFor) : this()
+    public CefAuthWindow(string authUrl, string authCompleteIDentifier) : this()
     {
         this._authURL = authUrl;
         this._authCompleteIDentifier = authCompleteIDentifier;
-        this._searchFor = searchFor;
         
         this._isComplete = false;
         this._returnValue = string.Empty;
@@ -65,14 +61,16 @@ public partial class CefAuthWindow : Window
         Debug.WriteLine(e.Url);
         if (e.Url.Contains(this._authCompleteIDentifier))
         {
-            Regex regex = new Regex(@"(code=)([a-zA-Z0-9\W_]*)");
+            Regex regex = new Regex(@"(refresh_token=([\w\W]+)((access_token=([\w\W]+))))");
             if (regex.IsMatch(e.Url))
             {
                 Match match = regex.Match(e.Url);
 
-                if (match.Groups.Count >= 2)
+                if (match.Groups.Count >= 5)
                 {
-                    this._returnValue = match.Groups[2].Value;
+                    string refresh_token = match.Groups[2].Value;
+                    string access_token = match.Groups[5].Value;
+                    
                     this._isComplete = true;
                     this.Close();
                 }

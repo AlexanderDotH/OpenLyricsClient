@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using DevBase.Async.Task;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Services.Services;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Utils;
-using SpotifyApi.NetCore;
+using SpotifyAPI.Web;
 
 namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
 {
@@ -15,7 +14,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
         private Debugger<SpotifySongProvider> _debugger;
         private Structure.Song.Song _currentSong;
 
-        private PlayerApi _playerApi;
+        private SpotifyClient _spotifyClient;
         private string _accessToken;
 
         private TaskSuspensionToken _updatePlaybackSuspensionToken;
@@ -31,8 +30,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             this._debugger = new Debugger<SpotifySongProvider>(this);
             this._disposed = false;
 
-            this._playerApi = new PlayerApi(new HttpClient(), Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken);
-            this._accessToken = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken;
+            this._spotifyClient = new SpotifyClient(Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken);
 
             this._service = Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
 
@@ -120,13 +118,13 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
 
                 await Task.Delay(2000);
 
-                if (DataValidator.ValidateData(this._playerApi) &&
+                if (DataValidator.ValidateData(this._spotifyClient) &&
                     DataValidator.ValidateData(this._currentSong))
                 {
                     try
                     {
-                        CurrentPlaybackContext currentPlayback =
-                            await this.GetPlayerApi().GetCurrentPlaybackInfo();
+                        CurrentlyPlayingContext currentPlayback =
+                            await this.GetPlayerApi().Player.GetCurrentPlayback();
 
                         if (DataValidator.ValidateData(currentPlayback))
                         {
@@ -154,14 +152,14 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
 
                 await Task.Delay(1000);
 
-                if (DataValidator.ValidateData(this._playerApi) && 
+                if (DataValidator.ValidateData(this._spotifyClient) && 
                     DataValidator.ValidateData(this._currentSong))
                 {
                     try
                     {
-                        CurrentTrackPlaybackContext currentTrack =
-                            await this.GetPlayerApi().GetCurrentlyPlayingTrack<CurrentTrackPlaybackContext>();
-
+                        CurrentlyPlayingContext currentTrack =
+                            await this.GetPlayerApi().Player.GetCurrentPlayback();
+                        
                         if (DataValidator.ValidateData(currentTrack))
                         {
                             this._currentSong =
@@ -182,12 +180,12 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             if (!this._service.IsConnected())
                 return null;
 
-            if (DataValidator.ValidateData(this._playerApi))
+            if (DataValidator.ValidateData(this._spotifyClient))
             {
                 try
                 {
-                    CurrentTrackPlaybackContext currentTrack =
-                        await this.GetPlayerApi().GetCurrentlyPlayingTrack<CurrentTrackPlaybackContext>();
+                    CurrentlyPlayingContext currentTrack =
+                        await this.GetPlayerApi().Player.GetCurrentPlayback();
 
                     if (DataValidator.ValidateData(currentTrack))
                     {
@@ -206,15 +204,16 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             return null;
         }
 
-        private PlayerApi GetPlayerApi()
+        private SpotifyClient GetPlayerApi()
         {
-            if (this._accessToken != Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken)
+            if (this._accessToken != Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken)
             {
-                this._playerApi = new PlayerApi(new HttpClient(), Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken);
-                this._accessToken = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess.AccessToken;
+                this._spotifyClient =
+                    new SpotifyClient(Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken);
+                this._accessToken = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken;
             }
 
-            return this._playerApi;
+            return this._spotifyClient;
         }
 
         public void Dispose()

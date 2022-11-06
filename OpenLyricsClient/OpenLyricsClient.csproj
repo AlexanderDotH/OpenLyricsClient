@@ -34,6 +34,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="SpotifyAPI.Web" Version="6.3.0" />
     <PackageReference Include="Squalr.Engine.Scanning" Version="2.3.0.1" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
   </ItemGroup>
@@ -85,9 +86,6 @@
     </Reference>
     <Reference Include="Romanization.NET">
       <HintPath>..\Libraries\Romanization.NET.dll</HintPath>
-    </Reference>
-    <Reference Include="SpotifyApi.NetCore">
-      <HintPath>..\Libraries\SpotifyApi.NetCore.dll</HintPath>
     </Reference>
     <Reference Include="XWindowManager">
       <HintPath>..\Libraries\XWindowManager.dll</HintPath>

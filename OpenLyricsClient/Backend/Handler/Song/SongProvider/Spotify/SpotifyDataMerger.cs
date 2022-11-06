@@ -2,13 +2,13 @@
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
-using SpotifyApi.NetCore;
+using SpotifyAPI.Web;
 
 namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
 {
     class SpotifyDataMerger
     {
-        public static Structure.Song.Song ValidateUpdatePlayBack(Structure.Song.Song song, CurrentPlaybackContext playbackContext)
+        public static Structure.Song.Song ValidateUpdatePlayBack(Structure.Song.Song song, CurrentlyPlayingContext playbackContext)
         {
             if (DataValidator.ValidateData(song) &&
                 DataValidator.ValidateData(playbackContext) &&
@@ -21,22 +21,20 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             return song;
         }
 
-        public static Structure.Song.Song UpdatePlayBack(Structure.Song.Song song, CurrentPlaybackContext playbackContext)
+        public static Structure.Song.Song UpdatePlayBack(Structure.Song.Song song, CurrentlyPlayingContext playbackContext)
         {
             song.Paused = !playbackContext.IsPlaying;
 
             if (!song.Paused)
             {
                 song.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-
-                if (playbackContext.ProgressMs.HasValue) 
-                    song.ProgressMs = playbackContext.ProgressMs.Value;
+                song.ProgressMs = playbackContext.ProgressMs;
             }
 
             return song;
         }
 
-        public static Structure.Song.Song ValidateUpdateAndMerge(Structure.Song.Song song, CurrentTrackPlaybackContext currentTrack)
+        public static Structure.Song.Song ValidateUpdateAndMerge(Structure.Song.Song song, CurrentlyPlayingContext currentTrack)
         {
             if (DataValidator.ValidateData(song) &&
                 DataValidator.ValidateData(
@@ -51,10 +49,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
                         currentTrack.IsPlaying,
                         currentTrack.Timestamp,
                         currentTrack.ProgressMs) &&
-                    DataValidator.ValidateData(currentTrack.Item) &&
-                    DataValidator.ValidateData(
-                        currentTrack.Item.Artists,
-                        currentTrack.Item.Album))
+                    DataValidator.ValidateData(currentTrack.Item))
                 {
                     return UpdateAndMerge(song, currentTrack);
                 }
@@ -63,27 +58,31 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             return song;
         }
 
-        public static Structure.Song.Song UpdateAndMerge(Structure.Song.Song song, CurrentTrackPlaybackContext currentTrack)
+        public static Structure.Song.Song UpdateAndMerge(Structure.Song.Song song, CurrentlyPlayingContext currentTrack)
         {
-            song.SongMetadata = SongMetadata.ToSongMetadata(
-                currentTrack.Item.Name, 
-                currentTrack.Item.Album.Name, 
-                DataConverter.SpotifyArtistsToStrings(currentTrack.Item.Artists), 
-                currentTrack.Item.DurationMs);
+            if (currentTrack.Item.Type.Equals(ItemType.Track))
+            {
+                if (currentTrack.Item is FullTrack)
+                {
+                    FullTrack track = (FullTrack)currentTrack.Item;
+                    song.SongMetadata = SongMetadata.ToSongMetadata(
+                        track.Name, 
+                        track.Album.Name, 
+                        DataConverter.SpotifyArtistsToStrings(track.Artists), 
+                        track.DurationMs);
+                }
+            }
+           
             return song;
         }
 
-        public static Structure.Song.Song ValidateConvertAndMerge(CurrentTrackPlaybackContext currentTrack)
+        public static Structure.Song.Song ValidateConvertAndMerge(CurrentlyPlayingContext currentTrack)
         {
             if (DataValidator.ValidateData(currentTrack) &&
                 DataValidator.ValidateData(currentTrack.Timestamp) &&
                 DataValidator.ValidateData(currentTrack.Item) &&
-                DataValidator.ValidateData(
-                    currentTrack.Item.Name,
-                    currentTrack.Item.Artists,
-                    currentTrack.Item.DurationMs) &&
                 DataValidator.ValidateData(currentTrack.ProgressMs) &&
-                DataValidator.ValidateData(currentTrack.ProgressMs.Value))
+                DataValidator.ValidateData(currentTrack.ProgressMs))
             {
                 return ConvertAndMerge(currentTrack);
             }
@@ -91,18 +90,28 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             return null;
         }
 
-        public static Structure.Song.Song ConvertAndMerge(CurrentTrackPlaybackContext currentTrack)
+        public static Structure.Song.Song ConvertAndMerge(CurrentlyPlayingContext currentTrack)
         {
-            Structure.Song.Song song = new Structure.Song.Song(
-                currentTrack.Item.Name,
-                currentTrack.Item.Album.Name,
-                DataConverter.SpotifyArtistsToStrings(currentTrack.Item.Artists),
-                currentTrack.Item.DurationMs);
-            song.Time = -1;
-            song.Lyrics = null;
-            song.CurrentLyricPart = null;
-            song.State = SongState.SEARCHING_LYRICS;
-            return song;
+            if (currentTrack.Item.Type.Equals(ItemType.Track))
+            {
+                if (currentTrack.Item is FullTrack)
+                {
+                    FullTrack track = (FullTrack)currentTrack.Item;
+                    Structure.Song.Song song = new Structure.Song.Song(
+                        track.Name,
+                        track.Album.Name,
+                        DataConverter.SpotifyArtistsToStrings(track.Artists),
+                        track.DurationMs);
+                    song.Time = -1;
+                    song.Lyrics = null;
+                    song.CurrentLyricPart = null;
+                    song.State = SongState.SEARCHING_LYRICS;
+
+                    return song;
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -70,8 +70,6 @@ namespace OpenLyricsClient.Backend
             this._songHandler = new SongHandler();
             this._lyricHandler = new LyricHandler(this._songHandler);
 
-            SpotifyApi.NetCore.Logger.LoggingEnabled = false;
-            
             _loaded = true;
         }
 
