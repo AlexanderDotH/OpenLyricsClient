@@ -28,6 +28,9 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
         private UserAccountsService _userAccountsService;
         private IConfiguration _configurationManager;
 
+        private string _baseAuthUrl;
+        private string _redirectUrl;
+        
         private TaskSuspensionToken _refreshTokenSuspensionToken;
 
         private Debugger<SpotifyService> _debugger;
@@ -38,12 +41,14 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             this._debugger = new Debugger<SpotifyService>(this);
             this._disposed = false;
 
+            this._baseAuthUrl = "https://www.openlyricsclient.com/connect/spotify/begin";
+            this._redirectUrl = "https://www.openlyricsclient.com/connect/spotify/complete"; 
+            
             //Please dont steal me
             Dictionary<string, string> configurationManager = new Dictionary<string, string>();
-
-            configurationManager["SpotifyApiClientId"] = Core.INSTANCE.Environment.Get(EnvironmentType.SPOTIFY_CLIENT_ID);
-            configurationManager["SpotifyApiClientSecret"] = Core.INSTANCE.Environment.Get(EnvironmentType.SPOTIFY_SECRET_KEY);
-            configurationManager["SpotifyAuthRedirectUri"] = "https://alexh.space/callback";
+            configurationManager["SpotifyApiClientId"] = "5506575c84334b25978bda35ee43e6fd";
+            configurationManager["SpotifyApiClientSecret"] = "notset";
+            configurationManager["SpotifyAuthRedirectUri"] = this._redirectUrl;
 
             ConfigurationBuilder builder = new ConfigurationBuilder();
             builder.AddInMemoryCollection(configurationManager);
@@ -51,7 +56,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             this._configurationManager = builder.Build();
 
             HttpClient httpClient = new HttpClient();
-            this._userAccountsService = new UserAccountsService(httpClient, _configurationManager);
+            this._userAccountsService = new AccountsService(httpClient, _configurationManager);
 
             Core.INSTANCE.TaskRegister.Register(
                 out _refreshTokenSuspensionToken,
@@ -129,24 +134,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
         public async Task StartAuthorization()
         {
-            string state = Guid.NewGuid().ToString("N");
-
-            GenericList<string> scopes = new GenericList<string>();
-            scopes.Add("playlist-read-private");
-            scopes.Add("playlist-read-collaborative");
-            scopes.Add("streaming");
-            scopes.Add("user-follow-read");
-            scopes.Add("user-library-read");
-            scopes.Add("user-read-private");
-            scopes.Add("user-read-playback-state");
-            scopes.Add("user-modify-playback-state");
-            scopes.Add("user-read-currently-playing");
-            scopes.Add("user-read-recently-played");
-
-            string url = _userAccountsService.AuthorizeUrl(state, scopes.GetAsArray());
-
-            Debug.WriteLine(url);
-            CefAuthWindow cefAuthWindow = new CefAuthWindow(url, "/callback", "code");
+            CefAuthWindow cefAuthWindow = new CefAuthWindow(this._baseAuthUrl, "/callback", "code");
             
             cefAuthWindow.Width = 500;
             cefAuthWindow.Height = 600;

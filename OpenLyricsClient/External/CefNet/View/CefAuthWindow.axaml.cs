@@ -65,15 +65,16 @@ public partial class CefAuthWindow : Window
         Debug.WriteLine(e.Url);
         if (e.Url.Contains(this._authCompleteIDentifier))
         {
-            Regex regex = new Regex(@"(code=)([a-zA-Z0-9\W]*)");
+            Regex regex = new Regex(@"(code=)([a-zA-Z0-9\W_]*)");
             if (regex.IsMatch(e.Url))
             {
                 Match match = regex.Match(e.Url);
 
-                if (match.Groups.Count >= 1)
+                if (match.Groups.Count >= 2)
                 {
-                    this._returnValue = match.Groups[1].Value;
+                    this._returnValue = match.Groups[2].Value;
                     this._isComplete = true;
+                    this.Close();
                 }
             }
         }
