@@ -30,10 +30,7 @@ public class CefSetup
             settings.LogSeverity = CefLogSeverity.Warning;
             settings.UncaughtExceptionStackSize = 8;
 
-            settings.PersistUserPreferences = false;
-            settings.BackgroundColor = CefColor.FromArgb(-1);
-
-            CefNetApplication cefNetApplication = new CefNetApplication();
+            CefNetImplementation cefNetApplication = new CefNetImplementation();
             cefNetApplication.Initialize(string.Format("{0}\\CefBinaries\\{1}\\Release", GetExecutionPath(), GetOSIDentifier()), settings);
 
             this._cefNetApplication = cefNetApplication;

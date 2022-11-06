@@ -16,6 +16,14 @@ namespace OpenLyricsClient
         [STAThread]
         public static void Main(string[] args)
         {
+            CefSetup cefSetup = new CefSetup();
+            cefSetup.SetupCef();
+            
+            App.FrameworkShutdown += (sender, args) =>
+            {
+                cefSetup.CefNetApplication.Shutdown();
+            };
+            
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
         }
@@ -28,14 +36,6 @@ namespace OpenLyricsClient
                 .AfterSetup(t =>
                 {
                     new Core();
-                    
-                    CefSetup cefSetup = new CefSetup();
-                    cefSetup.SetupCef();
-                    
-                    App.FrameworkShutdown += (sender, args) =>
-                    {
-                        cefSetup.CefNetApplication.Shutdown();
-                    };
                 })
                 .UseReactiveUI();
     }

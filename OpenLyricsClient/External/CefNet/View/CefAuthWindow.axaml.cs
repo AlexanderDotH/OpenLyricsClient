@@ -8,6 +8,8 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using CefNet;
 using CefNet.Avalonia;
+using OpenLyricsClient.Backend;
+using OpenLyricsClient.External.CefNet.Structure;
 
 namespace OpenLyricsClient.External.CefNet.View;
 
@@ -17,7 +19,8 @@ public partial class CefAuthWindow : Window
     private string _authCompleteIDentifier;
     
     private bool _isComplete;
-    private string _returnValue;
+    private string _accessToken;
+    private string _refreshToken;
 
     private WebView _authWebView;
 
@@ -27,7 +30,8 @@ public partial class CefAuthWindow : Window
         this._authCompleteIDentifier = "/callback";
         
         this._isComplete = false;
-        this._returnValue = string.Empty;
+        this._accessToken = string.Empty;
+        this._refreshToken = string.Empty;
         
         InitializeComponent();
 #if DEBUG
@@ -41,7 +45,8 @@ public partial class CefAuthWindow : Window
         this._authCompleteIDentifier = authCompleteIDentifier;
         
         this._isComplete = false;
-        this._returnValue = string.Empty;
+        this._accessToken = string.Empty;
+        this._refreshToken = string.Empty;
 
         this._authWebView = this.FindControl<WebView>(nameof(AuthWebView));
     }
@@ -58,7 +63,6 @@ public partial class CefAuthWindow : Window
 
     private void AuthWebView_OnAddressChange(object? sender, AddressChangeEventArgs e)
     {
-        Debug.WriteLine(e.Url);
         if (e.Url.Contains(this._authCompleteIDentifier))
         {
             Regex regex = new Regex(@"(refresh_token=([\w\W]+)((access_token=([\w\W]+))))");
@@ -68,29 +72,27 @@ public partial class CefAuthWindow : Window
 
                 if (match.Groups.Count >= 5)
                 {
-                    string refresh_token = match.Groups[2].Value;
-                    string access_token = match.Groups[5].Value;
-                    
+                    this._refreshToken = match.Groups[2].Value;
+                    this._accessToken = match.Groups[5].Value;
                     this._isComplete = true;
-                    this.Close();
                 }
             }
         }
     }
 
-    public Task<string> GetAuthCode()
+    public async Task<Token> GetAuthCode()
     {
-        TaskCompletionSource<string> completionSource = new TaskCompletionSource<string>();
-        
-        Task.Factory.StartNew(async () =>
+        while (!this._isComplete)
         {
-            while (!this._isComplete)
-            {
-                await Task.Delay(500);
-                completionSource.SetResult(this._returnValue);
-            }
-        });
+            await Task.Delay(500);
 
-        return completionSource.Task;
+            if (this._accessToken != string.Empty && 
+                this._refreshToken != string.Empty)
+            {
+                return new Token(this._accessToken, this._refreshToken);
+            }
+        }
+
+        return null;
     }
 }

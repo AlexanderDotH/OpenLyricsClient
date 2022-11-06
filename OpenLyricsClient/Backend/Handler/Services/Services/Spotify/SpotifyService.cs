@@ -17,6 +17,7 @@ using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Environment;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.External.CefNet.Structure;
 using OpenLyricsClient.External.CefNet.View;
 using OpenLyricsClient.Frontend.View.Windows;
 using SpotifyAPI.Web;
@@ -63,9 +64,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
                 {
                     if (Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken != null)
                     {
-                        int expire = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime;
-
-                        if (DateTimeOffset.Now.ToUnixTimeMilliseconds() > expire)
+                        if (DateTimeOffset.Now.ToUnixTimeMilliseconds() > Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime)
                         {
                             await RefreshTokenRequest();
                             this._debugger.Write("Refreshed Spotify Token", DebugType.DEBUG);
@@ -113,7 +112,8 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
                         await api.GetAccessToken(Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken);
                 
                 Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken = access.AccessToken;
-                Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime = access.ExpiresIn;
+                Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime = 
+                    DateTimeOffset.Now.AddHours(1).ToUnixTimeMilliseconds();
                 Core.INSTANCE.SettingManager.WriteSettings();
             }
             catch (Exception e)
@@ -124,14 +124,24 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
         public async Task StartAuthorization()
         {
-            CefAuthWindow cefAuthWindow = new CefAuthWindow("https://www.openlyricsclient.com/connect/spotify/begin", "/complete");
+            CefAuthWindow cefAuthWindow = new CefAuthWindow("https://openlyricsclient.com/connect/spotify/begin", "/complete");
             
             cefAuthWindow.Width = 500;
             cefAuthWindow.Height = 600;
             
-            await cefAuthWindow.ShowDialog<string>(MainWindow.Instance);
-            string token = await cefAuthWindow.GetAuthCode();
+            cefAuthWindow.ShowDialog<string>(MainWindow.Instance);
             
+            Token token = await cefAuthWindow.GetAuthCode();
+            
+            cefAuthWindow.Close();
+
+            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken = token.AccessToken;
+            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken = token.RefreshToken;
+            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime =
+                DateTimeOffset.Now.AddHours(1).ToUnixTimeMilliseconds();
+            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected = true;
+            Core.INSTANCE.SettingManager.WriteSettings();
+
             /*
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {

@@ -5,6 +5,7 @@
         xmlns:avalonia="clr-namespace:CefNet.Avalonia;assembly=CefNet.Avalonia"
         Background="White"
         mc:Ignorable="d" 
+        d:DesignWidth="800" d:DesignHeight="450"
         WindowStartupLocation="CenterScreen"
         x:Class="OpenLyricsClient.External.CefNet.View.CefAuthWindow"
         
