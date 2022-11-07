@@ -5,9 +5,12 @@ using System.Runtime.CompilerServices;
 using DevBase.IO;
 using Newtonsoft.Json;
 using OpenLyricsClient.Backend.Collector.Lyrics;
+using OpenLyricsClient.Backend.Events.EventArgs;
+using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Romanization;
 using OpenLyricsClient.Backend.Structure;
 using SharpDX.Text;
+using SpotifyAPI.Web;
 
 namespace OpenLyricsClient.Backend.Settings
 {
@@ -18,6 +21,8 @@ namespace OpenLyricsClient.Backend.Settings
         private string _workingDirectory;
 
         private const string SETTING_FILE_NAME = "settings.json";
+        
+        public event SettingsChangedEventHandler SettingsChanged;
         
         public SettingManager(string workingFolder)
         {
@@ -80,6 +85,20 @@ namespace OpenLyricsClient.Backend.Settings
                     spotifyAccess.RefreshToken = string.Empty;
                     spotifyAccess.SpotifyExpireTime = (int)DateTimeOffset.Now.ToUnixTimeMilliseconds();
 
+                    PrivateUser privateUser = new PrivateUser();
+                    privateUser.Country = "";
+                    privateUser.Email = "";
+                    privateUser.Followers = null;
+                    privateUser.Href = "";
+                    privateUser.Id = "";
+                    privateUser.Images = new List<Image>();
+                    privateUser.Product = "";
+                    privateUser.Type = "";
+                    privateUser.Uri = "";
+                    privateUser.DisplayName = "";
+
+                    spotifyAccess.UserData = privateUser;
+
                     return spotifyAccess;
                 }
                 case EnumSetting.TIDAL:
@@ -119,6 +138,8 @@ namespace OpenLyricsClient.Backend.Settings
             string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
 
             File.WriteAllText(this._settingsFilePath.FileInfo.FullName, json);
+            
+            SettingsChangedEvent(new SettingsChangedEventArgs(settings));
         }
         
         public void WriteSettings()
@@ -154,6 +175,12 @@ namespace OpenLyricsClient.Backend.Settings
         public string WorkingDirectory
         {
             get => _workingDirectory;
+        }
+        
+        protected virtual void SettingsChangedEvent(SettingsChangedEventArgs settingsChangedEventArgs)
+        {
+            SettingsChangedEventHandler settingsChangedEventHandler = SettingsChanged;
+            settingsChangedEventHandler?.Invoke(this, settingsChangedEventArgs);
         }
     }
 }

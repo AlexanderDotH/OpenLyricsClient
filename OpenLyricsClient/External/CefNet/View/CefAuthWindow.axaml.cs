@@ -89,6 +89,7 @@ public partial class CefAuthWindow : Window
             if (this._accessToken != string.Empty && 
                 this._refreshToken != string.Empty)
             {
+                await Task.Delay(2000);
                 return new Token(this._accessToken, this._refreshToken);
             }
         }

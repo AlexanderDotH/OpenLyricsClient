@@ -49,22 +49,28 @@
                             Background="{DynamicResource PrimaryBackgroundBrush}"
                             HeaderText="Romanize">
                             <StackPanel>
-                                <CheckBox Content="Japanese to Romanji"
+                                <CheckBox Name="CHK_JapaneseToRomanji" 
+                                          Content="Japanese to Romanji"
                                           Background="{DynamicResource PrimaryColorBrush}"
                                           Foreground="{DynamicResource PrimaryFontColorBrush}"
-                                          IsChecked="True"
+                                          Checked="CHK_JapaneseToRomanji_OnChecked"
+                                          Unchecked="CHK_JapaneseToRomanji_OnUnchecked"
                                           Margin="10,0,0,0"></CheckBox>
                                 
-                                <CheckBox Content="Korean to Romanji"
+                                <CheckBox Name="CHK_KoreanToRomanji" 
+                                          Content="Korean to Romanji"
                                           Background="{DynamicResource PrimaryColorBrush}"
                                           Foreground="{DynamicResource PrimaryFontColorBrush}"
-                                          IsChecked="True"
+                                          Checked="CHK_KoreanToRomanji_OnChecked"
+                                          Unchecked="CHK_KoreanToRomanji_OnUnchecked"
                                           Margin="10,5,0,0"></CheckBox>
                                 
-                                <CheckBox Content="Russia to Latin"
+                                <CheckBox Name="CHK_RussiaToLatin" 
+                                          Content="Russia to Latin"
                                           Background="{DynamicResource PrimaryColorBrush}"
                                           Foreground="{DynamicResource PrimaryFontColorBrush}"
-                                          IsChecked="True"
+                                          Checked="CHK_RussiaToLatin_OnChecked"
+                                          Unchecked="CHK_RussiaToLatin_OnUnchecked"
                                           Margin="10,5,0,0"></CheckBox>
                             </StackPanel>
                         </elements:GroupBox>
@@ -88,8 +94,9 @@
                                           Width="180"
                                           Background="{DynamicResource SecondaryBackgroundBrush}"
                                           Foreground="{DynamicResource PrimaryFontColorBrush}"
+                                          SelectionChanged="CMBX_LyricsSelection_OnSelectionChanged"
                                           Margin="10,5,0,0"
-                                          >
+                                >
                                     <ComboBoxItem Content="Quality"></ComboBoxItem>
                                     <ComboBoxItem Content="Performance"></ComboBoxItem>
                                 </ComboBox>
@@ -117,27 +124,31 @@
                             Background="{DynamicResource PrimaryBackgroundBrush}"
                             HeaderText="Spotify">
                             <Grid>
-                                <TextBlock Text="Connect with Spotify"
+                                <TextBlock Name="TXT_ConnectSpotify" 
+                                           Text="Connect with Spotify"
                                            FontSize="14"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Top"
                                            Margin="0,10,0,0"/>
-                                <Button Width="180" 
+                                <Button Name="BTN_ConnectSpotify" 
+                                        Width="180" 
                                         Height="30" 
                                         Background="#1ED760"
                                         Foreground="{DynamicResource PrimaryFontColorBrush}"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
                                         Margin="0,45,0,0"
-                                        Click="Button_OnClick"
+                                        Click="BTN_ConnectSpotify_OnClick"
                                         Content="Connect"/>
-                                <Button Width="180" 
+                                <Button Name="BTN_DisconnectSpotify" 
+                                        Width="180" 
                                         Height="30" 
                                         Background="#FF4040"
                                         Foreground="{DynamicResource PrimaryFontColorBrush}"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
                                         Margin="0,82,0,0"
+                                        Click="BTN_DisconnectSpotify_OnClick"
                                         Content="Disconnect"/>
                                
                             </Grid>
@@ -165,21 +176,25 @@
                             Background="{DynamicResource PrimaryBackgroundBrush}"
                             HeaderText="Advanced">
                             <Grid>
-                                <Button Width="180" 
+                                <Button Name="BTN_ClearCache" 
+                                        Width="180" 
                                         Height="30" 
                                         Background="{DynamicResource PrimaryColorBrush}"
                                         Foreground="{DynamicResource PrimaryFontColorBrush}"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
                                         Margin="0,5,0,0"
+                                        Click="BTN_ClearCache_OnClick"
                                         Content="Clear cache"/>
-                                <Button Width="180" 
+                                <Button Name="BTN_RefreshLyrics" 
+                                        Width="180" 
                                         Height="30" 
                                         Background="{DynamicResource PrimaryColorBrush}"
                                         Foreground="{DynamicResource PrimaryFontColorBrush}"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
                                         Margin="0,42,0,0"
+                                        Click="BTN_RefreshLyrics_OnClick"
                                         Content="Refresh Lyrics"/>
                                
                             </Grid>

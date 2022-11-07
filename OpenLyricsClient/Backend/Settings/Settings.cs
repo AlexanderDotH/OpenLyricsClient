@@ -13,5 +13,6 @@ namespace OpenLyricsClient.Backend.Settings
         public List<RomanizeSelection> RomanizeSelection { get; set; }
         public SelectionMode LyricSelectionMode { get; set; }
         public List<MusixMatchToken> MusixMatchToken { get; set; }
+        
     }
 }

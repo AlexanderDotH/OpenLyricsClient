@@ -8,6 +8,7 @@ using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Handler.Song;
+using OpenLyricsClient.Backend.Helper;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
@@ -55,11 +56,6 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                 EnumRegisterTypes.MANAGE_LYRICS);
 
             Core.INSTANCE.TaskRegister.Register(
-                out _manageLyricsRollSuspensionToken,
-                new Task(async () => await ManageLyricsRoll(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
-                EnumRegisterTypes.MANAGE_LYRICS_ROLL);
-
-            Core.INSTANCE.TaskRegister.Register(
                 out _applyLyricSuspensionToken,
                 new Task(async () => await ApplyLyricsToSong(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.APPLY_LYRICS_TO_SONG);
@@ -104,6 +100,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
                     if (lyricData.LyricReturnCode == LyricReturnCode.SUCCESS)
                     {
+                        lyricData.LyricParts = await new RomanizationHelper().RomanizeArray(Core.INSTANCE.CacheManager.GetDataByRequest(songRequestObject).LyricParts);
                         song.Lyrics = lyricData;
                         song.State = SongState.HAS_LYRICS_AVAILABLE;
                     }
@@ -171,70 +168,6 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                         {
                             this._debugger.Write(e);
                         }
-                    }
-                }
-            }
-        }
-
-        public async Task ManageLyricsRoll()
-        {
-            while (!this._disposed)
-            {
-                await this._manageLyricsRollSuspensionToken.WaitForRelease();
-                await Task.Delay(35);
-
-                Structure.Song.Song song = this._songHandler.CurrentSong;
-
-                if (DataValidator.ValidateData(song) &&
-                    DataValidator.ValidateData(song.CurrentLyricPart) &&
-                    DataValidator.ValidateData(song.Lyrics) &&
-                    DataValidator.ValidateData(song.Lyrics.LyricParts) &&
-
-                    song.State == SongState.HAS_LYRICS_AVAILABLE)
-                {
-                    try
-                    {
-                        LyricData lyrics = song.Lyrics;
-
-                        for (int i = 0; i < lyrics.LyricParts.Length; i++)
-                        {
-                            LyricPart thirdLyricPart = lyrics.LyricParts[i];
-
-                            if (thirdLyricPart == song.CurrentLyricPart)
-                            {
-                                LyricPart firstLyricPart = null;
-                                LyricPart secondLyricPart = null;
-                                LyricPart fourthLyricPart = null;
-                                LyricPart fifthLine = null;
-
-                                if (MathUtils.IsInRange(0, lyrics.LyricParts.Length - 1, i - 2))
-                                {
-                                    firstLyricPart = lyrics.LyricParts[i - 2];
-                                }
-
-                                if (MathUtils.IsInRange(0, lyrics.LyricParts.Length - 1, i - 1))
-                                {
-                                    secondLyricPart = lyrics.LyricParts[i - 1];
-                                }
-
-                                if (MathUtils.IsInRange(0, lyrics.LyricParts.Length - 1, i + 1))
-                                {
-                                    fourthLyricPart = lyrics.LyricParts[i + 1];
-                                }
-
-                                if (MathUtils.IsInRange(0, lyrics.LyricParts.Length - 1, i + 2))
-                                {
-                                    fifthLine = lyrics.LyricParts[i + 2];
-                                }
-
-                                song.CurrentLyricsRoll =
-                                    new LyricsRoll(firstLyricPart, secondLyricPart, thirdLyricPart, fourthLyricPart, fifthLine);
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        this._debugger.Write(e);
                     }
                 }
             }

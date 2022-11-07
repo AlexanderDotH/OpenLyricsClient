@@ -35,7 +35,7 @@ namespace OpenLyricsClient.Backend.Helper
         {
             for (int i = 0; i < lyrics.Length; i++)
             {
-                lyrics[i].Part = await this._romanization.Romanize(lyrics[i].Part);
+               lyrics[i].Part = await this._romanization.Romanize(lyrics[i].Part);
             }
 
             return lyrics;
@@ -44,19 +44,6 @@ namespace OpenLyricsClient.Backend.Helper
         public async Task<string> RomanizeString(string lyric)
         {
             return await this._romanization.Romanize(lyric);
-        }
-        
-        public async Task<LyricsRoll> RomanizeRoll(LyricsRoll roll)
-        {
-            string[] romanized = await this._romanization.Romanize(roll.PartOne.Part, roll.PartTwo.Part, roll.PartThree.Part, roll.PartFour.Part, roll.PartFive.Part);
-
-            LyricPart one = new LyricPart(roll.PartOne.Time, romanized[0]);
-            LyricPart two = new LyricPart(roll.PartTwo.Time, romanized[1]);
-            LyricPart three = new LyricPart(roll.PartThree.Time, romanized[2]);
-            LyricPart four = new LyricPart(roll.PartFour.Time, romanized[3]);
-            LyricPart five = new LyricPart(roll.PartFive.Time, romanized[4]);
-
-            return new LyricsRoll(one, two, three, four, five);
         }
     }
 }

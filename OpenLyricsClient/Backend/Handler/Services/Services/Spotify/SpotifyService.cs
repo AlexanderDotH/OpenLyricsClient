@@ -26,7 +26,6 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 {
     class SpotifyService : IService
     {
-        private SpotifyClient _spotifyClient;
         private IConfiguration _configurationManager;
 
         private string _baseAuthUrl;
@@ -45,8 +44,6 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             this._baseAuthUrl = "https://www.openlyricsclient.com/connect/spotify/begin";
             this._redirectUrl = "https://www.openlyricsclient.com/connect/spotify/complete";
 
-            this._spotifyClient = new SpotifyClient(Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken);
-            
             Core.INSTANCE.TaskRegister.Register(
                 out _refreshTokenSuspensionToken,
                 new Task(async () => await RefreshToken(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.None),
@@ -128,6 +125,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             
             cefAuthWindow.Width = 500;
             cefAuthWindow.Height = 600;
+            cefAuthWindow.Title = "Connect to spotify";
             
             cefAuthWindow.ShowDialog<string>(MainWindow.Instance);
             
@@ -135,12 +133,15 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             
             cefAuthWindow.Close();
 
+            SpotifyClient client = new SpotifyClient(token.AccessToken);
+            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.UserData = await client.UserProfile.Current();
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken = token.AccessToken;
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken = token.RefreshToken;
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime =
                 DateTimeOffset.Now.AddHours(1).ToUnixTimeMilliseconds();
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected = true;
             Core.INSTANCE.SettingManager.WriteSettings();
+
 
             /*
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

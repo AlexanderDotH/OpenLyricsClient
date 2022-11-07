@@ -61,6 +61,11 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
                 new Task(async () => await SyncLyricsPercentageTask(), Core.INSTANCE.CancellationTokenSource.Token,
                     TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.SYNC_LYRICS_PERCENTAGE);
+
+            Core.INSTANCE.SettingManager.SettingsChanged += (sender, args) =>
+            {
+                this.CurrentLyricParts = null;
+            };
         }
     }
 
@@ -76,9 +81,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
                 Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
 
                 if (!DataValidator.ValidateData(currentSong))
-                {
                     return;
-                }
 
                 if (!DataValidator.ValidateData(currentSong.Lyrics))
                     return;
@@ -105,8 +108,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
 
                 if (changed)
                 {
-                    this.CurrentLyricParts =  new ObservableCollection<LyricPart>(
-                        await this._romanizationHelper.RomanizeArray(currentSong.Lyrics.LyricParts));
+                    this.CurrentLyricParts =  new ObservableCollection<LyricPart>(currentSong.Lyrics.LyricParts);
                 }
                 
                 
@@ -133,7 +135,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
                 continue;
 
             this.CurrentLyricPart = currentSong.CurrentLyricPart;
-            this.CurrentLyricPart.Part = await this._romanizationHelper.RomanizeString(this.CurrentLyricPart.Part);
+           // this.CurrentLyricPart.Part = await this._romanizationHelper.RomanizeString(this.CurrentLyricPart.Part);
         }
     }
     

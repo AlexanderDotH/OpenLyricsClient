@@ -9,7 +9,6 @@ namespace OpenLyricsClient.Backend.Structure.Song
         private long _time;
         private LyricData _lyrics;
         private LyricPart _currentLyricPart;
-        private LyricsRoll _currentLyricsRoll;
         private SongState _state;
 
         private bool _firstUpdate;
@@ -181,12 +180,6 @@ namespace OpenLyricsClient.Backend.Structure.Song
         public bool Synced
         {
             get => _synced;
-        }
-
-        public LyricsRoll CurrentLyricsRoll
-        {
-            get => _currentLyricsRoll;
-            set => _currentLyricsRoll = value;
         }
     }
 }
