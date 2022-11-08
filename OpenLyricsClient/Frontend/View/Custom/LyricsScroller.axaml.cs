@@ -98,7 +98,7 @@ public partial class LyricsScroller : UserControl
         this._renderTimer = new SleepLoopRenderTimer(500);
         this._renderTimer.Tick += RenderTimerOnTick;
 
-        /*Core.INSTANCE.SettingManager.SettingsChanged += (sender, args) =>
+        /*Core.INSTANCE.SettingManager.SettingsChanged  += (sender, args) =>
         {
             Reload();
             Reset();
