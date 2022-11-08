@@ -20,7 +20,7 @@ namespace OpenLyricsClient.Backend.Handler.Services
             this._services = new GenericList<IService>();
 
             this._services.Add(new SpotifyService());
-            this._services.Add(new TidalService());
+            //this._services.Add(new TidalService());
         }
 
         public bool IsConnected(string serviceName)

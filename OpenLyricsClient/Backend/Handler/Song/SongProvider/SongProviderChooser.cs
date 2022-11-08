@@ -94,6 +94,9 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
 
         public async Task<bool> IsInUse(IService service)
         {
+            if (!DataValidator.ValidateData(service))
+                return false;
+            
             if (!service.IsConnected())
                 return false;
 
@@ -116,36 +119,44 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
 
         private void ResumeProvider(EnumSongProvider songProvider)
         {
-            switch (songProvider)
+            try
             {
-                case EnumSongProvider.SPOTIFY:
+                switch (songProvider)
                 {
-                    Core.INSTANCE.TaskRegister.ResumeByArray(this._spotifyTypes);
-                    break;
-                }
-                case EnumSongProvider.TIDAL:
-                {
-                    Core.INSTANCE.TaskRegister.ResumeByArray(this._tidalTypes);
-                    break;
+                    case EnumSongProvider.SPOTIFY:
+                    {
+                        Core.INSTANCE.TaskRegister.ResumeByArray(this._spotifyTypes);
+                        break;
+                    }
+                    case EnumSongProvider.TIDAL:
+                    {
+                        Core.INSTANCE.TaskRegister.ResumeByArray(this._tidalTypes);
+                        break;
+                    }
                 }
             }
+            catch (Exception e) { }
         }
 
         private void SuspendProvider(EnumSongProvider songProvider)
         {
-            switch (songProvider)
+            try
             {
-                case EnumSongProvider.SPOTIFY:
+                switch (songProvider)
                 {
-                    Core.INSTANCE.TaskRegister.SuspendByArray(this._spotifyTypes);
-                    break;
-                }
-                case EnumSongProvider.TIDAL:
-                {
-                    Core.INSTANCE.TaskRegister.SuspendByArray(this._tidalTypes);
-                    break;
+                    case EnumSongProvider.SPOTIFY:
+                    {
+                        Core.INSTANCE.TaskRegister.SuspendByArray(this._spotifyTypes);
+                        break;
+                    }
+                    case EnumSongProvider.TIDAL:
+                    {
+                        Core.INSTANCE.TaskRegister.SuspendByArray(this._tidalTypes);
+                        break;
+                    }
                 }
             }
+            catch (Exception e) { }
         }
 
         public EnumSongProvider GetSongProvider()
