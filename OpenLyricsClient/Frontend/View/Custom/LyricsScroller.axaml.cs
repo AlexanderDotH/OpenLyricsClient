@@ -98,11 +98,11 @@ public partial class LyricsScroller : UserControl
         this._renderTimer = new SleepLoopRenderTimer(500);
         this._renderTimer.Tick += RenderTimerOnTick;
 
-        Core.INSTANCE.SettingManager.SettingsChanged += (sender, args) =>
+        /*Core.INSTANCE.SettingManager.SettingsChanged += (sender, args) =>
         {
             Reload();
             Reset();
-        };
+        };*/
     }
 
     private void RenderTimerOnTick(TimeSpan obj)
@@ -158,7 +158,14 @@ public partial class LyricsScroller : UserControl
                 if (this.DataContext is LyricsScrollerViewModel)
                 {
                     LyricsScrollerViewModel context = (LyricsScrollerViewModel)this.DataContext;
-                    this._card.Percentage = (double)context.Percentage;
+
+                    if (DataValidator.ValidateData(this._card.LyricPart))
+                    {
+                        if (this._card.LyricPart.Equals(this._lyricPart))
+                        {
+                            this._card.Percentage = (double)context.Percentage;
+                        }
+                    }
                 }
             }
         });
@@ -182,6 +189,7 @@ public partial class LyricsScroller : UserControl
                 if (child is LyricsCard)
                 {
                     this._card = (LyricsCard)child;
+                    //this._card.Focus();
                 }
                 
                 break;
@@ -190,16 +198,37 @@ public partial class LyricsScroller : UserControl
             {
                 position += GetRenderedSize(i).Height;
                 
-                if (child is LyricsCard)
+                /*if (child is LyricsCard)
                 {
                     LyricsCard card = (LyricsCard)child;
                     card.Percentage = -1;
-                }
+                    card.IsEnabled = false;
+                }*/
             }
         }
 
+        //TryUnselectAll();
+        
         this._scrollFrom = this._scrollTo;
         this._scrollTo = CalcOffsetInViewPoint(selectedLine, position);
+    }
+
+    private void TryUnselectAll()
+    {
+        for (int i = 0; i < this._lyricParts.Count; i++)
+        {
+            var child = this._itemsRepeater.TryGetElement(i);
+            
+            if (child is LyricsCard)
+            {
+                LyricsCard element = (LyricsCard)child;
+                if (element != this._card)
+                {
+                    element.Percentage = -1;
+                    element.IsEnabled = false;
+                }
+            }
+        }
     }
 
     private double CalcOffsetInViewPoint(int index, double currentSize)

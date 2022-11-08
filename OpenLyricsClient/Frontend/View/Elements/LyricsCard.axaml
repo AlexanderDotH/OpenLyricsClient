@@ -8,15 +8,26 @@
         </Border>
     </Design.PreviewWith>
 
-    <!-- Add Styles Here -->
     <Style Selector="elements|LyricsCard">
-        <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}"/>
-        <Setter Property="CornerRadius" Value="5"/>
         <Setter Property="Transitions">
             <Transitions>
                 <DoubleTransition Property="Percentage" Easing="CircularEaseOut" Duration="0:0:0.4" ></DoubleTransition>
             </Transitions>
         </Setter>
+    </Style>
+    
+    <Style Selector="elements|LyricsCard[Current=True] /template/ elements|LyricsCard">
+        <Setter Property="Percentage" Value="0"></Setter>
+    </Style>
+    
+    <Style Selector="elements|LyricsCard[Current=False] /template/ elements|LyricsCard">
+        <Setter Property="Percentage" Value="-10"></Setter>
+    </Style>
+    
+    <!-- Add Styles Here -->
+    <Style Selector="elements|LyricsCard">
+        <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}"/>
+        <Setter Property="CornerRadius" Value="5"/>
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid Name="PART_Grid">

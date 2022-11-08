@@ -55,7 +55,6 @@ namespace OpenLyricsClient.Backend.Romanization
                 }
             }
 
-
             if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection.RUSSIA_TO_LATIN) && DataValidator.ValidateData(this._russiaConverter))
             {
                 if (this._russiaConverter.IsPartOfCulture(text))

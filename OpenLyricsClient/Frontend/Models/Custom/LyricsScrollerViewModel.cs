@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Avalonia.Threading;
 using DevBase.Async.Task;
 using JetBrains.Annotations;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
@@ -94,24 +95,17 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
                     this.CurrentLyricParts = new ObservableCollection<LyricPart>();
                     return;
                 }
-
-                bool changed = false;
                 
                 lock (this.CurrentLyricParts)
                 {
+                    if (this.CurrentLyricParts == null)
+                        return;
+                    
                     if (!(AreListsEqual(this.CurrentLyricParts, currentSong.Lyrics.LyricParts)))
                     {
                         this.CurrentLyricParts =  new ObservableCollection<LyricPart>(currentSong.Lyrics.LyricParts);
-                        changed = true;
                     }
                 }
-
-                if (changed)
-                {
-                    this.CurrentLyricParts =  new ObservableCollection<LyricPart>(currentSong.Lyrics.LyricParts);
-                }
-                
-                
             });
         }
     }

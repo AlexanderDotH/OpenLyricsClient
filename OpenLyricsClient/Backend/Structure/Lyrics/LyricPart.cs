@@ -1,9 +1,11 @@
 ﻿using System;
+using Newtonsoft.Json;
 using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Structure.Lyrics
 {
     [Serializable]
+    [JsonObject(MemberSerialization.OptIn)]
     public class LyricPart
     {
         private long _time;
@@ -15,12 +17,14 @@ namespace OpenLyricsClient.Backend.Structure.Lyrics
             this._part = part;
         }
 
+        [JsonProperty]
         public long Time
         {
             get => this._time;
             set => this._time = value;
         }
 
+        [JsonProperty]
         public string Part
         {
             get => this._part;

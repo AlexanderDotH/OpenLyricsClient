@@ -126,6 +126,11 @@ namespace OpenLyricsClient.Backend
             get => this._environment;
         }
 
+        public LyricHandler LyricHandler
+        {
+            get => this._lyricHandler;
+        }
+
         public static bool IsDisposed()
         {
             return _disposed;

@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
+using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Frontend.View.Custom;
 using Brush = Avalonia.Media.Brush;
 using FontFamily = Avalonia.Media.FontFamily;
 using FontStyle = Avalonia.Media.FontStyle;
@@ -33,13 +37,37 @@ public class LyricsCard : TemplatedControl
     public static readonly StyledProperty<int> SpacingProperty =
         AvaloniaProperty.Register<LyricsCard, int>(nameof(Spacing));
     
+    public static readonly DirectProperty<LyricsCard, LyricPart> LyricPartProperty = 
+        AvaloniaProperty.RegisterDirect<LyricsCard, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
+
+    public static readonly DirectProperty<LyricsCard, bool> CurrentProperty = 
+        AvaloniaProperty.RegisterDirect<LyricsCard, bool>(nameof(Current), o => o.Current, (o, v) => o.Current = v);
+    
     private TextBlock _presenterBlock;
     private TextBlock _greyBlock;
     private Border _border;
 
+    private LyricPart _lyricPart;
+    private bool _current;
+
     public LyricsCard()
     {
-
+        Core.INSTANCE.LyricHandler.LyricChanged += (sender, args) =>
+        {
+            if (DataValidator.ValidateData(this._lyricPart))
+            {
+                if (args.LyricPart.Time != this._lyricPart.Time &&
+                    args.LyricPart.Part != this._lyricPart.Part)
+                {
+                    Current = false;
+                    Percentage = -10;
+                }
+                else
+                {
+                    Current = true;
+                }
+            }            
+        };
     }
     
     public Rect GetBounds()
@@ -71,7 +99,7 @@ public class LyricsCard : TemplatedControl
 
                 if (this.FontWeight == 0)
                     return;
-                
+
                 if (DataValidator.ValidateData(this._presenterBlock, this._greyBlock, this._border))
                 {
                     if (DataValidator.ValidateData(this._presenterBlock.TextLayout, this._greyBlock.TextLayout))
@@ -84,6 +112,24 @@ public class LyricsCard : TemplatedControl
                     }
                 }
             }
+        }
+    }
+    
+    public bool Current
+    {
+        get { return this._current; }
+        set
+        {
+            SetAndRaise(CurrentProperty, ref _current, value);
+        }
+    }
+    
+    public LyricPart LyricPart
+    {
+        get { return this._lyricPart; }
+        set
+        {
+            SetAndRaise(LyricPartProperty, ref _lyricPart, value);
         }
     }
     
@@ -115,6 +161,40 @@ public class LyricsCard : TemplatedControl
     {
         get { return GetValue(UnSelectedLineBrushProperty); }
         set { SetValue(UnSelectedLineBrushProperty, value); }
+    }
+
+    protected override void OnDataContextBeginUpdate()
+    {
+        /*if (Percentage < 0 || !Current)
+        {
+            if (DataValidator.ValidateData(this._border))
+            {
+                this._border.IsVisible = false;
+            }
+
+            if (DataValidator.ValidateData(this._presenterBlock))
+            {
+                this._presenterBlock.IsVisible = false;
+            }
+        }
+        else
+        {
+            if (DataValidator.ValidateData(this._border))
+            {
+                this._border.IsVisible = true;
+            }
+
+            if (DataValidator.ValidateData(this._presenterBlock))
+            {
+                this._presenterBlock.IsVisible = true;
+            }
+        }*/
+        
+        if (!Current)
+        {
+            //Percentage = int.MinValue;
+        }
+        base.OnDataContextBeginUpdate();
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)

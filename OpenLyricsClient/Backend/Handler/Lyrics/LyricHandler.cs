@@ -2,11 +2,13 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using DevBase.Async.Task;
 using OpenLyricsClient.Backend.Collector.Lyrics;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
+using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Helper;
 using OpenLyricsClient.Backend.Structure;
@@ -38,6 +40,8 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
         private bool _disposed;
 
         private const int LYRIC_OFFSET = 0;
+
+        public event LyricChangedEventHandler LyricChanged;
 
         public LyricHandler(SongHandler songHandler)
         {
@@ -100,7 +104,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
                     if (lyricData.LyricReturnCode == LyricReturnCode.SUCCESS)
                     {
-                        lyricData.LyricParts = await new RomanizationHelper().RomanizeArray(Core.INSTANCE.CacheManager.GetDataByRequest(songRequestObject).LyricParts);
+                        //lyricData.LyricParts = await new RomanizationHelper().RomanizeArray(Core.INSTANCE.CacheManager.GetDataByRequest(songRequestObject).LyricParts);
                         song.Lyrics = lyricData;
                         song.State = SongState.HAS_LYRICS_AVAILABLE;
                     }
@@ -150,6 +154,10 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                                         if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, currentSong.Time + LYRIC_OFFSET))
                                         {
                                             currentSong.CurrentLyricPart = currentPart;
+                                            Dispatcher.UIThread.InvokeAsync(() =>
+                                            {
+                                                LyricChangedEvent(new LyricChangedEventArgs(currentPart));
+                                            });
                                             continue;
                                         }
                                     }
@@ -159,6 +167,10 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                                     if (MathUtils.IsInRange(currentPart.Time, currentSong.SongMetadata.MaxTime, currentSong.Time + LYRIC_OFFSET))
                                     {
                                         currentSong.CurrentLyricPart = currentPart;
+                                        Dispatcher.UIThread.InvokeAsync(() =>
+                                        {
+                                            LyricChangedEvent(new LyricChangedEventArgs(currentPart));
+                                        });
                                         continue;
                                     }
                                 }
@@ -212,6 +224,12 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                     }
                 });
             }
+        }
+        
+        protected virtual void LyricChangedEvent(LyricChangedEventArgs lyricChangedEventArgs)
+        {
+            LyricChangedEventHandler lyricChangedEventHandler = LyricChanged;
+            lyricChangedEventHandler?.Invoke(this, lyricChangedEventArgs);
         }
 
         public void Dispose()
