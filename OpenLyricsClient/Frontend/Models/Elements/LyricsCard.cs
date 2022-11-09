@@ -73,9 +73,13 @@ public class LyricsCard : TemplatedControl
     public Rect GetBounds()
     {
         FormattedText text = new FormattedText(Text,
-            new Typeface(FontFamily.Parse("avares://Material.Styles/Fonts/Roboto#Roboto"), FontStyle.Normal, FontWeight <= 0 ? FontWeight.Bold : FontWeight), FontSize, TextAlignment.Left,
-            TextWrapping.Wrap, this.DesiredSize);
-        return text.Bounds;
+            new Typeface(FontFamily.Parse(
+                    "avares://Material.Styles/Fonts/Roboto#Roboto, Noto Sans, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Helvetica, Cantarell, Ubuntu, Arial, Hiragino Kaku Gothic Pro, MS UI Gothic, MS PMincho, Microsoft JhengHei, Microsoft JhengHei UI, Microsoft YaHei New, Microsoft Yahei, SimHei"), 
+                FontStyle.Normal, this.FontWeight), this.FontSize, TextAlignment.Left,
+            TextWrapping.Wrap, new Size(this.Parent.Bounds.Width, 0));
+
+        Rect rect = new Rect(new Size(text.Bounds.Width, Math.Floor(text.Bounds.Height)));
+        return rect;
     }
 
     public string Text
