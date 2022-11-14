@@ -233,7 +233,7 @@ public partial class LyricsScroller : UserControl
 
     private double CalcOffsetInViewPoint(int index, double currentSize)
     {
-        double viewPortHeight = this._scrollViewer.Viewport.Height / 1.3;
+        double viewPortHeight = this._scrollViewer.Viewport.Height / 1.16;
 
         double x = 0;
         int currentPos = index;

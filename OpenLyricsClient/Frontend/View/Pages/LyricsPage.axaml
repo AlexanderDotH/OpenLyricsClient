@@ -9,12 +9,17 @@
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              xmlns:custom1="clr-namespace:OpenLyricsClient.Frontend.View.Custom"
              xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
+             xmlns:pages="clr-namespace:OpenLyricsClient.Frontend.Models.Pages"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{DynamicResource PrimaryBackgroundBrush}"
              Foreground="{DynamicResource PrimaryFontColorBrush}"
              Name="PG_LyricsPage"
              EffectiveViewportChanged="Layoutable_OnEffectiveViewportChanged"
              x:Class="OpenLyricsClient.Frontend.View.Pages.LyricsPage">
+    
+    <UserControl.DataContext>
+        <pages:LyricsPageViewModel></pages:LyricsPageViewModel>
+    </UserControl.DataContext>
     
     <UserControl.Styles>
         
@@ -57,38 +62,36 @@
             HorizontalAlignment="Left"
             Margin="12, 12, 0, 0"></TextBlock>
         
-        <styles:Card Name="CRD_SongInfo" 
-                     Width="{Binding ElementName=UGRD_SongInfo, Path=Width}"
-                     MinWidth="100"
-                     Height="{Binding ElementName=STPNL_SongInfo, Path=Height}"
-                     VerticalAlignment="Top"
-                     HorizontalAlignment="Right"
-                     Margin="0,60,10,0"
-                     Background="{DynamicResource SecondaryBackgroundBrush}">
-
-            <StackPanel Name="STPNL_SongInfo"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top">
-                
-                <TextBlock Name="TXT_Title"
-                           Text="SongName"
-                           HorizontalAlignment="Right"
-                           VerticalAlignment="Top"
-                           FontWeight="Bold"
-                           FontSize="20"></TextBlock>
-                
-                <TextBlock Name="TXT_Artists" 
-                           Text="By Artist, Artist, Artist"
-                           HorizontalAlignment="Right"
-                           VerticalAlignment="Top"
-                           Margin="0,3,0,0"
-                           FontSize="12"></TextBlock>
-            </StackPanel>
-        </styles:Card>
-        
         <Grid 
             HorizontalAlignment="Left"
             Width="500">
+            
+            <styles:Card Name="CRD_SongInfo" 
+                         Width="{Binding ElementName=UGRD_SongInfo, Path=Width}"
+                         MaxWidth="320"
+                         Height="{Binding ElementName=STPNL_SongInfo, Path=Height}"
+                         VerticalAlignment="Center"
+                         HorizontalAlignment="Center"
+                         Margin="0, 340,0,0"
+                         Background="{DynamicResource SecondaryBackgroundBrush}">
+
+                <Grid Name="STPNL_SongInfo">
+                
+                    <TextBlock Name="TXT_Title"
+                               Text="{Binding SongName}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Top"
+                               FontWeight="Bold"
+                               FontSize="20"></TextBlock>
+                
+                    <TextBlock Name="TXT_Artists" 
+                               Text="{Binding Artists}"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="0,25,0,0"
+                               FontSize="12"></TextBlock>
+                </Grid>
+            </styles:Card>
             
             <Border Width="320"
                     Height="320"
@@ -101,16 +104,18 @@
                 </Border.Background>
             </Border>
             
-            <TextBlock Text="AlbumName"
+            <!--<TextBlock Text="{Binding AlbumName}"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Margin="0, 335,0,0"
-                       FontSize="15"></TextBlock>
+                       FontSize="15"></TextBlock>-->
         </Grid>
         
         <Grid Name="GRD_Presenter"
               VerticalAlignment="Top"
-              Margin="500,120,5,50">
+              Background="Green"
+              
+              Margin="500,50,5,50">
             
             <custom1:LyricsScroller 
                 Name="LRC_Display" 
@@ -118,7 +123,7 @@
                 LyricsFontSize="30"
                 LyricsFontWeight="Bold"
                 UnSelectedLineBrush="#646464"
-                ItemMargin="0,0,0,50"/>
+                ItemMargin="0,0,0,60"/>
             
            
             
@@ -172,18 +177,18 @@
                          PointerLeave="InputElement_OnPointerLeave">
                <Grid>
                    <ProgressBar Foreground="{DynamicResource PrimaryColorBrush}"
-                                Background="{DynamicResource SecondaryColorBrush}"
-                                BorderBrush="{DynamicResource SecondaryColorBrush}"
+                                Background="{DynamicResource PrimaryBackgroundBrush}"
+                                BorderBrush="{DynamicResource PrimaryBackgroundBrush}"
                                 VerticalAlignment="Bottom"
                                 Height="5"
                                 Minimum="0"
                                 Maximum="100"
-                                Value="10"
+                                Value="{Binding Percentage}"
                                 Margin="10, 0,10,10"></ProgressBar>
                 
                    <TextBlock Classes="progress_text" 
                               Name="TXT_TimeFrom"
-                              Text="0:00" 
+                              Text="{Binding CurrentTime}" 
                               VerticalAlignment="Bottom"
                               HorizontalAlignment="Left"
                               Opacity="0"
@@ -193,7 +198,7 @@
                    
                    <TextBlock Classes="progress_text"
                               Name="TXT_TimeTo"
-                              Text="10:00" 
+                              Text="{Binding CurrentMaxTime}" 
                               VerticalAlignment="Bottom"
                               HorizontalAlignment="Right"
                               Opacity="0"

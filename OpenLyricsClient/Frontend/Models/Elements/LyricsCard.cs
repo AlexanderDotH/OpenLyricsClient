@@ -72,6 +72,9 @@ public class LyricsCard : TemplatedControl
     
     public Rect GetBounds()
     {
+        if (this.FontSize == 0)
+            return new Rect();
+        
         FormattedText text = new FormattedText(Text,
             new Typeface(FontFamily.Parse(
                     "avares://Material.Styles/Fonts/Roboto#Roboto, Noto Sans, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Helvetica, Cantarell, Ubuntu, Arial, Hiragino Kaku Gothic Pro, MS UI Gothic, MS PMincho, Microsoft JhengHei, Microsoft JhengHei UI, Microsoft YaHei New, Microsoft Yahei, SimHei"), 

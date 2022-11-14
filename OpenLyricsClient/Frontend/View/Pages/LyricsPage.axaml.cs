@@ -64,4 +64,34 @@ public partial class LyricsPage : UserControl
             this._cstmLyricsDisplay.ResyncOffset();
         }
     }
+
+    public string SongName
+    {
+        get { return "Never gonna give you up"; }
+    }
+    
+    public string Artists
+    {
+        get { return "Rick Astley"; }
+    }
+    
+    public string AlbumName
+    {
+        get { return "Example Album"; }
+    }
+
+    public string CurrentTime
+    {
+        get { return "0:00"; }
+    }
+
+    public string CurrentMaxTime
+    {
+        get { return "10:00"; }
+    }
+    
+    public double Percentage
+    {
+        get { return 0; }
+    }
 }

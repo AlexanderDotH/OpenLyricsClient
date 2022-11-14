@@ -75,7 +75,7 @@ namespace OpenLyricsClient.Backend.Structure.Song
             if (Double.IsNaN(divide))
                 return 0;
 
-            return 100.0 * divide;
+            return Math.Abs(100.0 * divide);
         }
 
         public SongMetadata SongMetadata
