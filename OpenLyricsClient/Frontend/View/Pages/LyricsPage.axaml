@@ -79,6 +79,7 @@
                 
                     <TextBlock Name="TXT_Title"
                                Text="{Binding SongName}"
+                               TextWrapping="Wrap"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Top"
                                FontWeight="Bold"
@@ -86,6 +87,7 @@
                 
                     <TextBlock Name="TXT_Artists" 
                                Text="{Binding Artists}"
+                               TextWrapping="Wrap"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
                                Margin="0,25,0,0"

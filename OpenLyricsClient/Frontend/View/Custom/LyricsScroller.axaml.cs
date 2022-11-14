@@ -22,6 +22,7 @@ using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.Frontend.Models.Custom;
 using OpenLyricsClient.Frontend.Models.Elements;
+using Squalr.Engine.Utils.Extensions;
 using TextAlignment = Avalonia.Media.TextAlignment;
 
 namespace OpenLyricsClient.Frontend.View.Custom;
@@ -66,6 +67,8 @@ public partial class LyricsScroller : UserControl
 
     private bool _isFirstSync;
     private int _scrollCount;
+
+    private double _startMargin;
     
     private ScrollViewer _scrollViewer;
     private ItemsRepeater _itemsRepeater;
@@ -94,6 +97,7 @@ public partial class LyricsScroller : UserControl
         this._isFirstSync = true;
         this._scrollCount = -2;
         this._oldScrollY = 0;
+        this._startMargin = 0;
 
         this._renderTimer = new SleepLoopRenderTimer(500);
         this._renderTimer.Tick += RenderTimerOnTick;
@@ -144,13 +148,23 @@ public partial class LyricsScroller : UserControl
                 this._scrollViewer.Offset = new Vector(0, y);
             }
             
-            if (y < 10)
+            if (y - this._startMargin < 10 || this._scrollViewer.Offset.Y - this._startMargin < 10)
             {
                 this._gradientTop.Opacity = 0;
             }
             else
             {
                 this._gradientTop.Opacity = 1;
+            }
+
+            if ((this._scrollViewer.Extent.Height - this._scrollViewer.Offset.Y) == 
+                this._scrollViewer.LargeChange.Height)
+            {
+                this._gradientBottom.Opacity = 0;
+            }
+            else
+            {
+                this._gradientBottom.Opacity = 1;
             }
 
             if (DataValidator.ValidateData(this._card))
@@ -189,7 +203,6 @@ public partial class LyricsScroller : UserControl
                 if (child is LyricsCard)
                 {
                     this._card = (LyricsCard)child;
-                    //this._card.Focus();
                 }
                 
                 break;
@@ -197,58 +210,48 @@ public partial class LyricsScroller : UserControl
             else
             {
                 position += GetRenderedSize(i).Height;
-                
-                /*if (child is LyricsCard)
-                {
-                    LyricsCard card = (LyricsCard)child;
-                    card.Percentage = -1;
-                    card.IsEnabled = false;
-                }*/
             }
         }
 
-        //TryUnselectAll();
-        
+        this._startMargin = CalcStartMargin();
+
         this._scrollFrom = this._scrollTo;
-        this._scrollTo = CalcOffsetInViewPoint(selectedLine, position);
+        this._scrollTo = CalcOffsetInViewPoint(selectedLine, position, this._startMargin);
+
+        this._itemsRepeater.Margin = new Thickness(0,this._startMargin,0,0);
     }
 
-    private void TryUnselectAll()
+    private double CalcStartMargin()
     {
-        for (int i = 0; i < this._lyricParts.Count; i++)
-        {
-            var child = this._itemsRepeater.TryGetElement(i);
-            
-            if (child is LyricsCard)
-            {
-                LyricsCard element = (LyricsCard)child;
-                if (element != this._card)
-                {
-                    element.Percentage = -1;
-                    element.IsEnabled = false;
-                }
-            }
-        }
-    }
+        if (this._lyricParts.IsNullOrEmpty())
+            return 0;
+        
+        double untilPoint = this._scrollViewer.Viewport.Height / 2;
 
-    private double CalcOffsetInViewPoint(int index, double currentSize)
-    {
-        double viewPortHeight = this._scrollViewer.Viewport.Height / 1.16;
-
+        int itemIndex = 0;
         double x = 0;
-        int currentPos = index;
 
-        double nextValue = 0;
-        while ((nextValue + x + GetRenderedSize(currentPos).Height) < viewPortHeight)
+        while (x + GetRenderedSize(itemIndex).Height < untilPoint)
         {
-            nextValue = x + GetRenderedSize(currentPos).Height;
-            x = nextValue;
-
-            if (currentPos - 1 >= 0)
-                currentPos--;
+            x += GetRenderedSize(itemIndex).Height;
+            itemIndex++;
         }
 
-        return currentSize - x;
+        return x;
+    }
+
+    private double CalcOffsetInViewPoint(int index, double currentSize, double startMargin)
+    {
+        double untilPos = this._scrollViewer.Viewport.Height / 2;
+        
+        double x = 0;
+
+        while (x + GetRenderedSize(index).Height < untilPos)
+        {
+            x += GetRenderedSize(index).Height;
+        }
+
+        return currentSize - x + startMargin;
     }
 
     private Size GetRenderedSize(int index)
@@ -298,6 +301,7 @@ public partial class LyricsScroller : UserControl
             
             SetAndRaise(LyricPartsProperty, ref _lyricParts,  null); 
             SetAndRaise(LyricPartsProperty, ref _lyricParts,  context.CurrentLyricParts);
+            
         }
     }
     
