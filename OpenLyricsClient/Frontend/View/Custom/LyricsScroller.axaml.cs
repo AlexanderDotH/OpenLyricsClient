@@ -353,8 +353,8 @@ public partial class LyricsScroller : UserControl
         {
             SetAndRaise(LyricPartsProperty, ref _lyricParts, value); 
             Reset();
+            
             this._scrollSpeed = CalcSpeed();
-            Debug.WriteLine(this._scrollSpeed + "");
         }
     }
 
