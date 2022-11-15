@@ -423,7 +423,7 @@ public partial class LyricsScroller : UserControl
         double diff = Math.Ceiling(Math.Abs(this._scrollViewer.Offset.Y - this._oldScrollY));
         double delta = Math.Abs(e.OffsetDelta.Y);
         
-        if (diff < delta && e.OffsetDelta.Y % 50 == 0)
+        if (diff < delta && e.OffsetDelta.Y % 5 == 0)
             this._scrollCount++;
 
         if (this._scrollCount >= 0)
