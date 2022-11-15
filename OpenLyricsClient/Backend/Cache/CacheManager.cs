@@ -26,8 +26,9 @@ namespace OpenLyricsClient.Backend.Cache
 
         public CacheManager()
         {
-            CACHE_PATH = Core.INSTANCE.SettingManager.WorkingDirectory + "\\" + CACHE_FOLDER_NAME + "\\";
-
+            CACHE_PATH = string.Format("{1}{0}{2}{0}", Path.DirectorySeparatorChar, Core.INSTANCE.SettingManager.WorkingDirectory,
+                CACHE_FOLDER_NAME);
+            
             this._debugger = new Debugger<CacheManager>(this);
 
             if (!Directory.Exists(CACHE_PATH))

@@ -47,8 +47,8 @@ public partial class CefAuthWindow : Window
         this._isComplete = false;
         this._accessToken = string.Empty;
         this._refreshToken = string.Empty;
-
-        this._authWebView = this.FindControl<WebView>(nameof(AuthWebView));
+        
+        this._authWebView = this.Get<WebView>(nameof(AuthWebView));
     }
 
     private void InitializeComponent()

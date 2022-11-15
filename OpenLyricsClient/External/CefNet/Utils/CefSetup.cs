@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Channels;
 using CefNet;
@@ -25,20 +26,23 @@ public class CefSetup
             settings.NoSandbox = true;
             settings.MultiThreadedMessageLoop = true;
             settings.WindowlessRenderingEnabled = true;
-            settings.LocalesDirPath = string.Format("{0}\\CefBinaries\\{1}\\Resources\\locales", GetExecutionPath(), GetOSIDentifier());
-            settings.ResourcesDirPath = string.Format("{0}\\CefBinaries\\{1}\\Resources", GetExecutionPath(), GetOSIDentifier());
+            settings.LocalesDirPath = string.Format("{0}{2}CefBinaries{2}{1}{2}Resources{2}locales", GetExecutionPath(), GetOSIDentifier(), Path.DirectorySeparatorChar);
+            settings.ResourcesDirPath = string.Format("{0}{2}CefBinaries{2}{1}{2}Resources", GetExecutionPath(), GetOSIDentifier(), Path.DirectorySeparatorChar);
             settings.LogSeverity = CefLogSeverity.Warning;
             settings.UncaughtExceptionStackSize = 8;
 
+            
+            
             CefNetImplementation cefNetApplication = new CefNetImplementation();
-            cefNetApplication.Initialize(string.Format("{0}\\CefBinaries\\{1}\\Release", GetExecutionPath(), GetOSIDentifier()), settings);
-
+            cefNetApplication.Initialize(string.Format("{0}{2}CefBinaries{2}{1}{2}Release", GetExecutionPath(), GetOSIDentifier(), Path.DirectorySeparatorChar), settings);
+            //                                              /nick/Cef/
             this._cefNetApplication = cefNetApplication;
             
             this._debugger.Write("Cef initialized!", DebugType.INFO);
         }
         catch (Exception e)
         {
+            throw;
             this._debugger.Write("Cannot intiialize cef " + e.Message, DebugType.FATAL);
         }
     }

@@ -26,7 +26,7 @@ namespace OpenLyricsClient.Backend.Settings
         
         public SettingManager(string workingFolder)
         {
-            this._settingsFilePath = new AFileObject(new FileInfo(workingFolder + "\\" + SETTING_FILE_NAME));
+            this._settingsFilePath = new AFileObject(new FileInfo(string.Format("workingFolder{0}{1}", Path.PathSeparator, SETTING_FILE_NAME)));
 
             this._workingDirectory = workingFolder;
 
