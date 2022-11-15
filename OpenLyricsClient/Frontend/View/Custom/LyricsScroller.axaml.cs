@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Avalonia;
@@ -69,6 +70,7 @@ public partial class LyricsScroller : UserControl
     private int _scrollCount;
 
     private double _startMargin;
+    private double _scrollSpeed;
     
     private ScrollViewer _scrollViewer;
     private ItemsRepeater _itemsRepeater;
@@ -98,6 +100,7 @@ public partial class LyricsScroller : UserControl
         this._scrollCount = -2;
         this._oldScrollY = 0;
         this._startMargin = 0;
+        this._scrollSpeed = 15;
 
         this._renderTimer = new SleepLoopRenderTimer(500);
         this._renderTimer.Tick += RenderTimerOnTick;
@@ -111,28 +114,19 @@ public partial class LyricsScroller : UserControl
 
     private void RenderTimerOnTick(TimeSpan obj)
     {
-        SetThreadPos(_currentScrollOffset);
-        
-        /*if (this._isFirstSync && this._lyricParts != null && this._lyricPart != null)
-        {
-            SetThreadPos(_scrollTo);
-            this._currentScrollOffset = this._scrollTo;
-            this._isFirstSync = false;
-        }*/
+        SetThreadPos(this._currentScrollOffset);
 
-        int divider = 15;
-        
-        if (_currentScrollOffset < _scrollTo)
+        if (this._currentScrollOffset < _scrollTo)
         {
-            double step = Math.Abs(_scrollFrom - _scrollTo) / divider;
-            _currentScrollOffset += step;
-            _scrollFrom = _currentScrollOffset;
+            double step = Math.Abs(this._scrollFrom - this._scrollTo) / this._scrollSpeed;
+            this._currentScrollOffset += step;
+            this._scrollFrom = this._currentScrollOffset;
         }
         else
         {
-            double step = Math.Abs(_scrollFrom - _scrollTo) / divider;
-            _currentScrollOffset -= step;
-            _scrollFrom = _currentScrollOffset;
+            double step = Math.Abs(this._scrollFrom - this._scrollTo) / this._scrollSpeed;
+            this._currentScrollOffset -= step;
+            this._scrollFrom = this._currentScrollOffset;
         }
     }
 
@@ -253,6 +247,34 @@ public partial class LyricsScroller : UserControl
 
         return currentSize - x + startMargin;
     }
+    
+    public double CalcSpeed()
+    {
+        if (this._lyricParts.IsNullOrEmpty())
+            return 15;
+
+        LyricPart lastPart = null;
+        double sum = 0;
+        
+        for (int i = 0; i < this._lyricParts.Count; i++)
+        {
+            LyricPart currentPart = this._lyricParts[i];
+            
+            if (lastPart == null)
+            {
+                lastPart = currentPart;
+                continue;
+            }
+            else
+            {
+                sum += (currentPart.Time - lastPart.Time);
+                lastPart = currentPart;
+                continue;
+            }
+        }
+
+        return (sum / this._lyricParts.Count) * 0.005f;
+    }
 
     private Size GetRenderedSize(int index)
     {
@@ -331,6 +353,8 @@ public partial class LyricsScroller : UserControl
         {
             SetAndRaise(LyricPartsProperty, ref _lyricParts, value); 
             Reset();
+            this._scrollSpeed = CalcSpeed();
+            Debug.WriteLine(this._scrollSpeed + "");
         }
     }
 
