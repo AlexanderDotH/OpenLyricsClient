@@ -115,17 +115,7 @@ public partial class LyricsScroller : UserControl
     private void RenderTimerOnTick(TimeSpan obj)
     {
         SetThreadPos(this._currentScrollOffset);
-        /*if (this._isFirstSync)
-        {
-            SetThreadPos(_scrollTo);
-            this._currentScrollOffset = this._scrollTo;
-            this._isFirstSync = false;
-        }
-        else
-        {
-            SetThreadPos(this._currentScrollOffset);
-        }*/
-        
+
         if (this._currentScrollOffset < _scrollTo)
         {
             double step = Math.Abs(this._scrollFrom - this._scrollTo) / this._scrollSpeed;
