@@ -40,7 +40,6 @@ public class CefSetup
         }
         catch (Exception e)
         {
-            throw;
             this._debugger.Write("Cannot intiialize cef " + e.Message, DebugType.FATAL);
         }
     }

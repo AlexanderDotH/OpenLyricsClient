@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -96,15 +97,12 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
                     return;
                 }
                 
-                lock (this.CurrentLyricParts)
-                {
-                    if (this.CurrentLyricParts == null)
-                        return;
+                if (this.CurrentLyricParts == null)
+                    return;
                     
-                    if (!(AreListsEqual(this.CurrentLyricParts, currentSong.Lyrics.LyricParts)))
-                    {
-                        this.CurrentLyricParts =  new ObservableCollection<LyricPart>(currentSong.Lyrics.LyricParts);
-                    }
+                if (!(AreListsEqual(this.CurrentLyricParts, currentSong.Lyrics.LyricParts)))
+                {
+                    this.CurrentLyricParts =  new ObservableCollection<LyricPart>(currentSong.Lyrics.LyricParts);
                 }
             });
         }
@@ -128,9 +126,25 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             if (!DataValidator.ValidateData(currentSong.CurrentLyricPart))
                 continue;
 
-            this.CurrentLyricPart = currentSong.CurrentLyricPart;
-           // this.CurrentLyricPart.Part = await this._romanizationHelper.RomanizeString(this.CurrentLyricPart.Part);
+            if (!IsLyricPartEqual(this.CurrentLyricPart, currentSong.CurrentLyricPart))
+            {
+                this.CurrentLyricPart = currentSong.CurrentLyricPart;
+            }
         }
+    }
+
+    private bool IsLyricPartEqual(LyricPart part1, LyricPart part2)
+    {
+        if (!(DataValidator.ValidateData(part1) && DataValidator.ValidateData(part2)))
+            return false;
+
+        if (!(DataValidator.ValidateData(part1.Part) && DataValidator.ValidateData(part2.Part)))
+            return false;
+        
+        if (!(DataValidator.ValidateData(part1.Time) && DataValidator.ValidateData(part2.Time)))
+            return false;
+        
+        return part1.Time.Equals(part2.Time) && part1.Part.Equals(part2.Part);
     }
     
     private async Task SyncLyricsPercentageTask()

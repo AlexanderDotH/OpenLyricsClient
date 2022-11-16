@@ -61,7 +61,10 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
                 {
                     if (Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken != null)
                     {
-                        if (DateTimeOffset.Now.ToUnixTimeMilliseconds() > Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime)
+                        long now = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                        long settings = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime;
+                        
+                        if (now > settings)
                         {
                             await RefreshTokenRequest();
                             this._debugger.Write("Refreshed Spotify Token", DebugType.DEBUG);
@@ -84,17 +87,24 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             if (!DataValidator.ValidateData(Core.INSTANCE.SettingManager.Settings.SpotifyAccess))
                 return false;
 
-            CurrentlyPlayingContext currentlyPlayingContext = await new SpotifyClient(GetAccessToken()).Player.GetCurrentPlayback();
-            return DataValidator.ValidateData(currentlyPlayingContext) && currentlyPlayingContext.IsPlaying;
+            try
+            {
+                CurrentlyPlayingContext currentlyPlayingContext = await new SpotifyClient(GetAccessToken()).Player.GetCurrentPlayback();
+                return DataValidator.ValidateData(currentlyPlayingContext) && currentlyPlayingContext.IsPlaying;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         public string GetAccessToken()
         {
-            Task.Factory.StartNew(async() =>
-            {
-                await RefreshTokenRequest();
-
-            }).Wait(Core.INSTANCE.CancellationTokenSource.Token);
+            // Task.Factory.StartNew(async() =>
+            // {
+            //     await RefreshTokenRequest();
+            //
+            // }).Wait(Core.INSTANCE.CancellationTokenSource.Token);
             return Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken;
         }
 

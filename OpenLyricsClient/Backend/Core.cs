@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Avalonia.Controls.Shapes;
 using OpenLyricsClient.Backend.Cache;
 using OpenLyricsClient.Backend.Collector.Token;
 using OpenLyricsClient.Backend.Debugger;
@@ -60,7 +61,8 @@ namespace OpenLyricsClient.Backend
 
             this._windowLogger = new WindowLogger();
 
-            this._settingManager = new SettingManager(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\OpenLyricsClient\\");
+            this._settingManager = new SettingManager(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + 
+                                                      string.Format("{0}OpenLyricsClient{0}", System.IO.Path.DirectorySeparatorChar));
 
             this._cacheManager = new CacheManager();
 

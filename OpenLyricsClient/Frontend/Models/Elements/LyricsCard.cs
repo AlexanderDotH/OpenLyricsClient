@@ -49,9 +49,12 @@ public class LyricsCard : TemplatedControl
 
     private LyricPart _lyricPart;
     private bool _current;
-
+    private double _oldValue;
+    
     public LyricsCard()
     {
+        this._oldValue = 0;
+        
         Core.INSTANCE.LyricHandler.LyricChanged += (sender, args) =>
         {
             if (DataValidator.ValidateData(this._lyricPart))
@@ -102,6 +105,10 @@ public class LyricsCard : TemplatedControl
             }
             else
             {
+                if (this._oldValue == value)
+                    return;
+                
+                this._oldValue = value;
                 SetValue(PercentageProperty, Math.Round(((GetBounds().Width) / 100) * value) + 12);
 
                 if (this.FontWeight == 0)

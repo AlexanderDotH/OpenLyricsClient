@@ -87,8 +87,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
                     }
                 }
 
-                await Task.Delay(1000);
-
+                await Task.Delay(3000);
             }
         }
 

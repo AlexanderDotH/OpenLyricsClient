@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using CefNet;
 
@@ -8,10 +9,9 @@ class CefNetImplementation : CefNetApplication
 {
     protected override void OnBeforeCommandLineProcessing(string processType, CefCommandLine commandLine)
     {
-        base.OnBeforeCommandLineProcessing(processType, commandLine);
 
-        Console.WriteLine("ChromiumWebBrowser_OnBeforeCommandLineProcessing");
-        Console.WriteLine(commandLine.CommandLineString);
+        Debug.WriteLine("ChromiumWebBrowser_OnBeforeCommandLineProcessing");
+        Debug.WriteLine(commandLine.CommandLineString);
 
         //commandLine.AppendSwitchWithValue("proxy-server", "127.0.0.1:8888");
 
@@ -39,6 +39,8 @@ class CefNetImplementation : CefNetApplication
             commandLine.AppendSwitch("no-zygote");
             commandLine.AppendSwitch("no-sandbox");
         }
+        
+        base.OnBeforeCommandLineProcessing(processType, commandLine);
     }
 
     protected override void OnContextCreated(CefBrowser browser, CefFrame frame, CefV8Context context)

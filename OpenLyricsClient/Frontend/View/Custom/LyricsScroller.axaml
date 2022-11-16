@@ -7,7 +7,7 @@
              xmlns:romanization="clr-namespace:OpenLyricsClient.Backend.Romanization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              LyricPart="{Binding CurrentLyricPart, Mode=TwoWay}"
-             LyricParts="{Binding CurrentLyricParts, Mode=TwoWay}"
+             LyricParts="{Binding CurrentLyricParts, Mode=OneWay}"
              LyricsFontSize="{Binding LyricsFontSize, Mode=TwoWay}"
              LyricsFontWeight="{Binding LyricsFontWeight, Mode=TwoWay}"
              UnSelectedLineBrush="{Binding UnSelectedLineBrush}"

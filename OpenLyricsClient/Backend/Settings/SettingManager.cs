@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using DevBase.IO;
@@ -26,7 +27,7 @@ namespace OpenLyricsClient.Backend.Settings
         
         public SettingManager(string workingFolder)
         {
-            this._settingsFilePath = new AFileObject(new FileInfo(string.Format("workingFolder{0}{1}", Path.PathSeparator, SETTING_FILE_NAME)));
+            this._settingsFilePath = new AFileObject(new FileInfo(string.Format("{2}{0}{1}", Path.DirectorySeparatorChar, SETTING_FILE_NAME, System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData))));
 
             this._workingDirectory = workingFolder;
 
@@ -142,8 +143,10 @@ namespace OpenLyricsClient.Backend.Settings
             SettingsChangedEvent(new SettingsChangedEventArgs(settings));
         }
         
-        public void WriteSettings()
+        public void WriteSettings([CallerMemberName] string memberName = "")
         {
+            Debug.WriteLine(memberName);
+            
             if (!Core.IsLoaded())
                 return;
 
