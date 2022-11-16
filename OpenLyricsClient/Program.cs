@@ -32,7 +32,6 @@ namespace OpenLyricsClient
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .LogToTrace()
-                .UseX11()
                 .AfterSetup(t =>
                 {
                     new Core();
