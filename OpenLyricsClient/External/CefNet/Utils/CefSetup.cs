@@ -31,8 +31,6 @@ public class CefSetup
             settings.LogSeverity = CefLogSeverity.Warning;
             settings.UncaughtExceptionStackSize = 8;
 
-            
-            
             CefNetImplementation cefNetApplication = new CefNetImplementation();
             cefNetApplication.Initialize(string.Format("{0}{2}CefBinaries{2}{1}{2}Release", GetExecutionPath(), GetOSIDentifier(), Path.DirectorySeparatorChar), settings);
             //                                              /nick/Cef/
