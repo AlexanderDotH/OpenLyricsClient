@@ -135,13 +135,13 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
 
     private bool IsLyricPartEqual(LyricPart part1, LyricPart part2)
     {
-        if (!(DataValidator.ValidateData(part1) && DataValidator.ValidateData(part2)))
+        if (!DataValidator.ValidateData(part1) || !DataValidator.ValidateData(part2))
             return false;
 
-        if (!(DataValidator.ValidateData(part1.Part) && DataValidator.ValidateData(part2.Part)))
+        if (!DataValidator.ValidateData(part1.Part) || !DataValidator.ValidateData(part2.Part))
             return false;
         
-        if (!(DataValidator.ValidateData(part1.Time) && DataValidator.ValidateData(part2.Time)))
+        if (!DataValidator.ValidateData(part1.Time) || !DataValidator.ValidateData(part2.Time))
             return false;
         
         return part1.Time.Equals(part2.Time) && part1.Part.Equals(part2.Part);
