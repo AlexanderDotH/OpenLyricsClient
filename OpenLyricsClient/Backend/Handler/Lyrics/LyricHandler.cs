@@ -237,8 +237,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
             this._disposed = true;
 
             Core.INSTANCE.TaskRegister.Kill(
-                EnumRegisterTypes.MANAGE_LYRICS, 
-                EnumRegisterTypes.MANAGE_LYRICS_ROLL,
+                EnumRegisterTypes.MANAGE_LYRICS,
                 EnumRegisterTypes.APPLY_LYRICS_TO_SONG);
         }
     }

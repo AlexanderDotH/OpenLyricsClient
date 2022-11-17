@@ -21,14 +21,16 @@ namespace OpenLyricsClient.Backend.Helper
             GenericList<string> names = new GenericList<string>(processNames);
             GenericList<string> returnList = new GenericList<string>();
 
-            names.ForEach(n =>
+            for (int i = 0; i < names.Length; i++)
             {
+                string n = names.Get(i);
+                
                 if (!returnList.Contains(n) && IsLastWindow(n))
                 {
                     returnList.Add(n);
                 }
-            });
-
+            }
+            
             return returnList;
         }
 

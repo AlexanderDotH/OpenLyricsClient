@@ -91,7 +91,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
             }
         }
 
-        public async Task<bool> IsInUse(IService service)
+        private async Task<bool> IsInUse(IService service)
         {
             if (!DataValidator.ValidateData(service))
                 return false;

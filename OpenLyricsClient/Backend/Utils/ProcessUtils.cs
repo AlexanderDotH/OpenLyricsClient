@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using DevBase.Generic;
 
 namespace OpenLyricsClient.Backend.Utils
@@ -17,19 +18,23 @@ namespace OpenLyricsClient.Backend.Utils
             GenericList<Process> processes = new GenericList<Process>(Process.GetProcesses());
             GenericList<string> foundProcesses = new GenericList<string>();
 
-            processesToSearch.ForEach(s =>
+            for (int i = 0; i < processesToSearch.Length; i++)
             {
-                processes.ForEach(p =>
+                string pts = processesToSearch.Get(i);
+
+                for (int j = 0; j < processes.Length; j++)
                 {
-                    if (p.ProcessName.Equals(s))
+                    Process p = processes.Get(i);
+                    
+                    if (p.ProcessName.Equals(pts))
                     {
-                        if (!foundProcesses.Contains(s))
+                        if (!foundProcesses.Contains(pts))
                         {
-                            foundProcesses.Add(s);
+                            foundProcesses.Add(pts);
                         }
                     }
-                });
-            });
+                }
+            }
 
             return foundProcesses;
         }
