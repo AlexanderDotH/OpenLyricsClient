@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DevBase.Async.Task;
 using DevBase.Generic;
@@ -40,58 +41,91 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
         {
             this._debugger = new Debugger<SongProviderChooser>(this);
             this._currentSongProvider = EnumSongProvider.NONE;
-
-            Core.INSTANCE.TaskRegister.Register(
-                out _taskSuspensionToken, 
-                new Task(async () => await SongProviderChooserTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
-                EnumRegisterTypes.SONG_PROVIDER_CHOOSER);
+            Core.INSTANCE.SlowTickHandler += OnTickHandler;
         }
 
-        private async Task SongProviderChooserTask()
+        private void OnTickHandler(object sender)
         {
-            while (!this._disposed)
+            if (!DataValidator.ValidateData(Core.INSTANCE.WindowLogger))
+                return;
+
+            EnumSongProvider songProvider = EnumSongProvider.NONE;
+
+            IService spotifyService = Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
+            IService tidalService = Core.INSTANCE.ServiceHandler.GetServiceByName("Tidal");
+
+            if (IsInUse(tidalService))
+                songProvider = EnumSongProvider.TIDAL;
+
+            if (IsInUse(spotifyService))
+                songProvider = EnumSongProvider.SPOTIFY;
+
+            if (songProvider == EnumSongProvider.NONE)
+                return;
+
+            if (!songProvider.Equals(this._currentSongProvider))
             {
-                await this._taskSuspensionToken.WaitForRelease();
+                this._debugger.Write("SongProvider has been changed to: " + new AString(songProvider.ToString()).CapitalizeFirst(), DebugType.INFO);
+                this._currentSongProvider = songProvider;
 
-                if (!DataValidator.ValidateData(Core.INSTANCE.WindowLogger))
-                    continue;
-
-                EnumSongProvider songProvider = EnumSongProvider.NONE;
-
-                IService spotifyService = Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
-                IService tidalService = Core.INSTANCE.ServiceHandler.GetServiceByName("Tidal");
-
-                if (await IsInUse(tidalService))
-                    songProvider = EnumSongProvider.TIDAL;
-
-                if (await IsInUse(spotifyService))
-                    songProvider = EnumSongProvider.SPOTIFY;
-
-                if (songProvider == EnumSongProvider.NONE)
-                    continue;
-
-                if (!songProvider.Equals(this._currentSongProvider))
+                if (songProvider == EnumSongProvider.SPOTIFY)
                 {
-                    this._debugger.Write("SongProvider has been changed to: " + new AString(songProvider.ToString()).CapitalizeFirst(), DebugType.INFO);
-                    this._currentSongProvider = songProvider;
-
-                    if (songProvider == EnumSongProvider.SPOTIFY)
-                    {
-                        ResumeProvider(EnumSongProvider.SPOTIFY);
-                        SuspendProvider(EnumSongProvider.TIDAL);
-                    }
-                    else if (songProvider == EnumSongProvider.TIDAL)
-                    {
-                        ResumeProvider(EnumSongProvider.TIDAL);
-                        SuspendProvider(EnumSongProvider.SPOTIFY);
-                    }
+                    ResumeProvider(EnumSongProvider.SPOTIFY);
+                    SuspendProvider(EnumSongProvider.TIDAL);
                 }
-
-                await Task.Delay(3000);
+                else if (songProvider == EnumSongProvider.TIDAL)
+                {
+                    ResumeProvider(EnumSongProvider.TIDAL);
+                    SuspendProvider(EnumSongProvider.SPOTIFY);
+                }
             }
         }
 
-        private async Task<bool> IsInUse(IService service)
+        // private async Task SongProviderChooserTask()
+        // {
+        //     while (!this._disposed)
+        //     {
+        //         await this._taskSuspensionToken.WaitForRelease();
+        //
+        //         if (!DataValidator.ValidateData(Core.INSTANCE.WindowLogger))
+        //             continue;
+        //
+        //         EnumSongProvider songProvider = EnumSongProvider.NONE;
+        //
+        //         IService spotifyService = Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
+        //         IService tidalService = Core.INSTANCE.ServiceHandler.GetServiceByName("Tidal");
+        //
+        //         if (await IsInUse(tidalService))
+        //             songProvider = EnumSongProvider.TIDAL;
+        //
+        //         if (await IsInUse(spotifyService))
+        //             songProvider = EnumSongProvider.SPOTIFY;
+        //
+        //         if (songProvider == EnumSongProvider.NONE)
+        //             continue;
+        //
+        //         if (!songProvider.Equals(this._currentSongProvider))
+        //         {
+        //             this._debugger.Write("SongProvider has been changed to: " + new AString(songProvider.ToString()).CapitalizeFirst(), DebugType.INFO);
+        //             this._currentSongProvider = songProvider;
+        //
+        //             if (songProvider == EnumSongProvider.SPOTIFY)
+        //             {
+        //                 ResumeProvider(EnumSongProvider.SPOTIFY);
+        //                 SuspendProvider(EnumSongProvider.TIDAL);
+        //             }
+        //             else if (songProvider == EnumSongProvider.TIDAL)
+        //             {
+        //                 ResumeProvider(EnumSongProvider.TIDAL);
+        //                 SuspendProvider(EnumSongProvider.SPOTIFY);
+        //             }
+        //         }
+        //
+        //         await Task.Delay(3000);
+        //     }
+        // }
+
+        private bool IsInUse(IService service)
         {
             if (!DataValidator.ValidateData(service))
                 return false;
@@ -110,7 +144,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
                 if (foundProcesses.Get(0).Equals(service.ProcessName()))
                     return true;
 
-            if (await service.TestConnection())
+            if (service.TestConnection().GetAwaiter().GetResult())
                 return true;
 
             return false;

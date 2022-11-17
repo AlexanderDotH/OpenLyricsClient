@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Avalonia.Controls.Shapes;
+using DevBase.Async.Task;
 using OpenLyricsClient.Backend.Cache;
 using OpenLyricsClient.Backend.Collector.Token;
 using OpenLyricsClient.Backend.Debugger;
+using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Handler.Lyrics;
 using OpenLyricsClient.Backend.Handler.Services;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Helper;
-using OpenLyricsClient.Backend.Overwrite;
 using OpenLyricsClient.Backend.Settings;
 using OpenLyricsClient.Backend.Structure.Enum;
+using TaskRegister = OpenLyricsClient.Backend.Overwrite.TaskRegister;
 
 namespace OpenLyricsClient.Backend
 {
@@ -44,6 +47,12 @@ namespace OpenLyricsClient.Backend
         private WindowLogger _windowLogger;
         private Environment.Environment _environment;
 
+        private TaskSuspensionToken _tickSuspensionToken;
+
+        public event TickEventHandler TickHandler;
+        public event SlowTickEventHandler SlowTickHandler;
+
+        
         public Core()
         {
             INSTANCE = this;
@@ -59,6 +68,16 @@ namespace OpenLyricsClient.Backend
 
             this._taskRegister = new TaskRegister();
 
+            TaskRegister.Register(
+                out _tickSuspensionToken,
+                new Task(async () => await this.TickTask(), CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
+                EnumRegisterTypes.GLOBAL_TICK);
+            
+            TaskRegister.Register(
+                out _tickSuspensionToken,
+                new Task(async () => await this.SlowTickTask(), CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
+                EnumRegisterTypes.GLOBAL_TICK);
+            
             this._windowLogger = new WindowLogger();
 
             this._settingManager = new SettingManager(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + 
@@ -75,6 +94,24 @@ namespace OpenLyricsClient.Backend
             _loaded = true;
         }
 
+        private async Task TickTask()
+        {
+            while (!_disposed)
+            {
+                await Task.Delay(10);
+                this.TickEvent();
+            }
+        }
+        
+        private async Task SlowTickTask()
+        {
+            while (!_disposed)
+            {
+                await Task.Delay(3000);
+                this.SlowTickEvent();
+            }
+        }
+        
         public void DisposeEverything()
         {
             _disposed = true;
@@ -82,10 +119,23 @@ namespace OpenLyricsClient.Backend
 
             this.TaskRegister.Kill(EnumRegisterTypes.SHOW_LYRICS, EnumRegisterTypes.SHOW_FULLLYRICS, EnumRegisterTypes.SHOW_PROGRESS, EnumRegisterTypes.SHOW_INFOS);
             this.TaskRegister.Kill(EnumRegisterTypes.COLLECT_TOKENS);
+            this.TaskRegister.Kill(EnumRegisterTypes.GLOBAL_TICK);
 
             this._songHandler.Dispose();
             this._lyricHandler.Dispose();
             this._serviceHandler.Dispose();
+        }
+        
+        protected virtual void TickEvent()
+        {
+            TickEventHandler tickEventHandler = TickHandler;
+            tickEventHandler?.Invoke(this);
+        }
+        
+        protected virtual void SlowTickEvent()
+        {
+            SlowTickEventHandler slowTickEventHandler = SlowTickHandler;
+            slowTickEventHandler?.Invoke(this);
         }
 
         public SettingManager SettingManager

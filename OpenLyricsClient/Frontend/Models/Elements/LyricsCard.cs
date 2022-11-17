@@ -75,7 +75,10 @@ public class LyricsCard : TemplatedControl
     
     public Rect GetBounds()
     {
-        if (this.FontSize == 0)
+        if (this.FontSize <= 0)
+            return new Rect();
+        
+        if (this.FontWeight <= 0)
             return new Rect();
         
         FormattedText text = new FormattedText(Text,

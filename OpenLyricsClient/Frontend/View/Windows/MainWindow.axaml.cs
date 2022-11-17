@@ -111,10 +111,5 @@ namespace OpenLyricsClient.Frontend.View.Windows
             if (this._windowDragable)
                 this.BeginMoveDrag(e);
         }
-
-        private void WebView_OnBrowserCreated(object? sender, EventArgs e)
-        {
-            this.Get<WebView>(nameof(WebView)).Navigate("http://google.de");
-        }
     }
 }

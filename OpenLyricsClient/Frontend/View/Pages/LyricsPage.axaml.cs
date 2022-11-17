@@ -53,7 +53,9 @@ public partial class LyricsPage : UserControl
     {
         if (this._cstmLyricsDisplay != null)
         {
+            this._cstmLyricsDisplay.Reset();
             this._cstmLyricsDisplay.Reload();
+            this._cstmLyricsDisplay.ResyncOffset();
         }
     }
 

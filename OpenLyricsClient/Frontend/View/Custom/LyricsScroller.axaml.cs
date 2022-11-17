@@ -282,6 +282,12 @@ public partial class LyricsScroller : UserControl
         if (index < 0)
             return new Size(0, 0);
         
+        if (this.FontWeight <= 0)
+            return new Size(0, 0);
+        
+        if (this.LyricsFontSize <= 0)
+            return new Size(0, 0);
+        
         FormattedText text = new FormattedText(this._lyricParts[index].Part,
             new Typeface(FontFamily.Parse(
                 "avares://Material.Styles/Fonts/Roboto#Roboto, Noto Sans, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Helvetica, Cantarell, Ubuntu, Arial, Hiragino Kaku Gothic Pro, MS UI Gothic, MS PMincho, Microsoft JhengHei, Microsoft JhengHei UI, Microsoft YaHei New, Microsoft Yahei, SimHei"), 
@@ -325,7 +331,6 @@ public partial class LyricsScroller : UserControl
             
             SetAndRaise(LyricPartsProperty, ref _lyricParts,  null); 
             SetAndRaise(LyricPartsProperty, ref _lyricParts,  context.CurrentLyricParts);
-            
         }
     }
     

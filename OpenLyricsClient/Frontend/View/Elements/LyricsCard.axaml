@@ -42,8 +42,8 @@
                                HorizontalAlignment="Left"
                                Text="{TemplateBinding Text}"
                                TextWrapping="Wrap"
-                               FontWeight="{TemplateBinding FontWeight}"
-                               FontSize="{TemplateBinding FontSize}"
+                               FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
+                               FontSize="{TemplateBinding FontSize, Converter={StaticResource FontSizeConverter}}"
                                Margin="5,0,5,5"
                                Foreground="{TemplateBinding UnSelectedLineBrush}">
                         <TextBlock.Transitions>
@@ -64,8 +64,8 @@
                                    HorizontalAlignment="Left"
                                    Text="{TemplateBinding Text}"
                                    TextWrapping="Wrap"
-                                   FontWeight="{TemplateBinding FontWeight}"
-                                   FontSize="{TemplateBinding FontSize}"
+                                   FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
+                                   FontSize="{TemplateBinding FontSize, Converter={StaticResource FontSizeConverter}}"
                                    Margin="5,0,5,5"
                                    Foreground="{TemplateBinding SelectedLineBrush}">
                             <TextBlock.Transitions>
@@ -77,31 +77,6 @@
                             </TextBlock.Transitions>
                         </TextBlock>
                     </Viewbox>
-                    <!--<Panel Name="PART_LowerPanel" HorizontalAlignment="Left" >
-                        
-                    </Panel>
-                    
-                    <Panel Name="PART_UpperPanel" 
-                           HorizontalAlignment="Left"
-                           Width="{TemplateBinding Percentage}">
-                        <TextBlock Name="PART_TextBlock"
-                                   HorizontalAlignment="Left"
-                                   Text="{TemplateBinding Text}"
-                                   TextWrapping="NoWrap"
-                                   OpacityMask="Pink"
-                                   FontWeight="Bold"
-                                   FontSize="30"
-                                   Margin="5,0,5,5"
-                                   Foreground="White">
-                            <TextBlock.Transitions>
-                                <Transitions>
-                                    <BrushTransition Property="Foreground"
-                                                     Easing="CircularEaseOut"
-                                                     Duration="0:0:0.500"></BrushTransition>
-                                </Transitions>
-                            </TextBlock.Transitions>
-                        </TextBlock>
-                    </Panel>-->
                 </Grid>
             </ControlTemplate>
         </Setter>

@@ -45,24 +45,10 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             this.CurrentLyricParts =  new ObservableCollection<LyricPart>();
 
             Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
-
-            Core.INSTANCE.TaskRegister.Register(
-                out _displayLyricsSuspensionToken,
-                new Task(async () => await DisplayLyricsTask(), Core.INSTANCE.CancellationTokenSource.Token,
-                    TaskCreationOptions.LongRunning),
-                EnumRegisterTypes.SHOW_LYRICS);
-
-            Core.INSTANCE.TaskRegister.Register(
-                out _syncLyricsSuspensionToken,
-                new Task(async () => await SyncLyricsTask(), Core.INSTANCE.CancellationTokenSource.Token,
-                    TaskCreationOptions.LongRunning),
-                EnumRegisterTypes.SYNC_LYRICS);
             
-            Core.INSTANCE.TaskRegister.Register(
-                out _syncLyricsPercentageSuspensionToken,
-                new Task(async () => await SyncLyricsPercentageTask(), Core.INSTANCE.CancellationTokenSource.Token,
-                    TaskCreationOptions.LongRunning),
-                EnumRegisterTypes.SYNC_LYRICS_PERCENTAGE);
+            Core.INSTANCE.TickHandler += OnLyricsLoadTickHandler;
+            Core.INSTANCE.TickHandler += OnLyricsSyncTickHandler;
+            Core.INSTANCE.TickHandler += OnLyricsSyncPercentageTickHandler;
 
             Core.INSTANCE.SettingManager.SettingsChanged += (sender, args) =>
             {
@@ -71,128 +57,90 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
         }
     }
 
-    private async Task DisplayLyricsTask()
+    private void OnLyricsSyncPercentageTickHandler(object sender)
     {
-        while (!Core.IsDisposed())
+        Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
+
+        if (!DataValidator.ValidateData(currentSong))
+            return;
+
+        if (!DataValidator.ValidateData(currentSong.Lyrics))
+            return;
+
+        if (!DataValidator.ValidateData(currentSong.CurrentLyricPart))
+            return;
+
+        if (!DataValidator.ValidateData(this._lyricParts))
+            return;
+            
+        for (var i = 0; i < this._lyricParts.Count; i++)
         {
-            await Task.Delay(1);
-            await this._displayLyricsSuspensionToken.WaitForRelease();
-
-            await Dispatcher.UIThread.InvokeAsync(async () =>
+            if (this._lyricParts[i] == currentSong.CurrentLyricPart)
             {
-                Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
-
-                if (!DataValidator.ValidateData(currentSong))
-                    return;
-
-                if (!DataValidator.ValidateData(currentSong.Lyrics))
-                    return;
-
-                if (!DataValidator.ValidateData(currentSong.Lyrics.LyricParts))
-                    return;
-
-                if (!DataValidator.ValidateData(this.CurrentLyricParts))
+                if (i + 1 < this._lyricParts.Count)
                 {
-                    this.CurrentLyricParts = new ObservableCollection<LyricPart>();
-                    return;
+                    LyricPart nextPart = this._lyricParts[i + 1];
+                        
+                    long time = nextPart.Time - currentSong.CurrentLyricPart.Time;
+                    long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
+                    double change = Math.Round((double)(100 * currentTime) / time);
+                        
+                    Percentage = change;
                 }
-                
-                if (this.CurrentLyricParts == null)
-                    return;
-                    
-                if (!(AreListsEqual(this.CurrentLyricParts, currentSong.Lyrics.LyricParts)))
+                else
                 {
-                    this.CurrentLyricParts =  new ObservableCollection<LyricPart>(currentSong.Lyrics.LyricParts);
+                    long time = currentSong.SongMetadata.MaxTime - currentSong.CurrentLyricPart.Time;
+                    long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
+                    double change = Math.Round((double)(100 * currentTime) / time);
+                        
+                    Percentage = change;
                 }
+            }
+        }
+    }
+
+    private void OnLyricsSyncTickHandler(object sender)
+    {
+        Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
+
+        if (!DataValidator.ValidateData(currentSong))
+            return;
+
+        if (!DataValidator.ValidateData(currentSong.Lyrics))
+            return;
+
+        if (!DataValidator.ValidateData(currentSong.CurrentLyricPart))
+            return;
+
+        if (currentSong.CurrentLyricPart != this._lyricPart)
+            this.CurrentLyricPart = currentSong.CurrentLyricPart;
+    }
+
+    private void OnLyricsLoadTickHandler(object sender)
+    {
+        Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
+
+        if (!DataValidator.ValidateData(currentSong))
+            return;
+
+        if (!DataValidator.ValidateData(currentSong.Lyrics))
+            return;
+
+        if (!DataValidator.ValidateData(currentSong.Lyrics.LyricParts))
+            return;
+
+        if (!DataValidator.ValidateData(this.CurrentLyricParts))
+        {
+            this.CurrentLyricParts = new ObservableCollection<LyricPart>();
+            return;
+        }
+        
+        if (!(AreListsEqual(this.CurrentLyricParts, currentSong.Lyrics.LyricParts)))
+        {
+            Dispatcher.UIThread.InvokeAsync(async () =>
+            {
+                this.CurrentLyricParts =  new ObservableCollection<LyricPart>(currentSong.Lyrics.LyricParts);
             });
-        }
-    }
-
-    private async Task SyncLyricsTask()
-    {
-        while (!Core.IsDisposed())
-        {
-            await Task.Delay(1);
-            await this._syncLyricsSuspensionToken.WaitForRelease();
-
-            Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
-
-            if (!DataValidator.ValidateData(currentSong))
-                continue;
-
-            if (!DataValidator.ValidateData(currentSong.Lyrics))
-                continue;
-
-            if (!DataValidator.ValidateData(currentSong.CurrentLyricPart))
-                continue;
-
-            if (!IsLyricPartEqual(this.CurrentLyricPart, currentSong.CurrentLyricPart))
-            {
-                this.CurrentLyricPart = currentSong.CurrentLyricPart;
-            }
-        }
-    }
-
-    private bool IsLyricPartEqual(LyricPart part1, LyricPart part2)
-    {
-        if (!DataValidator.ValidateData(part1) || !DataValidator.ValidateData(part2))
-            return false;
-
-        if (!DataValidator.ValidateData(part1.Part) || !DataValidator.ValidateData(part2.Part))
-            return false;
-        
-        if (!DataValidator.ValidateData(part1.Time) || !DataValidator.ValidateData(part2.Time))
-            return false;
-        
-        return part1.Time.Equals(part2.Time) && part1.Part.Equals(part2.Part);
-    }
-    
-    private async Task SyncLyricsPercentageTask()
-    {
-        while (!Core.IsDisposed())
-        {
-            await Task.Delay(1);
-            await this._syncLyricsPercentageSuspensionToken.WaitForRelease();
-
-            Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
-
-            if (!DataValidator.ValidateData(currentSong))
-                continue;
-
-            if (!DataValidator.ValidateData(currentSong.Lyrics))
-                continue;
-
-            if (!DataValidator.ValidateData(currentSong.CurrentLyricPart))
-                continue;
-
-            if (!DataValidator.ValidateData(this._lyricParts))
-                continue;
-            
-            for (var i = 0; i < this._lyricParts.Count; i++)
-            {
-                if (this._lyricParts[i] == currentSong.CurrentLyricPart)
-                {
-                    if (i + 1 < this._lyricParts.Count)
-                    {
-                        LyricPart nextPart = this._lyricParts[i + 1];
-                        
-                        long time = nextPart.Time - currentSong.CurrentLyricPart.Time;
-                        long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
-                        double change = Math.Round((double)(100 * currentTime) / time);
-                        
-                        Percentage = change;
-                    }
-                    else
-                    {
-                        long time = currentSong.SongMetadata.MaxTime - currentSong.CurrentLyricPart.Time;
-                        long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
-                        double change = Math.Round((double)(100 * currentTime) / time);
-                        
-                        Percentage = change;
-                    }
-                }
-            }
-            
         }
     }
     
