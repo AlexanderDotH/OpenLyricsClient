@@ -8,7 +8,7 @@ mkdir -p "../OpenLyricsClient/bin/Debug/net6.0/IpaDic/"
 cp -r "../Binaries/IpaDic/" "../OpenLyricsClient/bin/Debug/net6.0/IpaDic/"
 fi
 
-if [[ ! -e "../OpenLyricsClient/bin/Debug/net6.0/" ]]; then
+if [[ ! -e "../OpenLyricsClient/bin/Debug/net6.0/icudtl.dat" ]]; then
 mkdir -p "../OpenLyricsClient/bin/Debug/net6.0/"
 cp "../Binaries/CefBinaries/icudtl.dat" "../OpenLyricsClient/bin/Debug/net6.0/icudtl.dat"
 fi

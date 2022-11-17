@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Channels;
+using System.Threading.Tasks;
+using Avalonia.Threading;
 using CefNet;
 using OpenLyricsClient.Backend.Debugger;
 
@@ -24,7 +26,8 @@ public class CefSetup
         {
             CefSettings settings = new CefSettings();
             settings.NoSandbox = true;
-            settings.MultiThreadedMessageLoop = true;
+            settings.ExternalMessagePump = false;
+            settings.MultiThreadedMessageLoop = !settings.ExternalMessagePump;
             settings.WindowlessRenderingEnabled = true;
             settings.LocalesDirPath = string.Format("{0}{2}CefBinaries{2}{1}{2}Resources{2}locales", GetExecutionPath(), GetOSIDentifier(), Path.DirectorySeparatorChar);
             settings.ResourcesDirPath = string.Format("{0}{2}CefBinaries{2}{1}{2}Resources", GetExecutionPath(), GetOSIDentifier(), Path.DirectorySeparatorChar);
@@ -32,6 +35,7 @@ public class CefSetup
             settings.UncaughtExceptionStackSize = 8;
 
             CefNetImplementation cefNetApplication = new CefNetImplementation();
+            cefNetApplication.ScheduleMessagePumpWorkCallback += ScheduleMessagePumpWorkCallback;
             cefNetApplication.Initialize(string.Format("{0}{2}CefBinaries{2}{1}{2}Release", GetExecutionPath(), GetOSIDentifier(), Path.DirectorySeparatorChar), settings);
             //                                              /nick/Cef/
             this._cefNetApplication = cefNetApplication;
@@ -42,6 +46,12 @@ public class CefSetup
         {
             this._debugger.Write("Cannot intiialize cef " + e.Message, DebugType.FATAL);
         }
+    }
+
+    private async void ScheduleMessagePumpWorkCallback(long delayMs)
+    {
+        await Task.Delay((int)delayMs);
+        Dispatcher.UIThread.Post(CefApi.DoMessageLoopWork);
     }
 
     private string GetOSIDentifier()

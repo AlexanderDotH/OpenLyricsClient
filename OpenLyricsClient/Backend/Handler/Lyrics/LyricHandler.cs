@@ -104,7 +104,6 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
                     if (lyricData.LyricReturnCode == LyricReturnCode.SUCCESS)
                     {
-                        //lyricData.LyricParts = await new RomanizationHelper().RomanizeArray(Core.INSTANCE.CacheManager.GetDataByRequest(songRequestObject).LyricParts);
                         song.Lyrics = lyricData;
                         song.State = SongState.HAS_LYRICS_AVAILABLE;
                     }

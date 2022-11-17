@@ -131,56 +131,56 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
         public async Task StartAuthorization()
         {
-            CefAuthWindow cefAuthWindow = new CefAuthWindow("https://openlyricsclient.com/connect/spotify/begin", "/complete");
-            
-            cefAuthWindow.Width = 500;
-            cefAuthWindow.Height = 600;
-            cefAuthWindow.Title = "Connect to spotify";
-            
-            cefAuthWindow.ShowDialog<string>(MainWindow.Instance);
-            
-            Token token = await cefAuthWindow.GetAuthCode();
-            
-            cefAuthWindow.Close();
+             CefAuthWindow cefAuthWindow = new CefAuthWindow("https://openlyricsclient.com/connect/spotify/begin", "/complete");
+             
+             cefAuthWindow.Width = 500;
+             cefAuthWindow.Height = 600;
+             cefAuthWindow.Title = "Connect to spotify";
+             
+             cefAuthWindow.ShowDialog<string>(MainWindow.Instance);
+             
+             Token token = await cefAuthWindow.GetAuthCode();
+             
+             cefAuthWindow.Close();
+             
+             SpotifyClient client = new SpotifyClient(token.AccessToken);
+             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.UserData = await client.UserProfile.Current();
+             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken = token.AccessToken;
+             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken = token.RefreshToken;
+             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime =
+                 DateTimeOffset.Now.AddHours(1).ToUnixTimeMilliseconds();
+             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected = true;
+             Core.INSTANCE.SettingManager.WriteSettings();
 
-            SpotifyClient client = new SpotifyClient(token.AccessToken);
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.UserData = await client.UserProfile.Current();
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken = token.AccessToken;
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken = token.RefreshToken;
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime =
-                DateTimeOffset.Now.AddHours(1).ToUnixTimeMilliseconds();
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected = true;
-            Core.INSTANCE.SettingManager.WriteSettings();
 
+             /*
+             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+             {
+                 ProcessStartInfo processStartInfo = new ProcessStartInfo(url);
+                 processStartInfo.UseShellExecute = true;
+                 Process.Start(processStartInfo);
+             }
 
-            /*
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                ProcessStartInfo processStartInfo = new ProcessStartInfo(url);
-                processStartInfo.UseShellExecute = true;
-                Process.Start(processStartInfo);
-            }
+             Listener.Listener l = new Listener.Listener("http://localhost:8080/", "/callback", "code");
 
-            Listener.Listener l = new Listener.Listener("http://localhost:8080/", "/callback", "code");
+             string token = string.Empty;
+             bool running = false;
+             while (!l.Finished && !running)
+             {
+                 if (l.Response != null)
+                 {
+                     token = l.Response;
+                     running = true;
+                 }
+             }
+             
 
-            string token = string.Empty;
-            bool running = false;
-            while (!l.Finished && !running)
-            {
-                if (l.Response != null)
-                {
-                    token = l.Response;
-                    running = true;
-                }
-            }
-            */
+             /*BearerAccessRefreshToken bearerAccessRefresh = await _userAccountsService.RequestAccessRefreshToken(token);
 
-            /*BearerAccessRefreshToken bearerAccessRefresh = await _userAccountsService.RequestAccessRefreshToken(token);
-
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken = bearerAccessRefresh.RefreshToken;
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess = bearerAccessRefresh;
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected = true;
-            Core.INSTANCE.SettingManager.WriteSettings();*/
+             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken = bearerAccessRefresh.RefreshToken;
+             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess = bearerAccessRefresh;
+             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected = true;
+             Core.INSTANCE.SettingManager.WriteSettings();*/
         }
 
         string IService.ServiceName()

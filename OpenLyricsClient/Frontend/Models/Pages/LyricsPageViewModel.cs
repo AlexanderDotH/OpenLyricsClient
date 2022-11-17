@@ -29,33 +29,22 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     
     public LyricsPageViewModel()
     {
-        Core.INSTANCE.TaskRegister.Register(
-            out _songInfoSuspensionToken,
-            new Task(async () => await SongInformationTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.None),
-            EnumRegisterTypes.SHOW_INFOS);
+        Core.INSTANCE.TickHandler += OnTickHandler;
     }
 
-    public async Task SongInformationTask()
+    private void OnTickHandler(object sender)
     {
-        while (!Core.IsDisposed())
-        {
-            await Task.Delay(300);
-            
-            Song song = Core.INSTANCE.SongHandler.CurrentSong;
+        Song song = Core.INSTANCE.SongHandler.CurrentSong;
         
-            if (!DataValidator.ValidateData(song))
-                continue;
+        if (!DataValidator.ValidateData(song))
+            return;
 
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                SongName = song.SongMetadata.Name;
-                Artists = song.SongMetadata.FullArtists;
-                AlbumName = song.SongMetadata.Album;
-                Percentage = song.GetPercentage();
-                CurrentTime = song.ProgressString;
-                CurrentMaxTime = song.MaxProgressString;
-            });
-        }
+        SongName = song.SongMetadata.Name;
+        Artists = song.SongMetadata.FullArtists;
+        AlbumName = song.SongMetadata.Album;
+        Percentage = song.GetPercentage();
+        CurrentTime = song.ProgressString;
+        CurrentMaxTime = song.MaxProgressString;
     }
 
     public string SongName

@@ -186,7 +186,8 @@
                                 Minimum="0"
                                 Maximum="100"
                                 Value="{Binding Percentage}"
-                                Margin="10, 0,10,10"></ProgressBar>
+                                Margin="10, 0,10,10">
+                   </ProgressBar>
                 
                    <TextBlock Classes="progress_text" 
                               Name="TXT_TimeFrom"

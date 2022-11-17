@@ -2,6 +2,9 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.ReactiveUI;
 using System;
+using System.Linq;
+using System.Runtime.InteropServices;
+using Avalonia.Threading;
 using CefNet;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.External.CefNet.Utils;
@@ -16,13 +19,17 @@ namespace OpenLyricsClient
         [STAThread]
         public static void Main(string[] args)
         {
-            // CefSetup cefSetup = new CefSetup();
-            // cefSetup.SetupCef();
-            //
-            // App.FrameworkShutdown += (sender, args) =>
-            // {
-            //     cefSetup.CefNetApplication.Shutdown();
-            // };
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                CefSetup cefSetup = new CefSetup();
+                cefSetup.SetupCef();
+                    
+                App.FrameworkShutdown += (sender, args) =>
+                {
+                    cefSetup.CefNetApplication.Shutdown();
+                };
+            }
+
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
         }
