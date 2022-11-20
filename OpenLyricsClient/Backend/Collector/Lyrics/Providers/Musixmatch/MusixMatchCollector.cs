@@ -71,7 +71,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
                         HasSubtitles = true
                     });
 
-                if (!DataValidator.ValidateData(tracks) || DataValidator.ValidateData(tracks) && tracks.Count == 0)
+                /*if (!DataValidator.ValidateData(tracks) || DataValidator.ValidateData(tracks) && tracks.Count == 0)
                 {
                     tracks = await musixmatchClient.SongSearchAsync(
                         new TrackSearchParameters
@@ -80,7 +80,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
                             Title = songRequestObject.FormattedSongName,
                             HasSubtitles = true
                         });
-                }
+                }*/
             }
 
             if (!DataValidator.ValidateData(tracks))

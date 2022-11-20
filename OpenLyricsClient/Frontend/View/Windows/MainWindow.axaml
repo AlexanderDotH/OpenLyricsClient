@@ -16,7 +16,7 @@
         x:Class="OpenLyricsClient.Frontend.View.Windows.MainWindow"
         Background="{DynamicResource PrimaryBackgroundBrush}"
         WindowStartupLocation="CenterScreen"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/app-logo.ico"
         Title="OpenLyricsClient">
 
     <Design.DataContext>

@@ -103,7 +103,7 @@ public partial class LyricsScroller : UserControl
         this._startMargin = 0;
         this._scrollSpeed = 15;
 
-        this._renderTimer = new SleepLoopRenderTimer(60);
+        this._renderTimer = new SleepLoopRenderTimer(500);
         this._renderTimer.Tick += RenderTimerOnTick;
 
         /*Core.INSTANCE.SettingManager.SettingsChanged  += (sender, args) =>
@@ -204,6 +204,14 @@ public partial class LyricsScroller : UserControl
             }
             else
             {
+
+                if (child is LyricsCard)
+                {
+                    LyricsCard card = (LyricsCard)child;
+                    card.Current = false;
+                    card.Percentage = -10;
+                }
+                
                 position += GetRenderedSize(i).Height;
             }
         }

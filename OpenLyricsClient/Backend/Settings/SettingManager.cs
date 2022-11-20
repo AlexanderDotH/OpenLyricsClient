@@ -27,9 +27,10 @@ namespace OpenLyricsClient.Backend.Settings
         
         public SettingManager(string workingFolder)
         {
-            this._settingsFilePath = new AFileObject(new FileInfo(string.Format("{2}{0}{1}", Path.DirectorySeparatorChar, SETTING_FILE_NAME, System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData))));
-
             this._workingDirectory = workingFolder;
+            
+            this._settingsFilePath = new AFileObject(new FileInfo(string.Format("{0}{1}", 
+                this._workingDirectory, SETTING_FILE_NAME)));
 
             Setup();
         }

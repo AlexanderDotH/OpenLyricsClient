@@ -112,8 +112,8 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
         if (!DataValidator.ValidateData(currentSong.CurrentLyricPart))
             return;
 
-        if (currentSong.CurrentLyricPart != this._lyricPart)
-            this.CurrentLyricPart = currentSong.CurrentLyricPart;
+        this.CurrentLyricPart = currentSong.CurrentLyricPart;
+
     }
 
     private void OnLyricsLoadTickHandler(object sender)
