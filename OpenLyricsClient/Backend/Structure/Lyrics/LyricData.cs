@@ -57,7 +57,7 @@ namespace OpenLyricsClient.Backend.Structure.Lyrics
             set => this._lyricReturnCode = value;
         }
 
-        public LyricPart[] LyricParts
+        public LyricPart[]? LyricParts
         {
             get => this._lyricParts;
             set => this._lyricParts = value;
