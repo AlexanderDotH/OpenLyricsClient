@@ -2,6 +2,8 @@
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DevBase.Async.Task;
+using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.External.CefNet.Structure;
 
 namespace OpenLyricsClient.Backend.Listener
@@ -16,6 +18,8 @@ namespace OpenLyricsClient.Backend.Listener
 
         private bool _running;
 
+        private TaskSuspensionToken _suspensionToken;
+        
         public Listener(string prefix, string suffix, string refreshPrefix, string accessPrefix)
         {
             this._prefix = prefix;
@@ -23,9 +27,6 @@ namespace OpenLyricsClient.Backend.Listener
 
             this._refreshPrefix = refreshPrefix;
             this._accessPrefix = accessPrefix;
-
-            Task task = new Task(async () => await StartListener(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.None);
-            task.Start();
         }
 
         public async Task StartListener()

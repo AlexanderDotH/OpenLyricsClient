@@ -149,21 +149,13 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             } 
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                
                 ProcessStartInfo processStartInfo = new ProcessStartInfo("https://www.openlyricsclient.com/connect/spotify/begin/listener");
                 processStartInfo.UseShellExecute = true;
                 Process.Start(processStartInfo);
                 
                 Listener.Listener l = new Listener.Listener("http://127.0.0.1:45674/", "/complete", "refresh_token", "access_token");
-                
-                while (!l.Finished)
-                {
-                    if (l.Response != null)
-                    {
-                        token = l.Response;
-                        break;
-                    }
-                }
+                await l.StartListener();
+                token = l.Response;
             }
             
             if (!DataValidator.ValidateData(token))

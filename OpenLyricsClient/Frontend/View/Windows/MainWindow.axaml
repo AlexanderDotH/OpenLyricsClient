@@ -16,7 +16,7 @@
         x:Class="OpenLyricsClient.Frontend.View.Windows.MainWindow"
         Background="{DynamicResource PrimaryBackgroundBrush}"
         WindowStartupLocation="CenterScreen"
-        Icon="/Assets/AppIcon/32x32.png"
+        Icon="/Assets/AppIcon/256x256.ico"
         Title="OpenLyricsClient">
 
     <Design.DataContext>
