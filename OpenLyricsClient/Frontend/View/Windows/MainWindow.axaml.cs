@@ -34,7 +34,7 @@ namespace OpenLyricsClient.Frontend.View.Windows
             this._pageSelector = this.Get<Carousel>(nameof(PageSelection));
             
             this._lyricsButton = this.Get<Button>(nameof(BTN_LyricsButton));
-            this._fulltextButton = this.Get<Button>(nameof(BTN_FullTextButton));
+            //this._fulltextButton = this.Get<Button>(nameof(BTN_FullTextButton));
             this._settingsButton = this.Get<Button>(nameof(BTN_SettingsButton));
         }
 
@@ -70,13 +70,13 @@ namespace OpenLyricsClient.Frontend.View.Windows
                     this._windowDragable = true;
                     break;
                 }
-                case 1:
+                /*case 1:
                 {
                     UnselectAll();
                     SelectButton(this.BTN_FullTextButton);
                     this._windowDragable = true;
                     break;
-                }
+                }*/
                 case 2:
                 {
                     UnselectAll();
@@ -97,7 +97,7 @@ namespace OpenLyricsClient.Frontend.View.Windows
         private void UnselectAll()
         {
             this.BTN_LyricsButton.Foreground = App.Current.FindResource("SecondaryFontColorBrush") as SolidColorBrush;
-            this.BTN_FullTextButton.Foreground = App.Current.FindResource("SecondaryFontColorBrush") as SolidColorBrush;
+            //this.BTN_FullTextButton.Foreground = App.Current.FindResource("SecondaryFontColorBrush") as SolidColorBrush;
             this.BTN_SettingsButton.Foreground = App.Current.FindResource("SecondaryFontColorBrush") as SolidColorBrush;
         }
 

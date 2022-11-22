@@ -88,6 +88,9 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                 {
                     SongRequestObject songRequestObject = SongRequestObject.FromSong(song);
 
+                    if (!DataValidator.ValidateData(songRequestObject))
+                        continue;
+                    
                     LyricData lyricData = Core.INSTANCE.CacheManager.GetLyricsByRequest(songRequestObject);
 
                     if (!DataValidator.ValidateData(lyricData))

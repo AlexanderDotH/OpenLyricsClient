@@ -38,6 +38,9 @@ namespace OpenLyricsClient.Backend.Structure.Song
 
         public static SongMetadata ToSongMetadata(SongRequestObject songRequestObject)
         {
+            if (!DataValidator.ValidateData(songRequestObject))
+                return null;
+            
             return new SongMetadata(songRequestObject.SongName,
                 songRequestObject.Album, songRequestObject.Artists, songRequestObject.SongDuration);
         }

@@ -117,18 +117,24 @@ public partial class LyricsScroller : UserControl
     {
         SetThreadPos(this._currentScrollOffset);
 
+        double step = Math.Abs(this._scrollFrom - this._scrollTo) / this._scrollSpeed;
+
+        if (step != 0)
+        {
+            
+        }
+        
         if (this._currentScrollOffset < _scrollTo)
         {
-            double step = Math.Abs(this._scrollFrom - this._scrollTo) / this._scrollSpeed;
             this._currentScrollOffset += step;
-            this._scrollFrom = this._currentScrollOffset;
         }
         else
         {
-            double step = Math.Abs(this._scrollFrom - this._scrollTo) / this._scrollSpeed;
             this._currentScrollOffset -= step;
-            this._scrollFrom = this._currentScrollOffset;
         }
+        
+        this._scrollFrom = this._currentScrollOffset;
+
     }
 
     private void SetThreadPos(Double y)
@@ -300,7 +306,7 @@ public partial class LyricsScroller : UserControl
             new Typeface(FontFamily.Parse(
                 "avares://Material.Styles/Fonts/Roboto#Roboto, Noto Sans, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Helvetica, Cantarell, Ubuntu, Arial, Hiragino Kaku Gothic Pro, MS UI Gothic, MS PMincho, Microsoft JhengHei, Microsoft JhengHei UI, Microsoft YaHei New, Microsoft Yahei, SimHei"), 
                 FontStyle.Normal, this.LyricsFontWeight), this.LyricsFontSize, TextAlignment.Left,
-            TextWrapping.Wrap, new Size(this._itemsRepeater.DesiredSize.Width, 0));
+            TextWrapping.Wrap, new Size(this._itemsRepeater.DesiredSize.Width, this._itemsRepeater.DesiredSize.Height));
 
         Size returnVal = new Size(text.Bounds.Width, Math.Floor(text.Bounds.Height + ItemMargin.Bottom + 5));
         return returnVal;

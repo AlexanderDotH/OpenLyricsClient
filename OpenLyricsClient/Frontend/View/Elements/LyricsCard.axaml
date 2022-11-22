@@ -67,6 +67,7 @@
                                    FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
                                    FontSize="{TemplateBinding FontSize, Converter={StaticResource FontSizeConverter}}"
                                    Margin="5,0,5,5"
+                                   Width="{TemplateBinding Width}"
                                    Foreground="{TemplateBinding SelectedLineBrush}">
                             <TextBlock.Transitions>
                                 <Transitions>

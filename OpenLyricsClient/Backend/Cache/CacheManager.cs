@@ -234,7 +234,6 @@ namespace OpenLyricsClient.Backend.Cache
 
             return cacheData.Artwork != null;
         }
-
         
         public bool IsInCache(SongRequestObject songRequestObject)
         {
@@ -256,6 +255,9 @@ namespace OpenLyricsClient.Backend.Cache
 
         private string CalculateID(SongRequestObject songRequestObject)
         {
+            if (!DataValidator.ValidateData(songRequestObject))
+                return null;
+            
             string append = string.Empty;
 
             append += songRequestObject.SongName;
@@ -287,6 +289,13 @@ namespace OpenLyricsClient.Backend.Cache
 
         private JsonCacheData ConvertToJsonCacheData(CacheData cacheData)
         {
+            if (!DataValidator.ValidateData(cacheData) &&
+                !DataValidator.ValidateData(
+                    cacheData.Artwork, 
+                    cacheData.LyricData, 
+                    cacheData.SongMetadata))
+                return null;
+
             SongMetadata metadata = cacheData.SongMetadata;
             JsonSongMetadata jsonSongMetadata = new JsonSongMetadata();
             jsonSongMetadata.Name = metadata.Name;

@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenLyricsClient.Backend.Collector.Lyrics;
 using OpenLyricsClient.Backend.Handler.Song;
+using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Structure.Song
 {
@@ -28,6 +29,9 @@ namespace OpenLyricsClient.Backend.Structure.Song
 
         public static SongRequestObject FromSong(Song song)
         {
+            if (!DataValidator.ValidateData(song))
+                return null;
+            
             SongRequestObject songRequestObject = new SongRequestObject(
                 song.SongMetadata.Name,
                 SongFormatter.FormatSongName(song.SongMetadata.Name),

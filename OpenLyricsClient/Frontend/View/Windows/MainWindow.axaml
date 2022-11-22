@@ -74,6 +74,7 @@
                     </Button.Content>
                 </Button>
                 
+                <!--
                 <Button Classes="noshadow"  
                         HorizontalAlignment="Center"
                         VerticalAlignment="Stretch"
@@ -105,6 +106,7 @@
                         </Panel>
                     </Button.Content>
                 </Button>
+                -->
                 
             </StackPanel>
             

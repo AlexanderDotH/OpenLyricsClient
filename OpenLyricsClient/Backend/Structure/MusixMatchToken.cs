@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.VisualBasic.CompilerServices;
+using Newtonsoft.Json;
 
 namespace OpenLyricsClient.Backend.Structure
 {
@@ -9,12 +10,16 @@ namespace OpenLyricsClient.Backend.Structure
 
         [JsonProperty("ExpirationDate")]
         public long ExpirationDate { get; set; }
+        
+        [JsonProperty("Usage")]
+        public short Usage { get; set; }
 
         public static MusixMatchToken ToToken(string token, long expiresIn)
         {
             MusixMatchToken musixMatchToken = new MusixMatchToken();
             musixMatchToken.Token = token;
             musixMatchToken.ExpirationDate = expiresIn;
+            musixMatchToken.Usage = 5;
             return musixMatchToken;
         }
     }

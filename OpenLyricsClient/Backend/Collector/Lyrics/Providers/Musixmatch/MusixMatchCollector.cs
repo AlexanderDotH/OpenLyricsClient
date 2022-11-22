@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using DevBase.Async.Task;
@@ -12,6 +13,7 @@ using MusixmatchClientLib;
 using MusixmatchClientLib.API.Model.Types;
 using MusixmatchClientLib.Auth;
 using MusixmatchClientLib.Types;
+using OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
@@ -37,7 +39,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
             if (!DataValidator.ValidateData(songRequestObject))
                 return new LyricData();
 
-            string token = Core.INSTANCE.SettingManager.Settings.MusixMatchToken[new Random().Next(0, Core.INSTANCE.SettingManager.Settings.MusixMatchToken.Count)].Token;
+            string token = MusixmatchTokenCollector.Instance.GetToken().Token;
 
             if (!DataValidator.ValidateData(token))
                 return new LyricData();
@@ -71,16 +73,16 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
                         HasSubtitles = true
                     });
 
-                /*if (!DataValidator.ValidateData(tracks) || DataValidator.ValidateData(tracks) && tracks.Count == 0)
+                if (!DataValidator.ValidateData(tracks) || DataValidator.ValidateData(tracks) && tracks.Count == 0)
                 {
                     tracks = await musixmatchClient.SongSearchAsync(
                         new TrackSearchParameters
                         {
                             Album = songRequestObject.FormattedSongAlbum,
-                            Title = songRequestObject.FormattedSongName,
+                            Title = songRequestObject.SongName,
                             HasSubtitles = true
                         });
-                }*/
+                }
             }
 
             if (!DataValidator.ValidateData(tracks))

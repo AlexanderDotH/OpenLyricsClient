@@ -75,8 +75,7 @@
                          Margin="0, 340,0,0"
                          Background="{DynamicResource SecondaryBackgroundBrush}">
 
-                <Grid Name="STPNL_SongInfo">
-                
+                <StackPanel Orientation="Vertical">
                     <TextBlock Name="TXT_Title"
                                Text="{Binding SongName}"
                                TextWrapping="Wrap"
@@ -89,10 +88,10 @@
                                Text="{Binding Artists}"
                                TextWrapping="Wrap"
                                HorizontalAlignment="Left"
-                               VerticalAlignment="Top"
-                               Margin="0,25,0,0"
+                               VerticalAlignment="Bottom"
+                               Margin="0,4,0,0"
                                FontSize="12"></TextBlock>
-                </Grid>
+                </StackPanel>
             </styles:Card>
             
             <Border Width="320"
