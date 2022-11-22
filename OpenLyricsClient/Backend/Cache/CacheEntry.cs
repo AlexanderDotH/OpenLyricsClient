@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using DevBase.Utilities;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
@@ -12,9 +12,9 @@ namespace OpenLyricsClient.Backend.Cache
     public class CacheEntry
     {
         private string _id;
-        private LyricData cacheData;
+        private CacheData cacheData;
 
-        public CacheEntry(SongRequestObject songRequestObject, LyricData cacheData)
+        public CacheEntry(SongRequestObject songRequestObject, CacheData cacheData)
         {
             this.cacheData = cacheData;
 
@@ -33,7 +33,7 @@ namespace OpenLyricsClient.Backend.Cache
             }
         }
 
-        public CacheEntry(string id, LyricData cacheData)
+        public CacheEntry(string id, CacheData cacheData)
         {
             this.cacheData = cacheData;
             this._id = id;
@@ -44,7 +44,7 @@ namespace OpenLyricsClient.Backend.Cache
             get => _id;
         }
 
-        public LyricData CacheData
+        public CacheData CacheData
         {
             get => cacheData;
         }

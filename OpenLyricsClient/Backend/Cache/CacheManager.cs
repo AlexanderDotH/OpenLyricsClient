@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Backend.Structure.Artwork;
 using OpenLyricsClient.Backend.Structure.Json;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
@@ -49,34 +50,85 @@ namespace OpenLyricsClient.Backend.Cache
 
                 string id = ifo.FileInfo.Name.Replace(CACHE_EXTENSION, string.Empty);
 
-                JsonLyricData jsonLyricData =
-                    new JsonDeserializer<JsonLyricData>().Deserialize(AFile.ReadFile(ifo.FileInfo).ToStringData());
+                JsonCacheData jsonLyricData =
+                    new JsonDeserializer<JsonCacheData>().Deserialize(AFile.ReadFile(ifo.FileInfo).ToStringData());
 
-                CacheEntry cacheEntry = new CacheEntry(id, ConvertToLyricData(jsonLyricData));
-             
+                CacheEntry cacheEntry = new CacheEntry(id, ConvertToCacheData(jsonLyricData));
                 this._cache.Add(cacheEntry);
             }
         }
 
-        public void WriteToCache(SongRequestObject songRequestObject, LyricData cacheData)
+        public void WriteToCache(SongRequestObject songRequestObject, CacheData cacheData, bool addToCache = false)
         {
             string id = CalculateID(songRequestObject);
             string idAsString = Convert.ToString(id);
 
             string filePath = CACHE_PATH + idAsString + CACHE_EXTENSION;
 
-            if (!File.Exists(filePath))
-            {
-                File.WriteAllText(filePath, JsonConvert.SerializeObject(ConvertToJsonLyricData(cacheData), Formatting.Indented));
-            }
+            File.WriteAllText(filePath, JsonConvert.SerializeObject(ConvertToJsonCacheData(cacheData), Formatting.Indented));
             
-            this._cache.Add(new CacheEntry(id, cacheData));
+            if (addToCache)
+                this._cache.Add(new CacheEntry(id, cacheData));
+        }
+        
+        public void WriteToCache(SongRequestObject songRequestObject)
+        {
+            CacheData data = GetDataByRequest(songRequestObject);
+            
+            if (DataValidator.ValidateData(data))
+                return;
+            
+            CacheData newCacheData = new CacheData(SongMetadata.ToSongMetadata(songRequestObject), new LyricData(), new Artwork());
+            WriteToCache(songRequestObject, newCacheData, true);
+        }
+        
+        public void WriteToCache(SongRequestObject songRequestObject, LyricData lyricData)
+        {
+            CacheData data = GetDataByRequest(songRequestObject);
+            
+            if (!DataValidator.ValidateData(data))
+                return;
+            
+            data.LyricData = lyricData;
+            WriteToCache(songRequestObject, data, true);
+        }
+        
+        public void WriteToCache(SongRequestObject songRequestObject, Artwork artwork)
+        {
+            CacheData data = GetDataByRequest(songRequestObject);
+            
+            if (!DataValidator.ValidateData(data))
+                return;
+            
+            data.Artwork = artwork;
+            WriteToCache(songRequestObject, data);
         }
 
-        public void AddToCache(SongRequestObject songRequestObject, LyricData cacheData)
+        public void AddToCache(SongRequestObject songRequestObject, CacheData cacheData)
         {
             string id = CalculateID(songRequestObject);
             this._cache.Add(new CacheEntry(id, cacheData));
+        }
+        
+        //maybe add recover by SongRequestObject
+        public void AddToCache(SongRequestObject songRequestObject, LyricData lyricData)
+        {
+            CacheData data = GetDataByRequest(songRequestObject);
+            
+            if (!DataValidator.ValidateData(data))
+                return;
+
+            data.LyricData = lyricData;
+        }
+        
+        public void AddToCache(SongRequestObject songRequestObject, Artwork artwork)
+        {
+            CacheData data = GetDataByRequest(songRequestObject);
+            
+            if (!DataValidator.ValidateData(data))
+                return;
+
+            data.Artwork = artwork;
         }
 
         public void ClearCache()
@@ -116,7 +168,7 @@ namespace OpenLyricsClient.Backend.Cache
             }
         }
 
-        public LyricData GetDataByRequest(SongRequestObject songRequestObject)
+        public CacheData GetDataByRequest(SongRequestObject songRequestObject)
         {
             for (int i = 0; i < this._cache.Length; i++)
             {
@@ -134,6 +186,56 @@ namespace OpenLyricsClient.Backend.Cache
             return null;
         }
 
+        public LyricData GetLyricsByRequest(SongRequestObject songRequestObject)
+        {
+            CacheData data = GetDataByRequest(songRequestObject);
+
+            if (!DataValidator.ValidateData(data))
+                return null;
+
+            if (!DataValidator.ValidateData(data.LyricData))
+                return null;
+
+            return data.LyricData;
+        }
+        
+        public Artwork GetArtworkByRequest(SongRequestObject songRequestObject)
+        {
+            CacheData data = GetDataByRequest(songRequestObject);
+
+            if (!DataValidator.ValidateData(data))
+                return null;
+
+            if (!DataValidator.ValidateData(data.Artwork))
+                return null;
+
+            return data.Artwork;
+        }
+
+        public bool IsLyricsInCache(SongRequestObject songRequestObject)
+        {
+            CacheData cacheData = GetDataByRequest(songRequestObject);
+
+            if (!DataValidator.ValidateData(cacheData))
+                return true;
+
+            if (!DataValidator.ValidateData(cacheData.LyricData))
+                return true;
+            
+            return cacheData.LyricData.LyricReturnCode == LyricReturnCode.SUCCESS;
+        }
+        
+        public bool IsArtworkInCache(SongRequestObject songRequestObject)
+        {
+            CacheData cacheData = GetDataByRequest(songRequestObject);
+
+            if (!DataValidator.ValidateData(cacheData))
+                return false;
+
+            return cacheData.Artwork != null;
+        }
+
+        
         public bool IsInCache(SongRequestObject songRequestObject)
         {
             for (int i = 0; i < this._cache.Length; i++)
@@ -166,31 +268,49 @@ namespace OpenLyricsClient.Backend.Cache
             return CryptoUtils.ToMD5(append);
         }
 
-        private LyricData ConvertToLyricData(JsonLyricData json)
+        private CacheData ConvertToCacheData(JsonCacheData cacheData)
         {
-            LyricPart[] lyricParts = json.LyricParts;
-            string lyricProvider = json.LyricProvider;
-            LyricType lyricType = json.LyricType;
-            string songName = json.SongName;
-            string album = json.Album;
-            string[] artists = json.Artists;
-            long duration = json.Duration;
+            JsonSongMetadata songMetadata = cacheData.SongMetadata;
+            SongMetadata metadata = new SongMetadata(songMetadata.Name, songMetadata.Album, songMetadata.Artists,
+                songMetadata.Duration);
 
-            return new LyricData(LyricReturnCode.SUCCESS, SongMetadata.ToSongMetadata(songName, album, artists, duration), lyricParts, lyricProvider, lyricType);
+            JsonLyricData lyricData = cacheData.LyricData;
+            LyricData lyrics = new LyricData(lyricData.ReturnCode, metadata, lyricData.LyricParts,
+                lyricData.LyricProvider, lyricData.LyricType);
+
+            JsonArtwork artworkData = cacheData.Artwork;
+            Artwork artwork = new Artwork();
+            artwork.ArtworkAsBase64String = artworkData.Artwork;
+
+            return new CacheData(metadata, lyrics, artwork);
         }
 
-        private JsonLyricData ConvertToJsonLyricData(LyricData lyricData)
+        private JsonCacheData ConvertToJsonCacheData(CacheData cacheData)
         {
-            return new JsonLyricData()
-            {
-                SongName = lyricData.SongMetadata == null ? string.Empty : lyricData.SongMetadata.Name,
-                Duration = lyricData.SongMetadata == null ? 0 : lyricData.SongMetadata.MaxTime,
-                Album = lyricData.SongMetadata == null ? string.Empty : lyricData.SongMetadata.Album,
-                Artists = lyricData.SongMetadata == null ? new string[] {""} : lyricData.SongMetadata.Artists,
-                LyricProvider = lyricData.LyricProvider,
-                LyricParts = lyricData.LyricParts,
-                LyricType = lyricData.LyricType
-            };
+            SongMetadata metadata = cacheData.SongMetadata;
+            JsonSongMetadata jsonSongMetadata = new JsonSongMetadata();
+            jsonSongMetadata.Name = metadata.Name;
+            jsonSongMetadata.Artists = metadata.Artists;
+            jsonSongMetadata.Album = metadata.Album;
+            jsonSongMetadata.Duration = metadata.MaxTime;
+
+            LyricData lyricData = cacheData.LyricData;
+            JsonLyricData jsonLyricData = new JsonLyricData();
+            jsonLyricData.LyricType = lyricData.LyricType;
+            jsonLyricData.ReturnCode = lyricData.LyricReturnCode;
+            jsonLyricData.LyricProvider = lyricData.LyricProvider;
+            jsonLyricData.LyricParts = lyricData.LyricParts;
+
+            Artwork artwork = cacheData.Artwork;
+            JsonArtwork jsonArtwork = new JsonArtwork();
+            jsonArtwork.Artwork = artwork.ArtworkAsBase64String;
+
+            JsonCacheData jsonCacheData = new JsonCacheData();
+            jsonCacheData.SongMetadata = jsonSongMetadata;
+            jsonCacheData.LyricData = jsonLyricData;
+            jsonCacheData.Artwork = jsonArtwork;
+
+            return jsonCacheData;
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Text;
 
 namespace OpenLyricsClient.Backend.Structure.Artwork
 {
+    [Serializable]
     public class Artwork
     {
         private byte[] _data;

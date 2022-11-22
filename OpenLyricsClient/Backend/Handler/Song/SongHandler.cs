@@ -10,6 +10,7 @@ using OpenLyricsClient.Backend.Handler.Song.SongProvider;
 using OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify;
 using OpenLyricsClient.Backend.Handler.Song.SongProvider.Tidal;
 using OpenLyricsClient.Backend.Structure.Enum;
+using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Handler.Song
@@ -81,6 +82,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
                             continue;
 
                         Structure.Song.Song song = await songProvider.UpdateCurrentPlaybackTrack();
+                        Core.INSTANCE.CacheManager.WriteToCache(SongRequestObject.FromSong(song));
                         //
 
                         SongChangedEvent(new SongChangedEventArgs(song, EventType.POST));

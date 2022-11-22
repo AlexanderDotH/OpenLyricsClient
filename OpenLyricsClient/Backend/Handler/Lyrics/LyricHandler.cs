@@ -88,7 +88,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                 {
                     SongRequestObject songRequestObject = SongRequestObject.FromSong(song);
 
-                    LyricData lyricData = Core.INSTANCE.CacheManager.GetDataByRequest(songRequestObject);
+                    LyricData lyricData = Core.INSTANCE.CacheManager.GetLyricsByRequest(songRequestObject);
 
                     if (!DataValidator.ValidateData(lyricData))
                         continue;
@@ -191,7 +191,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
             {
                 SongRequestObject songRequestObject = SongRequestObject.FromSong(this._songHandler.CurrentSong);
 
-                LyricData lyricData = Core.INSTANCE.CacheManager.GetDataByRequest(songRequestObject);
+                LyricData lyricData = Core.INSTANCE.CacheManager.GetLyricsByRequest(songRequestObject);
 
                 if (DataValidator.ValidateData(lyricData))
                 {
@@ -209,7 +209,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                     {
                         SongRequestObject songRequestObject = SongRequestObject.FromSong(songChangedEventArgs.Song);
 
-                        if (Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
+                        if (Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject))
                             return;
 
                         Stopwatch stopwatch = new Stopwatch();

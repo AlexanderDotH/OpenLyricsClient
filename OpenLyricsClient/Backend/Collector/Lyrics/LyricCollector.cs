@@ -27,14 +27,14 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
 
         public async Task CollectLyrics(SongRequestObject songRequestObject)
         {
-            if (Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
+            if (Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject))
                 return;
             
             this._lyricCollectors.Sort(new CollectorComparer());
 
             for (int i = 0; i < this._lyricCollectors.Length; i++)
             {
-                if (Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
+                if (Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject))
                     break;
 
                 ICollector collector = this._lyricCollectors.Get(i);
@@ -46,15 +46,15 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
                 if (lyricData.LyricReturnCode != LyricReturnCode.SUCCESS)
                     continue;
 
-                if (!Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
+                if (!Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject))
                 {
                     Core.INSTANCE.CacheManager.WriteToCache(songRequestObject, lyricData);
                     return;
                 }
             }
 
-            if (!Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
-                Core.INSTANCE.CacheManager.AddToCache(songRequestObject, new LyricData());
+            // if (!Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
+            //     Core.INSTANCE.CacheManager.AddToCache(songRequestObject, new LyricData());
         }
     }
 }
