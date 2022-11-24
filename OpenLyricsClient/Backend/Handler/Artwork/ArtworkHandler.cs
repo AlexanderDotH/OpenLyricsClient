@@ -48,8 +48,13 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
 
         private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songChangedEventArgs)
         {
+            if (songChangedEventArgs.EventType == EventType.PRE)
+                return;
+            
             Task.Factory.StartNew(async () =>
             {
+                await Task.Delay(2000);
+                
                 if (DataValidator.ValidateData(songChangedEventArgs) &&
                     DataValidator.ValidateData(songChangedEventArgs.Song))
                 {
@@ -85,9 +90,6 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                 SongRequestObject songRequestObject = SongRequestObject.FromSong(song);
                 
                 if (!DataValidator.ValidateData(songRequestObject))
-                    continue;
-                
-                if (DataValidator.ValidateData(song.Artwork))
                     continue;
 
                 Structure.Artwork.Artwork artworkCache = Core.INSTANCE.CacheManager.GetArtworkByRequest(songRequestObject);

@@ -94,14 +94,15 @@
                 </StackPanel>
             </styles:Card>
             
-            <Border Width="320"
+            <Border Name="BRD_ImageBox" 
+                    Width="320"
                     Height="320"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Margin="0, 0,0,60"
                     CornerRadius="6">
                 <Border.Background>
-                    <ImageBrush Stretch="UniformToFill" Source="../../../Assets/dummy_cover.jpg"></ImageBrush>
+                    <ImageBrush Stretch="UniformToFill" Source="{Binding Artwork}"></ImageBrush>
                 </Border.Background>
             </Border>
             
@@ -118,9 +119,9 @@
               
               Margin="500,50,5,50">
             
-            <custom1:LyricsScroller 
-                Name="LRC_Display" 
-                SelectedLineBrush="#FFFFFF" 
+            <custom1:LyricsScroller
+                Name="LRC_Display"
+                SelectedLineBrush="#FFFFFF"
                 LyricsFontSize="30"
                 LyricsFontWeight="Bold"
                 UnSelectedLineBrush="#646464"

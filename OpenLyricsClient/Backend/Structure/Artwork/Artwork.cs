@@ -3,7 +3,9 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
+using Avalonia.Media.Imaging;
 using Squalr.Engine.Utils.Extensions;
+using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace OpenLyricsClient.Backend.Structure.Artwork
 {
@@ -39,26 +41,16 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
             }
         }
 
-        public Image ArtworkAsImage
+        public IBitmap ArtworkAsImage
         {
             get
             {
-                if (this._data == null)
+                if (this._data.IsNullOrEmpty())
                     return null;
-
-                MemoryStream stream = new MemoryStream(this._data);
-                return Image.FromStream(stream);
-            }
-            set
-            {
-                if (this._data == null)
-                    return;
-
-                if (value == null)
-                    return;
-
-                MemoryStream stream = new MemoryStream(this._data);
-                value.Save(stream, ImageFormat.Png);
+                
+                MemoryStream ms = new MemoryStream(this._data);
+                Bitmap map = new Bitmap((Stream)ms);
+                return map;
             }
         }
 

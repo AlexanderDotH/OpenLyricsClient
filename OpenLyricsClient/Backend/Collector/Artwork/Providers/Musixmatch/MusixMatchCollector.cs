@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using DevBase.Web;
 using MusixmatchClientLib;
@@ -55,7 +56,6 @@ namespace OpenLyricsClient.Backend.Collector.Artwork.Providers.Musixmatch
                         Album = songRequestObject.Album,
                         Title = songRequestObject.SongName,
                         Artist = songRequestObject.GetArtistsSplit(),
-                        HasSubtitles = true
                     });
             }
             else
@@ -66,7 +66,6 @@ namespace OpenLyricsClient.Backend.Collector.Artwork.Providers.Musixmatch
                         Album = songRequestObject.Album,
                         Title = songRequestObject.SongName,
                         Artist = songRequestObject.GetArtistsSplit(),
-                        HasSubtitles = true
                     });
 
                 if (!DataValidator.ValidateData(tracks) || DataValidator.ValidateData(tracks) && tracks.Count == 0)
@@ -76,7 +75,6 @@ namespace OpenLyricsClient.Backend.Collector.Artwork.Providers.Musixmatch
                         {
                             Album = songRequestObject.FormattedSongAlbum,
                             Title = songRequestObject.SongName,
-                            HasSubtitles = true
                         });
                 }
             }
@@ -104,8 +102,8 @@ namespace OpenLyricsClient.Backend.Collector.Artwork.Providers.Musixmatch
 
         private async Task<Structure.Artwork.Artwork> GetArtwork(string url)
         {
-            ResponseData responseData = await new Request(url).GetResponseAsync();
-            return new Structure.Artwork.Artwork(responseData.Content, ArtworkReturnCode.SUCCESS);
+            byte[] artwork = await new WebClient().DownloadDataTaskAsync(url);
+            return new Structure.Artwork.Artwork(artwork, ArtworkReturnCode.SUCCESS);
         }
         
         private bool IsValidSong(Track track, SongRequestObject songRequestObject)

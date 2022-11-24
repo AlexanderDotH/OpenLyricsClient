@@ -135,21 +135,22 @@ namespace OpenLyricsClient.Backend.Settings
             return null;
         }
 
-        public void WriteSettings(Settings settings)
+        public void WriteSettings(Settings settings, bool fireEvent = true)
         {
             string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
 
             File.WriteAllText(this._settingsFilePath.FileInfo.FullName, json);
             
-            SettingsChangedEvent(new SettingsChangedEventArgs(settings));
+            if (fireEvent)
+                SettingsChangedEvent(new SettingsChangedEventArgs(settings));
         }
         
-        public void WriteSettings([CallerMemberName] string memberName = "")
+        public void WriteSettings(bool fireEvent = true)
         {
             if (!Core.IsLoaded())
                 return;
 
-            WriteSettings(this._settings);
+            WriteSettings(this._settings, fireEvent);
         }
        
         private Settings ReadSettings()

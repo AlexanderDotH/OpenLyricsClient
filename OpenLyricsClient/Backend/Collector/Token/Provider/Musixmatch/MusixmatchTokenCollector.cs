@@ -48,7 +48,7 @@ namespace OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch
                 MusixMatchToken mxmToken = new MusixMatchToken();
                 mxmToken.Token = token;
                 mxmToken.ExpirationDate = expiresIn;
-                mxmToken.Usage = 2;
+                mxmToken.Usage = 5;
 
                 Core.INSTANCE.SettingManager.Settings.MusixMatchToken.Add(mxmToken);
 
@@ -75,7 +75,7 @@ namespace OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch
             }
             
             if (settingsChanged)
-                Core.INSTANCE.SettingManager.WriteSettings();
+                Core.INSTANCE.SettingManager.WriteSettings(false);
         }
         
         public MusixMatchToken GetToken()

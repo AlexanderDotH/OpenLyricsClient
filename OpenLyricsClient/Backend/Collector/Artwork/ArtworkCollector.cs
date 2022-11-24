@@ -16,7 +16,6 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
 {
     public class ArtworkCollector
     {
-
         private GenericList<IArtworkCollector> _artworkCollectors;
         private Debugger<ArtworkCollector> _debugger;
 

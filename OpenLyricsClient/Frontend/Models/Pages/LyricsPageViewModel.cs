@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Avalonia.Media.Imaging;
 using Avalonia.Rendering;
 using Avalonia.Threading;
 using DevBase.Async.Task;
@@ -26,6 +27,8 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     private double _currentPercentage;
     private string _currentTime;
     private string _currentMaxTime;
+
+    private IBitmap _artwork;
     
     public LyricsPageViewModel()
     {
@@ -45,6 +48,16 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         Percentage = song.GetPercentage();
         CurrentTime = song.ProgressString;
         CurrentMaxTime = song.MaxProgressString;
+
+        if (DataValidator.ValidateData(song.Artwork))
+        {
+            IBitmap artwork = song.Artwork.ArtworkAsImage;
+
+            if (DataValidator.ValidateData(artwork))
+            {
+                Artwork = song.Artwork.ArtworkAsImage;
+            }
+        }
     }
 
     public string SongName
@@ -106,6 +119,17 @@ public class LyricsPageViewModel : INotifyPropertyChanged
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentMaxTime"));
         }
     }
+    
+    public IBitmap Artwork
+    {
+        get => this._artwork;
+        set
+        {
+            this._artwork = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Artwork"));
+        }
+    }
+
     
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
