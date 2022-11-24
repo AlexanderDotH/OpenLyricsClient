@@ -146,8 +146,6 @@ namespace OpenLyricsClient.Backend.Settings
         
         public void WriteSettings([CallerMemberName] string memberName = "")
         {
-            Debug.WriteLine(memberName);
-            
             if (!Core.IsLoaded())
                 return;
 

@@ -12,6 +12,7 @@ using OpenLyricsClient.Backend.Structure.Json;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
+using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Backend.Cache
 {
@@ -232,7 +233,10 @@ namespace OpenLyricsClient.Backend.Cache
             if (!DataValidator.ValidateData(cacheData))
                 return false;
 
-            return cacheData.Artwork != null;
+            if (!DataValidator.ValidateData(cacheData.Artwork))
+                return false;
+
+            return !cacheData.Artwork.Data.IsNullOrEmpty();
         }
         
         public bool IsInCache(SongRequestObject songRequestObject)
@@ -293,8 +297,24 @@ namespace OpenLyricsClient.Backend.Cache
                 !DataValidator.ValidateData(
                     cacheData.Artwork, 
                     cacheData.LyricData, 
-                    cacheData.SongMetadata))
-                return null;
+                    cacheData.SongMetadata) &&
+                !DataValidator.ValidateData(
+                    cacheData.SongMetadata.Album, 
+                    cacheData.SongMetadata.Artists, 
+                    cacheData.SongMetadata.Artwork, 
+                    cacheData.SongMetadata.Name, 
+                    cacheData.SongMetadata.FullArtists, 
+                    cacheData.SongMetadata.MaxTime) && 
+                !DataValidator.ValidateData(
+                    cacheData.Artwork.Data, 
+                    cacheData.Artwork.ReturnCode) &&
+                !DataValidator.ValidateData(
+                    cacheData.LyricData.LyricParts, 
+                    cacheData.LyricData.LyricProvider,
+                    cacheData.LyricData.LyricType,
+                    cacheData.LyricData.SongMetadata,
+                    cacheData.LyricData.LyricReturnCode))
+            return null;
 
             SongMetadata metadata = cacheData.SongMetadata;
             JsonSongMetadata jsonSongMetadata = new JsonSongMetadata();

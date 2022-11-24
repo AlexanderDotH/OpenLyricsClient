@@ -125,7 +125,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
                     {
                         CurrentlyPlayingContext currentPlayback =
                             await this.GetPlayerApi().Player.GetCurrentPlayback();
-
+                        
                         if (DataValidator.ValidateData(currentPlayback))
                         {
                             this._currentSong =

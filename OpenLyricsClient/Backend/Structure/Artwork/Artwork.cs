@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
+using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Backend.Structure.Artwork
 {
@@ -24,18 +25,16 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
         {
             get
             {
-                if (this._data == null)
+                if (this._data.IsNullOrEmpty())
                     return string.Empty;
-
-                return Encoding.UTF8.GetString(
-                    Convert.FromBase64String(
-                        Encoding.UTF8.GetString(this._data)));
+                
+                return Convert.ToBase64String(this._data);
             }
             set
             {
-                if (value == null)
+                if (value.IsNullOrEmpty())
                     return;
-
+                
                 this._data = Convert.FromBase64String(value);
             }
         }

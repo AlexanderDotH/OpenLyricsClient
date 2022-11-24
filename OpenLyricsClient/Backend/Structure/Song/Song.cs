@@ -87,6 +87,7 @@ namespace OpenLyricsClient.Backend.Structure.Song
         public Artwork.Artwork Artwork
         {
             get => this._artwork;
+            set => this._artwork = value;
         }
 
         public long Time

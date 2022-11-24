@@ -7,6 +7,7 @@ using OpenLyricsClient.Backend.Cache;
 using OpenLyricsClient.Backend.Collector.Token;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Events.EventHandler;
+using OpenLyricsClient.Backend.Handler.Artwork;
 using OpenLyricsClient.Backend.Handler.Lyrics;
 using OpenLyricsClient.Backend.Handler.Services;
 using OpenLyricsClient.Backend.Handler.Song;
@@ -35,6 +36,7 @@ namespace OpenLyricsClient.Backend
         private ServiceHandler _serviceHandler;
         private SongHandler _songHandler;
         private LyricHandler _lyricHandler;
+        private ArtworkHandler _artworkHandler;
         private CacheManager _cacheManager;
 
         private TokenCollector _tokenCollector;
@@ -90,6 +92,7 @@ namespace OpenLyricsClient.Backend
             this._serviceHandler = new ServiceHandler();
             this._songHandler = new SongHandler();
             this._lyricHandler = new LyricHandler(this._songHandler);
+            this._artworkHandler = new ArtworkHandler(this._songHandler);
 
             _loaded = true;
         }
