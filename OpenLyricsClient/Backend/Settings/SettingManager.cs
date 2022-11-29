@@ -10,6 +10,7 @@ using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Romanization;
 using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Backend.Structure.Enum;
 using SharpDX.Text;
 using SpotifyAPI.Web;
 

@@ -8,7 +8,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
 {
     interface ICollector
     {
-        Task<LyricData> GetLyrics(SongRequestObject songRequestObject);
+        Task<LyricData> GetLyrics(SongResponseObject songResponseObject);
         string CollectorName();
         int ProviderQuality();
     }

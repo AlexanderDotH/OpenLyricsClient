@@ -3,6 +3,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using Avalonia.Styling;
 using DevBase.Generic;
 using DevBase.Typography;
 using DevBase.Web;
@@ -10,11 +11,11 @@ using DevBase.Web.ResponseData;
 using DevBaseFormat;
 using DevBaseFormat.Formats.LrcFormat;
 using DevBaseFormat.Structure;
-using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase.Json;
-using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2.Json;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Backend.Structure.Enum;
+using OpenLyricsClient.Backend.Structure.Json.NetEaseV2.Json;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
@@ -36,120 +37,68 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
             this._baseUrl = "https://music.xianqiao.wang/neteaseapiv2";
         }
 
-        public async Task<LyricData> GetLyrics(SongRequestObject songRequestObject)
+        public async Task<LyricData> GetLyrics(SongResponseObject songResponseObject)
         {
-            if (DataValidator.ValidateData(songRequestObject) &&
-                DataValidator.ValidateData(songRequestObject.Artists, songRequestObject.SongDuration, songRequestObject.SongName, songRequestObject.Album))
+            if (!(DataValidator.ValidateData(songResponseObject)))
+                return new LyricData();
+
+            if (!songResponseObject.CollectorName.Equals(this.CollectorName()))
+                return new LyricData();
+
+            if (!(songResponseObject.Track is GenericList<NetEaseV2SongResponse>))
+                return new LyricData();
+
+            GenericList<NetEaseV2SongResponse> response = (GenericList<NetEaseV2SongResponse>)songResponseObject.Track;
+
+            GenericList<Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>> lyrics = 
+                new GenericList<Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>>();
+
+            double retryPercentage = 5;
+
+            for (int i = 0; i < RETRIES; i++)
             {
-                NetEaseV2SearchResponse response = await SearchTrack(songRequestObject);
-
-                if (DataValidator.ValidateData(response) &&
-                    DataValidator.ValidateData(response.Code, response.Result))
+                for (int j = 0; j < response.Length; j++)
                 {
-                    if (response.Code == 200)
+                    NetEaseV2SongResponse songResponse = response[j];
+
+                    SongMetadata songMetadata = SongMetadata.ToSongMetadata(
+                        songResponse.Name,
+                        songResponse.Album.Name,
+                        DataConverter.ToArtists(songResponse.Artists),
+                        songResponse.Duration);
+
+                    int songId = songResponse.Id;
+                    NetEaseV2LyricResponse lyricResponse = await GetLyricsFromEndpoint(songId);
+
+                    if (songResponseObject.SongRequestObject.SelectioMode == SelectionMode.QUALITY)
                     {
-                        if (DataValidator.ValidateData(response.Result) &&
-                            DataValidator.ValidateData(response.Result.HasMore, response.Result.SongCount, response.Result.Songs))
+                        lyrics.Add(new Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>(songResponse, lyricResponse));
+
+                        for (int k = 0; k < lyrics.Length; k++)
                         {
-
-                            if (response.Result.Songs.Length > 0)
+                            Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse> lyricElement = lyrics.Get(i);
+                            if (!IsGarbage(lyricElement.Item2))
                             {
-                                GenericList<Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>> lyrics = 
-                                    new GenericList<Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>>();
-
-                                double retryPercentage = 5;
-
-                                for (int i = 0; i < RETRIES; i++)
-                                {
-                                    for (int j = 0; j < response.Result.Songs.Length; j++)
-                                    {
-                                        NetEaseV2SongResponse songResponse = response.Result.Songs[j];
-
-                                        SongMetadata songMetadata = SongMetadata.ToSongMetadata(
-                                            songResponse.Name,
-                                            songResponse.Album.Name,
-                                            DataConverter.ToArtists(songResponse.Artists),
-                                            songResponse.Duration);
-
-                                        /*if (Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
-                                            break;*/
-
-                                        if (IsValidSong(songResponse, songRequestObject, retryPercentage))
-                                        {
-                                            int songId = songResponse.Id;
-                                            NetEaseV2LyricResponse lyricResponse = await GetLyricsFromEndpoint(songId);
-
-                                            if (songRequestObject.SelectioMode == SelectionMode.QUALITY)
-                                            {
-                                                lyrics.Add(new Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>(songResponse, lyricResponse));
-
-                                                for (int k = 0; k < lyrics.Length; k++)
-                                                {
-                                                    Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse> lyricElement = lyrics.Get(i);
-                                                    if (!IsGarbage(lyricElement.Item2))
-                                                    {
-                                                        return await ParseLyricResponse(lyricElement.Item2, songMetadata);
-                                                    }
-                                                }
-
-                                            }
-                                            else if (songRequestObject.SelectioMode == SelectionMode.PERFORMANCE)
-                                            {
-                                                return await ParseLyricResponse(lyricResponse, songMetadata);
-                                            }
-                                        }
-
-                                        retryPercentage += (int)Math.Ceiling(i * RETRY_DURATION_MULTIPLIER);
-                                    }
-
-                                    return new LyricData();
-                                }
-
-                                return new LyricData();
-                            }
-                            else
-                            {
-                                return new LyricData();
+                                return await ParseLyricResponse(lyricElement.Item2, songMetadata);
                             }
                         }
+
+                    }
+                    else if (songResponseObject.SongRequestObject.SelectioMode == SelectionMode.PERFORMANCE)
+                    {
+                        return await ParseLyricResponse(lyricResponse, songMetadata);
+                    }
+
+                    retryPercentage += (int)Math.Ceiling(i * RETRY_DURATION_MULTIPLIER);
+
+                    if (retryPercentage > 100)
+                    {
+                        retryPercentage = 100;
                     }
                 }
-
-                return new LyricData();
             }
-
+            
             return new LyricData();
-        }
-
-        private bool IsValidSong(NetEaseV2SongResponse songResponse, SongRequestObject songRequestObject, double percentage)
-        {
-            if (!DataValidator.ValidateData(songResponse) || 
-                  !DataValidator.ValidateData(songRequestObject))
-                return false;
-
-            if (IsSimilar(songRequestObject.FormattedSongName, songResponse.Name) != IsSimilar(songRequestObject.FormattedSongAlbum, songResponse.Album.Name))
-            {
-                if (!IsSimilar(songRequestObject.FormattedSongAlbum, songResponse.Album.Name))
-                    return false;
-            }
-
-            if (!MatchDuration(songResponse, songRequestObject.SongDuration, percentage))
-                return false;
-
-            if (!MatchArtists(songResponse, songRequestObject.Artists, 70))
-                return false;
-
-            if (!IsSimilar(songRequestObject.FormattedSongName, songResponse.Name))
-                return false;
-
-            return true;
-        }
-
-        //Untested it should make everything a bit more strict
-        private bool IsSimilar(string string1, string string2)
-        {
-            return MathUtils.CalculateLevenshteinDistance(string1, string2) >=
-                   Math.Abs(string1.Length - string2.Length);
         }
 
         private async Task<LyricData> ParseLyricResponse(NetEaseV2LyricResponse lyricResponse, SongMetadata songMetadata)
@@ -204,24 +153,6 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
             return true;
         }
 
-        private async Task<NetEaseV2SearchResponse> SearchTrack(SongRequestObject songRequestObject)
-        {
-            string requestUrl = Uri.EscapeUriString(string.Format("{0}/search?limit=100&type=1&keywords={2}",
-                this._baseUrl,
-                songRequestObject.GetArtistsSplit(), songRequestObject.FormattedSongName));
-
-            this._debugger.Write("Full track search URL: " + requestUrl, DebugType.DEBUG);
-            DevBase.Web.Request request = new Request(requestUrl);
-            ResponseData responseData = await request.GetResponseAsync();
-
-            if (responseData.StatusCode == HttpStatusCode.OK)
-            { 
-                return new JsonDeserializer<NetEaseV2SearchResponse>().Deserialize(responseData.GetContentAsString());
-            }
-
-            return null;
-        }
-
         private async Task<NetEaseV2LyricResponse> GetLyricsFromEndpoint(int songId)
         {
             string requestURL = Uri.EscapeUriString(string.Format("{0}/lyric?id={1}", this._baseUrl, songId));
@@ -240,58 +171,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
 
             return null;
         }
-
-        private bool MatchDuration(NetEaseV2SongResponse netEaseSongResponse, long duration, double percentage)
-        {
-            long songDurationThreshold = (long)((duration * 0.01) * percentage);
-            return MathUtils.IsInRange(duration - songDurationThreshold, duration + songDurationThreshold, netEaseSongResponse.Duration);
-        }
-
-        private bool MatchArtists(NetEaseV2SongResponse netEaseSongResponse, string[] artists, double percentage)
-        {
-            double minArtistCount = Math.Floor((artists.Length * 0.01) * percentage);
-            int artistsMatch = 0;
-
-            if (artists.Length > 0)
-            {
-                for (int i = 0; i < netEaseSongResponse.Artists.Length; i++)
-                {
-                    for (int j = 0; j < artists.Length; j++)
-                    {
-                        string artist = SongFormatter.FormatString(netEaseSongResponse.Artists[i].Name);
-
-                        if (MathUtils.CalculateLevenshteinDistance(artist, artists[j]) <= Math.Abs(artist.Length - artists[j].Length))
-                        {
-                            artistsMatch++;
-                        } 
-                        else if (MathUtils.CalculateLevenshteinDistance(artist, artists[j]) <= 5)
-                        {
-                            artistsMatch++;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < netEaseSongResponse.Artists.Length; i++)
-                {
-                    string artist = SongFormatter.FormatString(netEaseSongResponse.Artists[i].Name);
-
-                    if (MathUtils.CalculateLevenshteinDistance(artist, artists[0]) <=  Math.Abs(artist.Length - artists[0].Length))
-                    {
-                        artistsMatch++;
-                    }
-                    else if (MathUtils.CalculateLevenshteinDistance(artist, artists[0]) <= 5)
-                    {
-                        artistsMatch++;
-                    }
-                }
-            }
-
-            return artistsMatch >= minArtistCount;
-        }
-
-
+        
         public string CollectorName()
         {
             return "NetEaseV2";

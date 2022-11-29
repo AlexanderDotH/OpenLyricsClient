@@ -27,16 +27,16 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
             this._artworkCollectors.Add(new MusixMatchCollector());
         }
 
-        public async Task CollectArtwork(SongRequestObject songRequestObject)
+        public async Task CollectArtwork(SongResponseObject songResponseObject)
         {
-            if (Core.INSTANCE.CacheManager.IsArtworkInCache(songRequestObject))
+            if (Core.INSTANCE.CacheManager.IsArtworkInCache(songResponseObject.SongRequestObject))
                 return;
             
             for (int i = 0; i < this._artworkCollectors.Length; i++)
             {
                 IArtworkCollector artworkCollector = this._artworkCollectors.Get(i);
 
-                Structure.Artwork.Artwork artwork = await artworkCollector.GetArtwork(songRequestObject);
+                Structure.Artwork.Artwork artwork = await artworkCollector.GetArtwork(songResponseObject);
 
                 if (!DataValidator.ValidateData(artwork))
                     continue;
@@ -44,10 +44,10 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
                 if (artwork.ReturnCode != ArtworkReturnCode.SUCCESS && artwork.Data == null)
                     continue;
 
-                if (Core.INSTANCE.CacheManager.IsArtworkInCache(songRequestObject))
+                if (Core.INSTANCE.CacheManager.IsArtworkInCache(songResponseObject.SongRequestObject))
                     continue;
                 
-                Core.INSTANCE.CacheManager.WriteToCache(songRequestObject, artwork);
+                Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, artwork);
             }
 
         }

@@ -23,7 +23,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
     // TODOO:
     // Lyrics collector
 
-    class LyricHandler : IHandler
+    public class LyricHandler : IHandler
     {
         private Debugger<LyricHandler> _debugger;
 
@@ -50,7 +50,6 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
             this._lyricCollector = new LyricCollector();
 
             this._songHandler = songHandler;
-            songHandler.SongChanged += OnSongChanged;
 
             this._cancellationTokenSource = new CancellationTokenSource();
 
@@ -187,9 +186,9 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
             }
         }
 
-        public void OnSongChanged(Object sender, SongChangedEventArgs songChangedEventArgs)
+        public async Task FireLyricsSearch(SongResponseObject songResponseObject, SongChangedEventArgs songChangedEventArgs)
         {
-            if (songChangedEventArgs.EventType == EventType.PRE &&
+            /*if (songChangedEventArgs.EventType == EventType.PRE &&
                 DataValidator.ValidateData(this._songHandler.CurrentSong))
             {
                 SongRequestObject songRequestObject = SongRequestObject.FromSong(this._songHandler.CurrentSong);
@@ -201,30 +200,21 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                     if (lyricData.LyricReturnCode == LyricReturnCode.FAILED)
                         Core.INSTANCE.CacheManager.RemoveDataByRequest(songRequestObject);
                 }
-            }
+            }*/
 
             if (songChangedEventArgs.EventType == EventType.POST)
             {
-                Task.Factory.StartNew(async () =>
-                {
-                    if (DataValidator.ValidateData(songChangedEventArgs) &&
-                        DataValidator.ValidateData(songChangedEventArgs.Song))
-                    {
-                        SongRequestObject songRequestObject = SongRequestObject.FromSong(songChangedEventArgs.Song);
+                if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
+                    return;
 
-                        if (Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject))
-                            return;
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
 
-                        Stopwatch stopwatch = new Stopwatch();
-                        stopwatch.Start();
+                songChangedEventArgs.Song.State = SongState.SEARCHING_LYRICS;
+                await this._lyricCollector.CollectLyrics(songResponseObject);
+                songChangedEventArgs.Song.State = SongState.SEARCHING_FINISHED;
 
-                        songChangedEventArgs.Song.State = SongState.SEARCHING_LYRICS;
-                        await this._lyricCollector.CollectLyrics(songRequestObject);
-                        songChangedEventArgs.Song.State = SongState.SEARCHING_FINISHED;
-
-                        this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
-                    }
-                });
+                this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
             }
         }
         

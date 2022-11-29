@@ -8,7 +8,7 @@ using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Romanization;
 using OpenLyricsClient.Frontend.Models.Pages;
 using OpenLyricsClient.Frontend.View.Windows;
-using SelectionMode = OpenLyricsClient.Backend.Collector.Lyrics.SelectionMode;
+using SelectionMode = OpenLyricsClient.Backend.Structure.Enum.SelectionMode;
 
 namespace OpenLyricsClient.Frontend.View.Pages;
 

@@ -3,6 +3,7 @@ using DevBaseApi.Apis.Tidal.Structure.Json;
 using OpenLyricsClient.Backend.Collector.Lyrics;
 using OpenLyricsClient.Backend.Romanization;
 using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Backend.Structure.Enum;
 
 namespace OpenLyricsClient.Backend.Settings
 {

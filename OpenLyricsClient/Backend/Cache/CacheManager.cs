@@ -74,6 +74,9 @@ namespace OpenLyricsClient.Backend.Cache
         
         public void WriteToCache(SongRequestObject songRequestObject)
         {
+            if (!DataValidator.ValidateData(songRequestObject))
+                return;
+            
             CacheData data = GetDataByRequest(songRequestObject);
             
             if (DataValidator.ValidateData(data))
@@ -236,7 +239,7 @@ namespace OpenLyricsClient.Backend.Cache
             if (!DataValidator.ValidateData(cacheData.Artwork))
                 return false;
 
-            return !cacheData.Artwork.Data.IsNullOrEmpty();
+            return cacheData.Artwork.ReturnCode == ArtworkReturnCode.SUCCESS;
         }
         
         public bool IsInCache(SongRequestObject songRequestObject)

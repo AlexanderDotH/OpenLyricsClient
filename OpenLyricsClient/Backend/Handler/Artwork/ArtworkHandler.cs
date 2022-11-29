@@ -17,9 +17,8 @@ using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Handler.Artwork
 {
-    class ArtworkHandler : IHandler
+    public class ArtworkHandler : IHandler
     {
-
         private Debugger<ArtworkHandler> _debugger;
 
         private ArtworkCollector _artworkCollector;
@@ -38,39 +37,30 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
             this._songHandler = songHandler;
             this._artworkCollector = new ArtworkCollector();
             
-            songHandler.SongChanged += SongHandlerOnSongChanged;
-            
             Core.INSTANCE.TaskRegister.Register(
                 out _applyArtworkSuspensionToken, 
                 new Task(async () => await ApplyArtworkTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
                 EnumRegisterTypes.APPLY_ARTWORK_TO_SONG);
         }
 
-        private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songChangedEventArgs)
+        public async Task FireArtworkSearch(SongResponseObject songResponseObject, SongChangedEventArgs songChangedEventArgs)
         {
             if (songChangedEventArgs.EventType == EventType.PRE)
                 return;
             
-            Task.Factory.StartNew(async () =>
+            if (DataValidator.ValidateData(songChangedEventArgs) &&
+                DataValidator.ValidateData(songChangedEventArgs.Song))
             {
-                await Task.Delay(2000);
-                
-                if (DataValidator.ValidateData(songChangedEventArgs) &&
-                    DataValidator.ValidateData(songChangedEventArgs.Song))
-                {
-                    SongRequestObject songRequestObject = SongRequestObject.FromSong(songChangedEventArgs.Song);
+                if (Core.INSTANCE.CacheManager.IsArtworkInCache(songResponseObject.SongRequestObject))
+                    return;
 
-                    if (Core.INSTANCE.CacheManager.IsArtworkInCache(songRequestObject))
-                        return;
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
 
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
+                await this._artworkCollector.CollectArtwork(songResponseObject);
 
-                    await this._artworkCollector.CollectArtwork(songRequestObject);
-
-                    this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the artwork!", DebugType.INFO);
-                }
-            });
+                this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the artwork!", DebugType.INFO);
+            }
         }
 
         private async Task ApplyArtworkTask()

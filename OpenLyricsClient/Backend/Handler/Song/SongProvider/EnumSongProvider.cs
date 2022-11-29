@@ -1,6 +1,6 @@
 ﻿namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
 {
-    enum EnumSongProvider
+    public enum EnumSongProvider
     {
         SPOTIFY, TIDAL, NONE
     }

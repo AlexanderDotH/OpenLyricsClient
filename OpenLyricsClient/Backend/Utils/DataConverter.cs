@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using DevBaseApi.Apis.Tidal.Structure.Json;
-using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase.Json;
-using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2.Json;
+using OpenLyricsClient.Backend.Structure.Json.NetEase.Json;
+using OpenLyricsClient.Backend.Structure.Json.NetEaseV2.Json;
 using SpotifyAPI.Web;
 
 namespace OpenLyricsClient.Backend.Utils

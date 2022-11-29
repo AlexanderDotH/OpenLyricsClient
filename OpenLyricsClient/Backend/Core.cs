@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls.Shapes;
 using DevBase.Async.Task;
 using OpenLyricsClient.Backend.Cache;
+using OpenLyricsClient.Backend.Collector.Song;
 using OpenLyricsClient.Backend.Collector.Token;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Events.EventHandler;
@@ -37,6 +38,9 @@ namespace OpenLyricsClient.Backend
         private SongHandler _songHandler;
         private LyricHandler _lyricHandler;
         private ArtworkHandler _artworkHandler;
+        
+        
+        
         private CacheManager _cacheManager;
 
         private TokenCollector _tokenCollector;
@@ -90,9 +94,15 @@ namespace OpenLyricsClient.Backend
             this._tokenCollector = new TokenCollector();
 
             this._serviceHandler = new ServiceHandler();
-            this._songHandler = new SongHandler();
-            this._lyricHandler = new LyricHandler(this._songHandler);
-            this._artworkHandler = new ArtworkHandler(this._songHandler);
+            
+            SongHandler songHandler = new SongHandler();
+            
+            this._lyricHandler = new LyricHandler(songHandler);
+            this._artworkHandler = new ArtworkHandler(songHandler);
+            
+            songHandler.InitializeSongCollector(this._lyricHandler, this._artworkHandler);
+            
+            this._songHandler = songHandler;
 
             _loaded = true;
         }

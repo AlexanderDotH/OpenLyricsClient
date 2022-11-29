@@ -11,6 +11,8 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
 {
     interface IArtworkCollector
     {
-        Task<Structure.Artwork.Artwork> GetArtwork(SongRequestObject songRequestObject);
+        Task<Structure.Artwork.Artwork> GetArtwork(SongResponseObject songResponseObject);
+        string CollectorName();
+
     }
 }

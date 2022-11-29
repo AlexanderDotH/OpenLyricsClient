@@ -5,10 +5,11 @@ using DevBase.Web;
 using DevBase.Web.RequestData;
 using DevBase.Web.ResponseData;
 using DevBaseFormat.Structure;
-using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl.Json;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Backend.Structure.Enum;
+using OpenLyricsClient.Backend.Structure.Json.Textyl.Json;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
@@ -27,9 +28,9 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
             this._baseUrl = "https://api.textyl.co/api";
         }
 
-        public async Task<LyricData> GetLyrics(SongRequestObject songRequestObject)
+        public async Task<LyricData> GetLyrics(SongResponseObject songResponseObject)
         {
-            TextylLyricReponse[] lyrics = await FetchLyrics(songRequestObject);
+            TextylLyricReponse[] lyrics = await FetchLyrics(songResponseObject.SongRequestObject);
 
             if (!DataValidator.ValidateData(lyrics))
                 return new LyricData();
@@ -45,7 +46,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
                 lyricElements.Add(new LyricElement(l.Seconds * 1000, l.Lyrics));
             }
 
-            return await LyricData.ConvertToData(lyricElements, SongMetadata.ToSongMetadata(songRequestObject),
+            return await LyricData.ConvertToData(lyricElements, SongMetadata.ToSongMetadata(songResponseObject.SongRequestObject),
                 CollectorName());
         }
 

@@ -2,7 +2,7 @@
 
 namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
 {
-    interface ISongProvider
+    public interface ISongProvider
     {
         Structure.Song.Song GetCurrentSong();
         EnumSongProvider GetEnum();

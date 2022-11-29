@@ -21,24 +21,30 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
             this._lyricCollectors = new GenericList<ICollector>();
             this._lyricCollectors.Add(new NetEaseCollector());
             this._lyricCollectors.Add(new NetEaseV2Collector());
-            this._lyricCollectors.Add(new MusixMatchCollector());
+            this._lyricCollectors.Add(new MusixmatchCollector());
             this._lyricCollectors.Add(new TextylCollector());
         }
 
-        public async Task CollectLyrics(SongRequestObject songRequestObject)
+        public async Task CollectLyrics(SongResponseObject songResponseObject)
         {
-            if (Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject))
+            if (!DataValidator.ValidateData(songResponseObject))
+                return;
+            
+            if (!DataValidator.ValidateData(songResponseObject.SongRequestObject))
+                return;
+            
+            if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
                 return;
             
             this._lyricCollectors.Sort(new CollectorComparer());
 
             for (int i = 0; i < this._lyricCollectors.Length; i++)
             {
-                if (Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject))
+                if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
                     break;
 
                 ICollector collector = this._lyricCollectors.Get(i);
-                LyricData lyricData = await collector.GetLyrics(songRequestObject);
+                LyricData lyricData = await collector.GetLyrics(songResponseObject);
 
                 if (!DataValidator.ValidateData(lyricData))
                     continue;
@@ -46,9 +52,9 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
                 if (lyricData.LyricReturnCode != LyricReturnCode.SUCCESS)
                     continue;
 
-                if (!Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject))
+                if (!Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
                 {
-                    Core.INSTANCE.CacheManager.WriteToCache(songRequestObject, lyricData);
+                    Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, lyricData);
                     return;
                 }
             }

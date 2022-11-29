@@ -12,9 +12,11 @@ using OpenLyricsClient.Backend.Collector.Lyrics;
 using OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Structure.Artwork;
+using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
+using Squalr.Engine.Utils.Extensions;
 using ResponseData = DevBase.Web.ResponseData.ResponseData;
 
 namespace OpenLyricsClient.Backend.Collector.Artwork.Providers.Musixmatch
@@ -28,76 +30,33 @@ namespace OpenLyricsClient.Backend.Collector.Artwork.Providers.Musixmatch
             this._debugger = new Debugger<MusixMatchCollector>(this);
         }
 
-        public async Task<Structure.Artwork.Artwork> GetArtwork(SongRequestObject songRequestObject)
+        public async Task<Structure.Artwork.Artwork> GetArtwork(SongResponseObject songResponseObject)
         {
-            if (!DataValidator.ValidateData(songRequestObject))
-                return null;
+            if (!DataValidator.ValidateData(songResponseObject))
+                return new Structure.Artwork.Artwork();
 
-            if (!DataValidator.ValidateData(songRequestObject))
-                return null;
-
-            string token = MusixmatchTokenCollector.Instance.GetToken().Token;
-
-            if (!DataValidator.ValidateData(token))
-                return null;
-
-            MusixmatchClient musixmatchClient = new MusixmatchClient(token);
-
-            if (!DataValidator.ValidateData(musixmatchClient))
-                return null;
-
-            List<Track> tracks = null;
-
-            if (songRequestObject.SelectioMode == SelectionMode.PERFORMANCE)
-            {
-                tracks = await musixmatchClient.SongSearchAsync(
-                    new TrackSearchParameters
-                    {
-                        Album = songRequestObject.Album,
-                        Title = songRequestObject.SongName,
-                        Artist = songRequestObject.GetArtistsSplit(),
-                    });
-            }
-            else
-            {
-                tracks = await musixmatchClient.SongSearchAsync(
-                    new TrackSearchParameters
-                    {
-                        Album = songRequestObject.Album,
-                        Title = songRequestObject.SongName,
-                        Artist = songRequestObject.GetArtistsSplit(),
-                    });
-
-                if (!DataValidator.ValidateData(tracks) || DataValidator.ValidateData(tracks) && tracks.Count == 0)
-                {
-                    tracks = await musixmatchClient.SongSearchAsync(
-                        new TrackSearchParameters
-                        {
-                            Album = songRequestObject.FormattedSongAlbum,
-                            Title = songRequestObject.SongName,
-                        });
-                }
-            }
-
-            if (!DataValidator.ValidateData(tracks))
-            {
-                this._debugger.Write("Track not found", DebugType.ERROR);
-                return null;
-            }
-
-            this._debugger.Write(string.Format("Found {0} tracks", tracks.Count), DebugType.INFO);
-
-            for (int i = 0; i < tracks.Count; i++)
-            {
-                Track track = tracks[i];
+            if (!songResponseObject.CollectorName.Equals(this.CollectorName()))
+                return new Structure.Artwork.Artwork();
                 
-                if (!IsValidSong(track, songRequestObject))
-                    continue;
+            if (!DataValidator.ValidateData(songResponseObject.SongRequestObject))
+                return new Structure.Artwork.Artwork();
 
-                return await GetArtwork(track.AlbumCoverart800x800);
-            }
+            if (!(songResponseObject.Track is Track))
+                return new Structure.Artwork.Artwork();
 
-            return new Structure.Artwork.Artwork(null, ArtworkReturnCode.FAILED);
+            Track track = (Track)songResponseObject.Track;
+
+            string artworkUrl = GetArtworkUrl(track);
+
+            if (artworkUrl.IsNullOrEmpty())
+                return new Structure.Artwork.Artwork();
+            
+            Structure.Artwork.Artwork artwork = await GetArtwork(artworkUrl);
+
+            if (DataValidator.ValidateData(artwork))
+                return artwork;
+            
+            return new Structure.Artwork.Artwork();
         }
 
         private async Task<Structure.Artwork.Artwork> GetArtwork(string url)
@@ -105,45 +64,34 @@ namespace OpenLyricsClient.Backend.Collector.Artwork.Providers.Musixmatch
             byte[] artwork = await new WebClient().DownloadDataTaskAsync(url);
             return new Structure.Artwork.Artwork(artwork, ArtworkReturnCode.SUCCESS);
         }
-        
-        private bool IsValidSong(Track track, SongRequestObject songRequestObject)
+
+        private string GetArtworkUrl(Track track)
         {
-            if (!DataValidator.ValidateData(track) ||
-                !DataValidator.ValidateData(songRequestObject))
-                return false;
-
-            if (IsSimilar(songRequestObject.FormattedSongName, track.TrackName) != IsSimilar(songRequestObject.FormattedSongAlbum, track.AlbumName))
+            if (!track.AlbumCoverart800x800.IsNullOrEmpty())
             {
-                if (!IsSimilar(songRequestObject.FormattedSongAlbum, track.AlbumName))
-                    return false;
+                return track.AlbumCoverart800x800;
+            } 
+            else if (!track.AlbumCoverart500x500.IsNullOrEmpty())
+            {
+                return track.AlbumCoverart500x500;
+            }
+            else if (!track.AlbumCoverart350x350.IsNullOrEmpty())
+            {
+                return track.AlbumCoverart350x350;
+            }
+            else if (!track.AlbumCoverart100x100.IsNullOrEmpty())
+            {
+                return track.AlbumCoverart100x100;
             }
 
-            //if ((track.TrackLength * 1000) != songRequestObject.SongDuration)
-            //    return false;
-
-            if (!IsSimilar(songRequestObject.FormattedSongName, track.TrackName))
-                return false;
-
-            if (!IsSimilar(songRequestObject.SongName, track.TrackName))
-                return false;
-
-            for (int i = 0; i < songRequestObject.Artists.Length; i++)
-            {
-                string artist = songRequestObject.Artists[i];
-
-                if (track.ArtistName.Contains(artist))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return string.Empty;
         }
-        
-        private bool IsSimilar(string string1, string string2)
+
+        public string CollectorName()
         {
-            return MathUtils.CalculateLevenshteinDistance(string1, string2) >=
-                   Math.Abs(string1.Length - string2.Length);
+            return "MusixMatch";
         }
     }
+    
+    
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenLyricsClient.Backend.Collector.Lyrics;
 using OpenLyricsClient.Backend.Handler.Song;
+using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Structure.Song
@@ -27,6 +28,11 @@ namespace OpenLyricsClient.Backend.Structure.Song
             _selectioMode = selectioMode;
         }
 
+        public SongRequestObject(string songName, string[] artists, long songDuration, string album,
+            SelectionMode selectioMode) :
+            this(songName, SongFormatter.FormatSongName(songName), artists, songDuration, album,
+                SongFormatter.FormatSongAlbum(album), selectioMode){}
+       
         public static SongRequestObject FromSong(Song song)
         {
             if (!DataValidator.ValidateData(song))

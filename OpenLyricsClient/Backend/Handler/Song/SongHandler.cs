@@ -2,10 +2,13 @@
 using System.Threading.Tasks;
 using DevBase.Async.Task;
 using DevBase.Generic;
+using OpenLyricsClient.Backend.Collector.Song;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Events.EventHandler;
+using OpenLyricsClient.Backend.Handler.Artwork;
+using OpenLyricsClient.Backend.Handler.Lyrics;
 using OpenLyricsClient.Backend.Handler.Song.SongProvider;
 using OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify;
 using OpenLyricsClient.Backend.Handler.Song.SongProvider.Tidal;
@@ -15,7 +18,7 @@ using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Handler.Song
 {
-    class SongHandler : IHandler
+    public class SongHandler : IHandler
     {
         private SongStageChange _songStageChange;
 
@@ -28,6 +31,8 @@ namespace OpenLyricsClient.Backend.Handler.Song
 
         private Debugger<SongHandler> _debugger;
 
+        private SongCollector _songCollector;
+        
         public event SongChangedEventHandler SongChanged;
 
         public SongHandler()
@@ -39,7 +44,6 @@ namespace OpenLyricsClient.Backend.Handler.Song
             //this._songProviders.Add(new Tuple<ISongProvider, EnumSongProvider>(new TidalSongProvider(), EnumSongProvider.TIDAL));
 
             this._songProviderChooser = new SongProviderChooser();
-
             this._songStageChange = new SongStageChange();
 
             Core.INSTANCE.TaskRegister.Register(
@@ -55,7 +59,22 @@ namespace OpenLyricsClient.Backend.Handler.Song
                     EnumRegisterTypes.SONGHANDLER_SONGINFORMATION);
             }
 
+            this.SongChanged += OnSongChanged;
+            
             this._disposed = false;
+        }
+
+        private void OnSongChanged(object sender, SongChangedEventArgs songChangedEventArgs)
+        {
+            Task.Factory.StartNew(async () =>
+            {
+                await this._songCollector.FireSongCollector(songChangedEventArgs);
+            });
+        }
+
+        public void InitializeSongCollector(LyricHandler lyricHandler, ArtworkHandler artworkHandler)
+        {
+            this._songCollector = new SongCollector(this, lyricHandler, artworkHandler);
         }
 
         private async Task ManageCurrentSong()
