@@ -53,48 +53,36 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
             GenericList<Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>> lyrics = 
                 new GenericList<Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>>();
 
-            double retryPercentage = 5;
-
-            for (int i = 0; i < RETRIES; i++)
+            for (int j = 0; j < response.Length; j++)
             {
-                for (int j = 0; j < response.Length; j++)
+                NetEaseV2SongResponse songResponse = response[j];
+
+                SongMetadata songMetadata = SongMetadata.ToSongMetadata(
+                    songResponse.Name,
+                    songResponse.Album.Name,
+                    DataConverter.ToArtists(songResponse.Artists),
+                    songResponse.Duration);
+
+                int songId = songResponse.Id;
+                NetEaseV2LyricResponse lyricResponse = await GetLyricsFromEndpoint(songId);
+
+                if (songResponseObject.SongRequestObject.SelectioMode == SelectionMode.QUALITY)
                 {
-                    NetEaseV2SongResponse songResponse = response[j];
+                    lyrics.Add(new Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>(songResponse, lyricResponse));
 
-                    SongMetadata songMetadata = SongMetadata.ToSongMetadata(
-                        songResponse.Name,
-                        songResponse.Album.Name,
-                        DataConverter.ToArtists(songResponse.Artists),
-                        songResponse.Duration);
-
-                    int songId = songResponse.Id;
-                    NetEaseV2LyricResponse lyricResponse = await GetLyricsFromEndpoint(songId);
-
-                    if (songResponseObject.SongRequestObject.SelectioMode == SelectionMode.QUALITY)
+                    for (int k = 0; k < lyrics.Length; k++)
                     {
-                        lyrics.Add(new Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>(songResponse, lyricResponse));
-
-                        for (int k = 0; k < lyrics.Length; k++)
+                        Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse> lyricElement = lyrics.Get(k);
+                        if (!IsGarbage(lyricElement.Item2))
                         {
-                            Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse> lyricElement = lyrics.Get(i);
-                            if (!IsGarbage(lyricElement.Item2))
-                            {
-                                return await ParseLyricResponse(lyricElement.Item2, songMetadata);
-                            }
+                            return await ParseLyricResponse(lyricElement.Item2, songMetadata);
                         }
-
-                    }
-                    else if (songResponseObject.SongRequestObject.SelectioMode == SelectionMode.PERFORMANCE)
-                    {
-                        return await ParseLyricResponse(lyricResponse, songMetadata);
                     }
 
-                    retryPercentage += (int)Math.Ceiling(i * RETRY_DURATION_MULTIPLIER);
-
-                    if (retryPercentage > 100)
-                    {
-                        retryPercentage = 100;
-                    }
+                }
+                else if (songResponseObject.SongRequestObject.SelectioMode == SelectionMode.PERFORMANCE)
+                {
+                    return await ParseLyricResponse(lyricResponse, songMetadata);
                 }
             }
             

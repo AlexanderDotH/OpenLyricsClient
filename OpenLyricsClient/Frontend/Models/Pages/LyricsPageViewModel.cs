@@ -55,7 +55,9 @@ public class LyricsPageViewModel : INotifyPropertyChanged
 
             if (DataValidator.ValidateData(artwork))
             {
-                Artwork = song.Artwork.ArtworkAsImage;
+                if (!(DataValidator.ValidateData(this._artwork) || 
+                      DataValidator.ValidateData(this._artwork) && this._artwork.Equals(artwork)))
+                    Artwork = artwork;
             }
         }
     }

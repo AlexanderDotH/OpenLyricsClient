@@ -103,7 +103,7 @@ public partial class LyricsScroller : UserControl
         this._startMargin = 0;
         this._scrollSpeed = 15;
 
-        this._renderTimer = new SleepLoopRenderTimer(500);
+        this._renderTimer = new SleepLoopRenderTimer(144);
         this._renderTimer.Tick += RenderTimerOnTick;
 
         /*Core.INSTANCE.SettingManager.SettingsChanged  += (sender, args) =>
