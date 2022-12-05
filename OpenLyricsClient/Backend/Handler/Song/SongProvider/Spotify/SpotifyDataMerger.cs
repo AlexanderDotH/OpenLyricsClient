@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
 using SpotifyAPI.Web;
@@ -24,7 +25,6 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
         public static Structure.Song.Song UpdatePlayBack(Structure.Song.Song song, CurrentlyPlayingContext playbackContext)
         {
             song.Paused = !playbackContext.IsPlaying;
-
             if (!song.Paused)
             {
                 song.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -98,6 +98,8 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
                 {
                     FullTrack track = (FullTrack)currentTrack.Item;
                     Structure.Song.Song song = new Structure.Song.Song(
+                        DataOrigin.SPOTIFY,
+                        track,
                         track.Name,
                         track.Album.Name,
                         DataConverter.SpotifyArtistsToStrings(track.Artists),
@@ -106,7 +108,6 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
                     song.Lyrics = null;
                     song.CurrentLyricPart = null;
                     song.State = SongState.SEARCHING_LYRICS;
-
                     return song;
                 }
             }

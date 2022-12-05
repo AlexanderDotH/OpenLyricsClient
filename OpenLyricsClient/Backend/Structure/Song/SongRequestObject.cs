@@ -16,6 +16,7 @@ namespace OpenLyricsClient.Backend.Structure.Song
         private string _formattedSongAlbum;
         private long _songDuration;
         private SelectionMode _selectioMode;
+        private Song _song;
 
         public SongRequestObject(string songName, string formattedSongName, string[] artists, long songDuration, string album, string formattedSongAlbum, SelectionMode selectioMode)
         {
@@ -28,6 +29,18 @@ namespace OpenLyricsClient.Backend.Structure.Song
             _selectioMode = selectioMode;
         }
 
+        public SongRequestObject(Song song, string songName, string formattedSongName, string[] artists, long songDuration, string album, string formattedSongAlbum, SelectionMode selectioMode)
+        {
+            _song = song;
+            _songName = songName;
+            _formattedSongName = formattedSongName;
+            _artists = artists;
+            _songDuration = songDuration;
+            _album = album;
+            _formattedSongAlbum = formattedSongAlbum;
+            _selectioMode = selectioMode;
+        }
+        
         public SongRequestObject(string songName, string[] artists, long songDuration, string album,
             SelectionMode selectioMode) :
             this(songName, SongFormatter.FormatSongName(songName), artists, songDuration, album,
@@ -39,6 +52,7 @@ namespace OpenLyricsClient.Backend.Structure.Song
                 return null;
             
             SongRequestObject songRequestObject = new SongRequestObject(
+                song,
                 song.SongMetadata.Name,
                 SongFormatter.FormatSongName(song.SongMetadata.Name),
                 song.SongMetadata.Artists,
@@ -48,6 +62,12 @@ namespace OpenLyricsClient.Backend.Structure.Song
                 Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
 
             return songRequestObject;
+        }
+
+        public Song Song
+        {
+            get => _song;
+            set => _song = value;
         }
 
         public string FormattedSongAlbum

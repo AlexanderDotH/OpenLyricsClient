@@ -1,6 +1,7 @@
 ﻿using System;
 using DevBaseApi.Apis.Tidal.Structure.Json;
 using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
 
@@ -50,6 +51,8 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Tidal
         public static Structure.Song.Song ConvertAndMerge(JsonTidalTrack track)
         {
             Structure.Song.Song song = new Structure.Song.Song(
+                DataOrigin.TIDAL,
+                track,
                 track.Title,
                 track.Album.Title,
                 DataConverter.TidalArtistsToString(track.Artists),

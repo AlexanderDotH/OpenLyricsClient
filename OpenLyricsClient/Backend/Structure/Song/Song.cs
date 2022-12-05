@@ -1,4 +1,6 @@
 ﻿using System;
+using Avalonia.Input;
+using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 
 namespace OpenLyricsClient.Backend.Structure.Song
@@ -10,6 +12,8 @@ namespace OpenLyricsClient.Backend.Structure.Song
         private LyricData _lyrics;
         private LyricPart _currentLyricPart;
         private SongState _state;
+        private Object _trackObject;
+        private DataOrigin _dataOrigin;
 
         private bool _firstUpdate;
 
@@ -22,10 +26,12 @@ namespace OpenLyricsClient.Backend.Structure.Song
 
         private Artwork.Artwork _artwork;
 
-        public Song(string title, string album, string[] artists, long maxTime)
+        public Song(DataOrigin origin, Object trackObject, string title, string album, string[] artists, long maxTime)
         {
             this._songMetadata = new SongMetadata(title, album, artists, maxTime);
 
+            this._dataOrigin = origin;
+            this._trackObject = trackObject;
             this._startTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             this._firstUpdate = true;
             this._timeThreshold = 0;
@@ -34,6 +40,18 @@ namespace OpenLyricsClient.Backend.Structure.Song
             this._synced = false;
 
             //this._currentLyricPart = new LyricPart(0, "Error");
+        }
+
+        public object TrackObject
+        {
+            get => _trackObject;
+            set => _trackObject = value;
+        }
+
+        public DataOrigin DataOrigin
+        {
+            get => _dataOrigin;
+            set => _dataOrigin = value;
         }
 
         public TimeSpan ProgressTimeSpan
