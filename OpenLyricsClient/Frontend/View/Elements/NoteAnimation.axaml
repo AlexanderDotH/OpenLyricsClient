@@ -88,7 +88,7 @@
         <Setter Property="Template">
             <ControlTemplate>
                 
-                <Grid>
+                <Grid Margin="3,0,3,0">
                     <Border Name="PART_BackgroundBorder"
                             HorizontalAlignment="Left"
                             Width="{TemplateBinding Percentage}" 

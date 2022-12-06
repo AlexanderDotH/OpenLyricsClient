@@ -46,6 +46,7 @@
                                             SelectedLineBrush="{TemplateBinding SelectedLineBrush}"/>
                     
                     <TextBlock Name="PART_TextBlock1"
+                               Classes="grow"
                                HorizontalAlignment="Left"
                                Text="{TemplateBinding Text}"
                                TextWrapping="Wrap"
@@ -67,6 +68,7 @@
                              Stretch="None" 
                              Width="{TemplateBinding Percentage}">
                         <TextBlock Name="PART_TextBlock"
+                                   Classes="grow"
                                    VerticalAlignment="Top"
                                    HorizontalAlignment="Left"
                                    Text="{TemplateBinding Text}"

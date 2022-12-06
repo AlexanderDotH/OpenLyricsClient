@@ -24,7 +24,7 @@ public partial class LyricsPage : UserControl
 
         this._txtTimeFrom = this.Get<TextBlock>(nameof(TXT_TimeFrom));
         this._txtTimeTo = this.Get<TextBlock>(nameof(TXT_TimeTo));
-        //this._cstmLyricsDisplay = this.Get<LyricsScroller>(nameof(LRC_Display));
+        this._cstmLyricsDisplay = this.Get<LyricsScroller>(nameof(LRC_Display));
     }
 
     private void InitializeComponent()
