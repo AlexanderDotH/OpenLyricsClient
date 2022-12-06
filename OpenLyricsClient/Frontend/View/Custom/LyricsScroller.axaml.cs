@@ -314,7 +314,6 @@ public partial class LyricsScroller : UserControl
 
     public void Reset([CallerMemberName] string memberName = "")
     {
-        
         this._scrollFrom = 0;
         this._currentScrollOffset = 0;
         this._scrollTo = 0;

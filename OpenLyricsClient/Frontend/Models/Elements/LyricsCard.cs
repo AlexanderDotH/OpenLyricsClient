@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Data;
 using Avalonia.Media;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Structure.Lyrics;
@@ -46,14 +47,32 @@ public class LyricsCard : TemplatedControl
     private TextBlock _presenterBlock;
     private TextBlock _greyBlock;
     private Border _border;
+    private Viewbox _viewbox;
+    private Panel _panel;
+    private NoteAnimation _noteAnimation;
 
     private LyricPart _lyricPart;
     private bool _current;
     private double _oldValue;
-    
+
+    private bool _templateApplied;
+    private bool _validLyricSet;
+    private bool _alreadySet;
+
     public LyricsCard()
     {
         this._oldValue = 0;
+
+        this._templateApplied = false;
+        this._validLyricSet = false;
+        this._alreadySet = false;
+        
+        Core.INSTANCE.SongHandler.SongChanged += (s, args) =>
+        {
+            this._templateApplied = false;
+            this._validLyricSet = false;
+            this._alreadySet = false;
+        };
         
         Core.INSTANCE.LyricHandler.LyricChanged += (sender, args) =>
         {
@@ -65,15 +84,38 @@ public class LyricsCard : TemplatedControl
                 {
                     Current = false;
                     Percentage = -10;
+                    this._noteAnimation.Current = false;
+                    this._noteAnimation.Percentage = -10;
                 }
                 else
                 {
                     Current = true;
+                    this._noteAnimation.Current = true;
                 }
             }            
+            
+            if (!(DataValidator.ValidateData(this._presenterBlock, this._greyBlock, this._noteAnimation, this._border)))
+                return;
+            
+            if (!(DataValidator.ValidateData(this._presenterBlock.Text) && DataValidator.ValidateData(this._greyBlock.Text)))
+                return;
+        
+            if (this._presenterBlock.Text.Equals("♪") || this._greyBlock.Text.Equals("♪"))
+            {
+                this._presenterBlock.IsVisible = false;
+                this._greyBlock.IsVisible = false;
+                this._noteAnimation.IsVisible = true;
+                this._border.IsVisible = false;
+            }
+            else
+            {
+                this._presenterBlock.IsVisible = true;
+                this._greyBlock.IsVisible = true;
+                this._noteAnimation.IsVisible = false;
+                this._border.IsVisible = true;
+            }
         };
     }
-    
     public Rect GetBounds()
     {
         if (this.FontSize <= 0)
@@ -81,7 +123,7 @@ public class LyricsCard : TemplatedControl
         
         if (this.FontWeight <= 0)
             return new Rect();
-        
+
         FormattedText text = new FormattedText(Text,
             new Typeface(FontFamily.Parse(
                     "avares://Material.Styles/Fonts/Roboto#Roboto, Noto Sans, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Helvetica, Cantarell, Ubuntu, Arial, Hiragino Kaku Gothic Pro, MS UI Gothic, MS PMincho, Microsoft JhengHei, Microsoft JhengHei UI, Microsoft YaHei New, Microsoft Yahei, SimHei"), 
@@ -111,6 +153,8 @@ public class LyricsCard : TemplatedControl
             {
                 if (this._oldValue == value)
                     return;
+
+                this._noteAnimation.Percentage = value;
                 
                 this._oldValue = value;
                 SetValue(PercentageProperty, Math.Round(((GetBounds().Width) / 100) * value) + 12);
@@ -118,10 +162,15 @@ public class LyricsCard : TemplatedControl
                 if (this.FontWeight == 0)
                     return;
 
-                if (DataValidator.ValidateData(this._presenterBlock, this._greyBlock, this._border))
+                if (DataValidator.ValidateData(this._presenterBlock, this._greyBlock, this._border, this._noteAnimation))
                 {
                     if (DataValidator.ValidateData(this._presenterBlock.TextLayout, this._greyBlock.TextLayout))
                     {
+                        /*if (this._noteAnimation.IsVisible)
+                        {
+                            this._border.MaxWidth = Math.Round(((this._noteAnimation.MaxWidth) / 100) * 100);
+                        }*/
+                        
                         if (this._presenterBlock.TextLayout.Size.Height < this._greyBlock.TextLayout.Size.Height)
                         {
                             this._presenterBlock.MaxWidth = this._greyBlock.TextLayout.Size.Width;
@@ -139,6 +188,7 @@ public class LyricsCard : TemplatedControl
         set
         {
             SetAndRaise(CurrentProperty, ref _current, value);
+            // this._alreadySet = true;
         }
     }
     
@@ -154,7 +204,10 @@ public class LyricsCard : TemplatedControl
     public FontWeight FontWeight
     {
         get { return GetValue(FontWeightProperty); }
-        set { SetValue(FontWeightProperty, value); }
+        set
+        {
+            SetValue(FontWeightProperty, value); 
+        }
     }
     
     public int FontSize
@@ -179,6 +232,14 @@ public class LyricsCard : TemplatedControl
     {
         get { return GetValue(UnSelectedLineBrushProperty); }
         set { SetValue(UnSelectedLineBrushProperty, value); }
+    }
+
+    
+    
+    protected override void OnTemplateChanged(AvaloniaPropertyChangedEventArgs e)
+    {
+        base.OnTemplateChanged(e);
+
     }
 
     protected override void OnDataContextBeginUpdate()
@@ -220,6 +281,33 @@ public class LyricsCard : TemplatedControl
         var textBlock = e.NameScope.Find("PART_TextBlock");
         var textBlock1 = e.NameScope.Find("PART_TextBlock1");
         var border = e.NameScope.Find("PART_BackgroundBorder");
+        var viewBox = e.NameScope.Find("PART_Viewbox");
+        var noteAnimation = e.NameScope.Find("PART_NoteAnimation");
+        var panel = e.NameScope.Find("PART_Panel");
+
+        if (noteAnimation is NoteAnimation)
+        {
+            NoteAnimation animation = ((NoteAnimation)(noteAnimation));
+            this._noteAnimation = animation;
+        }
+        
+        if (panel is Panel)
+        {
+            Panel p = (Panel)panel;
+            this._panel = p;
+        }
+        
+        if (border is Border)
+        {
+            Border b = (Border)border;
+            this._border = b;
+        }
+        
+        if (viewBox is Viewbox)
+        {
+            Viewbox box = (Viewbox)viewBox;
+            this._viewbox = box;
+        }
         
         if (textBlock is TextBlock)
         {
@@ -233,12 +321,8 @@ public class LyricsCard : TemplatedControl
             this._greyBlock = block;
         }
 
-        if (border is Border)
-        {
-            Border b = (Border)border;
-            this._border = b;
-        }
         
         base.OnApplyTemplate(e);
+
     }
 }

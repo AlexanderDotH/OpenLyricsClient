@@ -34,7 +34,6 @@ public class SpotifyCollector : IArtworkCollector
             return new Structure.Artwork.Artwork();
 
         FullTrack track = (FullTrack)song.TrackObject;
-
         for (int i = 0; i < track.Album.Images.Count; i++)
         {
             Image image = track.Album.Images[i];
