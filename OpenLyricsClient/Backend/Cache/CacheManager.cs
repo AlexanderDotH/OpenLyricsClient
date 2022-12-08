@@ -290,6 +290,7 @@ namespace OpenLyricsClient.Backend.Cache
             JsonArtwork artworkData = cacheData.Artwork;
             Artwork artwork = new Artwork();
             artwork.ArtworkAsBase64String = artworkData.Artwork;
+            artwork.ArtworkColor = cacheData.Artwork.ArtworkColor;
 
             return new CacheData(metadata, lyrics, artwork);
         }
@@ -310,7 +311,8 @@ namespace OpenLyricsClient.Backend.Cache
                     cacheData.SongMetadata.MaxTime) && 
                 !DataValidator.ValidateData(
                     cacheData.Artwork.Data, 
-                    cacheData.Artwork.ReturnCode) &&
+                    cacheData.Artwork.ReturnCode, 
+                    cacheData.Artwork.ArtworkColor) &&
                 !DataValidator.ValidateData(
                     cacheData.LyricData.LyricParts, 
                     cacheData.LyricData.LyricProvider,
@@ -336,6 +338,7 @@ namespace OpenLyricsClient.Backend.Cache
             Artwork artwork = cacheData.Artwork;
             JsonArtwork jsonArtwork = new JsonArtwork();
             jsonArtwork.Artwork = artwork.ArtworkAsBase64String;
+            jsonArtwork.ArtworkColor = artwork.ArtworkColor;
 
             JsonCacheData jsonCacheData = new JsonCacheData();
             jsonCacheData.SongMetadata = jsonSongMetadata;

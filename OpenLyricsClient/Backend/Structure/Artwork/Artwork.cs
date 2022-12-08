@@ -4,8 +4,10 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using Avalonia.Media.Imaging;
+using DevBaseColor.Image;
 using Squalr.Engine.Utils.Extensions;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
+using Color = Avalonia.Media.Color;
 
 namespace OpenLyricsClient.Backend.Structure.Artwork
 {
@@ -14,11 +16,18 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
     {
         private byte[] _data;
         private ArtworkReturnCode _returnCode;
+        private Color _artworkColor;
 
         public Artwork(byte[] data, ArtworkReturnCode returnCode)
         {
             this._data = data;
             this._returnCode = returnCode;
+
+            if (!data.IsNullOrEmpty())
+            {
+                NearestColorCalculator colorCalculator = new NearestColorCalculator();
+                this._artworkColor = colorCalculator.GetColorFromBitmap(this.ArtworkAsImage);
+            }
         }
 
         public Artwork() : this(null, ArtworkReturnCode.FAILED) { }
@@ -52,6 +61,12 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
                 Bitmap map = new Bitmap((Stream)ms);
                 return map;
             }
+        }
+
+        public Color ArtworkColor
+        {
+            get => this._artworkColor;
+            set => this._artworkColor = value;
         }
 
         public byte[] Data

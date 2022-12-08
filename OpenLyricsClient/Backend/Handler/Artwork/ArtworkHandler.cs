@@ -4,6 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Avalonia.Controls;
+using Avalonia.Media;
+using Avalonia.Threading;
 using DevBase.Async.Task;
 using OpenLyricsClient.Backend.Cache;
 using OpenLyricsClient.Backend.Collector.Artwork;
@@ -91,6 +94,15 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                     continue;
 
                 song.Artwork = artworkCache;
+                
+                if (!DataValidator.ValidateData(artworkCache.ArtworkColor))
+                    continue;
+
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    SolidColorBrush color = App.Current.FindResource("PrimaryColorBrush") as SolidColorBrush;
+                    color.Color = artworkCache.ArtworkColor;
+                });
             }
         }
 

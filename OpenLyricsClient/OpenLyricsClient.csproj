@@ -86,6 +86,9 @@
     <Reference Include="DevBaseApi">
       <HintPath>..\Libraries\DevBaseApi.dll</HintPath>
     </Reference>
+    <Reference Include="DevBaseColor">
+      <HintPath>..\Libraries\DevBaseColor.dll</HintPath>
+    </Reference>
     <Reference Include="DevBaseFormat">
       <HintPath>..\Libraries\DevBaseFormat.dll</HintPath>
     </Reference>
