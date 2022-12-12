@@ -25,7 +25,10 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
 
             if (!data.IsNullOrEmpty())
             {
-                NearestColorCalculator colorCalculator = new NearestColorCalculator();
+                GroupColorCalculator colorCalculator = new GroupColorCalculator();
+                colorCalculator.BigShift = 2.3;
+                colorCalculator.SmallShift = 2.0;
+                colorCalculator.Brightness = 40;
                 this._artworkColor = colorCalculator.GetColorFromBitmap(this.ArtworkAsImage);
             }
         }
