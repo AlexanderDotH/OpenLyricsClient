@@ -91,6 +91,11 @@ namespace OpenLyricsClient.Backend.Collector.Artwork.Providers.Musixmatch
         {
             return "MusixMatch";
         }
+
+        public int Quality()
+        {
+            return 5;
+        }
     }
     
     

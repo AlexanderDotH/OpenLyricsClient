@@ -34,13 +34,25 @@ public class SpotifyCollector : IArtworkCollector
             return new Structure.Artwork.Artwork();
 
         FullTrack track = (FullTrack)song.TrackObject;
+
+        Image maxImage = new Image();
+        maxImage.Height = 0;
+        maxImage.Width = 0;
+        
         for (int i = 0; i < track.Album.Images.Count; i++)
         {
             Image image = track.Album.Images[i];
-            return await GetArtwork(image.Url);
+
+            int size = image.Height * image.Width;
+            int imageSize = maxImage.Height * maxImage.Width;
+
+            if (size > imageSize)
+            {
+                maxImage = image;
+            }
         }
 
-        return new Structure.Artwork.Artwork();
+        return await GetArtwork(maxImage.Url);
     }
 
     private async Task<Structure.Artwork.Artwork> GetArtwork(string url)
@@ -52,5 +64,10 @@ public class SpotifyCollector : IArtworkCollector
     public string CollectorName()
     {
         return "Spotify";
+    }
+
+    public int Quality()
+    {
+        return 10;
     }
 }

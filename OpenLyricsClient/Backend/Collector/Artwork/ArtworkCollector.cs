@@ -35,6 +35,8 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
             if (Core.INSTANCE.CacheManager.IsArtworkInCache(songResponseObject.SongRequestObject))
                 return;
             
+            this._artworkCollectors.Sort(new ArtworkCollectorComparer());
+            
             for (int i = 0; i < this._artworkCollectors.Length; i++)
             {
                 IArtworkCollector artworkCollector = this._artworkCollectors.Get(i);

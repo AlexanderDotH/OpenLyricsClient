@@ -29,6 +29,7 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
                 colorCalculator.BigShift = 2.3;
                 colorCalculator.SmallShift = 2.0;
                 colorCalculator.Brightness = 40;
+                
                 this._artworkColor = colorCalculator.GetColorFromBitmap(this.ArtworkAsImage);
             }
         }

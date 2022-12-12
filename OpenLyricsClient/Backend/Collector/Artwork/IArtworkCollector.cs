@@ -13,6 +13,7 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
     {
         Task<Structure.Artwork.Artwork> GetArtwork(SongResponseObject songResponseObject);
         string CollectorName();
+        int Quality();
 
     }
 }
