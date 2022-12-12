@@ -141,8 +141,10 @@ public partial class LyricsScroller : UserControl
     {
         this._oldScrollY = this._scrollViewer.Offset.Y;
 
-        Dispatcher.UIThread.InvokeAsync(() =>
+        Dispatcher.UIThread.InvokeAsync(async () =>
         {
+            await Task.Delay(50);
+
             if (this.IsSynced)
             {
                 this._oldScrollY = this._scrollViewer.Offset.Y;
