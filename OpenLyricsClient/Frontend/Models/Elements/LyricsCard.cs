@@ -126,7 +126,7 @@ public class LyricsCard : TemplatedControl
 
         FormattedText text = new FormattedText(Text,
             new Typeface(FontFamily.Parse(
-                    "avares://Material.Styles/Fonts/Roboto#Roboto, Noto Sans, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Helvetica, Cantarell, Ubuntu, Arial, Hiragino Kaku Gothic Pro, MS UI Gothic, MS PMincho, Microsoft JhengHei, Microsoft JhengHei UI, Microsoft YaHei New, Microsoft Yahei, SimHei"), 
+                    "avares://Material.Styles/Fonts/Roboto#Roboto"), 
                 FontStyle.Normal, this.FontWeight), this.FontSize, TextAlignment.Left,
             TextWrapping.Wrap, new Size(this.Parent.Bounds.Width, this.Parent.Bounds.Height));
 

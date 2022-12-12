@@ -304,7 +304,7 @@ public partial class LyricsScroller : UserControl
         
         FormattedText text = new FormattedText(this._lyricParts[index].Part,
             new Typeface(FontFamily.Parse(
-                "avares://Material.Styles/Fonts/Roboto#Roboto, Noto Sans, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Helvetica, Cantarell, Ubuntu, Arial, Hiragino Kaku Gothic Pro, MS UI Gothic, MS PMincho, Microsoft JhengHei, Microsoft JhengHei UI, Microsoft YaHei New, Microsoft Yahei, SimHei"), 
+                "avares://Material.Styles/Fonts/Roboto#Roboto"), 
                 FontStyle.Normal, this.LyricsFontWeight), this.LyricsFontSize, TextAlignment.Left,
             TextWrapping.Wrap, new Size(this._itemsRepeater.DesiredSize.Width, this._itemsRepeater.DesiredSize.Height));
 
