@@ -75,8 +75,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             
         for (var i = 0; i < this._lyricParts.Count; i++)
         {
-            if (this._lyricParts[i].Part.Equals(currentSong.CurrentLyricPart.Part) &&
-                this._lyricParts[i].Time.Equals(currentSong.CurrentLyricPart.Time))
+            if (this._lyricParts[i].Equals(currentSong.CurrentLyricPart))
             {
                 if (i + 1 < this._lyricParts.Count)
                 {
@@ -170,8 +169,17 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
 
     private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
     {
-        if (songchangedevent.EventType != EventType.POST)
+        if (songchangedevent.EventType == EventType.POST)
             return;
+
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            if (this._lyricParts.IsNullOrEmpty())
+                return;
+            
+            this._lyricParts.Clear();
+            this._lyricPart = null;
+        });
     }
 
     public ObservableCollection<LyricPart> CurrentLyricParts
