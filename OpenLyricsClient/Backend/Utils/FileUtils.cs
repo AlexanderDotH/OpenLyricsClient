@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Text;
 
 namespace OpenLyricsClient.Backend.Utils
 {
@@ -20,5 +22,67 @@ namespace OpenLyricsClient.Backend.Utils
             return newFile;
         }
 
+        public static byte[] ReadFile(FileInfo fileInfo)
+        {
+            if (!fileInfo.Exists)
+                return null;
+
+            byte[] buffer = new byte[fileInfo.Length];
+
+            try
+            {
+                using (FileStream fileStream = fileInfo.OpenRead())
+                {
+                    using (BinaryReader reader = new BinaryReader(fileStream))
+                    {
+                        buffer = reader.ReadBytes(buffer.Length);
+                    }
+                }
+                
+                return buffer;
+            }
+            catch (Exception e) { }
+
+            return null;
+        }
+
+        public static string ReadFileString(FileInfo fileInfo)
+        {
+            byte[] data = ReadFile(fileInfo);
+
+            if (!DataValidator.ValidateData(data))
+                return null;
+            
+            return Encoding.UTF8.GetString(data);
+        }
+        
+        public static string ReadFileString(string filePath)
+        {
+            byte[] data = ReadFile(new FileInfo(filePath));
+
+            if (!DataValidator.ValidateData(data))
+                return null;
+            
+            return Encoding.UTF8.GetString(data);
+        }
+
+        public static void WriteFile(FileInfo fileInfo, byte[] data)
+        {
+            using (FileStream fileStream = File.Create(fileInfo.FullName))
+            {
+                fileStream.Write(data, 0, data.Length);
+            }
+        }
+
+        public static void WriteFileString(FileInfo fileInfo, string data)
+        {
+            WriteFile(fileInfo, Encoding.UTF8.GetBytes(data));
+        }
+        
+        public static void WriteFileString(string filePath, string data)
+        {
+            WriteFile(new FileInfo(filePath), Encoding.UTF8.GetBytes(data));
+        }
+        
     }
 }

@@ -30,5 +30,10 @@ namespace OpenLyricsClient.Backend.Structure.Lyrics
             get => this._part;
             set => this._part = value;
         }
+
+        public bool Equals(LyricPart obj)
+        {
+            return obj.Part.Equals(this.Part) && obj.Time.Equals(this.Time);
+        }
     }
 }

@@ -118,11 +118,6 @@ public partial class LyricsScroller : UserControl
         SetThreadPos(this._currentScrollOffset);
 
         double step = Math.Abs(this._scrollFrom - this._scrollTo) / this._scrollSpeed;
-
-        if (step != 0)
-        {
-            
-        }
         
         if (this._currentScrollOffset < _scrollTo)
         {
@@ -396,7 +391,7 @@ public partial class LyricsScroller : UserControl
             
             for (int i = 0; i < this._lyricParts.Count; i++)
             {
-                if (this._lyricParts[i] == value)
+                if (this._lyricParts[i].Equals(value))
                 {
                     SelectedLine = i;
                     this._lyricPart = value;

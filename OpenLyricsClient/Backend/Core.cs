@@ -89,7 +89,7 @@ namespace OpenLyricsClient.Backend
             this._settingManager = new SettingManager(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + 
                                                       string.Format("{0}OpenLyricsClient{0}", System.IO.Path.DirectorySeparatorChar));
 
-            this._cacheManager = new CacheManager();
+            this._cacheManager = new CacheManager(10, TimeSpan.FromMinutes(5).Milliseconds);
 
             this._tokenCollector = new TokenCollector();
 

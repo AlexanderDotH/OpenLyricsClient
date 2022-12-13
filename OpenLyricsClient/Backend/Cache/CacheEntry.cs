@@ -13,10 +13,12 @@ namespace OpenLyricsClient.Backend.Cache
     {
         private string _id;
         private CacheData cacheData;
+        private long _expirationDate;
 
-        public CacheEntry(SongRequestObject songRequestObject, CacheData cacheData)
+        public CacheEntry(SongRequestObject songRequestObject, CacheData cacheData, long expirationDate)
         {
             this.cacheData = cacheData;
+            this._expirationDate = expirationDate;
 
             if (DataValidator.ValidateData(songRequestObject))
             {
@@ -33,9 +35,10 @@ namespace OpenLyricsClient.Backend.Cache
             }
         }
 
-        public CacheEntry(string id, CacheData cacheData)
+        public CacheEntry(string id, CacheData cacheData, long expirationDate)
         {
             this.cacheData = cacheData;
+            this._expirationDate = expirationDate;
             this._id = id;
         }
 
@@ -47,6 +50,11 @@ namespace OpenLyricsClient.Backend.Cache
         public CacheData CacheData
         {
             get => cacheData;
+        }
+
+        public long ExpirationDate
+        {
+            get => _expirationDate;
         }
     }
 }

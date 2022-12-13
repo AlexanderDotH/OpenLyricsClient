@@ -46,13 +46,16 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
                 if (!DataValidator.ValidateData(artwork))
                     continue;
                 
-                if (artwork.ReturnCode != ArtworkReturnCode.SUCCESS && artwork.Data == null)
+                if (artwork.ReturnCode != ArtworkReturnCode.SUCCESS || artwork.Data == null)
                     continue;
 
                 if (Core.INSTANCE.CacheManager.IsArtworkInCache(songResponseObject.SongRequestObject))
                     continue;
-                
-                Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, artwork);
+
+                if (artwork.ReturnCode == ArtworkReturnCode.SUCCESS)
+                {
+                    Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, artwork);
+                }
             }
 
         }

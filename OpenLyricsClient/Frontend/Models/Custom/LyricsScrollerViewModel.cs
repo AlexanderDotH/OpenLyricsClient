@@ -75,7 +75,8 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             
         for (var i = 0; i < this._lyricParts.Count; i++)
         {
-            if (this._lyricParts[i] == currentSong.CurrentLyricPart)
+            if (this._lyricParts[i].Part.Equals(currentSong.CurrentLyricPart.Part) &&
+                this._lyricParts[i].Time.Equals(currentSong.CurrentLyricPart.Time))
             {
                 if (i + 1 < this._lyricParts.Count)
                 {
@@ -159,7 +160,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             for (int j = 0; j < lyricPartsList2.Length; j++)
             {
                 LyricPart currentPart2 = lyricPartsList2[i];
-                if (!currentPart1.Part.Equals(currentPart2.Part))
+                if (!currentPart1.Equals(currentPart2))
                     return false;
             }
         }

@@ -155,7 +155,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                                         if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, currentSong.Time + LYRIC_OFFSET))
                                         {
                                             currentSong.CurrentLyricPart = currentPart;
-                                            Dispatcher.UIThread.InvokeAsync(() =>
+                                            await Dispatcher.UIThread.InvokeAsync(() =>
                                             {
                                                 LyricChangedEvent(new LyricChangedEventArgs(currentPart));
                                             });

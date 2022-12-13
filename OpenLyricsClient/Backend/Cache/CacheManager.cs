@@ -24,9 +24,12 @@ namespace OpenLyricsClient.Backend.Cache
         private const string CACHE_FOLDER_NAME = "Cache";
         private readonly string CACHE_PATH;
 
+        private readonly int _maxCapacity;
+        private readonly int _expirationMS;
+
         private Debugger<CacheManager> _debugger;
 
-        public CacheManager()
+        public CacheManager(int maxCapacity, int expirationMs)
         {
             CACHE_PATH = string.Format("{1}{2}{0}", Path.DirectorySeparatorChar, Core.INSTANCE.SettingManager.WorkingDirectory,
                 CACHE_FOLDER_NAME);
@@ -37,6 +40,9 @@ namespace OpenLyricsClient.Backend.Cache
                 Directory.CreateDirectory(CACHE_PATH);
 
             this._cache = new GenericList<CacheEntry>();
+
+            this._maxCapacity = maxCapacity;
+            this._expirationMS = expirationMs;
 
             ReadCache();
         }
@@ -52,9 +58,12 @@ namespace OpenLyricsClient.Backend.Cache
                 string id = ifo.FileInfo.Name.Replace(CACHE_EXTENSION, string.Empty);
 
                 JsonCacheData jsonLyricData =
-                    new JsonDeserializer<JsonCacheData>().Deserialize(AFile.ReadFile(ifo.FileInfo).ToStringData());
+                    new JsonDeserializer<JsonCacheData>().Deserialize(FileUtils.ReadFileString(ifo.FileInfo));
 
-                CacheEntry cacheEntry = new CacheEntry(id, ConvertToCacheData(jsonLyricData));
+                if (this._cache.Length + 1 > this._maxCapacity)
+                    continue;
+                
+                CacheEntry cacheEntry = new CacheEntry(id, ConvertToCacheData(jsonLyricData), CalculateExpirationDate());
                 this._cache.Add(cacheEntry);
             }
         }
@@ -66,12 +75,14 @@ namespace OpenLyricsClient.Backend.Cache
 
             string filePath = CACHE_PATH + idAsString + CACHE_EXTENSION;
 
-            File.WriteAllText(filePath, JsonConvert.SerializeObject(ConvertToJsonCacheData(cacheData), Formatting.Indented));
+            FileUtils.WriteFileString(filePath, JsonConvert.SerializeObject(ConvertToJsonCacheData(cacheData), Formatting.Indented));
+
+            if (addToCache && this._cache.Length + 1 < this._maxCapacity)
+                this._cache.Add(new CacheEntry(id, cacheData, CalculateExpirationDate()));
             
-            if (addToCache)
-                this._cache.Add(new CacheEntry(id, cacheData));
+            RefreshExpirationEntries();
         }
-        
+
         public void WriteToCache(SongRequestObject songRequestObject)
         {
             if (!DataValidator.ValidateData(songRequestObject))
@@ -111,7 +122,7 @@ namespace OpenLyricsClient.Backend.Cache
         public void AddToCache(SongRequestObject songRequestObject, CacheData cacheData)
         {
             string id = CalculateID(songRequestObject);
-            this._cache.Add(new CacheEntry(id, cacheData));
+            this._cache.Add(new CacheEntry(id, cacheData, CalculateExpirationDate()));
         }
         
         //maybe add recover by SongRequestObject
@@ -187,7 +198,38 @@ namespace OpenLyricsClient.Backend.Cache
                 }
             }
 
+            return TryGetDataFromDisk(songRequestObject);
+        }
+
+        private CacheData TryGetDataFromDisk(SongRequestObject songRequestObject)
+        {
+            string fileName = CACHE_PATH + CalculateID(songRequestObject) + CACHE_EXTENSION;
+
+            if (File.Exists(fileName))
+            {
+                string data = FileUtils.ReadFileString(fileName);
+
+                if (!DataValidator.ValidateData(data))
+                    return null;
+                
+                JsonCacheData jsonLyricData =
+                    new JsonDeserializer<JsonCacheData>().Deserialize(data);
+                
+                return ConvertToCacheData(jsonLyricData);
+            }
+
             return null;
+        }
+        
+        private void RefreshExpirationEntries()
+        {
+            /*for (int i = 0; i < this._cache.Length; i++)
+            {
+                CacheEntry entry = this._cache.Get(i);
+
+                if (DateTimeOffset.Now.ToUnixTimeMilliseconds() > entry.ExpirationDate)
+                    this._cache.SafeRemove(entry);
+            }*/
         }
 
         public LyricData GetLyricsByRequest(SongRequestObject songRequestObject)
@@ -275,6 +317,11 @@ namespace OpenLyricsClient.Backend.Cache
             append += songRequestObject.SongDuration;
 
             return CryptoUtils.ToMD5(append);
+        }
+
+        private long CalculateExpirationDate()
+        {
+            return DateTimeOffset.Now.ToUnixTimeMilliseconds() + this._expirationMS;
         }
 
         private CacheData ConvertToCacheData(JsonCacheData cacheData)

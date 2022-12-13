@@ -78,9 +78,7 @@ public class LyricsCard : TemplatedControl
         {
             if (DataValidator.ValidateData(this._lyricPart))
             {
-                if (args.LyricPart.Time != this._lyricPart.Time &&
-                    args.LyricPart.Part != this._lyricPart.Part &&
-                    args.LyricPart != this._lyricPart)
+                if (!args.LyricPart.Equals(this._lyricPart))
                 {
                     Current = false;
                     Percentage = -10;
