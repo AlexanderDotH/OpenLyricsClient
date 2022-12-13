@@ -98,9 +98,10 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                 if (!DataValidator.ValidateData(artworkCache.ArtworkColor))
                     continue;
 
+                SolidColorBrush color = App.Current.FindResource("PrimaryColorBrush") as SolidColorBrush;
+
                 await Dispatcher.UIThread.InvokeAsync(() =>
                 {
-                    SolidColorBrush color = App.Current.FindResource("PrimaryColorBrush") as SolidColorBrush;
                     color.Color = artworkCache.ArtworkColor;
                 });
             }

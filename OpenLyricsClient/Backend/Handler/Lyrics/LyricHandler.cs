@@ -155,10 +155,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                                         if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, currentSong.Time + LYRIC_OFFSET))
                                         {
                                             currentSong.CurrentLyricPart = currentPart;
-                                            await Dispatcher.UIThread.InvokeAsync(() =>
-                                            {
-                                                LyricChangedEvent(new LyricChangedEventArgs(currentPart));
-                                            });
+                                            LyricChangedEvent(new LyricChangedEventArgs(currentPart));
                                             continue;
                                         }
                                     }
@@ -168,10 +165,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                                     if (MathUtils.IsInRange(currentPart.Time, currentSong.SongMetadata.MaxTime, currentSong.Time + LYRIC_OFFSET))
                                     {
                                         currentSong.CurrentLyricPart = currentPart;
-                                        Dispatcher.UIThread.InvokeAsync(() =>
-                                        {
-                                            LyricChangedEvent(new LyricChangedEventArgs(currentPart));
-                                        });
+                                        LyricChangedEvent(new LyricChangedEventArgs(currentPart));
                                         continue;
                                     }
                                 }
@@ -188,20 +182,6 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
         public async Task FireLyricsSearch(SongResponseObject songResponseObject, SongChangedEventArgs songChangedEventArgs)
         {
-            /*if (songChangedEventArgs.EventType == EventType.PRE &&
-                DataValidator.ValidateData(this._songHandler.CurrentSong))
-            {
-                SongRequestObject songRequestObject = SongRequestObject.FromSong(this._songHandler.CurrentSong);
-
-                LyricData lyricData = Core.INSTANCE.CacheManager.GetLyricsByRequest(songRequestObject);
-
-                if (DataValidator.ValidateData(lyricData))
-                {
-                    if (lyricData.LyricReturnCode == LyricReturnCode.FAILED)
-                        Core.INSTANCE.CacheManager.RemoveDataByRequest(songRequestObject);
-                }
-            }*/
-
             if (songChangedEventArgs.EventType == EventType.POST)
             {
                 if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))

@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Media;
+using Avalonia.Threading;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
@@ -76,42 +77,47 @@ public class LyricsCard : TemplatedControl
         
         Core.INSTANCE.LyricHandler.LyricChanged += (sender, args) =>
         {
-            if (DataValidator.ValidateData(this._lyricPart))
+            Dispatcher.UIThread.InvokeAsync(() =>
             {
-                if (!args.LyricPart.Equals(this._lyricPart))
+                if (DataValidator.ValidateData(this._lyricPart))
                 {
-                    Current = false;
-                    Percentage = -10;
-                    this._noteAnimation.Current = false;
-                    this._noteAnimation.Percentage = -10;
+                    if (!args.LyricPart.Equals(this._lyricPart))
+                    {
+                        Current = false;
+                        Percentage = -10;
+                        this._noteAnimation.Current = false;
+                        this._noteAnimation.Percentage = -10;
+                    }
+                    else
+                    {
+                        Current = true;
+                        this._noteAnimation.Current = true;
+                    }
+                }
+
+                if (!(DataValidator.ValidateData(this._presenterBlock, this._greyBlock, this._noteAnimation,
+                        this._border)))
+                    return;
+
+                if (!(DataValidator.ValidateData(this._presenterBlock.Text) &&
+                      DataValidator.ValidateData(this._greyBlock.Text)))
+                    return;
+
+                if (this._presenterBlock.Text.Equals("♪") || this._greyBlock.Text.Equals("♪"))
+                {
+                    this._presenterBlock.IsVisible = false;
+                    this._greyBlock.IsVisible = false;
+                    this._noteAnimation.IsVisible = true;
+                    this._border.IsVisible = false;
                 }
                 else
                 {
-                    Current = true;
-                    this._noteAnimation.Current = true;
+                    this._presenterBlock.IsVisible = true;
+                    this._greyBlock.IsVisible = true;
+                    this._noteAnimation.IsVisible = false;
+                    this._border.IsVisible = true;
                 }
-            }            
-            
-            if (!(DataValidator.ValidateData(this._presenterBlock, this._greyBlock, this._noteAnimation, this._border)))
-                return;
-            
-            if (!(DataValidator.ValidateData(this._presenterBlock.Text) && DataValidator.ValidateData(this._greyBlock.Text)))
-                return;
-        
-            if (this._presenterBlock.Text.Equals("♪") || this._greyBlock.Text.Equals("♪"))
-            {
-                this._presenterBlock.IsVisible = false;
-                this._greyBlock.IsVisible = false;
-                this._noteAnimation.IsVisible = true;
-                this._border.IsVisible = false;
-            }
-            else
-            {
-                this._presenterBlock.IsVisible = true;
-                this._greyBlock.IsVisible = true;
-                this._noteAnimation.IsVisible = false;
-                this._border.IsVisible = true;
-            }
+            });
         };
     }
     public Rect GetBounds()
