@@ -449,9 +449,36 @@ public partial class LyricsScroller : UserControl
     }
 
 
+    protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
+    {
+        if (e.Delta.Y != 0)
+        {
+            this.IsSynced = false;
+        }
+
+        if (e.Delta.Y > 0)
+        {
+            this._scrollViewer.ScrollDirection = ScrollDirection.UP;
+            this._scrollViewer.Offset = new Vector(0, 
+                this._scrollViewer.Offset.Y - 
+                this._scrollViewer.SmallChange.Height * 2);
+        }
+        
+        if (e.Delta.Y < 0)
+        {
+            this._scrollViewer.ScrollDirection = ScrollDirection.DOWN;
+            this._scrollViewer.Offset = new Vector(0, 
+                this._scrollViewer.Offset.Y + 
+                this._scrollViewer.SmallChange.Height * 2);
+        }
+        base.OnPointerWheelChanged(e);
+    }
+
     private Vector _correctOffset = new Vector();
     private void CTRL_Viewer_OnScrollChanged(object? sender, ScrollChangedEventArgs e)
     {
+       
+        
         /*if (Math.Abs(this._scrollViewer.Offset.Y - _correctOffset.Y) > 200)
         {
             this._scrollViewer.Offset = _correctOffset;

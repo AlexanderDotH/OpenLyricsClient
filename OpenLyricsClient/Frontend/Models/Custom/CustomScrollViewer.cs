@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Reactive.Linq;
 using Avalonia;
 using Avalonia.Controls;
@@ -8,7 +7,6 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Frontend.Models.Custom
 {
@@ -292,8 +290,6 @@ namespace OpenLyricsClient.Frontend.Models.Custom
                     
                     CalculatedPropertiesChanged();
                 }
-                
-
             }
         }
         
@@ -782,11 +778,6 @@ namespace OpenLyricsClient.Frontend.Models.Custom
 
             if (!extentDelta.NearlyEquals(default) || !offsetDelta.NearlyEquals(default) || !viewportDelta.NearlyEquals(default))
             {
-                if (extentDelta.Y < 0 || offsetDelta.Y < 0 || viewportDelta.Y < 0)
-                {
-                    return;
-                }
-                
                 var e = new ScrollChangedEventArgs(extentDelta, offsetDelta, viewportDelta);
                 OnScrollChanged(e);
 
