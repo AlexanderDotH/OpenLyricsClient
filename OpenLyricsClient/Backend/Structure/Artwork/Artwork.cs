@@ -25,15 +25,76 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
 
             if (!data.IsNullOrEmpty())
             {
-                GroupColorCalculator colorCalculator = new GroupColorCalculator();
-                colorCalculator.BigShift = 2.3;
-                colorCalculator.SmallShift = 2.0;
-                colorCalculator.Brightness = 40;
-                
-                this._artworkColor = colorCalculator.GetColorFromBitmap(this.ArtworkAsImage);
+               CalculateColor();
             }
         }
 
+        private void CalculateColor()
+        {
+            this._artworkColor = GetGroupColor();
+
+            double brightnessPercentage = 20;
+                
+            if (GetBrightness(this._artworkColor) < brightnessPercentage)
+            {
+                this._artworkColor = GetBrightnessColor();
+
+                if (GetBrightness(this._artworkColor) < brightnessPercentage)
+                {
+                    this._artworkColor = GetNearesColor();
+
+                    if (GetBrightness(this._artworkColor) < brightnessPercentage)
+                    {
+                        this._artworkColor = new Color(255, 220, 20, 60);
+                    }
+                }
+            }
+        }
+        
+        private Color GetGroupColor()
+        {
+            GroupColorCalculator colorCalculator = new GroupColorCalculator();
+            colorCalculator.BigShift = 2.3;
+            colorCalculator.SmallShift = 2.0;
+            colorCalculator.Brightness = 40;
+
+            return colorCalculator.GetColorFromBitmap(this.ArtworkAsImage);
+        }
+        
+        private Color GetBrightnessColor()
+        {
+            BrightestColorCalculator colorCalculator = new BrightestColorCalculator();
+            return colorCalculator.GetColorFromBitmap(this.ArtworkAsImage);
+        }
+        
+        private Color GetNearesColor()
+        {
+            NearestColorCalculator colorCalculator = new NearestColorCalculator();
+            return colorCalculator.GetColorFromBitmap(this.ArtworkAsImage);
+        }
+
+        private double GetBrightness(Color color)
+        {
+            double averageColor = 0;
+
+            averageColor += color.R;
+            averageColor += color.G;
+            averageColor += color.B;
+
+            averageColor /= 3;
+
+            double min = 100 / 255;
+            double calc = min * averageColor;
+
+            if (calc < 0)
+                calc = 0;
+
+            if (calc > 100)
+                calc = 100;
+            
+            return calc;
+        }
+        
         public Artwork() : this(null, ArtworkReturnCode.FAILED) { }
 
         public string ArtworkAsBase64String
