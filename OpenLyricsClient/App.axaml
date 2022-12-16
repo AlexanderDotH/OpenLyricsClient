@@ -25,6 +25,7 @@
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/AnimatedScrollView.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/LyricsCard.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/NoteAnimation.axaml"/>
+        <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Custom/CustomScrollViewers.axaml"/>
 
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/Styles/Grid.axaml"/>
 

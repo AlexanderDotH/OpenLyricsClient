@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using DevBase.Generic;
 using DevBase.IO;
 using DevBase.Utilities;
@@ -215,6 +216,8 @@ namespace OpenLyricsClient.Backend.Cache
                 JsonCacheData jsonLyricData =
                     new JsonDeserializer<JsonCacheData>().Deserialize(data);
                 
+                GCHandle.Alloc(data).Free();
+                
                 return ConvertToCacheData(jsonLyricData);
             }
 
@@ -223,13 +226,13 @@ namespace OpenLyricsClient.Backend.Cache
         
         private void RefreshExpirationEntries()
         {
-            /*for (int i = 0; i < this._cache.Length; i++)
+            for (int i = 0; i < this._cache.Length; i++)
             {
                 CacheEntry entry = this._cache.Get(i);
 
                 if (DateTimeOffset.Now.ToUnixTimeMilliseconds() > entry.ExpirationDate)
                     this._cache.SafeRemove(entry);
-            }*/
+            }
         }
 
         public LyricData GetLyricsByRequest(SongRequestObject songRequestObject)

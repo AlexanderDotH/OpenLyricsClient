@@ -6,6 +6,7 @@
              xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
              xmlns:romanization="clr-namespace:OpenLyricsClient.Backend.Romanization"
              xmlns:converter="clr-namespace:OpenLyricsClient.Backend.Utils.Converter"
+             xmlns:custom1="clr-namespace:OpenLyricsClient.Frontend.Models.Custom"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              LyricPart="{Binding CurrentLyricPart, Mode=TwoWay}"
              LyricParts="{Binding CurrentLyricParts, Mode=TwoWay}"
@@ -13,6 +14,7 @@
              LyricsFontWeight="{Binding LyricsFontWeight, Mode=TwoWay, Converter={StaticResource FontWeightConverter}}"
              UnSelectedLineBrush="{Binding UnSelectedLineBrush}"
              SelectedLineBrush="{Binding SelectedLineBrush}"
+             EffectiveViewportChanged ="Layoutable_OnEffectiveViewportChanged"
              x:Class="OpenLyricsClient.Frontend.View.Custom.LyricsScroller">
     
     <UserControl.Resources>
@@ -20,7 +22,7 @@
     </UserControl.Resources>
     
     <Grid Background="{DynamicResource PrimaryBackgroundBrush}">
-        <ScrollViewer Name="CTRL_Viewer" ScrollChanged="CTRL_Viewer_OnScrollChanged" >
+        <custom1:CustomScrollViewer Name="CTRL_Viewer" ScrollChanged="CTRL_Viewer_OnScrollChanged"  >
             <ItemsRepeater Name="CTRL_Repeater" Items="{Binding CurrentLyricParts}">
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate>
@@ -37,7 +39,7 @@
                     </DataTemplate>
                 </ItemsRepeater.ItemTemplate>
             </ItemsRepeater>
-        </ScrollViewer>
+        </custom1:CustomScrollViewer>
         
         <Grid Name="GradientTop"
               Height="20" 

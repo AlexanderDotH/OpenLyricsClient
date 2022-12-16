@@ -63,10 +63,11 @@
                         </TextBlock.Transitions>
                     </TextBlock>
                     
-                    <Viewbox HorizontalAlignment="Left" 
+                    <Viewbox Name="PART_Viewbox" 
+                             HorizontalAlignment="Left" 
                              VerticalAlignment="Top"
                              Stretch="None" 
-                             Width="{TemplateBinding Percentage}">
+                             >
                         <TextBlock Name="PART_TextBlock"
                                    Classes="grow"
                                    VerticalAlignment="Top"

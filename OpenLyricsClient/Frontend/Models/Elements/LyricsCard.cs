@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -59,7 +60,7 @@ public class LyricsCard : TemplatedControl
     private bool _templateApplied;
     private bool _validLyricSet;
     private bool _alreadySet;
-
+    
     public LyricsCard()
     {
         this._oldValue = 0;
@@ -79,6 +80,8 @@ public class LyricsCard : TemplatedControl
         {
             Dispatcher.UIThread.InvokeAsync(() =>
             {
+                this.InvalidateVisual();
+                
                 if (DataValidator.ValidateData(this._lyricPart))
                 {
                     if (!args.LyricPart.Equals(this._lyricPart))
@@ -132,9 +135,16 @@ public class LyricsCard : TemplatedControl
             new Typeface(FontFamily.Parse(
                     "avares://Material.Styles/Fonts/Roboto#Roboto"), 
                 FontStyle.Normal, this.FontWeight), this.FontSize, TextAlignment.Left,
-            TextWrapping.Wrap, new Size(this.Parent.Bounds.Width, this.Parent.Bounds.Height));
-
-        Rect rect = new Rect(new Size(text.Bounds.Width, Math.Floor(text.Bounds.Height)));
+            TextWrapping.Wrap, new Size(this._greyBlock.DesiredSize.Width, this._greyBlock.DesiredSize.Height));
+        
+        double lineSize = 0;
+        
+        foreach (FormattedTextLine line in text.GetLines())
+        {
+            lineSize += line.Height;
+        }
+        
+        Rect rect = new Rect(new Size(text.Bounds.Width, lineSize));
         return rect;
     }
 
@@ -161,12 +171,16 @@ public class LyricsCard : TemplatedControl
                 this._noteAnimation.Percentage = value;
                 
                 this._oldValue = value;
-                SetValue(PercentageProperty, Math.Round(((GetBounds().Width) / 100) * value) + 12);
+
+                double percentageToLayout = Math.Round(((GetBounds().Width + 15) / 100) * value);
+                
+                SetValue(PercentageProperty, value);
 
                 if (this.FontWeight == 0)
                     return;
 
-                if (DataValidator.ValidateData(this._presenterBlock, this._greyBlock, this._border, this._noteAnimation))
+                
+                if (DataValidator.ValidateData(this._presenterBlock, this._greyBlock, this._noteAnimation))
                 {
                     if (DataValidator.ValidateData(this._presenterBlock.TextLayout, this._greyBlock.TextLayout))
                     {
@@ -177,8 +191,8 @@ public class LyricsCard : TemplatedControl
                         
                         if (this._presenterBlock.TextLayout.Size.Height < this._greyBlock.TextLayout.Size.Height)
                         {
-                            this._presenterBlock.MaxWidth = this._greyBlock.TextLayout.Size.Width;
-                            this._border.MaxWidth = Math.Round(((this._presenterBlock.MaxWidth) / 100) * 100);
+                            
+                            //this._border.MaxWidth = Math.Round(((this._presenterBlock.MaxWidth) / 100) * 100);
                         }
                     }
                 }
@@ -238,8 +252,19 @@ public class LyricsCard : TemplatedControl
         set { SetValue(UnSelectedLineBrushProperty, value); }
     }
 
-    
-    
+
+    public override void Render(DrawingContext context)
+    {
+        this._presenterBlock.MaxWidth = this._greyBlock.TextLayout.Size.Width;
+        this._presenterBlock.Width = this._greyBlock.TextLayout.Size.Width;
+        
+        this._viewbox.MaxWidth = this._greyBlock.DesiredSize.Width;
+        this._viewbox.Width = ((this._viewbox.MaxWidth) / 100) * Percentage;
+        this._border.Width = ((this._viewbox.MaxWidth) / 100) * Percentage;
+
+        base.Render(context);
+    }
+
     protected override void OnTemplateChanged(AvaloniaPropertyChangedEventArgs e)
     {
         base.OnTemplateChanged(e);

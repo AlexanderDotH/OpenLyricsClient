@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using DevBase.Async.Task;
+using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Frontend.View.Windows;
 using LyricsScroller = OpenLyricsClient.Frontend.View.Custom.LyricsScroller;
 
@@ -53,9 +54,9 @@ public partial class LyricsPage : UserControl
     {
         if (this._cstmLyricsDisplay != null)
         {
-            this._cstmLyricsDisplay.Reset();
+            /*this._cstmLyricsDisplay.Reset();
             this._cstmLyricsDisplay.Reload();
-            this._cstmLyricsDisplay.ResyncOffset();
+            this._cstmLyricsDisplay.ResyncOffset();*/
         }
     }
 

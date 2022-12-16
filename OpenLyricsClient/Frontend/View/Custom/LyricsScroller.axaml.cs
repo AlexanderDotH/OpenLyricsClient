@@ -6,18 +6,22 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Rendering;
 using Avalonia.Threading;
 using DevBase.Async.Task;
 using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.Frontend.Models.Custom;
 using OpenLyricsClient.Frontend.Models.Elements;
+using OpenLyricsClient.Frontend.View.Windows;
 using Squalr.Engine.Utils.Extensions;
+using ScrollChangedEventArgs = OpenLyricsClient.Frontend.Models.Custom.ScrollChangedEventArgs;
 using TextAlignment = Avalonia.Media.TextAlignment;
 
 namespace OpenLyricsClient.Frontend.View.Custom;
@@ -66,7 +70,7 @@ public partial class LyricsScroller : UserControl
     private double _startMargin;
     private double _scrollSpeed;
     
-    private ScrollViewer _scrollViewer;
+    private CustomScrollViewer _scrollViewer;
     private ItemsRepeater _itemsRepeater;
 
     private Grid _gradientTop;
@@ -75,7 +79,7 @@ public partial class LyricsScroller : UserControl
     private SleepLoopRenderTimer _renderTimer;
 
     private LyricsScrollerViewModel _viewModel;
-
+    
     public LyricsScroller()
     {
         InitializeComponent();
@@ -83,7 +87,7 @@ public partial class LyricsScroller : UserControl
         this._viewModel = new LyricsScrollerViewModel();
         this.DataContext = this._viewModel;
 
-        this._scrollViewer = this.Get<ScrollViewer>(nameof(CTRL_Viewer));
+        this._scrollViewer = this.Get<CustomScrollViewer>(nameof(CTRL_Viewer));
         this._itemsRepeater = this.Get<ItemsRepeater>(nameof(CTRL_Repeater));
             
         this._gradientTop = this.Get<Grid>(nameof(GradientTop));
@@ -99,16 +103,16 @@ public partial class LyricsScroller : UserControl
         this._startMargin = 0;
         this._scrollSpeed = 15;
 
-        this._renderTimer = new SleepLoopRenderTimer(144);
+        this._renderTimer = new SleepLoopRenderTimer(150);
         this._renderTimer.Tick += RenderTimerOnTick;
-        
+
         /*Core.INSTANCE.SettingManager.SettingsChanged  += (sender, args) =>
         {
             Reload();
             Reset();
         };*/
     }
-
+    
     private void RenderTimerOnTick(TimeSpan obj)
     {
         double step = Math.Abs(this._scrollTo - this._currentScrollOffset) / this._scrollSpeed;
@@ -122,8 +126,8 @@ public partial class LyricsScroller : UserControl
             this._currentScrollOffset -= step;
         }
         
-        this._scrollFrom = this._currentScrollOffset;
         SetThreadPos(this._currentScrollOffset);
+        this._scrollFrom = this._currentScrollOffset;
     }
 
     private void SetThreadPos(Double y)
@@ -132,14 +136,20 @@ public partial class LyricsScroller : UserControl
 
         Dispatcher.UIThread.InvokeAsync(async () =>
         {
-            await Task.Delay(50);
+            if (this._scrollTo > this._scrollFrom)
+            {
+                this._scrollViewer.ScrollDirection = ScrollDirection.DOWN;
+            }
+            else if (this._scrollTo < this._scrollFrom)
+            {
+                this._scrollViewer.ScrollDirection = ScrollDirection.UP;
+            }
 
             if (this.IsSynced)
             {
-                this._oldScrollY = this._scrollViewer.Offset.Y;
-                this._scrollViewer.Offset = new Vector(0, y);
+                this._scrollViewer.Offset = new Vector(0, this._currentScrollOffset);
             }
-            
+
             if (y - this._startMargin < 10 || this._scrollViewer.Offset.Y - this._startMargin < 10)
             {
                 this._gradientTop.Opacity = 0;
@@ -169,7 +179,7 @@ public partial class LyricsScroller : UserControl
                     }
                 }
             }
-        });
+        }).GetAwaiter().GetResult();
     }
 
     private void InitializeComponent()
@@ -211,6 +221,7 @@ public partial class LyricsScroller : UserControl
         this._startMargin = CalcStartMargin();
 
         this._scrollFrom = this._scrollTo;
+        
         this._scrollTo = CalcOffsetInViewPoint(selectedLine, position, this._startMargin);
 
         this._itemsRepeater.Margin = new Thickness(0,this._startMargin,0,0);
@@ -221,32 +232,38 @@ public partial class LyricsScroller : UserControl
         if (this._lyricParts.IsNullOrEmpty())
             return 0;
         
-        double untilPoint = this._scrollViewer.Viewport.Height / 2;
+        double untilPos = this._scrollViewer.Viewport.Height / 2;
+        untilPos -= GetRenderedSize(0).Height / 2;
 
-        int itemIndex = 0;
-        double x = 0;
-
-        while (x + GetRenderedSize(itemIndex).Height < untilPoint)
-        {
-            x += GetRenderedSize(itemIndex).Height;
-            itemIndex++;
-        }
-
-        return x;
+        return untilPos;
     }
 
     private double CalcOffsetInViewPoint(int index, double currentSize, double startMargin)
     {
-        double untilPos = this._scrollViewer.Viewport.Height / 2;
+        double startAt = 0;
         
-        double x = 0;
-
-        while (x + GetRenderedSize(index).Height < untilPos)
+        for (int i = 0; i < index; i++)
         {
-            x += GetRenderedSize(index).Height;
+            startAt += GetRenderedSize(i).Height;
+        }
+        
+        double untilPos = this._scrollViewer.Viewport.Height / 2;
+
+        untilPos -= GetRenderedSize(index).Height / 2;
+        
+        /*double x = 0;
+        int copyOfIndex = index - 1;
+
+        while (x + GetRenderedSize(copyOfIndex).Height < untilPos)
+        {
+            x += GetRenderedSize(copyOfIndex).Height;
+            copyOfIndex--;
         }
 
-        return currentSize - x + startMargin;
+        if (x > untilPos)
+            x = untilPos;*/
+        
+        return startAt - untilPos + startMargin;
     }
     
     public double CalcSpeed()
@@ -292,7 +309,7 @@ public partial class LyricsScroller : UserControl
             new Typeface(FontFamily.Parse(
                 "avares://Material.Styles/Fonts/Roboto#Roboto"), 
                 FontStyle.Normal, this.LyricsFontWeight), this.LyricsFontSize, TextAlignment.Left,
-            TextWrapping.Wrap, new Size(this._itemsRepeater.DesiredSize.Width, this._itemsRepeater.DesiredSize.Height));
+            TextWrapping.Wrap, new Size(this.DesiredSize.Width - 5, this.DesiredSize.Height));
 
         double lineSize = 0;
         
@@ -430,22 +447,35 @@ public partial class LyricsScroller : UserControl
     private void CTRL_Viewer_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
     }
-    
+
+
+    private Vector _correctOffset = new Vector();
     private void CTRL_Viewer_OnScrollChanged(object? sender, ScrollChangedEventArgs e)
     {
-        double diff = Math.Ceiling(Math.Abs(this._scrollViewer.Offset.Y - this._oldScrollY));
+        /*if (Math.Abs(this._scrollViewer.Offset.Y - _correctOffset.Y) > 200)
+        {
+            this._scrollViewer.Offset = _correctOffset;
+        }
+        
+        _correctOffset = _scrollViewer.Offset;*/
+        /*double diff = Math.Ceiling(Math.Abs(this._scrollViewer.Offset.Y - this._oldScrollY));
         double delta = Math.Abs(e.OffsetDelta.Y);
         
         if (diff < delta && e.OffsetDelta.Y % 5 == 0)
             this._scrollCount++;
 
         if (this._scrollCount >= 0)
-            this.IsSynced = false;
+            this.IsSynced = false;*/
     }
 
     public void ResyncOffset()
     {
         this._scrollCount = -2;
         this.IsSynced = true;
+    }
+
+    private void Layoutable_OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
+    {
+        this.InvalidateVisual();
     }
 }

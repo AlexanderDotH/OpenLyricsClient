@@ -10,6 +10,7 @@
         xmlns:avalonia="clr-namespace:CefNet.Avalonia;assembly=CefNet.Avalonia"
         mc:Ignorable="d"
         Width="1500"
+        MinWidth="1000"
         Height="800"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="PreferSystemChrome"
