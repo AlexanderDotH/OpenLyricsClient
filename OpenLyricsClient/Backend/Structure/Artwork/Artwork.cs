@@ -70,6 +70,7 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
         private Color GetNearesColor()
         {
             NearestColorCalculator colorCalculator = new NearestColorCalculator();
+            colorCalculator.PixelSteps = 20;
             return colorCalculator.GetColorFromBitmap(this.ArtworkAsImage);
         }
 
@@ -83,7 +84,7 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
 
             averageColor /= 3;
 
-            double min = 100 / 255;
+            double min = 0.3921568627;
             double calc = min * averageColor;
 
             if (calc < 0)
