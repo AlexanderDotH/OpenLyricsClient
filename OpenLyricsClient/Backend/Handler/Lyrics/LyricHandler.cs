@@ -19,10 +19,6 @@ using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Handler.Lyrics
 {
-
-    // TODOO:
-    // Lyrics collector
-
     public class LyricHandler : IHandler
     {
         private Debugger<LyricHandler> _debugger;

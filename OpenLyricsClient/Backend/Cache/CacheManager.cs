@@ -199,7 +199,12 @@ namespace OpenLyricsClient.Backend.Cache
                 }
             }
 
-            return TryGetDataFromDisk(songRequestObject);
+            CacheData data = TryGetDataFromDisk(songRequestObject);
+
+            if (DataValidator.ValidateData(data))
+                AddToCache(songRequestObject, data);
+            
+            return data;
         }
 
         private CacheData TryGetDataFromDisk(SongRequestObject songRequestObject)
