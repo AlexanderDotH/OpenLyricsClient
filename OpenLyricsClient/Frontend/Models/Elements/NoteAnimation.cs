@@ -80,12 +80,14 @@ public class NoteAnimation : TemplatedControl
                 }
                 
                 double scaled = Math.Round(((this.DesiredSize.Width) / 100) * value);
+                double scaledB = Math.Round(((this.DesiredSize.Width) / 100) * value);
+
 
                 this._viewbox.Width = scaled;
                 this._viewbox.MaxWidth = scaled;
         
-                this._border.Width = scaled;
-                this._border.MaxWidth = scaled;
+                this._border.Width = scaledB;
+                this._border.MaxWidth = scaledB;
             }
         }
     }
