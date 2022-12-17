@@ -43,7 +43,9 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
         {
             try
             {
-                double brightnessPercentage = 20;
+                double brightnessPercentage = 10;
+
+                this._artworkColor = GetGroupColor();
                 
                 if (GetBrightness(this._artworkColor) < brightnessPercentage)
                 {
