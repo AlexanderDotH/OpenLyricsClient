@@ -262,19 +262,7 @@ public partial class LyricsScroller : UserControl
         double untilPos = this._scrollViewer.Viewport.Height / 2;
 
         untilPos -= GetRenderedSize(index).Height / 2;
-        
-        /*double x = 0;
-        int copyOfIndex = index - 1;
 
-        while (x + GetRenderedSize(copyOfIndex).Height < untilPos)
-        {
-            x += GetRenderedSize(copyOfIndex).Height;
-            copyOfIndex--;
-        }
-
-        if (x > untilPos)
-            x = untilPos;*/
-        
         return startAt - untilPos + startMargin;
     }
     
