@@ -91,7 +91,6 @@
                 <Grid Margin="3,0,3,0">
                     <Border Name="PART_BackgroundBorder"
                             HorizontalAlignment="Left"
-                            Width="{TemplateBinding Percentage}" 
                             Background="{DynamicResource SecondaryBackgroundBrush}"
                             CornerRadius="{TemplateBinding CornerRadius}">
                     </Border>
@@ -124,8 +123,8 @@
                     <Viewbox Name="PART_Viewbox" 
                              HorizontalAlignment="Left" 
                              VerticalAlignment="Top"
-                             Stretch="None" 
-                             Width="{TemplateBinding Percentage}">
+                             Width="-10"
+                             Stretch="None" >
                          
                         <StackPanel Orientation="Horizontal" 
                                     Spacing="8" 

@@ -22,6 +22,7 @@ public class NoteAnimation : TemplatedControl
     public static readonly DirectProperty<LyricsCard, bool> CurrentProperty = 
         AvaloniaProperty.RegisterDirect<LyricsCard, bool>(nameof(Current), o => o.Current, (o, v) => o.Current = v);
 
+    private Viewbox _viewbox;
     private Border _border;
     
     private bool _current;
@@ -35,11 +36,18 @@ public class NoteAnimation : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
+        var viewBox = e.NameScope.Find("PART_Viewbox");
         var border = e.NameScope.Find("PART_BackgroundBorder");
+        
+        if (viewBox is Viewbox)
+        {
+            Viewbox v = ((Viewbox)viewBox);
+            this._viewbox = v;
+        }
         
         if (border is Border)
         {
-            Border b = (Border)border;
+            Border b = ((Border)border);
             this._border = b;
         }
     }
@@ -55,11 +63,40 @@ public class NoteAnimation : TemplatedControl
             }
             else
             {
-                SetValue(PercentageProperty, Math.Round(((this.DesiredSize.Width) / 100) * value));
+                SetValue(PercentageProperty, value);
+
+                if (this._viewbox == null || this._border == null)
+                    return;
+
+                if (!this._current)
+                {
+                    this._viewbox.Width = -10;
+                    this._viewbox.MaxWidth = -10;
+        
+                    this._border.Width = -10;
+                    this._border.MaxWidth = -10;
+                    
+                    return;
+                }
+                
+                double scaled = Math.Round(((this.DesiredSize.Width) / 100) * value);
+
+                this._viewbox.Width = scaled;
+                this._viewbox.MaxWidth = scaled;
+        
+                this._border.Width = scaled;
+                this._border.MaxWidth = scaled;
             }
         }
     }
-    
+
+    public override void Render(DrawingContext context)
+    {
+       
+
+        base.Render(context);
+    }
+
     public Brush SelectedLineBrush
     {
         get { return GetValue(SelectedLineBrushProperty); }
