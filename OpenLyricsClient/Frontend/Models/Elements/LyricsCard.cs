@@ -123,6 +123,7 @@ public class LyricsCard : TemplatedControl
             });
         };
     }
+    
     public Rect GetBounds()
     {
         if (this.FontSize <= 0)
@@ -136,15 +137,8 @@ public class LyricsCard : TemplatedControl
                     "avares://Material.Styles/Fonts/Roboto#Roboto"), 
                 FontStyle.Normal, this.FontWeight), this.FontSize, TextAlignment.Left,
             TextWrapping.Wrap, new Size(this._greyBlock.DesiredSize.Width, this._greyBlock.DesiredSize.Height));
-        
-        double lineSize = 0;
-        
-        foreach (FormattedTextLine line in text.GetLines())
-        {
-            lineSize += line.Height;
-        }
-        
-        Rect rect = new Rect(new Size(text.Bounds.Width, lineSize));
+
+        Rect rect = new Rect(new Size(text.Bounds.Width, text.Bounds.Height));
         return rect;
     }
 
@@ -169,33 +163,9 @@ public class LyricsCard : TemplatedControl
                     return;
 
                 this._noteAnimation.Percentage = value;
-                
                 this._oldValue = value;
 
-                double percentageToLayout = Math.Round(((GetBounds().Width + 15) / 100) * value);
-                
                 SetValue(PercentageProperty, value);
-
-                if (this.FontWeight == 0)
-                    return;
-
-                
-                if (DataValidator.ValidateData(this._presenterBlock, this._greyBlock, this._noteAnimation))
-                {
-                    if (DataValidator.ValidateData(this._presenterBlock.TextLayout, this._greyBlock.TextLayout))
-                    {
-                        /*if (this._noteAnimation.IsVisible)
-                        {
-                            this._border.MaxWidth = Math.Round(((this._noteAnimation.MaxWidth) / 100) * 100);
-                        }*/
-                        
-                        if (this._presenterBlock.TextLayout.Size.Height < this._greyBlock.TextLayout.Size.Height)
-                        {
-                            
-                            //this._border.MaxWidth = Math.Round(((this._presenterBlock.MaxWidth) / 100) * 100);
-                        }
-                    }
-                }
             }
         }
     }

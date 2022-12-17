@@ -24,32 +24,45 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
         {
             this._data = data;
             this._returnCode = returnCode;
-
-            if (!data.IsNullOrEmpty())
-            {
-                Task.Factory.StartNew(CalculateColor);
-            }
         }
 
-        private void CalculateColor()
+        public async Task CalculateColor()
         {
-            this._artworkColor = GetGroupColor();
-
-            double brightnessPercentage = 20;
-                
-            if (GetBrightness(this._artworkColor) < brightnessPercentage)
+            if (this._data.IsNullOrEmpty())
+                return;
+            
+            Task t = Task.Factory.StartNew(() =>
             {
-                this._artworkColor = GetNearesColor();
+                CalculateArtworkColor();
+            });
+            
+            await t;
+        }
 
+        private void CalculateArtworkColor()
+        {
+            try
+            {
+                double brightnessPercentage = 20;
+                
                 if (GetBrightness(this._artworkColor) < brightnessPercentage)
                 {
-                    this._artworkColor = GetBrightnessColor();
+                    this._artworkColor = GetNearesColor();
 
                     if (GetBrightness(this._artworkColor) < brightnessPercentage)
                     {
-                        this._artworkColor = new Color(255, 220, 20, 60);
+                        this._artworkColor = GetBrightnessColor();
+
+                        if (GetBrightness(this._artworkColor) < brightnessPercentage)
+                        {
+                            this._artworkColor = new Color(255, 220, 20, 60);
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                this._artworkColor = new Color(255, 220, 20, 60);
             }
         }
         

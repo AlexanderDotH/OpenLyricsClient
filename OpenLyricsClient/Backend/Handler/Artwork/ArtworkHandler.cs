@@ -95,6 +95,8 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                 if (artworkCache.Equals(song.Artwork))
                     continue;
 
+                await artworkCache.CalculateColor();
+                
                 song.Artwork = artworkCache;
                 
                 if (!DataValidator.ValidateData(artworkCache.ArtworkColor))

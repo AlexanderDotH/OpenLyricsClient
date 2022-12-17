@@ -77,6 +77,7 @@ public partial class LyricsScroller : UserControl
     private Grid _gradientBottom;
     
     private SleepLoopRenderTimer _renderTimer;
+    private UiThreadRenderTimer _uiThreadRenderTimer;
 
     private LyricsScrollerViewModel _viewModel;
     
@@ -106,13 +107,37 @@ public partial class LyricsScroller : UserControl
         this._renderTimer = new SleepLoopRenderTimer(150);
         this._renderTimer.Tick += RenderTimerOnTick;
 
-        /*Core.INSTANCE.SettingManager.SettingsChanged  += (sender, args) =>
-        {
-            Reload();
-            Reset();
-        };*/
+        this._uiThreadRenderTimer = new UiThreadRenderTimer(150);
+        this._uiThreadRenderTimer.Tick += UiThreadRenderTimerOnTick;
     }
-    
+
+    private void UiThreadRenderTimerOnTick(TimeSpan obj)
+    {
+        this._startMargin = CalcStartMargin();
+
+        this._gradientTop.IsVisible = !this._lyricParts.IsNullOrEmpty();
+        this._gradientBottom.IsVisible = !this._lyricParts.IsNullOrEmpty();
+        
+        if (this._scrollViewer.Offset.Y - this._startMargin < 10)
+        {
+            this._gradientTop.Opacity = 0;
+        }
+        else
+        {
+            this._gradientTop.Opacity = 1;
+        }
+
+        if ((this._scrollViewer.Extent.Height - this._scrollViewer.Offset.Y) == 
+            this._scrollViewer.LargeChange.Height)
+        {
+            this._gradientBottom.Opacity = 0;
+        }
+        else
+        {
+            this._gradientBottom.Opacity = 1;
+        }
+    }
+
     private void RenderTimerOnTick(TimeSpan obj)
     {
         double step = Math.Abs(this._scrollTo - this._currentScrollOffset) / this._scrollSpeed;
@@ -157,24 +182,7 @@ public partial class LyricsScroller : UserControl
                 this._scrollViewer.Offset = new Vector(0, this._currentScrollOffset);
             }
 
-            if (y - this._startMargin < 10 || this._scrollViewer.Offset.Y - this._startMargin < 10)
-            {
-                this._gradientTop.Opacity = 0;
-            }
-            else
-            {
-                this._gradientTop.Opacity = 1;
-            }
-
-            if ((this._scrollViewer.Extent.Height - this._scrollViewer.Offset.Y) == 
-                this._scrollViewer.LargeChange.Height)
-            {
-                this._gradientBottom.Opacity = 0;
-            }
-            else
-            {
-                this._gradientBottom.Opacity = 1;
-            }
+            
 
             if (DataValidator.ValidateData(this._card))
             {
@@ -220,8 +228,6 @@ public partial class LyricsScroller : UserControl
                 }
             }
         }
-
-        this._startMargin = CalcStartMargin();
 
         this._scrollFrom = this._scrollTo;
 

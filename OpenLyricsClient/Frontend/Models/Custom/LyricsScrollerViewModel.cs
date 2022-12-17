@@ -122,9 +122,12 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
 
         if (!DataValidator.ValidateData(currentSong))
             return;
-        
+
         if (!DataValidator.ValidateData(currentSong.Lyrics))
+        {
+            this.CurrentLyricParts = null;
             return;
+        }
         
         if (currentSong.Lyrics.LyricParts == null)
             return;
