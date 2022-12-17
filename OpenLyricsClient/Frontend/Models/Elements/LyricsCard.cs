@@ -262,6 +262,10 @@ public class LyricsCard : TemplatedControl
         this._viewbox.Width = ((this._viewbox.MaxWidth) / 100) * Percentage;
         this._border.Width = ((this._viewbox.MaxWidth) / 100) * Percentage;
 
+        if (!this._current)
+        {
+        }
+
         base.Render(context);
     }
 

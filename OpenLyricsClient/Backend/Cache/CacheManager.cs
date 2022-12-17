@@ -234,6 +234,9 @@ namespace OpenLyricsClient.Backend.Cache
             for (int i = 0; i < this._cache.Length; i++)
             {
                 CacheEntry entry = this._cache.Get(i);
+                
+                if (!DataValidator.ValidateData(entry))
+                    continue;
 
                 if (DateTimeOffset.Now.ToUnixTimeMilliseconds() > entry.ExpirationDate)
                     this._cache.SafeRemove(entry);

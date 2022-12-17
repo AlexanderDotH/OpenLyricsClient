@@ -35,11 +35,6 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             this._service = Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
 
             Core.INSTANCE.TaskRegister.Register(
-                out _updatePlaybackSuspensionToken,
-                new Task(async () => await UpdatePlaybackTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
-                EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK);
-
-            Core.INSTANCE.TaskRegister.Register(
                 out _updateSongDataSuspensionToken,
                 new Task(async () => await UpdateSongDataTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATESONGDATA);
@@ -55,7 +50,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
         {
             while (!this._disposed)
             {
-                await Task.Delay(1);
+                await Task.Delay(20);
                 await this._timeSyncSuspensionToken.WaitForRelease();
 
                 if (!this._service.IsConnected())
@@ -106,40 +101,6 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             }
         }
 
-        //Song info sync -> data update
-        private async Task UpdatePlaybackTask()
-        {
-            while (!this._disposed)
-            {
-                await this._updatePlaybackSuspensionToken.WaitForRelease();
-
-                if (!this._service.IsConnected())
-                    continue;
-
-                await Task.Delay(2000);
-
-                if (DataValidator.ValidateData(this._spotifyClient) &&
-                    DataValidator.ValidateData(this._currentSong))
-                {
-                    try
-                    {
-                        CurrentlyPlayingContext currentPlayback =
-                            await this.GetPlayerApi().Player.GetCurrentPlayback();
-                        
-                        if (DataValidator.ValidateData(currentPlayback))
-                        {
-                            this._currentSong =
-                                SpotifyDataMerger.ValidateUpdatePlayBack(this._currentSong, currentPlayback);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        this._debugger.Write(e);
-                    }
-                }
-            }
-        }
-
         //Song info update -> data update
         private async Task UpdateSongDataTask()
         {
@@ -164,6 +125,8 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
                         {
                             this._currentSong =
                                 SpotifyDataMerger.ValidateUpdateAndMerge(this._currentSong, currentTrack);
+                            this._currentSong =
+                                SpotifyDataMerger.ValidateUpdatePlayBack(this._currentSong, currentTrack);
                         }
                     }
                     catch (Exception e)

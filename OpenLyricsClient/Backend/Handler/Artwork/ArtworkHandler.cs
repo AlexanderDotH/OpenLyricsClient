@@ -30,7 +30,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
         private TaskSuspensionToken _applyArtworkSuspensionToken;
 
         private bool _disposed;
-        
+
         public ArtworkHandler(SongHandler songHandler)
         {
             this._debugger = new Debugger<ArtworkHandler>(this);
@@ -86,9 +86,11 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                     continue;
 
                 Structure.Artwork.Artwork artworkCache = Core.INSTANCE.CacheManager.GetArtworkByRequest(songRequestObject);
-                
+
                 if (!DataValidator.ValidateData(artworkCache))
+                {
                     continue;
+                }
                 
                 if (artworkCache.Equals(song.Artwork))
                     continue;
@@ -98,11 +100,31 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                 if (!DataValidator.ValidateData(artworkCache.ArtworkColor))
                     continue;
 
-                SolidColorBrush color = App.Current.FindResource("PrimaryColorBrush") as SolidColorBrush;
+                SolidColorBrush primaryColor = App.Current.FindResource("PrimaryColorBrush") as SolidColorBrush;
+                SolidColorBrush color = App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
+                SolidColorBrush textColor = App.Current.FindResource("PrimaryThemeFontColorBrush") as SolidColorBrush;
 
                 await Dispatcher.UIThread.InvokeAsync(() =>
                 {
+                    if (color.Color == Color.FromRgb(22,22,22))
+                    {
+                        color.Color = primaryColor.Color;
+                    }
+                    else
+                    {
+                        color.Color = artworkCache.ArtworkColor;
+                    }
+                    
                     color.Color = artworkCache.ArtworkColor;
+                    
+                    if (artworkCache.GetBrightness() < 15)
+                    {
+                        textColor.Color = new Color(255, 255, 255, 255);
+                    }
+                    else
+                    {
+                        textColor.Color = new Color(255, 0, 0, 0);
+                    }
                 });
             }
         }

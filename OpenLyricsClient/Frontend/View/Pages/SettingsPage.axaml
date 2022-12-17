@@ -40,18 +40,20 @@
                     
                     <StackPanel>
                         <elements:GroupBox
-                            HeaderBrush="{DynamicResource PrimaryColorBrush}" 
+                            HeaderBrush="{DynamicResource PrimaryThemeColorBrush}" 
+                            HeaderTextBrush="{DynamicResource PrimaryThemeFontColorBrush}" 
                             Width="200" 
                             Height="125" 
                             Margin="10,0,0,10"
                             VerticalAlignment="Top" 
                             HorizontalAlignment="Left"
+                            Foreground="{DynamicResource PrimaryFontColorBrush}"
                             Background="{DynamicResource PrimaryBackgroundBrush}"
                             HeaderText="Romanize">
                             <StackPanel>
                                 <CheckBox Name="CHK_JapaneseToRomanji" 
                                           Content="Japanese to Romanji"
-                                          Background="{DynamicResource PrimaryColorBrush}"
+                                          Background="{DynamicResource PrimaryThemeColorBrush}"
                                           Foreground="{DynamicResource PrimaryFontColorBrush}"
                                           Checked="CHK_JapaneseToRomanji_OnChecked"
                                           Unchecked="CHK_JapaneseToRomanji_OnUnchecked"
@@ -59,7 +61,7 @@
                                 
                                 <CheckBox Name="CHK_KoreanToRomanji" 
                                           Content="Korean to Romanji"
-                                          Background="{DynamicResource PrimaryColorBrush}"
+                                          Background="{DynamicResource PrimaryThemeColorBrush}"
                                           Foreground="{DynamicResource PrimaryFontColorBrush}"
                                           Checked="CHK_KoreanToRomanji_OnChecked"
                                           Unchecked="CHK_KoreanToRomanji_OnUnchecked"
@@ -67,7 +69,7 @@
                                 
                                 <CheckBox Name="CHK_RussiaToLatin" 
                                           Content="Russia to Latin"
-                                          Background="{DynamicResource PrimaryColorBrush}"
+                                          Background="{DynamicResource PrimaryThemeColorBrush}"
                                           Foreground="{DynamicResource PrimaryFontColorBrush}"
                                           Checked="CHK_RussiaToLatin_OnChecked"
                                           Unchecked="CHK_RussiaToLatin_OnUnchecked"
@@ -76,7 +78,8 @@
                         </elements:GroupBox>
                         
                         <elements:GroupBox
-                            HeaderBrush="{DynamicResource PrimaryColorBrush}" 
+                            HeaderBrush="{DynamicResource PrimaryThemeColorBrush}" 
+                            HeaderTextBrush="{DynamicResource PrimaryThemeFontColorBrush}" 
                             Width="200" 
                             Height="105" 
                             Margin="10,0,0,10"
@@ -93,7 +96,7 @@
                                           PlaceholderText="Selection Mode"
                                           Width="180"
                                           Background="{DynamicResource SecondaryBackgroundBrush}"
-                                          Foreground="{DynamicResource PrimaryFontColorBrush}"
+                                          Foreground="{DynamicResource PrimaryThemeFontColorBrush}"
                                           SelectionChanged="CMBX_LyricsSelection_OnSelectionChanged"
                                           Margin="10,5,0,0"
                                 >
@@ -134,7 +137,7 @@
                                         Width="180" 
                                         Height="30" 
                                         Background="#1ED760"
-                                        Foreground="{DynamicResource PrimaryFontColorBrush}"
+                                        Foreground="{DynamicResource PrimaryThemeFontColorBrush}"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
                                         Margin="0,45,0,0"
@@ -144,7 +147,7 @@
                                         Width="180" 
                                         Height="30" 
                                         Background="#FF4040"
-                                        Foreground="{DynamicResource PrimaryFontColorBrush}"
+                                        Foreground="{DynamicResource PrimaryThemeFontColorBrush}"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
                                         Margin="0,82,0,0"
@@ -167,7 +170,8 @@
                     
                     <StackPanel>
                         <elements:GroupBox
-                            HeaderBrush="{DynamicResource PrimaryColorBrush}" 
+                            HeaderBrush="{DynamicResource PrimaryThemeColorBrush}" 
+                            HeaderTextBrush="{DynamicResource PrimaryThemeFontColorBrush}" 
                             Width="200" 
                             Height="127" 
                             Margin="10,0,0,10"
@@ -179,8 +183,8 @@
                                 <Button Name="BTN_ClearCache" 
                                         Width="180" 
                                         Height="30" 
-                                        Background="{DynamicResource PrimaryColorBrush}"
-                                        Foreground="{DynamicResource PrimaryFontColorBrush}"
+                                        Background="{DynamicResource PrimaryThemeColorBrush}"
+                                        Foreground="{DynamicResource PrimaryThemeFontColorBrush}"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
                                         Margin="0,5,0,0"
@@ -189,8 +193,8 @@
                                 <Button Name="BTN_RefreshLyrics" 
                                         Width="180" 
                                         Height="30" 
-                                        Background="{DynamicResource PrimaryColorBrush}"
-                                        Foreground="{DynamicResource PrimaryFontColorBrush}"
+                                        Background="{DynamicResource PrimaryThemeColorBrush}"
+                                        Foreground="{DynamicResource PrimaryThemeFontColorBrush}"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
                                         Margin="0,42,0,0"

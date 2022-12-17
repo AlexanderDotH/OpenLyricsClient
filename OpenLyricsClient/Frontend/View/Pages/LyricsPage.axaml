@@ -178,7 +178,7 @@
                          PointerMoved="InputElement_OnPointerMoved"
                          PointerLeave="InputElement_OnPointerLeave">
                <Grid>
-                   <ProgressBar Foreground="{DynamicResource PrimaryColorBrush}"
+                   <ProgressBar Foreground="{DynamicResource PrimaryThemeColorBrush}"
                                 Background="{DynamicResource PrimaryBackgroundBrush}"
                                 BorderBrush="{DynamicResource PrimaryBackgroundBrush}"
                                 VerticalAlignment="Bottom"
@@ -187,6 +187,13 @@
                                 Maximum="100"
                                 Value="{Binding Percentage}"
                                 Margin="10, 0,10,10">
+                       <ProgressBar.Transitions>
+                           <Transitions>
+                               <BrushTransition Property="Foreground"
+                                                Easing="CircularEaseOut"
+                                                Duration="0:0:1.500"></BrushTransition>
+                           </Transitions>
+                       </ProgressBar.Transitions>
                    </ProgressBar>
                 
                    <TextBlock Classes="progress_text" 

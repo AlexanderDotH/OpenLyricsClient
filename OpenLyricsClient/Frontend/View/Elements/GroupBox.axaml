@@ -12,7 +12,8 @@
     <Style Selector="elements|GroupBox">
         <Setter Property="assists:ShadowAssist.ShadowDepth" Value="Depth2"/>
         <Setter Property="CornerRadius" Value="4"/>
-        <Setter Property="HeaderBrush" Value="{DynamicResource PrimaryColorBrush}"></Setter>
+        <Setter Property="HeaderBrush" Value="{DynamicResource PrimaryColorBrush}"/>
+        <Setter Property="HeaderTextBrush" Value="#FFFFFF"></Setter>
         <Setter Property="HeaderText" Value="Header"></Setter>
         <Setter Property="Background" Value="{DynamicResource MaterialDesignCardBackground}" />
         <Setter Property="ClipToBounds" Value="False" />
@@ -38,6 +39,7 @@
                         <TextBlock Text="{ TemplateBinding elements:GroupBox.HeaderText}"
                                    HorizontalAlignment="Left"
                                    VerticalAlignment="Center"
+                                   Foreground="{TemplateBinding HeaderTextBrush}"
                                    Margin="10,0,0,0"
                                    FontSize="12"></TextBlock>
                     </Border>

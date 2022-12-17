@@ -26,11 +26,14 @@
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/LyricsCard.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/NoteAnimation.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Custom/CustomScrollViewers.axaml"/>
-
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/Styles/Grid.axaml"/>
-
+        
         <Style>
+            
             <Style.Resources>
+                <SolidColorBrush x:Key="PrimaryThemeColorBrush" Color="#dc143c"></SolidColorBrush>
+                <SolidColorBrush x:Key="PrimaryThemeFontColorBrush" Color="#FFFFFF"></SolidColorBrush>
+
                 <SolidColorBrush x:Key="PrimaryColorBrush" Color="#dc143c"></SolidColorBrush>
                 <SolidColorBrush x:Key="SecondaryColorBrush" Color="#9c0720"></SolidColorBrush>
                 <SolidColorBrush x:Key="PrimaryFontColorBrush" Color="#FFFFFF"></SolidColorBrush>
@@ -40,5 +43,7 @@
                 <SolidColorBrush x:Key="ImageMask" Color="#f10000"></SolidColorBrush>
             </Style.Resources>
         </Style>
+        
+        
     </Application.Styles>
 </Application>

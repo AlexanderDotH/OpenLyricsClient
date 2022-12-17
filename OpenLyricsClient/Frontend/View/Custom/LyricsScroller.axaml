@@ -22,7 +22,7 @@
     </UserControl.Resources>
     
     <Grid Background="{DynamicResource PrimaryBackgroundBrush}">
-        <custom1:CustomScrollViewer Name="CTRL_Viewer" ScrollChanged="CTRL_Viewer_OnScrollChanged"  >
+        <custom1:CustomScrollViewer Name="CTRL_Viewer">
             <ItemsRepeater Name="CTRL_Repeater" Items="{Binding CurrentLyricParts}">
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate>

@@ -64,7 +64,7 @@ public partial class LyricsScroller : UserControl
     private double _scrollTo;
     private double _oldScrollY;
 
-    private bool _isFirstSync;
+    private bool _isResynced;
     private int _scrollCount;
 
     private double _startMargin;
@@ -97,7 +97,7 @@ public partial class LyricsScroller : UserControl
         this._currentScrollOffset = 0;
         this._scrollTo = 0;
         this.IsSynced = true;
-        this._isFirstSync = true;
+        this._isResynced = true;
         this._scrollCount = -2;
         this._oldScrollY = 0;
         this._startMargin = 0;
@@ -124,6 +124,13 @@ public partial class LyricsScroller : UserControl
         else
         {
             this._currentScrollOffset -= step;
+        }
+
+        double diff = Math.Abs(this._currentScrollOffset - this._scrollViewer.Offset.Y);
+        
+        if (diff < 0.1)
+        {
+            this._isResynced = true;
         }
         
         SetThreadPos(this._currentScrollOffset);
@@ -189,8 +196,6 @@ public partial class LyricsScroller : UserControl
 
     private void SetCurrentPosition(int selectedLine)
     {
-        double position = 0;
-
         for (int i = 0; i < this._lyricParts.Count; i++)
         {
             var child = this._itemsRepeater.TryGetElement(i);
@@ -213,16 +218,17 @@ public partial class LyricsScroller : UserControl
                     card.Current = false;
                     card.Percentage = -10;
                 }
-                
-                position += GetRenderedSize(i).Height;
             }
         }
 
         this._startMargin = CalcStartMargin();
 
         this._scrollFrom = this._scrollTo;
-        
-        this._scrollTo = CalcOffsetInViewPoint(selectedLine, position, this._startMargin);
+
+        if (this._isResynced)
+        {
+            this._scrollTo = CalcOffsetInViewPoint(selectedLine, this._startMargin);
+        }
 
         this._itemsRepeater.Margin = new Thickness(0,this._startMargin,0,0);
     }
@@ -238,7 +244,7 @@ public partial class LyricsScroller : UserControl
         return untilPos;
     }
 
-    private double CalcOffsetInViewPoint(int index, double currentSize, double startMargin)
+    private double CalcOffsetInViewPoint(int index, double startMargin)
     {
         double startAt = 0;
         
@@ -327,7 +333,7 @@ public partial class LyricsScroller : UserControl
         this._scrollFrom = 0;
         this._currentScrollOffset = 0;
         this._scrollTo = 0;
-        this._isFirstSync = true;
+        this._isResynced = true;
         
         if (DataValidator.ValidateData(this._itemsRepeater) &&
             DataValidator.ValidateData(this._itemsRepeater.Children))
@@ -366,7 +372,7 @@ public partial class LyricsScroller : UserControl
             SetCurrentPosition(value);
         }
     }
-    
+
     public bool IsSynced
     {
         get { return GetValue(IsSyncedProperty); }
@@ -444,11 +450,6 @@ public partial class LyricsScroller : UserControl
         set { SetValue(LyricsFontSizeProperty, value); }
     }
 
-    private void CTRL_Viewer_OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
-    {
-    }
-
-
     protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
     {
         if (e.Delta.Y != 0)
@@ -474,30 +475,15 @@ public partial class LyricsScroller : UserControl
         base.OnPointerWheelChanged(e);
     }
 
-    private Vector _correctOffset = new Vector();
-    private void CTRL_Viewer_OnScrollChanged(object? sender, ScrollChangedEventArgs e)
-    {
-       
-        
-        /*if (Math.Abs(this._scrollViewer.Offset.Y - _correctOffset.Y) > 200)
-        {
-            this._scrollViewer.Offset = _correctOffset;
-        }
-        
-        _correctOffset = _scrollViewer.Offset;*/
-        /*double diff = Math.Ceiling(Math.Abs(this._scrollViewer.Offset.Y - this._oldScrollY));
-        double delta = Math.Abs(e.OffsetDelta.Y);
-        
-        if (diff < delta && e.OffsetDelta.Y % 5 == 0)
-            this._scrollCount++;
-
-        if (this._scrollCount >= 0)
-            this.IsSynced = false;*/
-    }
-
     public void ResyncOffset()
     {
         this._scrollCount = -2;
+
+        if (!DataValidator.ValidateData(this._scrollViewer))
+            return;
+        
+        this._currentScrollOffset = this._scrollViewer.Offset.Y;
+        this._isResynced = false;
         this.IsSynced = true;
     }
 

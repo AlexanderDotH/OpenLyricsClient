@@ -33,6 +33,9 @@ namespace OpenLyricsClient.Backend.Structure.Lyrics
 
         public bool Equals(LyricPart obj)
         {
+            if (!DataValidator.ValidateData(obj))
+                return false;
+            
             return obj.Part.Equals(this.Part) && obj.Time.Equals(this.Time);
         }
     }

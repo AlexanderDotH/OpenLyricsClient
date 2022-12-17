@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using DevBaseColor.Image;
 using Squalr.Engine.Utils.Extensions;
@@ -25,7 +27,7 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
 
             if (!data.IsNullOrEmpty())
             {
-               CalculateColor();
+                Task.Factory.StartNew(CalculateColor);
             }
         }
 
@@ -74,7 +76,7 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
             return colorCalculator.GetColorFromBitmap(this.ArtworkAsImage);
         }
 
-        private double GetBrightness(Color color)
+        public double GetBrightness(Color color)
         {
             double averageColor = 0;
 
@@ -94,6 +96,11 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
                 calc = 100;
             
             return calc;
+        }
+        
+        public double GetBrightness()
+        {
+            return GetBrightness(this._artworkColor);
         }
         
         public Artwork() : this(null, ArtworkReturnCode.FAILED) { }
