@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DevBase.Async.Task;
@@ -55,10 +56,23 @@ public partial class LyricsPage : UserControl
         image.HorizontalAlignment = HorizontalAlignment.Center;
         image.Margin = new Thickness(0, 0, 0, 60);
 
+        SolidColorBrush primaryBackColor = App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;
+        
+        Border border = new Border();
+        border.Width = 328;
+        border.Height = 328;
+        border.VerticalAlignment = VerticalAlignment.Center;
+        border.HorizontalAlignment = HorizontalAlignment.Center;
+        border.Margin = new Thickness(0, 0, 0, 60);
+        border.BorderThickness = new Thickness(5);
+        border.BorderBrush = primaryBackColor;
+        border.CornerRadius = new CornerRadius(8);
+        
         this._artworkImage = image;
         this._oldImagePath = string.Empty;
         
         this._presenterGrid.Children.Add(image);
+        this._presenterGrid.Children.Add(border);
             
         if (!DataValidator.ValidateData(this._lyricsPageViewModel))
             return;
@@ -88,16 +102,6 @@ public partial class LyricsPage : UserControl
             });
         }
     }
-
-    /*
-    <Image Width="320" 
-    Height="320" 
-    asyncImageLoader:ImageLoader.Source="{Binding Artwork}"
-    VerticalAlignment="Center" 
-    HorizontalAlignment="Center"
-    Margin="0,0,0,60" />
-    */
-
 
     private void InitializeComponent()
     {

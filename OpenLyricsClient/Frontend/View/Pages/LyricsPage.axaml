@@ -102,16 +102,7 @@
                    HorizontalAlignment="Center"
                    Margin="0,0,0,60" />
            
-           <Border Name="BRD_ImageBox" 
-                    Width="328"
-                    Height="328"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    Margin="0, 0,0,60"
-                    BorderThickness="5"
-                    BorderBrush="{DynamicResource PrimaryBackgroundBrush}"
-                    Background="Transparent"
-                    CornerRadius="8"/>
+           
             
             <!--<TextBlock Text="{Binding AlbumName}"
                        VerticalAlignment="Center"
