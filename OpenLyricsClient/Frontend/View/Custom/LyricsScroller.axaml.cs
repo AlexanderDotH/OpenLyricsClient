@@ -19,6 +19,7 @@ using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.Frontend.Models.Custom;
 using OpenLyricsClient.Frontend.Models.Elements;
+using OpenLyricsClient.Frontend.Utils;
 using OpenLyricsClient.Frontend.View.Windows;
 using Squalr.Engine.Utils.Extensions;
 using ScrollChangedEventArgs = OpenLyricsClient.Frontend.Models.Custom.ScrollChangedEventArgs;
@@ -76,7 +77,7 @@ public partial class LyricsScroller : UserControl
     private Grid _gradientTop;
     private Grid _gradientBottom;
     
-    private SleepLoopRenderTimer _renderTimer;
+    private SleepRenderTimer _renderTimer;
     private UiThreadRenderTimer _uiThreadRenderTimer;
 
     private LyricsScrollerViewModel _viewModel;
@@ -104,7 +105,7 @@ public partial class LyricsScroller : UserControl
         this._startMargin = 0;
         this._scrollSpeed = 15;
 
-        this._renderTimer = new SleepLoopRenderTimer(150);
+        this._renderTimer = new SleepRenderTimer(150);
         this._renderTimer.Tick += RenderTimerOnTick;
 
         this._uiThreadRenderTimer = new UiThreadRenderTimer(150);

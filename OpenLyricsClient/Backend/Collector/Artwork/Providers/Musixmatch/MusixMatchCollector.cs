@@ -62,7 +62,7 @@ namespace OpenLyricsClient.Backend.Collector.Artwork.Providers.Musixmatch
         private async Task<Structure.Artwork.Artwork> GetArtwork(string url)
         {
             byte[] artwork = await new WebClient().DownloadDataTaskAsync(url);
-            return new Structure.Artwork.Artwork(artwork, ArtworkReturnCode.SUCCESS);
+            return new Structure.Artwork.Artwork(artwork, string.Empty, ArtworkReturnCode.SUCCESS);
         }
 
         private string GetArtworkUrl(Track track)

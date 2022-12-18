@@ -94,17 +94,25 @@
                 </StackPanel>
             </styles:Card>
             
-            <Border Name="BRD_ImageBox" 
-                    Width="320"
-                    Height="320"
+            
+            <asyncImageLoader:AdvancedImage Width="320" 
+                                            Height="320" 
+                                            Source="{Binding Artwork}"
+                                            VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center"
+                                            Margin="0,0,0,60" 
+                                            CornerRadius="60"></asyncImageLoader:AdvancedImage>
+            
+           <Border Name="BRD_ImageBox" 
+                    Width="328"
+                    Height="328"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Margin="0, 0,0,60"
-                    CornerRadius="6">
-                <Border.Background>
-                    <ImageBrush Stretch="UniformToFill" BitmapInterpolationMode="HighQuality" Source="{Binding Artwork}"></ImageBrush>
-                </Border.Background>
-            </Border>
+                    BorderThickness="5"
+                    BorderBrush="{DynamicResource PrimaryBackgroundBrush}"
+                    Background="Transparent"
+                    CornerRadius="8"/>
             
             <!--<TextBlock Text="{Binding AlbumName}"
                        VerticalAlignment="Center"

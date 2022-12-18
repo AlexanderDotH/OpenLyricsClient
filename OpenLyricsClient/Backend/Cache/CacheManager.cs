@@ -64,7 +64,7 @@ namespace OpenLyricsClient.Backend.Cache
                 if (this._cache.Length + 1 > this._maxCapacity)
                     continue;
                 
-                CacheEntry cacheEntry = new CacheEntry(id, ConvertToCacheData(jsonLyricData), CalculateExpirationDate());
+                CacheEntry cacheEntry = new CacheEntry(id, ConvertToCacheData(jsonLyricData, id), CalculateExpirationDate());
                 this._cache.Add(cacheEntry);
             }
         }
@@ -76,7 +76,7 @@ namespace OpenLyricsClient.Backend.Cache
 
             string filePath = CACHE_PATH + idAsString + CACHE_EXTENSION;
 
-            FileUtils.WriteFileString(filePath, JsonConvert.SerializeObject(ConvertToJsonCacheData(cacheData), Formatting.Indented));
+            FileUtils.WriteFileString(filePath, JsonConvert.SerializeObject(ConvertToJsonCacheData(cacheData, id), Formatting.Indented));
 
             if (addToCache && this._cache.Length + 1 < this._maxCapacity)
                 this._cache.Add(new CacheEntry(id, cacheData, CalculateExpirationDate()));
@@ -209,7 +209,8 @@ namespace OpenLyricsClient.Backend.Cache
 
         private CacheData TryGetDataFromDisk(SongRequestObject songRequestObject)
         {
-            string fileName = CACHE_PATH + CalculateID(songRequestObject) + CACHE_EXTENSION;
+            string cacheID = CalculateID(songRequestObject);
+            string fileName = CACHE_PATH + cacheID + CACHE_EXTENSION;
 
             if (File.Exists(fileName))
             {
@@ -223,7 +224,7 @@ namespace OpenLyricsClient.Backend.Cache
                 
                 GCHandle.Alloc(data).Free();
                 
-                return ConvertToCacheData(jsonLyricData);
+                return ConvertToCacheData(jsonLyricData, cacheID);
             }
 
             return null;
@@ -335,7 +336,7 @@ namespace OpenLyricsClient.Backend.Cache
             return DateTimeOffset.Now.ToUnixTimeMilliseconds() + this._expirationMS;
         }
 
-        private CacheData ConvertToCacheData(JsonCacheData cacheData)
+        private CacheData ConvertToCacheData(JsonCacheData cacheData, string cacheID)
         {
             JsonSongMetadata songMetadata = cacheData.SongMetadata;
             SongMetadata metadata = new SongMetadata(songMetadata.Name, songMetadata.Album, songMetadata.Artists,
@@ -347,13 +348,21 @@ namespace OpenLyricsClient.Backend.Cache
 
             JsonArtwork artworkData = cacheData.Artwork;
             Artwork artwork = new Artwork();
-            artwork.ArtworkAsBase64String = artworkData.Artwork;
-            artwork.ArtworkColor = cacheData.Artwork.ArtworkColor;
+
+            string fileName = CACHE_PATH + cacheID + ".png";
+            byte[] data = FileUtils.ReadFile(fileName);
+
+            if (!data.IsNullOrEmpty())
+            {
+                artwork = new Artwork(data, fileName, ArtworkReturnCode.SUCCESS);
+            }
+            
+            artwork.ArtworkColor = artworkData.ArtworkColor;
 
             return new CacheData(metadata, lyrics, artwork);
         }
 
-        private JsonCacheData ConvertToJsonCacheData(CacheData cacheData)
+        private JsonCacheData ConvertToJsonCacheData(CacheData cacheData, string cacheID)
         {
             if (!DataValidator.ValidateData(cacheData) &&
                 !DataValidator.ValidateData(
@@ -395,7 +404,12 @@ namespace OpenLyricsClient.Backend.Cache
 
             Artwork artwork = cacheData.Artwork;
             JsonArtwork jsonArtwork = new JsonArtwork();
-            jsonArtwork.Artwork = artwork.ArtworkAsBase64String;
+
+            FileInfo fi = new FileInfo(CACHE_PATH + cacheID + ".png");
+            
+            if (!fi.Exists || fi.Length == 0)
+                FileUtils.WriteFile(fi, artwork.Data);
+
             jsonArtwork.ArtworkColor = artwork.ArtworkColor;
 
             JsonCacheData jsonCacheData = new JsonCacheData();

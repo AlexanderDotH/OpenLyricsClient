@@ -19,12 +19,16 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
         private byte[] _data;
         private ArtworkReturnCode _returnCode;
         private Color _artworkColor;
-
-        public Artwork(byte[] data, ArtworkReturnCode returnCode)
+        private string _filePath;
+        
+        public Artwork(byte[] data, string filePath, ArtworkReturnCode returnCode)
         {
             this._data = data;
             this._returnCode = returnCode;
+            this._filePath = filePath;
         }
+        
+        public Artwork() : this(null, string.Empty, ArtworkReturnCode.FAILED) { }
 
         public async Task CalculateColor()
         {
@@ -120,8 +124,6 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
             return GetBrightness(this._artworkColor);
         }
         
-        public Artwork() : this(null, ArtworkReturnCode.FAILED) { }
-
         public string ArtworkAsBase64String
         {
             get
@@ -151,6 +153,12 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
                 Bitmap map = new Bitmap((Stream)ms);
                 return map;
             }
+        }
+
+        public string FilePath
+        {
+            get => _filePath;
+            set => _filePath = value;
         }
 
         public Color ArtworkColor

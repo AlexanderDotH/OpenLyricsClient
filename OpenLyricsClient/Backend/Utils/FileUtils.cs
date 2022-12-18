@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using SpotifyAPI.Web;
+using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Backend.Utils
 {
@@ -46,6 +48,11 @@ namespace OpenLyricsClient.Backend.Utils
             return null;
         }
 
+        public static byte[] ReadFile(string filePath)
+        {
+            return ReadFile(new FileInfo(filePath));
+        }
+
         public static string ReadFileString(FileInfo fileInfo)
         {
             byte[] data = ReadFile(fileInfo);
@@ -68,6 +75,9 @@ namespace OpenLyricsClient.Backend.Utils
 
         public static void WriteFile(FileInfo fileInfo, byte[] data)
         {
+            if (data.IsNullOrEmpty())
+                return;
+            
             using (FileStream fileStream = File.Create(fileInfo.FullName))
             {
                 fileStream.Write(data, 0, data.Length);

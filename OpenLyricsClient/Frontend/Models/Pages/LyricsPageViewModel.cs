@@ -4,11 +4,13 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Rendering;
 using Avalonia.Threading;
 using DevBase.Async.Task;
 using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Structure.Artwork;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
@@ -28,7 +30,7 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     private string _currentTime;
     private string _currentMaxTime;
 
-    private IBitmap _artwork;
+    private string _artwork;
     
     public LyricsPageViewModel()
     {
@@ -51,13 +53,13 @@ public class LyricsPageViewModel : INotifyPropertyChanged
 
         if (DataValidator.ValidateData(song.Artwork))
         {
-            IBitmap artwork = song.Artwork.ArtworkAsImage;
+            Artwork artwork = song.Artwork;
 
             if (DataValidator.ValidateData(artwork))
             {
                 if (!DataValidator.ValidateData(this._artwork) || 
                       DataValidator.ValidateData(this._artwork) && !this._artwork.Equals(artwork))
-                    Artwork = artwork;
+                    Artwork = artwork.FilePath;
             }
         }
     }
@@ -122,7 +124,7 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         }
     }
     
-    public IBitmap Artwork
+    public string Artwork
     {
         get => this._artwork;
         set
