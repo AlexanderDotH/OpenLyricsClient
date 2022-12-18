@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -72,6 +73,9 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
             {
                 this._artworkColor = new Color(255, 220, 20, 60);
             }
+
+            this._data = null;
+            GCHandle.Alloc(this._data).Free();
         }
         
         private Color GetGroupColor()
