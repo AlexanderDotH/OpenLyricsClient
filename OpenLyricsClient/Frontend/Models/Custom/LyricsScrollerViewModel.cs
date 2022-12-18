@@ -129,10 +129,16 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             return;
         }
         
-        if (currentSong.Lyrics.LyricParts == null)
+        if (currentSong.Lyrics.LyricParts.IsNullOrEmpty())
             return;
 
         if (!DataValidator.ValidateData(this.CurrentLyricParts))
+        {
+            this.CurrentLyricParts = new ObservableCollection<LyricPart>();
+            return;
+        }
+
+        if (this.CurrentLyricParts.IsNullOrEmpty())
         {
             this.CurrentLyricParts = new ObservableCollection<LyricPart>();
             return;
