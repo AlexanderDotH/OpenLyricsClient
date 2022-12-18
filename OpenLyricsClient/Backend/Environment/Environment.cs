@@ -21,6 +21,10 @@ namespace OpenLyricsClient.Backend.Environment
         {
             FileFormatParser<GenericTupleList<string, string>> environmentParser =
                 new FileFormatParser<GenericTupleList<string, string>>(new EnvParser<GenericTupleList<string, string>>());
+            
+            if (!File.Exists(path))
+                return;
+            
             this._elements = environmentParser.FormatFromFile(path);
         }
         

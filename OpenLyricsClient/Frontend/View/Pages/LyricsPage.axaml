@@ -62,7 +62,7 @@
             HorizontalAlignment="Left"
             Margin="12, 12, 0, 0"></TextBlock>
         
-        <Grid 
+        <Grid Name="GRD_Content"
             HorizontalAlignment="Left"
             Width="500">
             
