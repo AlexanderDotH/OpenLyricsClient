@@ -138,12 +138,6 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             return;
         }
 
-        if (this.CurrentLyricParts.IsNullOrEmpty())
-        {
-            this.CurrentLyricParts = new ObservableCollection<LyricPart>();
-            return;
-        }
-        
         if (!(AreListsEqual(this.CurrentLyricParts, currentSong.Lyrics.LyricParts)))
         {
             Dispatcher.UIThread.InvokeAsync(async () =>
@@ -155,6 +149,9 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
     
     private bool AreListsEqual(ObservableCollection<LyricPart> lyricPartsList1, LyricPart[] lyricPartsList2)
     {
+        if (lyricPartsList2.IsNullOrEmpty())
+            return false;
+        
         if (!DataValidator.ValidateData(lyricPartsList1) || !DataValidator.ValidateData(lyricPartsList2))
             return false;
         
