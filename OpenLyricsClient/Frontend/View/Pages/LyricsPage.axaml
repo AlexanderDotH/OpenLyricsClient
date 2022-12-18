@@ -95,14 +95,13 @@
             </styles:Card>
             
             
-            <asyncImageLoader:AdvancedImage Width="320" 
-                                            Height="320" 
-                                            Source="{Binding Artwork}"
-                                            VerticalAlignment="Center" 
-                                            HorizontalAlignment="Center"
-                                            Margin="0,0,0,60" 
-                                            CornerRadius="60"></asyncImageLoader:AdvancedImage>
-            
+            <Image Width="320" 
+                   Height="320" 
+                   asyncImageLoader:ImageLoader.Source="{Binding Artwork}"
+                   VerticalAlignment="Center" 
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,60" />
+           
            <Border Name="BRD_ImageBox" 
                     Width="328"
                     Height="328"
