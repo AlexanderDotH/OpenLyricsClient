@@ -80,10 +80,10 @@ namespace OpenLyricsClient.Backend.Structure.Song
             }
         }
 
-        public double GetPercentage()
+        public float GetPercentage()
         {
-            double maxTime = this._songMetadata.MaxTime;
-            double time = this._time;
+            float maxTime = this._songMetadata.MaxTime;
+            float time = this._time;
 
             if (time == 0 || maxTime == 0)
                 return 0;
@@ -93,7 +93,7 @@ namespace OpenLyricsClient.Backend.Structure.Song
             if (Double.IsNaN(divide))
                 return 0;
 
-            return Math.Abs(100.0 * divide);
+            return (float)Math.Abs(100.0 * divide);
         }
 
         public SongMetadata SongMetadata

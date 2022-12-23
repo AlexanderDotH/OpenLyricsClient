@@ -10,6 +10,7 @@ using Avalonia.Rendering;
 using Avalonia.Threading;
 using DevBase.Async.Task;
 using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Structure.Artwork;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Song;
@@ -27,6 +28,7 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     private string _currentArtists;
     private string _currentAlbumName;
     private double _currentPercentage;
+    private long _time;
     private string _currentTime;
     private string _currentMaxTime;
 
@@ -35,6 +37,21 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     public LyricsPageViewModel()
     {
         Core.INSTANCE.TickHandler += OnTickHandler;
+        Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
+
+        this._currentSongName = string.Empty;
+        this._currentArtists = string.Empty;
+        this._currentAlbumName = string.Empty;
+        this._currentPercentage = 0;
+        this._currentTime = string.Empty;
+        this._currentMaxTime = string.Empty;
+
+        this._time = 0;
+    }
+
+    private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
+    {
+        this._time = 0;
     }
 
     private void OnTickHandler(object sender)
@@ -44,12 +61,26 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         if (!DataValidator.ValidateData(song))
             return;
 
-        SongName = song.SongMetadata.Name;
-        Artists = song.SongMetadata.FullArtists;
-        AlbumName = song.SongMetadata.Album;
-        Percentage = song.GetPercentage();
-        CurrentTime = song.ProgressString;
-        CurrentMaxTime = song.MaxProgressString;
+        if (!this._currentSongName.Equals(song.SongMetadata.Name))
+            SongName = song.SongMetadata.Name;
+
+        if (!this._currentArtists.Equals(song.SongMetadata.FullArtists))
+            Artists = song.SongMetadata.FullArtists;
+        
+        if (!this._currentAlbumName.Equals(song.SongMetadata.Album))
+            AlbumName = song.SongMetadata.Album;
+
+        if (!this._time.Equals(song.Time))
+        {
+            Percentage = song.GetPercentage();
+            this._time = song.Time;
+        }
+        
+        if (!this._currentTime.Equals(song.ProgressString))
+            CurrentTime = song.ProgressString;
+        
+        if (!this._currentMaxTime.Equals(song.MaxProgressString))
+            CurrentMaxTime = song.MaxProgressString;
 
         if (DataValidator.ValidateData(song.Artwork))
         {
