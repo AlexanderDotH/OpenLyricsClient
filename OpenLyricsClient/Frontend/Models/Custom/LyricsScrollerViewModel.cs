@@ -34,12 +34,17 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
 
     private RomanizationHelper _romanizationHelper;
 
+    private double _oldPercentage;
+    private LyricPart _oldLyricPart;
+
     public LyricsScrollerViewModel()
     {
         this._romanizationHelper = new RomanizationHelper();
         
         if (!AvaloniaUtils.IsInPreviewerMode())
         {
+            this._oldPercentage = 0;
+            this._oldLyricPart = new LyricPart(0, "");
             
             this._lyricParts = new ObservableCollection<LyricPart>();
             this.CurrentLyricParts =  new ObservableCollection<LyricPart>();
@@ -72,31 +77,9 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
 
         if (!DataValidator.ValidateData(this._lyricParts))
             return;
-            
-        for (var i = 0; i < this._lyricParts.Count; i++)
-        {
-            if (this._lyricParts[i].Equals(currentSong.CurrentLyricPart))
-            {
-                if (i + 1 < this._lyricParts.Count)
-                {
-                    LyricPart nextPart = this._lyricParts[i + 1];
-                        
-                    long time = nextPart.Time - currentSong.CurrentLyricPart.Time;
-                    long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
-                    double change = Math.Round((double)(100 * currentTime) / time);
-                        
-                    Percentage = change;
-                }
-                else
-                {
-                    long time = currentSong.SongMetadata.MaxTime - currentSong.CurrentLyricPart.Time;
-                    long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
-                    double change = Math.Round((double)(100 * currentTime) / time);
-                        
-                    Percentage = change;
-                }
-            }
-        }
+
+        if (!this._oldPercentage.Equals(currentSong.CurrentLyricPart.Percentage))
+            this.Percentage = currentSong.CurrentLyricPart.Percentage;
     }
 
     private void OnLyricsSyncTickHandler(object sender)
@@ -112,7 +95,8 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
         if (!DataValidator.ValidateData(currentSong.CurrentLyricPart))
             return;
 
-        this.CurrentLyricPart = currentSong.CurrentLyricPart;
+        if (!this._oldLyricPart.Equals(currentSong.CurrentLyricPart))
+            this.CurrentLyricPart = currentSong.CurrentLyricPart;
 
     }
 
@@ -204,6 +188,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
         set
         {
             _lyricPart = value;
+            _oldLyricPart = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentLyricPart"));
         }
     }
@@ -214,6 +199,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
         set
         {
             _percentage = value;
+            _oldPercentage = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Percentage"));
         }
     }

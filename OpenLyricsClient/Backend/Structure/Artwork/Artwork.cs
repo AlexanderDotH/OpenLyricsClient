@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -44,30 +45,51 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
             await t;
         }
 
+        private bool IsColorValid(Color color, double brightnessPercentage)
+        {
+            double brightness = GetBrightness(color);
+
+            if (brightness < brightnessPercentage || 
+                brightness < brightnessPercentage && brightness > 90)
+                return false;
+
+            if (color.G == 255 && color.B == 255 && color.R < 180)
+                return false;
+
+            if (color.R == 0 && color.G == 0 && color.B == 0)
+                return false;
+            
+            return true;
+        }
+        
         private void CalculateArtworkColor()
         {
             try
             {
                 double brightnessPercentage = 20;
 
-                this._artworkColor = GetGroupColor();
-
-                double brightness = GetBrightness(this._artworkColor);
-                
-                if (brightness < brightnessPercentage || brightness > 90)
+                Color groupColor = GetGroupColor();
+                if (IsColorValid(groupColor, brightnessPercentage))
                 {
-                    this._artworkColor = GetNearesColor();
-
-                    if (GetBrightness(this._artworkColor) < brightnessPercentage)
-                    {
-                        this._artworkColor = GetBrightnessColor();
-
-                        if (GetBrightness(this._artworkColor) < brightnessPercentage)
-                        {
-                            this._artworkColor = new Color(255, 220, 20, 60);
-                        }
-                    }
+                    this._artworkColor = groupColor;
+                    return;
                 }
+                
+                Color nearestColor = GetNearesColor();
+                if (IsColorValid(nearestColor, brightnessPercentage))
+                {
+                    this._artworkColor = nearestColor;
+                    return;
+                }
+                
+                Color brightestColor = GetBrightnessColor();
+                if (IsColorValid(brightestColor, brightnessPercentage))
+                {
+                    this._artworkColor = brightestColor;
+                    return;
+                }
+                
+                this._artworkColor = new Color(255, 220, 20, 60);
             }
             catch (Exception e)
             {

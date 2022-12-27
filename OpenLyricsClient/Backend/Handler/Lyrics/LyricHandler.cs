@@ -16,6 +16,7 @@ using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
+using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Backend.Handler.Lyrics
 {
@@ -58,8 +59,48 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                 out _applyLyricSuspensionToken,
                 new Task(async () => await ApplyLyricsToSong(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.APPLY_LYRICS_TO_SONG);
-
+            
+            this.LyricChanged += OnLyricChanged;
+            
             this._disposed = false;
+        }
+
+        private void OnLyricChanged(object sender, LyricChangedEventArgs lyricChangedEventArgs)
+        {
+            Structure.Song.Song currentSong = this._songHandler.CurrentSong;
+
+            if (currentSong.Lyrics.LyricParts.IsNullOrEmpty())
+                return;
+            
+            for (int i = 0; i < currentSong.Lyrics.LyricParts.Length; i++)
+            {
+                LyricPart currentPart = currentSong.Lyrics.LyricParts[i];
+
+                if (i + 1 < currentSong.Lyrics.LyricParts.Length)
+                {
+                    LyricPart nextPart = currentSong.Lyrics.LyricParts[i + 1];
+
+                    if (currentPart.Equals(lyricChangedEventArgs.LyricPart))
+                    {
+                        long time = nextPart.Time - currentSong.CurrentLyricPart.Time;
+                        long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
+                        double change = Math.Round((double)(100 * currentTime) / time);
+
+                        lyricChangedEventArgs.LyricPart.Percentage = change;
+                    }
+                }
+                else
+                {
+                    if (currentPart.Equals(lyricChangedEventArgs.LyricPart))
+                    {
+                        long time = currentSong.SongMetadata.MaxTime - currentSong.CurrentLyricPart.Time;
+                        long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
+                        double change = Math.Round((double)(100 * currentTime) / time);
+                                    
+                        lyricChangedEventArgs.LyricPart.Percentage = change;
+                    }
+                }
+            }
         }
 
         private async Task ApplyLyricsToSong()

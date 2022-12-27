@@ -10,11 +10,13 @@ namespace OpenLyricsClient.Backend.Structure.Lyrics
     {
         private long _time;
         private string _part;
+        private double _percentage;
 
         public LyricPart(long time, string part)
         {
             this._time = time;
             this._part = part;
+            this._percentage = 0;
         }
 
         [JsonProperty]
@@ -31,9 +33,18 @@ namespace OpenLyricsClient.Backend.Structure.Lyrics
             set => this._part = value;
         }
 
+        public double Percentage
+        {
+            get => _percentage;
+            set => _percentage = value;
+        }
+
         public bool Equals(LyricPart obj)
         {
             if (!DataValidator.ValidateData(obj))
+                return false;
+
+            if (!DataValidator.ValidateData(this))
                 return false;
             
             return obj.Part.Equals(this.Part) && obj.Time.Equals(this.Time);

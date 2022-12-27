@@ -22,5 +22,6 @@
 	<s:String x:Key="/Default/CodeInspection/PencilsConfiguration/FiltersState/=SpellingFilter/@EntryIndexedValue">On</s:String>
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;Assembly Path="C:\Users\Alex\.nuget\packages\avalonia.x11\0.10.18\lib\netstandard2.0\Avalonia.X11.dll" /&gt;&#xD;
+  &lt;Assembly Path="F:\Coding\Active Projects\CrossPlattform-Projects\OpenLyricsClient\Libraries\MusixmatchClientLib.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	</wpf:ResourceDictionary>
