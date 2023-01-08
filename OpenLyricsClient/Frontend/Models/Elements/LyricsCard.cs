@@ -175,6 +175,9 @@ public class LyricsCard : TemplatedControl
         get { return this._current; }
         set
         {
+            if (DataValidator.ValidateData(this._noteAnimation))
+                this._noteAnimation.Current = value;
+
             SetAndRaise(CurrentProperty, ref _current, value);
             // this._alreadySet = true;
         }
@@ -225,6 +228,13 @@ public class LyricsCard : TemplatedControl
 
     public override void Render(DrawingContext context)
     {
+        if (!(DataValidator.ValidateData(
+                this._presenterBlock, 
+                this._viewbox, 
+                this._border, 
+                this._noteAnimation)))
+            return;
+        
         this._presenterBlock.MaxWidth = this._greyBlock.TextLayout.Size.Width;
         this._presenterBlock.Width = this._greyBlock.TextLayout.Size.Width;
         
@@ -232,6 +242,8 @@ public class LyricsCard : TemplatedControl
         this._viewbox.Width = ((this._viewbox.MaxWidth) / 100) * Percentage;
         this._border.Width = ((this._viewbox.MaxWidth) / 100) * Percentage;
 
+        this._noteAnimation.Render(context);
+        
         if (!this._current)
         {
         }

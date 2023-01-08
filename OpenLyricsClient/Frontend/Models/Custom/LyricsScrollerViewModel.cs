@@ -44,7 +44,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
         if (!AvaloniaUtils.IsInPreviewerMode())
         {
             this._oldPercentage = 0;
-            this._oldLyricPart = new LyricPart(0, "");
+            //this._oldLyricPart = new LyricPart(-1, "Never gonna give you up");
             
             this._lyricParts = new ObservableCollection<LyricPart>();
             this.CurrentLyricParts =  new ObservableCollection<LyricPart>();
@@ -95,8 +95,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
         if (!DataValidator.ValidateData(currentSong.CurrentLyricPart))
             return;
 
-        if (!this._oldLyricPart.Equals(currentSong.CurrentLyricPart))
-            this.CurrentLyricPart = currentSong.CurrentLyricPart;
+        this.CurrentLyricPart = currentSong.CurrentLyricPart;
 
     }
 

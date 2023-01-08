@@ -15,9 +15,13 @@ public class CefSetup
     private Debugger<CefSetup> _debugger;
     private CefNetApplication _cefNetApplication;
 
+    private bool _initialized;
+    
     public CefSetup()
     {
         this._debugger = new Debugger<CefSetup>(this);
+
+        this._initialized = false;
     }
 
     public void SetupCef()
@@ -41,6 +45,8 @@ public class CefSetup
             this._cefNetApplication = cefNetApplication;
             
             this._debugger.Write("Cef initialized!", DebugType.INFO);
+
+            this._initialized = true;
         }
         catch (Exception e)
         {
@@ -76,5 +82,10 @@ public class CefSetup
     public CefNetApplication CefNetApplication
     {
         get => _cefNetApplication;
+    }
+
+    public bool Initialized
+    {
+        get => _initialized;
     }
 }

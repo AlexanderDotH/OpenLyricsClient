@@ -93,22 +93,6 @@
                                FontSize="12"></TextBlock>
                 </StackPanel>
             </styles:Card>
-            
-            
-            <Image Width="320" 
-                   Height="320" 
-                   asyncImageLoader:ImageLoader.Source="{Binding Artwork}"
-                   VerticalAlignment="Center" 
-                   HorizontalAlignment="Center"
-                   Margin="0,0,0,60" />
-           
-           
-            
-            <!--<TextBlock Text="{Binding AlbumName}"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       Margin="0, 335,0,0"
-                       FontSize="15"></TextBlock>-->
         </Grid>
         
         <Grid Name="GRD_Presenter"

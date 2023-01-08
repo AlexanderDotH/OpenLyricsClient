@@ -183,8 +183,6 @@ public partial class LyricsScroller : UserControl
                 this._scrollViewer.Offset = new Vector(0, this._currentScrollOffset);
             }
 
-            
-
             if (DataValidator.ValidateData(this._card))
             {
                 if (DataValidator.ValidateData(this._card.LyricPart))
@@ -220,7 +218,6 @@ public partial class LyricsScroller : UserControl
             }
             else
             {
-
                 if (child is LyricsCard)
                 {
                     LyricsCard card = (LyricsCard)child;

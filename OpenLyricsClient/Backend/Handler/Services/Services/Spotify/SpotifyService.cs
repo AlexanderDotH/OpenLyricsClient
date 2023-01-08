@@ -18,6 +18,7 @@ using OpenLyricsClient.Backend.Environment;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.External.CefNet.Structure;
+using OpenLyricsClient.External.CefNet.Utils;
 using OpenLyricsClient.External.CefNet.View;
 using OpenLyricsClient.Frontend.View.Windows;
 using SpotifyAPI.Web;
@@ -133,7 +134,19 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
         {
             Token token = null;
             
+            CefSetup cefSetup = new CefSetup();
+            
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                cefSetup.SetupCef();
+                    
+                App.FrameworkShutdown += (sender, args) =>
+                {
+                    cefSetup.CefNetApplication.Shutdown();
+                };
+            }
+            
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && cefSetup.Initialized)
             {
                 CefAuthWindow cefAuthWindow = new CefAuthWindow("https://openlyricsclient.com/connect/spotify/begin", "/complete");
              
@@ -147,7 +160,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
              
                 cefAuthWindow.Close();
             } 
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || !cefSetup.Initialized)
             {
                 ProcessStartInfo processStartInfo = new ProcessStartInfo("https://www.openlyricsclient.com/connect/spotify/begin/listener");
                 processStartInfo.UseShellExecute = true;

@@ -33,6 +33,24 @@ public class NoteAnimation : TemplatedControl
         FontWeight = FontWeight.Bold;
         this._current = false;
     }
+    
+    public Rect GetBounds(string textToMeasure)
+    {
+        if (this.FontSize <= 0)
+            return new Rect();
+        
+        if (this.FontWeight <= 0)
+            return new Rect();
+
+        FormattedText text = new FormattedText(textToMeasure,
+            new Typeface(FontFamily.Parse(
+                    "avares://Material.Styles/Fonts/Roboto#Roboto"), 
+                FontStyle.Normal, this.FontWeight), this.FontSize, TextAlignment.Left,
+            TextWrapping.Wrap, new Size(this._viewbox.DesiredSize.Width, this._viewbox.DesiredSize.Height));
+
+        Rect rect = new Rect(new Size(text.Bounds.Width, text.Bounds.Height));
+        return rect;
+    }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
@@ -57,44 +75,38 @@ public class NoteAnimation : TemplatedControl
         get => GetValue(PercentageProperty);
         set
         {
-            if (value < 0)
-            {
-                SetValue(PercentageProperty, value);
-            }
-            else
-            {
-                SetValue(PercentageProperty, value);
-
-                if (this._viewbox == null || this._border == null)
-                    return;
-
-                if (!this._current)
-                {
-                    this._viewbox.Width = -10;
-                    this._viewbox.MaxWidth = -10;
-        
-                    this._border.Width = -10;
-                    this._border.MaxWidth = -10;
-                    
-                    return;
-                }
-                
-                double scaled = Math.Round(((this.DesiredSize.Width) / 100) * value);
-                double scaledB = Math.Round(((this.DesiredSize.Width) / 100) * value);
-
-
-                this._viewbox.Width = scaled;
-                this._viewbox.MaxWidth = scaled;
-        
-                this._border.Width = scaledB;
-                this._border.MaxWidth = scaledB;
-            }
+            SetValue(PercentageProperty, value);
         }
     }
 
     public override void Render(DrawingContext context)
     {
-       
+        if(!(DataValidator.ValidateData(this._viewbox) || DataValidator.ValidateData(this._border)))
+            return;
+        
+        if (this._current)
+        {
+            double realSize = (this.GetBounds("♪").Width * 3) + (3 * 8) + 8;
+            
+            double scaled = Math.Round(((realSize) / 100) * this.Percentage);
+            double scaledB = Math.Round(((realSize) / 100) * this.Percentage);
+
+            this._viewbox.Width = scaled;
+            this._viewbox.MaxWidth = scaled;
+        
+            this._border.Width = scaledB;
+            this._border.MaxWidth = scaledB;
+            
+            return;
+        }
+        else
+        {
+            this._viewbox.Width = -10;
+            this._viewbox.MaxWidth = -10;
+
+            this._border.Width = -10;
+            this._border.MaxWidth = -10;
+        }
 
         base.Render(context);
     }

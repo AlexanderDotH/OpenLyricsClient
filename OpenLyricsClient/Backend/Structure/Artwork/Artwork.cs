@@ -103,7 +103,7 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
         private Color GetGroupColor()
         {
             GroupColorCalculator colorCalculator = new GroupColorCalculator();
-            colorCalculator.BigShift = 2.3;
+            colorCalculator.BigShift = 2.0;
             colorCalculator.SmallShift = 2.0;
             colorCalculator.Brightness = 40;
 
