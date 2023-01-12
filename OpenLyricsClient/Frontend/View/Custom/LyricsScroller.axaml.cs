@@ -118,28 +118,30 @@ public partial class LyricsScroller : UserControl
     private void UiThreadRenderTimerOnTick(TimeSpan obj)
     {
         this._startMargin = CalcStartMargin();
-         
-                 this._gradientTop.IsVisible = !this._lyricParts.IsNullOrEmpty();
-                 this._gradientBottom.IsVisible = !this._lyricParts.IsNullOrEmpty();
-                 
-                 if (this._scrollViewer.Offset.Y - this._startMargin < 10)
-                 {
-                     this._gradientTop.Opacity = 0;
-                 }
-                 else
-                 {
-                     this._gradientTop.Opacity = 1;
-                 }
-         
-                 if ((this._scrollViewer.Extent.Height - this._scrollViewer.Offset.Y) == 
-                     this._scrollViewer.LargeChange.Height)
-                 {
-                     this._gradientBottom.Opacity = 0;
-                 }
-                 else
-                 {
-                     this._gradientBottom.Opacity = 1;
-                 }
+        
+        this._itemsRepeater.Margin = new Thickness(0,this._startMargin,0,0);
+        
+        this._gradientTop.IsVisible = !this._lyricParts.IsNullOrEmpty();
+        this._gradientBottom.IsVisible = !this._lyricParts.IsNullOrEmpty();
+        
+        if (this._scrollViewer.Offset.Y - this._startMargin < 10)
+        {
+            this._gradientTop.Opacity = 0; 
+        }
+        else
+        {
+            this._gradientTop.Opacity = 1; 
+        }
+        
+        if ((this._scrollViewer.Extent.Height - this._scrollViewer.Offset.Y) == 
+            this._scrollViewer.LargeChange.Height)
+        {
+            this._gradientBottom.Opacity = 0;
+        }
+        else
+        {
+            this._gradientBottom.Opacity = 1;
+        }
     }
 
     private void RenderTimerOnTick(TimeSpan obj)
