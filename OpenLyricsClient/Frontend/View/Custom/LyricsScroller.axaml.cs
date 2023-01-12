@@ -17,6 +17,7 @@ using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Frontend.Animation;
 using OpenLyricsClient.Frontend.Models.Custom;
 using OpenLyricsClient.Frontend.Models.Elements;
 using OpenLyricsClient.Frontend.Utils;
@@ -64,6 +65,7 @@ public partial class LyricsScroller : UserControl
     private double _currentScrollOffset;
     private double _scrollTo;
     private double _oldScrollY;
+    private int _oldIndex;
 
     private bool _isResynced;
     private int _scrollCount;
@@ -104,6 +106,7 @@ public partial class LyricsScroller : UserControl
         this._oldScrollY = 0;
         this._startMargin = 0;
         this._scrollSpeed = 15;
+        this._oldIndex = 0;
 
         this._renderTimer = new SleepRenderTimer(150);
         this._renderTimer.Tick += RenderTimerOnTick;
@@ -115,52 +118,68 @@ public partial class LyricsScroller : UserControl
     private void UiThreadRenderTimerOnTick(TimeSpan obj)
     {
         this._startMargin = CalcStartMargin();
-
-        this._gradientTop.IsVisible = !this._lyricParts.IsNullOrEmpty();
-        this._gradientBottom.IsVisible = !this._lyricParts.IsNullOrEmpty();
-        
-        if (this._scrollViewer.Offset.Y - this._startMargin < 10)
-        {
-            this._gradientTop.Opacity = 0;
-        }
-        else
-        {
-            this._gradientTop.Opacity = 1;
-        }
-
-        if ((this._scrollViewer.Extent.Height - this._scrollViewer.Offset.Y) == 
-            this._scrollViewer.LargeChange.Height)
-        {
-            this._gradientBottom.Opacity = 0;
-        }
-        else
-        {
-            this._gradientBottom.Opacity = 1;
-        }
+         
+                 this._gradientTop.IsVisible = !this._lyricParts.IsNullOrEmpty();
+                 this._gradientBottom.IsVisible = !this._lyricParts.IsNullOrEmpty();
+                 
+                 if (this._scrollViewer.Offset.Y - this._startMargin < 10)
+                 {
+                     this._gradientTop.Opacity = 0;
+                 }
+                 else
+                 {
+                     this._gradientTop.Opacity = 1;
+                 }
+         
+                 if ((this._scrollViewer.Extent.Height - this._scrollViewer.Offset.Y) == 
+                     this._scrollViewer.LargeChange.Height)
+                 {
+                     this._gradientBottom.Opacity = 0;
+                 }
+                 else
+                 {
+                     this._gradientBottom.Opacity = 1;
+                 }
     }
 
     private void RenderTimerOnTick(TimeSpan obj)
     {
-        double step = Math.Abs(this._scrollTo - this._currentScrollOffset) / this._scrollSpeed;
-        
-        if (this._currentScrollOffset < _scrollTo)
+        if (!this._isResynced)
         {
-            this._currentScrollOffset += step;
+            double step = Math.Abs(this._scrollTo - this._currentScrollOffset) / this._scrollSpeed;
+        
+            if (this._currentScrollOffset < _scrollTo)
+            {
+                this._currentScrollOffset += step;
+            }
+            else
+            {
+                this._currentScrollOffset -= step;
+            }
+        
+            double diff = Math.Abs(this._currentScrollOffset - this._scrollViewer.Offset.Y);
+        
+            if (diff < 0.1)
+            {
+                this._isResynced = true;
+            }
         }
         else
         {
-            this._currentScrollOffset -= step;
-        }
+            double start = this._scrollTo;
+            double end = this._oldScrollY;
 
-        double diff = Math.Abs(this._currentScrollOffset - this._scrollViewer.Offset.Y);
-        
-        if (diff < 0.1)
-        {
-            this._isResynced = true;
+            double y = SmoothAnimator.CalculateStep(
+                start, 
+                end, 
+                this._currentScrollOffset, 
+                this._scrollSpeed);
+            
+            this._currentScrollOffset = y;
         }
         
-        SetThreadPos(this._currentScrollOffset);
-        this._scrollFrom = this._currentScrollOffset;
+        if (!double.IsNaN(this._currentScrollOffset))
+            SetThreadPos(this._currentScrollOffset);
     }
 
     private void SetThreadPos(Double y)
@@ -180,7 +199,7 @@ public partial class LyricsScroller : UserControl
 
             if (this.IsSynced)
             {
-                this._scrollViewer.Offset = new Vector(0, this._currentScrollOffset);
+                this._scrollViewer.Offset = new Vector(0, y);
             }
 
             if (DataValidator.ValidateData(this._card))
@@ -272,6 +291,9 @@ public partial class LyricsScroller : UserControl
         LyricPart lastPart = null;
         double sum = 0;
         
+        double highest = 0;
+        int hSum = 0;
+        
         for (int i = 0; i < this._lyricParts.Count; i++)
         {
             LyricPart currentPart = this._lyricParts[i];
@@ -283,13 +305,27 @@ public partial class LyricsScroller : UserControl
             }
             else
             {
-                sum += (currentPart.Time - lastPart.Time);
+                double value = (currentPart.Time - lastPart.Time);
+                
+                sum += value;
+
+                if (value > highest)
+                {
+                    highest += value;
+                    hSum++;
+                }
+
                 lastPart = currentPart;
                 continue;
             }
         }
 
-        return (sum / this._lyricParts.Count) * 0.005f;
+        double speed = (sum / this._lyricParts.Count);
+
+        double hSA = highest / hSum;
+        double percentage = 100 / hSA * speed;
+        
+        return 100 - percentage;
     }
 
     private Size GetRenderedSize(int index)
@@ -362,6 +398,13 @@ public partial class LyricsScroller : UserControl
         {
             SetValue(SelectedLineProperty, value);
             SetCurrentPosition(value);
+
+            if (value != this._oldIndex)
+            {
+                SetCurrentPosition(value);
+                this._oldIndex = value;
+            }
+            
         }
     }
 
