@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DevBase.Generic;
+using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Deezer;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2;
@@ -14,11 +15,12 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
 {
     class LyricCollector
     {
-        private GenericList<ICollector> _lyricCollectors;
+        private GenericList<ILyricsCollector> _lyricCollectors;
 
         public LyricCollector()
         {
-            this._lyricCollectors = new GenericList<ICollector>();
+            this._lyricCollectors = new GenericList<ILyricsCollector>();
+            this._lyricCollectors.Add(new DeezerCollector());
             this._lyricCollectors.Add(new NetEaseCollector());
             this._lyricCollectors.Add(new NetEaseV2Collector());
             this._lyricCollectors.Add(new MusixmatchCollector());
@@ -43,7 +45,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
                 if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
                     break;
 
-                ICollector collector = this._lyricCollectors.Get(i);
+                ILyricsCollector collector = this._lyricCollectors.Get(i);
                 LyricData lyricData = await collector.GetLyrics(songResponseObject);
 
                 if (!DataValidator.ValidateData(lyricData))

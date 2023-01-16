@@ -22,7 +22,7 @@ using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
 {
-    class NetEaseV2Collector : ICollector
+    class NetEaseV2Collector : ILyricsCollector
     {
         private readonly string _baseUrl;
 

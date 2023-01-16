@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using DevBaseApi.Apis.Deezer.Structure.Json;
 using DevBaseApi.Apis.Tidal.Structure.Json;
 using OpenLyricsClient.Backend.Structure.Json.NetEase.Json;
 using OpenLyricsClient.Backend.Structure.Json.NetEaseV2.Json;
@@ -54,6 +55,13 @@ namespace OpenLyricsClient.Backend.Utils
                 artistsAsStrings[i] = netEaseArtistResponses[i].Name;
             }
 
+            return artistsAsStrings;
+        }
+        
+        public static string[] ToArtists(JsonDeezerSearchDataArtistResponse deezerArtists)
+        {
+            string[] artistsAsStrings = new string[1];
+            artistsAsStrings[0] = deezerArtists.name;
             return artistsAsStrings;
         }
 

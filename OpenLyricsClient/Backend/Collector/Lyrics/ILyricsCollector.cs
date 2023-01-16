@@ -6,7 +6,7 @@ using OpenLyricsClient.Backend.Structure.Song;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics
 {
-    interface ICollector
+    interface ILyricsCollector
     {
         Task<LyricData> GetLyrics(SongResponseObject songResponseObject);
         string CollectorName();

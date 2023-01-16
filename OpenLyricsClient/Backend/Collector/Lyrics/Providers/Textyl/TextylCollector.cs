@@ -16,7 +16,7 @@ using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
 {
-    public class TextylCollector : ICollector
+    public class TextylCollector : ILyricsCollector
     {
         private readonly string _baseUrl;
         private Debugger<TextylCollector> _debugger;

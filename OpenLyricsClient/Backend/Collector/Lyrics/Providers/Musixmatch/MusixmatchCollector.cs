@@ -24,7 +24,7 @@ using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
 {
-    public class MusixmatchCollector : ICollector
+    public class MusixmatchCollector : ILyricsCollector
     {
         private Debugger<MusixmatchCollector> _debugger;
 
@@ -103,13 +103,6 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
             }
 
             return new LyricData();
-        }
-
-        //Untested! I should make everything a bit more strict
-        private bool IsSimilar(string string1, string string2)
-        {
-            return MathUtils.CalculateLevenshteinDistance(string1, string2) >=
-                   Math.Abs(string1.Length - string2.Length);
         }
 
         public string CollectorName()

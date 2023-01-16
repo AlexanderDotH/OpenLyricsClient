@@ -2,9 +2,9 @@
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics
 {
-    class CollectorComparer : IComparer<ICollector>
+    class CollectorComparer : IComparer<ILyricsCollector>
     {
-        public int Compare(ICollector x, ICollector y)
+        public int Compare(ILyricsCollector x, ILyricsCollector y)
         {
             if (x == null || y == null)
                 return 0;

@@ -21,7 +21,7 @@ using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase
 {
-    class NetEaseCollector : ICollector
+    class NetEaseCollector : ILyricsCollector
     {
         private readonly string _baseUrl;
 
