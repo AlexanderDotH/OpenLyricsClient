@@ -45,6 +45,8 @@ public class SongCollector
         if (songChangedEventArgs.EventType == EventType.PRE)
             return;
         
+        this._songCollectors.Sort(new SongCollectorComparer());
+        
         SongRequestObject songRequestObject = SongRequestObject.FromSong(songChangedEventArgs.Song);
         
         for (int i = 0; i < this._songCollectors.Length; i++)

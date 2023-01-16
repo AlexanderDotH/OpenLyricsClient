@@ -107,6 +107,6 @@ public class DeezerCollector : ILyricsCollector
 
     public int ProviderQuality()
     {
-        return 9;
+        return 10;
     }
 }

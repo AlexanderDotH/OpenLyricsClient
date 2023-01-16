@@ -9,17 +9,17 @@ public class Token
 
     public Token(string accessToken, string refreshToken)
     {
-        _accessToken = accessToken;
-        _refreshToken = refreshToken;
+        this._accessToken = accessToken;
+        this._refreshToken = refreshToken;
     }
 
     public string AccessToken
     {
-        get => _accessToken;
+        get => this._accessToken;
     }
 
     public string RefreshToken
     {
-        get => _refreshToken;
+        get => this._refreshToken;
     }
 }
