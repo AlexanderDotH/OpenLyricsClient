@@ -87,8 +87,8 @@ namespace OpenLyricsClient.Backend.Collector.Song.Providers.Musixmatch
                 return null;
             }
 
-            this._debugger.Write(string.Format("Found {0} tracks", tracks.Count), DebugType.INFO);
-
+            this._debugger.Write("Found " + tracks.Count + " songs!", DebugType.INFO);
+            
             for (int i = 0; i < tracks.Count; i++)
             {
                 Track track = tracks[i];
@@ -101,6 +101,8 @@ namespace OpenLyricsClient.Backend.Collector.Song.Providers.Musixmatch
                         Track = track,
                         CollectorName = this.CollectorName()
                     };
+                    
+                    this._debugger.Write("Got current song " + track.TrackName + "!", DebugType.INFO);
 
                     return songResponseObject;
                 }

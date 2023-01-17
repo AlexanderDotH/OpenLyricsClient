@@ -45,18 +45,24 @@ public class SongCollector
         if (songChangedEventArgs.EventType == EventType.PRE)
             return;
         
-        this._songCollectors.Sort(new SongCollectorComparer());
-        
         SongRequestObject songRequestObject = SongRequestObject.FromSong(songChangedEventArgs.Song);
+        
+        if (Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject))
+            return;
+        
+        this._songCollectors.Sort(new SongCollectorComparer());
         
         for (int i = 0; i < this._songCollectors.Length; i++)
         {
+            if (Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject))
+                continue;
+            
             ISongCollector songCollector = this._songCollectors.Get(i);
             SongResponseObject songResponseObject = await songCollector.GetSong(songRequestObject);
 
             if (!(DataValidator.ValidateData(songResponseObject)))
                 continue;
-            
+
             if (DataValidator.ValidateData(songResponseObject))
             {
                 Task.Factory.StartNew(async () =>

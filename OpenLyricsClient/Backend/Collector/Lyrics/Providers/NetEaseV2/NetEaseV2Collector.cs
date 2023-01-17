@@ -75,6 +75,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
                         Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse> lyricElement = lyrics.Get(k);
                         if (!IsGarbage(lyricElement.Item2))
                         {
+                            this._debugger.Write("Fetched lyrics for " + songMetadata.Name + "!", DebugType.INFO);
                             return await ParseLyricResponse(lyricElement.Item2, songMetadata);
                         }
                     }
@@ -82,10 +83,12 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
                 }
                 else if (songResponseObject.SongRequestObject.SelectioMode == SelectionMode.PERFORMANCE)
                 {
+                    this._debugger.Write("Fetched lyrics for " + songMetadata.Name + "!", DebugType.INFO);
                     return await ParseLyricResponse(lyricResponse, songMetadata);
                 }
             }
             
+            this._debugger.Write("Could not find lyrics for " + songResponseObject.SongRequestObject.SongName + "!", DebugType.ERROR);
             return new LyricData();
         }
 
@@ -145,12 +148,12 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
         {
             string requestURL = Uri.EscapeUriString(string.Format("{0}/lyric?id={1}", this._baseUrl, songId));
 
-            this._debugger.Write("Full lyric fetch URL: " + requestURL, DebugType.DEBUG);
+            //this._debugger.Write("Full lyric fetch URL: " + requestURL, DebugType.DEBUG);
 
             DevBase.Web.Request request = new Request(requestURL);
             ResponseData responseData = await request.GetResponseAsync();
 
-            this._debugger.Write(responseData.GetContentAsString(), DebugType.DEBUG);
+            //this._debugger.Write(responseData.GetContentAsString(), DebugType.DEBUG);
 
             if (responseData.StatusCode == HttpStatusCode.OK)
             {

@@ -46,21 +46,27 @@ public class DeezerCollector : ILyricsCollector
 
         JsonDeezerLyricsResponse lyricsResponse = await _deezerApi.GetLyrics(Convert.ToString(track.id));
 
-        if (!DataValidator.ValidateData(lyricsResponse))
-            return new LyricData();
-        
-        if (!DataValidator.ValidateData(
-                lyricsResponse.data, 
-                lyricsResponse.data.track, 
-                lyricsResponse.data.track.lyrics, 
-                lyricsResponse.data.track.lyrics.synchronizedLines))
-            return new LyricData();
-
         SongMetadata songMetadata = SongMetadata.ToSongMetadata(
             track.title,
             track.album.title,
             DataConverter.ToArtists(track.artist),
             track.duration);
+        
+        if (!DataValidator.ValidateData(lyricsResponse))
+        {
+            this._debugger.Write("Could not find lyrics for " + songMetadata.Name + "!", DebugType.ERROR);
+            return new LyricData();
+        }
+
+        if (!DataValidator.ValidateData(
+                lyricsResponse.data,
+                lyricsResponse.data.track,
+                lyricsResponse.data.track.lyrics,
+                lyricsResponse.data.track.lyrics.synchronizedLines))
+        {
+            this._debugger.Write("Could not find lyrics for " + songMetadata.Name + "!", DebugType.ERROR);
+            return new LyricData();
+        }
         
         return await ParseLyricData(lyricsResponse.data.track.lyrics, songMetadata);
     }
@@ -80,10 +86,11 @@ public class DeezerCollector : ILyricsCollector
 
             if (DataValidator.ValidateData(lyricElements))
             {
+                this._debugger.Write("Fetched lyrics for " + songMetadata.Name + "!", DebugType.INFO);
                 return await LyricData.ConvertToData(lyricElements, songMetadata, this.CollectorName());
             }
         }
-
+        
         return new LyricData();
     }
 

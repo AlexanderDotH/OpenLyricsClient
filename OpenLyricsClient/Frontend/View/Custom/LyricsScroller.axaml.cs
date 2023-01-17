@@ -61,17 +61,17 @@ public partial class LyricsScroller : UserControl
     private LyricPart _lyricPart;
     private LyricsCard _card;
     
-    private double _scrollFrom;
-    private double _currentScrollOffset;
-    private double _scrollTo;
-    private double _oldScrollY;
+    private float _scrollFrom;
+    private float _currentScrollOffset;
+    private float _scrollTo;
+    private float _oldScrollY;
     private int _oldIndex;
 
     private bool _isResynced;
     private int _scrollCount;
 
-    private double _startMargin;
-    private double _scrollSpeed;
+    private float _startMargin;
+    private float _scrollSpeed;
     
     private CustomScrollViewer _scrollViewer;
     private ItemsRepeater _itemsRepeater;
@@ -148,7 +148,7 @@ public partial class LyricsScroller : UserControl
     {
         if (!this._isResynced)
         {
-            double step = Math.Abs(this._scrollTo - this._currentScrollOffset) / this._scrollSpeed;
+            float step = Math.Abs(this._scrollTo - this._currentScrollOffset) / this._scrollSpeed;
         
             if (this._currentScrollOffset < _scrollTo)
             {
@@ -159,7 +159,7 @@ public partial class LyricsScroller : UserControl
                 this._currentScrollOffset -= step;
             }
         
-            double diff = Math.Abs(this._currentScrollOffset - this._scrollViewer.Offset.Y);
+            float diff = Math.Abs(this._currentScrollOffset - (float)this._scrollViewer.Offset.Y);
         
             if (diff < 0.1)
             {
@@ -168,10 +168,10 @@ public partial class LyricsScroller : UserControl
         }
         else
         {
-            double start = this._scrollTo;
-            double end = this._oldScrollY;
+            float start = this._scrollTo;
+            float end = this._oldScrollY;
 
-            double y = SmoothAnimator.CalculateStep(
+            float y = SmoothAnimator.CalculateStep(
                 start, 
                 end, 
                 this._currentScrollOffset, 
@@ -186,7 +186,7 @@ public partial class LyricsScroller : UserControl
 
     private void SetThreadPos(Double y)
     {
-        this._oldScrollY = this._scrollViewer.Offset.Y;
+        this._oldScrollY = (float)this._scrollViewer.Offset.Y;
 
         Dispatcher.UIThread.InvokeAsync(async () =>
         {
@@ -258,42 +258,42 @@ public partial class LyricsScroller : UserControl
         this._itemsRepeater.Margin = new Thickness(0,this._startMargin,0,0);
     }
 
-    private double CalcStartMargin()
+    private float CalcStartMargin()
     {
         if (this._lyricParts.IsNullOrEmpty())
             return 0;
         
-        double untilPos = this._scrollViewer.Viewport.Height / 2;
-        untilPos -= GetRenderedSize(0).Height / 2;
+        float untilPos = (float)this._scrollViewer.Viewport.Height / 2.0F;
+        untilPos -= (float)GetRenderedSize(0).Height / 2.0F;
 
         return untilPos;
     }
 
-    private double CalcOffsetInViewPoint(int index, double startMargin)
+    private float CalcOffsetInViewPoint(int index, float startMargin)
     {
-        double startAt = 0;
+        float startAt = 0;
         
         for (int i = 0; i < index; i++)
         {
-            startAt += GetRenderedSize(i).Height;
+            startAt += (float)GetRenderedSize(i).Height;
         }
         
-        double untilPos = this._scrollViewer.Viewport.Height / 2;
+        float untilPos = (float)this._scrollViewer.Viewport.Height / 2.0F;
 
-        untilPos -= GetRenderedSize(index).Height / 2;
+        untilPos -= (float)GetRenderedSize(index).Height / 2;
 
         return startAt - untilPos + startMargin;
     }
     
-    public double CalcSpeed()
+    public float CalcSpeed()
     {
         if (this._lyricParts.IsNullOrEmpty())
             return 15;
 
         LyricPart lastPart = null;
-        double sum = 0;
+        float sum = 0;
         
-        double highest = 0;
+        float highest = 0;
         int hSum = 0;
         
         for (int i = 0; i < this._lyricParts.Count; i++)
@@ -307,7 +307,7 @@ public partial class LyricsScroller : UserControl
             }
             else
             {
-                double value = (currentPart.Time - lastPart.Time);
+                float value = (currentPart.Time - lastPart.Time);
                 
                 sum += value;
 
@@ -322,12 +322,16 @@ public partial class LyricsScroller : UserControl
             }
         }
 
-        double speed = (sum / this._lyricParts.Count);
+        float speed = (sum / this._lyricParts.Count);
 
-        double hSA = highest / hSum;
-        double percentage = 100 / hSA * speed;
+        float hSA = highest / hSum;
+
+        hSA *= 1.1f;
+        hSA *= 1.1f;
         
-        return 100 - percentage;
+        float percentage = 100 / hSA * speed;
+        
+        return 100.0F - percentage;
     }
 
     private Size GetRenderedSize(int index)
@@ -519,7 +523,7 @@ public partial class LyricsScroller : UserControl
         if (!DataValidator.ValidateData(this._scrollViewer))
             return;
         
-        this._currentScrollOffset = this._scrollViewer.Offset.Y;
+        this._currentScrollOffset = (float)this._scrollViewer.Offset.Y;
         this._isResynced = false;
         this.IsSynced = true;
     }

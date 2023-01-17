@@ -13,6 +13,7 @@ using OpenLyricsClient.Backend.Structure.Json.Textyl.Json;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
+using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
 {
@@ -32,8 +33,11 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
         {
             TextylLyricReponse[] lyrics = await FetchLyrics(songResponseObject.SongRequestObject);
 
-            if (!DataValidator.ValidateData(lyrics))
+            if (!DataValidator.ValidateData(lyrics) || lyrics.IsNullOrEmpty())
+            {
+                this._debugger.Write("Could not find lyrics for " + songResponseObject.SongRequestObject.SongName + "!", DebugType.ERROR);
                 return new LyricData();
+            }
 
             if (lyrics.Length == 0)
                 return new LyricData();
@@ -46,6 +50,8 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
                 lyricElements.Add(new LyricElement(l.Seconds * 1000, l.Lyrics));
             }
 
+            this._debugger.Write("Fetched lyrics for " + songResponseObject.SongRequestObject.SongName + "!", DebugType.INFO);
+            
             return await LyricData.ConvertToData(lyricElements, SongMetadata.ToSongMetadata(songResponseObject.SongRequestObject),
                 CollectorName());
         }

@@ -29,7 +29,7 @@ public class DeezerSongCollector : ISongCollector
         if (!DataValidator.ValidateData(searchResponse))
             return null;
         
-        this._debugger.Write("Found " + searchResponse.total + " song!", DebugType.INFO);
+        this._debugger.Write("Found " + searchResponse.total + " songs!", DebugType.INFO);
 
         for (int i = 0; i < searchResponse.data.Count; i++)
         {

@@ -74,6 +74,12 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
             {
                 SubtitleRawResponse response = await musixmatchClient.GetTrackSubtitlesRawAsync(track.TrackId, MusixmatchClient.SubtitleFormat.Lrc);
 
+                if (!DataValidator.ValidateData(response, response.SubtitleBody))
+                {
+                    this._debugger.Write("Could not find lyrics for " + track.TrackName + "!", DebugType.ERROR);
+                    return new LyricData();
+                }
+                
                 FileFormatParser<LrcObject> fileFormatParser =
                     new FileFormatParser<LrcObject>(
                         new LrcParser<LrcObject>());

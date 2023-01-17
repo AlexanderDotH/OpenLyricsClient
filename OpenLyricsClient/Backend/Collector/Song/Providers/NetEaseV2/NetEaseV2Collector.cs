@@ -56,6 +56,8 @@ namespace OpenLyricsClient.Backend.Collector.Song.Providers.NetEaseV2
             if (response.Result.Songs.Length <= 0)
                 return null;
             
+            this._debugger.Write("Found " + response.Result.Songs.Length + " songs!", DebugType.INFO);
+            
             double retryPercentage = 5;
 
             GenericList<NetEaseV2SongResponse> songs = new GenericList<NetEaseV2SongResponse>();
@@ -84,6 +86,8 @@ namespace OpenLyricsClient.Backend.Collector.Song.Providers.NetEaseV2
                     CollectorName = this.CollectorName()
                 };
 
+                this._debugger.Write("Got current song " + songRequestObject.SongName + "!", DebugType.INFO);
+
                 return songResponseObject;
             }
 
@@ -105,7 +109,7 @@ namespace OpenLyricsClient.Backend.Collector.Song.Providers.NetEaseV2
             if (!MatchDuration(songResponse, songRequestObject.SongDuration, percentage))
                 return false;
 
-            if (!MatchArtists(songResponse, songRequestObject.Artists, 70))
+            if (!MatchArtists(songResponse, songRequestObject.Artists, 80))
                 return false;
 
             if (!IsSimilar(songRequestObject.FormattedSongName, songResponse.Name))
@@ -127,7 +131,7 @@ namespace OpenLyricsClient.Backend.Collector.Song.Providers.NetEaseV2
                 this._baseUrl,
                 songRequestObject.GetArtistsSplit(), songRequestObject.FormattedSongName));
 
-            this._debugger.Write("Full track search URL: " + requestUrl, DebugType.DEBUG);
+            //this._debugger.Write("Full track search URL: " + requestUrl, DebugType.DEBUG);
             DevBase.Web.Request request = new Request(requestUrl);
             ResponseData responseData = await request.GetResponseAsync();
 

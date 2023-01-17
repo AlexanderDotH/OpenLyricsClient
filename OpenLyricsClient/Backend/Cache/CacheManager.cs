@@ -155,7 +155,10 @@ namespace OpenLyricsClient.Backend.Cache
 
             if (Directory.Exists(CACHE_PATH))
             {
-                GenericList<AFileObject> files = AFile.GetFiles(CACHE_PATH, false, "*" + CACHE_EXTENSION);
+                GenericList<AFileObject> files = 
+                    AFile.GetFiles(CACHE_PATH, false, "*" + CACHE_EXTENSION);
+                
+                files.AddRange(AFile.GetFiles(CACHE_PATH, false, "*.png"));
 
                 try
                 {
