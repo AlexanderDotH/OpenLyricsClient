@@ -103,11 +103,11 @@
             
             <custom1:LyricsScroller
                 Name="LRC_Display"
-                SelectedLineBrush="#FFFFFF"
+                SelectedLineBrush="{DynamicResource PrimaryThemeColorBrush}"
                 LyricsFontSize="30"
                 LyricsFontWeight="Bold"
                 UnSelectedLineBrush="#646464"
-                ItemMargin="0,0,0,60"/>
+                ItemMargin="0,0,0,70"/>
             
            
             
