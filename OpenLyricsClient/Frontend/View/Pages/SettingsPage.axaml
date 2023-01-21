@@ -5,6 +5,7 @@
              xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
              xmlns:pages="clr-namespace:OpenLyricsClient.Frontend.Models.Pages"
              xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
+             xmlns:subPages="clr-namespace:OpenLyricsClient.Frontend.View.Pages.SubPages"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{DynamicResource PrimaryBackgroundBrush}"
              Foreground="{DynamicResource PrimaryFontColorBrush}"
@@ -38,7 +39,9 @@
                           Foreground="{DynamicResource PrimaryFontColorBrush}"
                           ExpandDirection="Down">
                     
-                    <StackPanel>
+                    <Grid ColumnDefinitions="Auto,Auto" 
+                          RowDefinitions="Auto,Auto">
+                        
                         <elements:GroupBox
                             HeaderBrush="{DynamicResource PrimaryThemeColorBrush}" 
                             HeaderTextBrush="{DynamicResource PrimaryThemeFontColorBrush}" 
@@ -49,6 +52,8 @@
                             HorizontalAlignment="Left"
                             Foreground="{DynamicResource PrimaryFontColorBrush}"
                             Background="{DynamicResource PrimaryBackgroundBrush}"
+                            Grid.Column="0"
+                            Grid.Row="0"
                             HeaderText="Romanize">
                             <StackPanel>
                                 <CheckBox Name="CHK_JapaneseToRomanji" 
@@ -75,6 +80,7 @@
                                           Unchecked="CHK_RussiaToLatin_OnUnchecked"
                                           Margin="10,5,0,0"></CheckBox>
                             </StackPanel>
+                            
                         </elements:GroupBox>
                         
                         <elements:GroupBox
@@ -85,8 +91,9 @@
                             Margin="10,0,0,10"
                             VerticalAlignment="Top" 
                             HorizontalAlignment="Left"
-                            Background="{DynamicResource PrimaryBackgroundBrush}"
-
+                            Background="{DynamicResource PrimaryBackgroundBrush}"                            
+                            Grid.Column="0"
+                            Grid.Row="1"
                             HeaderText="Lyrics Selection">
                             <StackPanel>
                                 <ComboBox Name="CMBX_LyricsSelection" 
@@ -105,7 +112,53 @@
                                 </ComboBox>
                             </StackPanel>
                         </elements:GroupBox>
-                    </StackPanel>
+                        
+                        <elements:GroupBox
+                            HeaderBrush="{DynamicResource PrimaryThemeColorBrush}" 
+                            HeaderTextBrush="{DynamicResource PrimaryThemeFontColorBrush}" 
+                     
+                            Margin="10,0,0,10"
+                            VerticalAlignment="Top" 
+                            HorizontalAlignment="Left"
+                            Foreground="{DynamicResource PrimaryFontColorBrush}"
+                            Background="{DynamicResource PrimaryBackgroundBrush}"
+                            HeaderText="Selection style"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Grid.RowSpan="2">
+                            
+                            <Grid Margin="10,0,10,10" 
+                                  ColumnDefinitions="Auto,Auto"
+                                  RowDefinitions="Auto,Auto">
+                                <Border 
+                                    CornerRadius="7" 
+                                    Background="{DynamicResource SecondaryBackgroundBrush}">
+                                    <subPages:ScrollPreviewSubPage 
+                                        Margin="5,5,5,5"
+                                        Background="{DynamicResource SecondaryBackgroundBrush}"
+                                        SelectedLineBrush="#FFFFFF"
+                                        LyricsFontSize="20"
+                                        LyricsFontWeight="Bold"
+                                        UnSelectedLineBrush="#646464"
+                                        ItemMargin="0,0,0,5"
+                                        Grid.Row="0"
+                                        Grid.RowSpan="2"/>
+                                </Border>
+                                <StackPanel >
+                                   
+                                    <RadioButton Classes="Custom" 
+                                                 Content="Test" 
+                                                 CornerRadius="50" 
+                                                 BorderBrush="{DynamicResource PrimaryBackgroundBrush}" 
+                                                 Background="{DynamicResource PrimaryBackgroundBrush}"></RadioButton>
+                                </StackPanel>                                
+                            </Grid>
+                            
+                        </elements:GroupBox>
+
+
+
+                    </Grid>
                     
                     
                 </Expander>

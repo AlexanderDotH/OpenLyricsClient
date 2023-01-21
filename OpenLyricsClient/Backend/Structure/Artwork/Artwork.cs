@@ -97,7 +97,6 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
             }
 
             this._data = null;
-            GCHandle.Alloc(this._data).Free();
         }
         
         private Color GetGroupColor()
@@ -125,24 +124,11 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
 
         public double GetBrightness(Color color)
         {
-            double averageColor = 0;
-
-            averageColor += color.R;
-            averageColor += color.G;
-            averageColor += color.B;
-
-            averageColor /= 3;
-
-            double min = 0.3921568627;
+            double averageColor = (color.R + color.G + color.B) / 3.0D;
+            double min = 100D / 255D;
             double calc = min * averageColor;
 
-            if (calc < 0)
-                calc = 0;
-
-            if (calc > 100)
-                calc = 100;
-            
-            return calc;
+            return Math.Clamp(calc, 0, 100);
         }
         
         public double GetBrightness()

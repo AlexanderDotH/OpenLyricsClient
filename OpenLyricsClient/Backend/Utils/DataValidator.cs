@@ -1,4 +1,6 @@
-﻿namespace OpenLyricsClient.Backend.Utils
+﻿using Squalr.Engine.Utils.Extensions;
+
+namespace OpenLyricsClient.Backend.Utils
 {
     class DataValidator
     {
@@ -29,6 +31,5 @@
 
             return true;
         }
-
     }
 }

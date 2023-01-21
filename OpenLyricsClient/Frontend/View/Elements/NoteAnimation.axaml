@@ -15,7 +15,7 @@
     </Design.PreviewWith>
     
     <Style Selector="TextBlock.one">
-        <Style.Animations >
+        <Style.Animations>
             <Animation Duration="0:0:2" 
                        Delay="0:0:0.0" 
                        IterationCount="Infinite" 

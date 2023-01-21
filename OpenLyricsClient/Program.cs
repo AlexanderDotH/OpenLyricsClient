@@ -19,6 +19,18 @@ namespace OpenLyricsClient
         [STAThread]
         public static void Main(string[] args)
         {
+            
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                CefSetup cefSetup = new CefSetup();
+                cefSetup.SetupCef();
+                    
+                App.FrameworkShutdown += (sender, args) =>
+                {
+                    cefSetup.CefNetApplication.Shutdown();
+                };
+            }
+            
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
         }

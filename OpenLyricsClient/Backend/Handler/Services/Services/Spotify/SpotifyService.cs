@@ -133,20 +133,8 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
         public async Task StartAuthorization()
         {
             Token token = null;
-            
-            CefSetup cefSetup = new CefSetup();
-            
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                cefSetup.SetupCef();
-                    
-                App.FrameworkShutdown += (sender, args) =>
-                {
-                    cefSetup.CefNetApplication.Shutdown();
-                };
-            }
-            
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && cefSetup.Initialized)
             {
                 CefAuthWindow cefAuthWindow = new CefAuthWindow("https://openlyricsclient.com/connect/spotify/begin", "/complete");
              
@@ -160,7 +148,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
              
                 cefAuthWindow.Close();
             } 
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || !cefSetup.Initialized)
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 ProcessStartInfo processStartInfo = new ProcessStartInfo("https://www.openlyricsclient.com/connect/spotify/begin/listener");
                 processStartInfo.UseShellExecute = true;

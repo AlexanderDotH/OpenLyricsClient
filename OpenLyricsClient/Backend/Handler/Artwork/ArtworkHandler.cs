@@ -126,7 +126,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                     
                     color.Color = artworkCache.ArtworkColor;
                     
-                    if (artworkCache.GetBrightness() < 15)
+                    if (artworkCache.GetBrightness() < 30)
                     {
                         textColor.Color = new Color(255, 255, 255, 255);
                     }

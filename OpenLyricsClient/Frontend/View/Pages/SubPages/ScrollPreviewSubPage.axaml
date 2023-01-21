@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
+             xmlns:subPages="clr-namespace:OpenLyricsClient.Frontend.View.Pages.SubPages"
+             xmlns:romanization="clr-namespace:OpenLyricsClient.Backend.Romanization"
+             xmlns:subPages1="clr-namespace:OpenLyricsClient.Frontend.Models.Pages.SubPages"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             LyricPart="{Binding CurrentLyricPart, Mode=TwoWay}"
+             LyricParts="{Binding CurrentLyricParts, Mode=TwoWay}"
+             LyricsFontSize="{Binding LyricsFontSize, Mode=TwoWay, Converter={StaticResource FontSizeConverter}}"
+             LyricsFontWeight="{Binding LyricsFontWeight, Mode=TwoWay, Converter={StaticResource FontWeightConverter}}"
+             UnSelectedLineBrush="{Binding UnSelectedLineBrush}"
+             SelectedLineBrush="{Binding SelectedLineBrush}"
+             x:Class="OpenLyricsClient.Frontend.View.Pages.SubPages.ScrollPreviewSubPage">
+    
+    <UserControl.Resources>
+        <romanization:RomanizationConverter x:Key="RomanizationConverter" />
+    </UserControl.Resources>
+    
+    <UserControl.DataContext>
+        <subPages1:ScrollPreviewSubPageViewModel></subPages1:ScrollPreviewSubPageViewModel>
+    </UserControl.DataContext>
+    
+    <Grid Background="{DynamicResource SecondaryBackgroundBrush}">
+        <ItemsRepeater Name="CTRL_Repeater" Items="{Binding CurrentLyricParts}" >
+            <ItemsRepeater.ItemTemplate>
+                <DataTemplate>
+                    <elements:LyricsCard 
+                        Text="{Binding Part, Converter={StaticResource RomanizationConverter}}" 
+                        LyricPart="{Binding}"
+                        HorizontalAlignment="Left"
+                        Percentage="-1"
+                        Background="{DynamicResource SecondaryBackgroundBrush}"
+                        UnSelectedLineBrush="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type subPages:ScrollPreviewSubPage}}, Path=UnSelectedLineBrush, Mode=TwoWay}"
+                        SelectedLineBrush="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type subPages:ScrollPreviewSubPage}}, Path=SelectedLineBrush, Mode=TwoWay}"
+                        FontWeight="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type subPages:ScrollPreviewSubPage}}, Path=LyricsFontWeight, Converter={StaticResource FontWeightConverter}, Mode=TwoWay}"
+                        FontSize="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type subPages:ScrollPreviewSubPage}}, Path=LyricsFontSize, Converter={StaticResource FontSizeConverter}, Mode=TwoWay}"
+                        Margin="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type subPages:ScrollPreviewSubPage}}, Path=ItemMargin, Mode=TwoWay}"></elements:LyricsCard>
+                </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+        
+    </Grid>
+    
+</UserControl>
