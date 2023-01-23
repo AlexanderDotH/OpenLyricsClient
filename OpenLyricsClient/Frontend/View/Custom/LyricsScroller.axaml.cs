@@ -117,8 +117,8 @@ public partial class LyricsScroller : UserControl
         this._oldIndex = 0;
 
         this._useBlur = true;
-        this._blurIncrement = 1;
-        this._blurItemCount = 10;
+        this._blurIncrement = 0.8F;
+        this._blurItemCount = 6;
         this._lyricsRoll = new GenericTupleList<LyricsCard, bool>();
         
         this._renderTimer = new SleepRenderTimer(150);
@@ -366,6 +366,15 @@ public partial class LyricsScroller : UserControl
 
         untilPos -= (float)GetRenderedSize(index).Height / 2;
 
+        /*
+        int itemCount = 0;
+        
+        while (GetRenderedSize(itemCount).Height > untilPos)
+        {
+            itemCount++;
+        }
+        */
+
         return startAt - untilPos + startMargin;
     }
     
@@ -429,6 +438,9 @@ public partial class LyricsScroller : UserControl
         if (this.LyricsFontSize <= 0)
             return new Size(0, 0);
         
+        if (index > this._lyricParts.Count - 1)
+            return new Size(0, 0);
+            
         FormattedText text = new FormattedText(this._lyricParts[index].Part,
             new Typeface(FontFamily.Parse(
                 "avares://Material.Styles/Fonts/Roboto#Roboto"), 
