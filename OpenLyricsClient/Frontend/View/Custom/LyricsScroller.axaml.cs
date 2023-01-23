@@ -12,6 +12,7 @@ using Avalonia.Media;
 using Avalonia.Rendering;
 using Avalonia.Threading;
 using DevBase.Async.Task;
+using DevBase.Generic;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Structure.Enum;
@@ -59,7 +60,13 @@ public partial class LyricsScroller : UserControl
 
     private ObservableCollection<LyricPart> _lyricParts;
     private LyricPart _lyricPart;
-    private LyricsCard _card;
+    
+    private LyricsCard _currentCard;
+    private GenericTupleList<LyricsCard, bool> _lyricsRoll;
+
+    private bool _useBlur;
+    private int _blurItemCount;
+    private float _blurIncrement;
     
     private float _scrollFrom;
     private float _currentScrollOffset;
@@ -83,7 +90,8 @@ public partial class LyricsScroller : UserControl
     private UiThreadRenderTimer _uiThreadRenderTimer;
 
     private LyricsScrollerViewModel _viewModel;
-    
+
+
     public LyricsScroller()
     {
         InitializeComponent();
@@ -108,6 +116,11 @@ public partial class LyricsScroller : UserControl
         this._scrollSpeed = 15;
         this._oldIndex = 0;
 
+        this._useBlur = true;
+        this._blurIncrement = 1;
+        this._blurItemCount = 10;
+        this._lyricsRoll = new GenericTupleList<LyricsCard, bool>();
+        
         this._renderTimer = new SleepRenderTimer(150);
         this._renderTimer.Tick += RenderTimerOnTick;
 
@@ -161,7 +174,7 @@ public partial class LyricsScroller : UserControl
         
             float diff = Math.Abs(this._currentScrollOffset - (float)this._scrollViewer.Offset.Y);
         
-            if (diff < 0.1)
+            if (diff < 1)
             {
                 this._isResynced = true;
             }
@@ -204,13 +217,13 @@ public partial class LyricsScroller : UserControl
                 this._scrollViewer.Offset = new Vector(0, y);
             }
 
-            if (DataValidator.ValidateData(this._card))
+            if (DataValidator.ValidateData(this._currentCard))
             {
-                if (DataValidator.ValidateData(this._card.LyricPart))
+                if (DataValidator.ValidateData(this._currentCard.LyricPart))
                 {
-                    if (this._card.LyricPart.Equals(this._lyricPart))
+                    if (this._currentCard.LyricPart.Equals(this._lyricPart))
                     {
-                        this._card.Percentage = (double)_viewModel.Percentage;
+                        this._currentCard.Percentage = (double)_viewModel.Percentage;
                     }
                 }
             }
@@ -222,23 +235,70 @@ public partial class LyricsScroller : UserControl
         AvaloniaXamlLoader.Load(this);
     }
 
+    private void TryBlurItem(int index, float blurSigma)
+    {
+        if (index < 0)
+            return;
+        
+        if (index > this._lyricParts.Count)
+            return;
+        
+        IControl item = this._itemsRepeater.TryGetElement(index);
+
+        if (item is LyricsCard)
+        {
+            LyricsCard cItem = (LyricsCard)item;
+            cItem.BlurSigma = blurSigma;
+        }
+    }
+    
     private void SetCurrentPosition(int selectedLine)
     {
+        this._lyricsRoll.Clear();
+        
+        float currentSize = this._blurIncrement;
+        
         for (int i = 0; i < this._lyricParts.Count; i++)
         {
             var child = this._itemsRepeater.TryGetElement(i);
+            
+            /*if (child is LyricsCard)
+            {
+                if ((i != selectedLine && i < selectedLine - this._blurItemCount) || 
+                    (i != selectedLine && i > selectedLine - this._blurItemCount))
+                {
+                    this._lyricsRoll.Add((LyricsCard)child, false);
+                }
+            }*/
             
             if (i == selectedLine)
             {
                 if (child is LyricsCard)
                 {
-                    this._card = (LyricsCard)child;
+                    this._currentCard = (LyricsCard)child;
+
+                    if ( this._useBlur)
+                    {
+                        for (int j = 0; j < this._blurItemCount; j++)
+                        {
+                            TryBlurItem(i - j, IsSynced && this._isResynced ? currentSize : 0);
+                            TryBlurItem(i + j, IsSynced && this._isResynced ? currentSize : 0);
+                            currentSize += _blurIncrement;
+                        }
+                    }
+
+                    this._currentCard.BlurSigma = 0;
                 }
                 
                 break;
             }
             else
             {
+                if (!this.IsSynced)
+                {
+                    TryBlurItem(i, 0);
+                }
+                
                 if (child is LyricsCard)
                 {
                     LyricsCard card = (LyricsCard)child;
@@ -247,6 +307,30 @@ public partial class LyricsScroller : UserControl
                 }
             }
         }
+
+        /*float currentSize = this._blurIncrement;
+        
+        for (int i = 0; i < this._lyricsRoll.Length; i++)
+        {
+            if (!DataValidator.ValidateData(this._lyricsRoll.Get(i)))
+                continue;
+            
+            LyricsCard card = this._lyricsRoll.Get(i).Item1;
+
+            if (card.Equals(this._currentCard))
+            {
+                for (int j = 0; j < this._blurItemCount; j++)
+                {
+                    int nextPos = i + j;
+                    
+                    if (nextPos < i)
+                    {
+                        this._lyricsRoll.Get(nextPos).Item1.BlurSigma = currentSize;
+                        currentSize += _blurIncrement;
+                    }
+                }
+            }
+        }*/
 
         this._scrollFrom = this._scrollTo;
 
@@ -489,6 +573,24 @@ public partial class LyricsScroller : UserControl
     {
         get { return GetValue(LyricsFontSizeProperty); }
         set { SetValue(LyricsFontSizeProperty, value); }
+    }
+
+    public bool UseBlur
+    {
+        get => this._useBlur;
+        set => this._useBlur = value;
+    }
+
+    public float BlurIncrement
+    {
+        get => this._blurIncrement;
+        set => this._blurIncrement = value;
+    }
+
+    public int BlurItemCount
+    {
+        get => this._blurItemCount;
+        set => this._blurItemCount = value;
     }
 
     protected override void OnPointerWheelChanged(PointerWheelEventArgs e)

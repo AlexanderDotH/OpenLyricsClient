@@ -1,6 +1,7 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements">
+        xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
+        xmlns:blur="clr-namespace:OpenLyricsClient.Frontend.Models.Elements.Blur">
     <Design.PreviewWith>
         <Border Padding="20">
             <elements:LyricsCard  Text="CurrentLine" ></elements:LyricsCard>
@@ -31,6 +32,7 @@
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid Name="PART_Grid">
+                    
                     <Border Name="PART_BackgroundBorder"
                             HorizontalAlignment="Left"
                             Width="{TemplateBinding Percentage}" 
@@ -88,6 +90,19 @@
                             </TextBlock.Transitions>
                         </TextBlock>
                     </Viewbox>
+                    
+                    <blur:BlurArea 
+                        Name="PART_BlurArea"
+                        Sigma="3" 
+                        Width="{TemplateBinding Width}" 
+                        Height="{TemplateBinding Height}">
+                        <blur:BlurArea.Transitions>
+                            <Transitions>
+                                <FloatTransition Property="SigmaX" Duration="0:0:0.8" Easing="CircularEaseOut"></FloatTransition>
+                                <FloatTransition Property="SigmaY" Duration="0:0:0.8" Easing="CircularEaseOut"></FloatTransition>
+                            </Transitions>
+                        </blur:BlurArea.Transitions>
+                    </blur:BlurArea>
                 </Grid>
             </ControlTemplate>
         </Setter>

@@ -10,6 +10,7 @@
              xmlns:custom1="clr-namespace:OpenLyricsClient.Frontend.View.Custom"
              xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
              xmlns:pages="clr-namespace:OpenLyricsClient.Frontend.Models.Pages"
+             xmlns:blur="clr-namespace:OpenLyricsClient.Frontend.Models.Elements.Blur"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{DynamicResource PrimaryBackgroundBrush}"
              Foreground="{DynamicResource PrimaryFontColorBrush}"
@@ -108,8 +109,6 @@
                 LyricsFontWeight="Bold"
                 UnSelectedLineBrush="#646464"
                 ItemMargin="0,0,0,70"/>
-            
-           
             
             <!--<Panel HorizontalAlignment="Left" 
                    VerticalAlignment="Center"

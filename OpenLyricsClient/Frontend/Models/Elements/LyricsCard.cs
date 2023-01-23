@@ -10,6 +10,7 @@ using Avalonia.Threading;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Frontend.Models.Elements.Blur;
 using OpenLyricsClient.Frontend.View.Custom;
 using Brush = Avalonia.Media.Brush;
 using FontFamily = Avalonia.Media.FontFamily;
@@ -40,6 +41,9 @@ public class LyricsCard : TemplatedControl
     public static readonly StyledProperty<int> SpacingProperty =
         AvaloniaProperty.Register<LyricsCard, int>(nameof(Spacing));
     
+    public static readonly StyledProperty<float> BlurSigmaProperty =
+        AvaloniaProperty.Register<LyricsCard, float>(nameof(BlurSigma));
+    
     public static readonly DirectProperty<LyricsCard, LyricPart> LyricPartProperty = 
         AvaloniaProperty.RegisterDirect<LyricsCard, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
 
@@ -52,7 +56,8 @@ public class LyricsCard : TemplatedControl
     private Viewbox _viewbox;
     private Panel _panel;
     private NoteAnimation _noteAnimation;
-
+    private BlurArea _blurArea;
+    
     private LyricPart _lyricPart;
     private bool _current;
     private double _oldValue;
@@ -96,6 +101,11 @@ public class LyricsCard : TemplatedControl
                         Current = true;
                         this._noteAnimation.Current = true;
                     }
+                }
+                
+                if (DataValidator.ValidateData(this._blurArea))
+                {
+                    this._blurArea.Sigma = this.BlurSigma;
                 }
 
                 if (!(DataValidator.ValidateData(this._presenterBlock, this._greyBlock, this._noteAnimation,
@@ -213,6 +223,12 @@ public class LyricsCard : TemplatedControl
         set { SetValue(SpacingProperty, value); }
     }
     
+    public float BlurSigma
+    {
+        get { return GetValue(BlurSigmaProperty); }
+        set { SetValue(BlurSigmaProperty, value); }
+    }
+
     public Brush SelectedLineBrush
     {
         get { return GetValue(SelectedLineBrushProperty); }
@@ -234,6 +250,11 @@ public class LyricsCard : TemplatedControl
                 this._border, 
                 this._noteAnimation)))
             return;
+        
+        if (DataValidator.ValidateData(this._blurArea))
+        {
+            this._blurArea.Sigma = this.BlurSigma;
+        }
         
         this._presenterBlock.MaxWidth = this._greyBlock.TextLayout.Size.Width;
         this._presenterBlock.Width = this._greyBlock.TextLayout.Size.Width;
@@ -299,6 +320,7 @@ public class LyricsCard : TemplatedControl
         var viewBox = e.NameScope.Find("PART_Viewbox");
         var noteAnimation = e.NameScope.Find("PART_NoteAnimation");
         var panel = e.NameScope.Find("PART_Panel");
+        var blurArea = e.NameScope.Find("PART_BlurArea");
 
         if (noteAnimation is NoteAnimation)
         {
@@ -335,7 +357,12 @@ public class LyricsCard : TemplatedControl
             TextBlock block = (TextBlock)textBlock1;
             this._greyBlock = block;
         }
-
+        
+        if (blurArea is BlurArea)
+        {
+            BlurArea blur = ((BlurArea)(blurArea));
+            this._blurArea = blur;
+        }
         
         base.OnApplyTemplate(e);
 

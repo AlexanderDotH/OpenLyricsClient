@@ -111,7 +111,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
                 if (!this._service.IsConnected())
                     continue;
 
-                await Task.Delay(500);
+                await Task.Delay(750);
 
                 if (DataValidator.ValidateData(this._spotifyClient) && 
                     DataValidator.ValidateData(this._currentSong))
