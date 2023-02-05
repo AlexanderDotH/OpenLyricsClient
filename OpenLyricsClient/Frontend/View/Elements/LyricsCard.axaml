@@ -93,7 +93,8 @@
                     
                     <blur:BlurArea 
                         Name="PART_BlurArea"
-                        Sigma="3" 
+                        SigmaX="{TemplateBinding BlurSigma}" 
+                        SigmaY="{TemplateBinding BlurSigma}" 
                         Width="{TemplateBinding Width}" 
                         Height="{TemplateBinding Height}">
                         <blur:BlurArea.Transitions>

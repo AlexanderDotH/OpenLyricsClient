@@ -2,11 +2,12 @@ using System;
 using System.Reactive;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using DevBase.Avalonia.Scaling;
 using ReactiveUI;
 
 namespace OpenLyricsClient.Frontend.Models.Windows
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelBase, IViewModel
     {
         public ReactiveCommand<Unit, Unit> CloseButtonActionCommand { get; }
         public ReactiveCommand<Unit, Unit> ExpandButtonActionCommand { get; }
@@ -84,5 +85,7 @@ namespace OpenLyricsClient.Frontend.Models.Windows
                 }
             }
         }
+
+        public bool IsResizing { get; set; }
     }
 }

@@ -14,6 +14,7 @@ using Avalonia.Threading;
 using DevBase.Async.Task;
 using DevBase.Generic;
 using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
@@ -31,6 +32,8 @@ namespace OpenLyricsClient.Frontend.View.Custom;
 
 public partial class LyricsScroller : UserControl
 {
+    public static LyricsScroller INSTANCE;
+    
     public static readonly StyledProperty<int> SelectedLineProperty =
         AvaloniaProperty.Register<LyricsScroller, int>(nameof(SelectedLine));
 
@@ -90,10 +93,12 @@ public partial class LyricsScroller : UserControl
     private UiThreadRenderTimer _uiThreadRenderTimer;
 
     private LyricsScrollerViewModel _viewModel;
-
+    public event BlurChangedEventHandler BlurChanged;
 
     public LyricsScroller()
     {
+        INSTANCE = this;
+        
         InitializeComponent();
 
         this._viewModel = new LyricsScrollerViewModel();
@@ -116,7 +121,7 @@ public partial class LyricsScroller : UserControl
         this._scrollSpeed = 15;
         this._oldIndex = 0;
 
-        this._useBlur = true;
+        this._useBlur = false;
         this._blurIncrement = 0.8F;
         this._blurItemCount = 6;
         this._lyricsRoll = new GenericTupleList<LyricsCard, bool>();
@@ -240,21 +245,29 @@ public partial class LyricsScroller : UserControl
         if (index < 0)
             return;
         
-        if (index > this._lyricParts.Count)
-            return;
+        /*if (index > this._lyricParts.Count - 1)
+            return;*/
         
-        IControl item = this._itemsRepeater.TryGetElement(index);
+        //BlurChangedEvent(new BlurChangedEventArgs(blurSigma, this._lyricParts[index]));
 
-        if (item is LyricsCard)
+        try
         {
-            LyricsCard cItem = (LyricsCard)item;
-            cItem.BlurSigma = blurSigma;
+            IControl item = this._itemsRepeater.TryGetElement(index);
+        
+            if (item is LyricsCard)
+            {
+                LyricsCard cItem = (LyricsCard)item;
+                cItem.BlurSigma = blurSigma;
+            }
+        }
+        catch (Exception e)
+        {
         }
     }
     
     private void SetCurrentPosition(int selectedLine)
     {
-        this._lyricsRoll.Clear();
+        //this._lyricsRoll.Clear();
         
         float currentSize = this._blurIncrement;
         
@@ -273,21 +286,23 @@ public partial class LyricsScroller : UserControl
             
             if (i == selectedLine)
             {
-                if (child is LyricsCard)
+                if (this._useBlur)
                 {
-                    this._currentCard = (LyricsCard)child;
-
-                    if ( this._useBlur)
+                    for (int j = 0; j < this._blurItemCount; j++)
                     {
-                        for (int j = 0; j < this._blurItemCount; j++)
+                        //TryBlurItem(i - j, IsSynced && this._isResynced ? currentSize : 0);
+                        if (i + j < this._lyricParts.Count)
                         {
-                            TryBlurItem(i - j, IsSynced && this._isResynced ? currentSize : 0);
                             TryBlurItem(i + j, IsSynced && this._isResynced ? currentSize : 0);
                             currentSize += _blurIncrement;
                         }
                     }
-
-                    this._currentCard.BlurSigma = 0;
+                }
+                
+                if (child is LyricsCard)
+                {
+                    this._currentCard = (LyricsCard)child;
+                    TryBlurItem(i, 0);
                 }
                 
                 break;
@@ -640,6 +655,12 @@ public partial class LyricsScroller : UserControl
         this._currentScrollOffset = (float)this._scrollViewer.Offset.Y;
         this._isResynced = false;
         this.IsSynced = true;
+    }
+    
+    protected virtual void BlurChangedEvent(BlurChangedEventArgs blurChangedEventArgs)
+    {
+        BlurChangedEventHandler blurChangedEvent = BlurChanged;
+        blurChangedEvent?.Invoke(this, blurChangedEventArgs);
     }
 
     private void Layoutable_OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)

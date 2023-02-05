@@ -7,10 +7,11 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using CefNet.Avalonia;
 using CefNet.WinApi;
+using DevBase.Avalonia.Scaling;
 
 namespace OpenLyricsClient.Frontend.View.Windows
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : ScalableWindow
     {
         private static MainWindow INSTANCE;
 
@@ -111,5 +112,9 @@ namespace OpenLyricsClient.Frontend.View.Windows
             if (this._windowDragable)
                 this.BeginMoveDrag(e);
         }
+
+        public override event EventHandler<PointerPressedEventArgs> BeginResize;
+        public override event EventHandler<PointerEventArgs> Resize;
+        public override event EventHandler<PointerReleasedEventArgs> EndResize;
     }
 }

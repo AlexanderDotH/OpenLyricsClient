@@ -7,6 +7,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Threading;
+using DevBase.Avalonia.Scaling;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
@@ -28,7 +29,7 @@ public class LyricsCard : TemplatedControl
     
     public static readonly StyledProperty<Brush> SelectedLineBrushProperty =
         AvaloniaProperty.Register<UserControl, Brush>(nameof(SelectedLineBrush));
-
+    
     public static readonly StyledProperty<Brush> UnSelectedLineBrushProperty =
         AvaloniaProperty.Register<UserControl, Brush>(nameof(UnSelectedLineBrush));
     
@@ -73,12 +74,34 @@ public class LyricsCard : TemplatedControl
         this._templateApplied = false;
         this._validLyricSet = false;
         this._alreadySet = false;
-        
+
         Core.INSTANCE.SongHandler.SongChanged += (s, args) =>
         {
             this._templateApplied = false;
             this._validLyricSet = false;
             this._alreadySet = false;
+        };
+
+        LyricsScroller.INSTANCE.BlurChanged += (sender, @event) =>
+        {
+            if (@event.LyricPart.Equals(this.LyricPart))
+            {
+                if (DataValidator.ValidateData(this._blurArea))
+                {
+                    this._blurArea.Sigma = @event.BlurSigma;
+                }
+            }
+        };
+        
+        Core.INSTANCE.TickHandler += sender =>
+        {
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                /*if (DataValidator.ValidateData(this._blurArea))
+                {
+                    this._blurArea.Sigma = this.BlurSigma;
+                }*/
+            });
         };
         
         Core.INSTANCE.LyricHandler.LyricChanged += (sender, args) =>
@@ -102,12 +125,7 @@ public class LyricsCard : TemplatedControl
                         this._noteAnimation.Current = true;
                     }
                 }
-                
-                if (DataValidator.ValidateData(this._blurArea))
-                {
-                    this._blurArea.Sigma = this.BlurSigma;
-                }
-
+           
                 if (!(DataValidator.ValidateData(this._presenterBlock, this._greyBlock, this._noteAnimation,
                         this._border)))
                     return;
@@ -145,7 +163,7 @@ public class LyricsCard : TemplatedControl
         FormattedText text = new FormattedText(Text,
             new Typeface(FontFamily.Parse(
                     "avares://Material.Styles/Fonts/Roboto#Roboto"), 
-                FontStyle.Normal, this.FontWeight), this.FontSize, TextAlignment.Left,
+                FontStyle.Normal, this.FontWeight), this.FontSize * App.INSTANCE.ScalingManager.CurrentScaling, TextAlignment.Left,
             TextWrapping.Wrap, new Size(this._greyBlock.DesiredSize.Width, this._greyBlock.DesiredSize.Height));
 
         Rect rect = new Rect(new Size(text.Bounds.Width, text.Bounds.Height));
@@ -214,7 +232,10 @@ public class LyricsCard : TemplatedControl
     public int FontSize
     {
         get { return GetValue(FontSizeProperty); }
-        set { SetValue(FontSizeProperty, value); }
+        set
+        {
+            SetValue(FontSizeProperty, (int)(value *  App.INSTANCE.ScalingManager.CurrentScaling)); 
+        }
     }
     
     public int Spacing
@@ -226,7 +247,15 @@ public class LyricsCard : TemplatedControl
     public float BlurSigma
     {
         get { return GetValue(BlurSigmaProperty); }
-        set { SetValue(BlurSigmaProperty, value); }
+        set
+        {
+            /*
+            if (DataValidator.ValidateData(this._blurArea))
+                this._blurArea.Sigma = value;
+                */
+            
+            SetValue(BlurSigmaProperty, value); 
+        }
     }
 
     public Brush SelectedLineBrush
@@ -366,5 +395,17 @@ public class LyricsCard : TemplatedControl
         
         base.OnApplyTemplate(e);
 
+    }
+
+    public void Dispose()
+    {
+
+        
+        throw new NotImplementedException();
+    }
+
+    public void ApplyScaling(double scalingFactor)
+    {
+        throw new NotImplementedException();
     }
 }

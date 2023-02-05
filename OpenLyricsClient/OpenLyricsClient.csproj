@@ -83,8 +83,14 @@
     <Reference Include="DevBase">
       <HintPath>..\Libraries\DevBase.dll</HintPath>
     </Reference>
+    <Reference Include="DevBase.Avalonia">
+      <HintPath>..\Libraries\DevBase.Avalonia.dll</HintPath>
+    </Reference>
     <Reference Include="DevBaseApi">
       <HintPath>..\Libraries\DevBaseApi.dll</HintPath>
+    </Reference>
+    <Reference Include="DevBaseAvalonia">
+      <HintPath>..\Libraries\DevBaseAvalonia.dll</HintPath>
     </Reference>
     <Reference Include="DevBaseColor">
       <HintPath>..\Libraries\DevBaseColor.dll</HintPath>

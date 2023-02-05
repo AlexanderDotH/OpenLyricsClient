@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
-using DevBaseColor.Image;
+using DevBase.Avalonia.Color.Image;
 using Squalr.Engine.Utils.Extensions;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 using Color = Avalonia.Media.Color;
