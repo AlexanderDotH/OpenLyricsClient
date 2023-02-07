@@ -53,7 +53,7 @@
                                Text="{TemplateBinding Text}"
                                TextWrapping="Wrap"
                                FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
-                               FontSize="{TemplateBinding FontSize, Converter={StaticResource FontSizeConverter}}"
+                               FontSize="{TemplateBinding FontSize}"
                                Margin="5,0,5,5"
                                Foreground="{TemplateBinding UnSelectedLineBrush}">
                         <TextBlock.Transitions>
@@ -77,7 +77,7 @@
                                    Text="{TemplateBinding Text}"
                                    TextWrapping="Wrap"
                                    FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
-                                   FontSize="{TemplateBinding FontSize, Converter={StaticResource FontSizeConverter}}"
+                                   FontSize="{TemplateBinding FontSize}"
                                    Margin="5,0,5,5"
                                    Width="{TemplateBinding Width}"
                                    Foreground="{TemplateBinding SelectedLineBrush}">

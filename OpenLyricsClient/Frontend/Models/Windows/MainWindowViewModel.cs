@@ -2,8 +2,8 @@ using System;
 using System.Reactive;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using DevBase.Avalonia.Scaling;
 using ReactiveUI;
+using IViewModel = OpenLyricsClient.Frontend.Scaling.IViewModel;
 
 namespace OpenLyricsClient.Frontend.Models.Windows
 {

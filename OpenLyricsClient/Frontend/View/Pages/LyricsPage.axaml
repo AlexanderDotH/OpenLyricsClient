@@ -73,7 +73,7 @@
                          Height="{Binding ElementName=STPNL_SongInfo, Path=Height}"
                          VerticalAlignment="Center"
                          HorizontalAlignment="Center"
-                         Margin="0, 340,0,0"
+                         Margin="0,340,0,0"
                          Background="{DynamicResource SecondaryBackgroundBrush}">
 
                 <StackPanel Orientation="Vertical">
@@ -105,7 +105,7 @@
             <custom1:LyricsScroller
                 Name="LRC_Display"
                 SelectedLineBrush="{DynamicResource PrimaryThemeColorBrush}"
-                LyricsFontSize="30"
+                FontSize="30"
                 LyricsFontWeight="Bold"
                 UnSelectedLineBrush="#646464"
                 ItemMargin="0,0,0,70"/>
@@ -152,7 +152,8 @@
         <Grid VerticalAlignment="Bottom"
               Height="50">
             
-            <styles:Card Classes="height_transition"
+            <styles:Card Name="CRD_Bar" 
+                         Classes="height_transition"
                          Background="{DynamicResource SecondaryBackgroundBrush}"
                          VerticalAlignment="Bottom"
                          Margin="10,0,10,10"
@@ -167,7 +168,7 @@
                                 Minimum="0"
                                 Maximum="100"
                                 Value="{Binding Percentage}"
-                                Margin="10, 0,10,10">
+                                Margin="10, 0,10,8">
                        <ProgressBar.Transitions>
                            <Transitions>
                                <BrushTransition Property="Foreground"

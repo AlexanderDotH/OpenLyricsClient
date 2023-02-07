@@ -7,7 +7,6 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Threading;
-using DevBase.Avalonia.Scaling;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
@@ -36,8 +35,8 @@ public class LyricsCard : TemplatedControl
     public static readonly StyledProperty<FontWeight> FontWeightProperty =
         AvaloniaProperty.Register<LyricsCard, FontWeight>(nameof(FontWeight));
     
-    public static readonly StyledProperty<int> FontSizeProperty =
-        AvaloniaProperty.Register<LyricsCard, int>(nameof(FontSize));
+    /*public static readonly StyledProperty<int> FontSizeProperty =
+        AvaloniaProperty.Register<LyricsCard, int>(nameof(FontSize));*/
     
     public static readonly StyledProperty<int> SpacingProperty =
         AvaloniaProperty.Register<LyricsCard, int>(nameof(Spacing));
@@ -229,14 +228,14 @@ public class LyricsCard : TemplatedControl
         }
     }
     
-    public int FontSize
+    /*public int FontSize
     {
         get { return GetValue(FontSizeProperty); }
         set
         {
             SetValue(FontSizeProperty, (int)(value *  App.INSTANCE.ScalingManager.CurrentScaling)); 
         }
-    }
+    }*/
     
     public int Spacing
     {

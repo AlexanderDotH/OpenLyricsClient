@@ -54,10 +54,7 @@ public partial class LyricsScroller : UserControl
 
     public static readonly StyledProperty<FontWeight> LyricsFontWeightProperty =
         AvaloniaProperty.Register<LyricsScroller, FontWeight>(nameof(LyricsFontWeight));
-    
-    public static readonly StyledProperty<int> LyricsFontSizeProperty =
-        AvaloniaProperty.Register<LyricsScroller, int>(nameof(LyricsFontSize));
-    
+
     public static readonly StyledProperty<bool> IsSyncedProperty =
         AvaloniaProperty.Register<LyricsScroller, bool>(nameof(IsSynced));
 
@@ -449,17 +446,14 @@ public partial class LyricsScroller : UserControl
         
         if (this.FontWeight <= 0)
             return new Size(0, 0);
-        
-        if (this.LyricsFontSize <= 0)
-            return new Size(0, 0);
-        
+
         if (index > this._lyricParts.Count - 1)
             return new Size(0, 0);
             
         FormattedText text = new FormattedText(this._lyricParts[index].Part,
             new Typeface(FontFamily.Parse(
                 "avares://Material.Styles/Fonts/Roboto#Roboto"), 
-                FontStyle.Normal, this.LyricsFontWeight), this.LyricsFontSize, TextAlignment.Left,
+                FontStyle.Normal, this.LyricsFontWeight), this.FontSize, TextAlignment.Left,
             TextWrapping.Wrap, new Size(this.DesiredSize.Width - 5, this.DesiredSize.Height));
 
         double lineSize = 0;
@@ -594,12 +588,6 @@ public partial class LyricsScroller : UserControl
     {
         get { return GetValue(LyricsFontWeightProperty); }
         set { SetValue(LyricsFontWeightProperty, value); }
-    }
-    
-    public int LyricsFontSize
-    {
-        get { return GetValue(LyricsFontSizeProperty); }
-        set { SetValue(LyricsFontSizeProperty, value); }
     }
 
     public bool UseBlur

@@ -10,7 +10,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              LyricPart="{Binding CurrentLyricPart, Mode=TwoWay}"
              LyricParts="{Binding CurrentLyricParts, Mode=TwoWay}"
-             LyricsFontSize="{Binding LyricsFontSize, Mode=TwoWay, Converter={StaticResource FontSizeConverter}}"
+             FontSize="{Binding FontSize, Mode=TwoWay, Converter={StaticResource FontSizeConverter}}"
              LyricsFontWeight="{Binding LyricsFontWeight, Mode=TwoWay, Converter={StaticResource FontWeightConverter}}"
              UnSelectedLineBrush="{Binding UnSelectedLineBrush}"
              SelectedLineBrush="{Binding SelectedLineBrush}"
@@ -34,7 +34,7 @@
                             UnSelectedLineBrush="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type custom:LyricsScroller}}, Path=UnSelectedLineBrush, Mode=TwoWay}"
                             SelectedLineBrush="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type custom:LyricsScroller}}, Path=SelectedLineBrush, Mode=TwoWay}"
                             FontWeight="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type custom:LyricsScroller}}, Path=LyricsFontWeight, Converter={StaticResource FontWeightConverter}, Mode=TwoWay}"
-                            FontSize="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type custom:LyricsScroller}}, Path=LyricsFontSize, Converter={StaticResource FontSizeConverter}, Mode=TwoWay}"
+                            FontSize="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type custom:LyricsScroller}}, Path=FontSize, Converter={StaticResource FontSizeConverter}, Mode=TwoWay}"
                             Margin="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type custom:LyricsScroller}}, Path=ItemMargin, Mode=TwoWay}"></elements:LyricsCard>
                     </DataTemplate>
                 </ItemsRepeater.ItemTemplate>

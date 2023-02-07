@@ -54,31 +54,35 @@
                             Background="{DynamicResource PrimaryBackgroundBrush}"
                             Grid.Column="0"
                             Grid.Row="0"
-                            HeaderText="Romanize">
+                            HeaderText="Romanize"
+                            FontSize="12">
                             <StackPanel>
                                 <CheckBox Name="CHK_JapaneseToRomanji" 
-                                          Content="Japanese to Romanji"
                                           Background="{DynamicResource PrimaryThemeColorBrush}"
                                           Foreground="{DynamicResource PrimaryFontColorBrush}"
                                           Checked="CHK_JapaneseToRomanji_OnChecked"
                                           Unchecked="CHK_JapaneseToRomanji_OnUnchecked"
-                                          Margin="10,0,0,0"></CheckBox>
+                                          Margin="10,0,0,0">
+                                    <TextBlock Text="Japanese to Latin"></TextBlock>
+                                </CheckBox>
                                 
                                 <CheckBox Name="CHK_KoreanToRomanji" 
-                                          Content="Korean to Romanji"
                                           Background="{DynamicResource PrimaryThemeColorBrush}"
                                           Foreground="{DynamicResource PrimaryFontColorBrush}"
                                           Checked="CHK_KoreanToRomanji_OnChecked"
                                           Unchecked="CHK_KoreanToRomanji_OnUnchecked"
-                                          Margin="10,5,0,0"></CheckBox>
+                                          Margin="10,5,0,0">
+                                    <TextBlock Text="Korean to Latin"></TextBlock>
+                                </CheckBox>
                                 
                                 <CheckBox Name="CHK_RussiaToLatin" 
-                                          Content="Russia to Latin"
                                           Background="{DynamicResource PrimaryThemeColorBrush}"
                                           Foreground="{DynamicResource PrimaryFontColorBrush}"
                                           Checked="CHK_RussiaToLatin_OnChecked"
                                           Unchecked="CHK_RussiaToLatin_OnUnchecked"
-                                          Margin="10,5,0,0"></CheckBox>
+                                          Margin="10,5,0,0">
+                                    <TextBlock Text="Russia to Latin"></TextBlock>
+                                </CheckBox>
                             </StackPanel>
                             
                         </elements:GroupBox>
@@ -94,7 +98,8 @@
                             Background="{DynamicResource PrimaryBackgroundBrush}"                            
                             Grid.Column="0"
                             Grid.Row="1"
-                            HeaderText="Lyrics Selection">
+                            HeaderText="Lyrics Selection"
+                            FontSize="12">
                             <StackPanel>
                                 <ComboBox Name="CMBX_LyricsSelection" 
                                           Classes="Custom"
@@ -116,13 +121,13 @@
                         <elements:GroupBox
                             HeaderBrush="{DynamicResource PrimaryThemeColorBrush}" 
                             HeaderTextBrush="{DynamicResource PrimaryThemeFontColorBrush}" 
-                     
                             Margin="10,0,0,10"
                             VerticalAlignment="Top" 
                             HorizontalAlignment="Left"
                             Foreground="{DynamicResource PrimaryFontColorBrush}"
                             Background="{DynamicResource PrimaryBackgroundBrush}"
                             HeaderText="Selection style"
+                            FontSize="12"
                             Grid.Row="0"
                             Grid.Column="1"
                             Grid.RowSpan="2">
@@ -178,7 +183,8 @@
                             VerticalAlignment="Top" 
                             HorizontalAlignment="Left"
                             Background="{DynamicResource PrimaryBackgroundBrush}"
-                            HeaderText="Spotify">
+                            HeaderText="Spotify"
+                            FontSize="12">
                             <Grid>
                                 <TextBlock Name="TXT_ConnectSpotify" 
                                            Text="Connect with Spotify"
@@ -193,9 +199,11 @@
                                         Foreground="{DynamicResource PrimaryThemeFontColorBrush}"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
+                                        FontSize="11"
                                         Margin="0,45,0,0"
-                                        Click="BTN_ConnectSpotify_OnClick"
-                                        Content="Connect"/>
+                                        Click="BTN_ConnectSpotify_OnClick">
+                                    <TextBlock Text="Connect"></TextBlock>
+                                </Button>
                                 <Button Name="BTN_DisconnectSpotify" 
                                         Width="180" 
                                         Height="30" 
@@ -204,8 +212,9 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
                                         Margin="0,82,0,0"
-                                        Click="BTN_DisconnectSpotify_OnClick"
-                                        Content="Disconnect"/>
+                                        Click="BTN_DisconnectSpotify_OnClick">
+                                    <TextBlock Text="Remove"></TextBlock>
+                                </Button>
                                
                             </Grid>
                         </elements:GroupBox>
@@ -231,7 +240,8 @@
                             VerticalAlignment="Top" 
                             HorizontalAlignment="Left"
                             Background="{DynamicResource PrimaryBackgroundBrush}"
-                            HeaderText="Advanced">
+                            HeaderText="Advanced"
+                            FontSize="12">
                             <Grid>
                                 <Button Name="BTN_ClearCache" 
                                         Width="180" 
@@ -241,8 +251,9 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
                                         Margin="0,5,0,0"
-                                        Click="BTN_ClearCache_OnClick"
-                                        Content="Clear cache"/>
+                                        Click="BTN_ClearCache_OnClick">
+                                    <TextBlock Text="Clear cache"></TextBlock>
+                                </Button>
                                 <Button Name="BTN_RefreshLyrics" 
                                         Width="180" 
                                         Height="30" 
@@ -251,8 +262,9 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
                                         Margin="0,42,0,0"
-                                        Click="BTN_RefreshLyrics_OnClick"
-                                        Content="Refresh Lyrics"/>
+                                        Click="BTN_RefreshLyrics_OnClick">
+                                    <TextBlock Text="Refresh"></TextBlock>
+                                </Button>
                                
                             </Grid>
                         </elements:GroupBox>

@@ -7,7 +7,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using CefNet.Avalonia;
 using CefNet.WinApi;
-using DevBase.Avalonia.Scaling;
+using ScalableWindow = OpenLyricsClient.Frontend.Scaling.ScalableWindow;
 
 namespace OpenLyricsClient.Frontend.View.Windows
 {

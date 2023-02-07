@@ -11,6 +11,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DevBase.Async.Task;
+using Material.Styles;
 using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.Frontend.Models.Pages;
@@ -26,6 +27,7 @@ public partial class LyricsPage : UserControl
     private TextBlock _txtTimeTo;
     private LyricsScroller _cstmLyricsDisplay;
     private Grid _presenterGrid;
+    private Card _cardBar;
     
     private Image _artworkImage;
     private string _oldImagePath;
@@ -43,7 +45,8 @@ public partial class LyricsPage : UserControl
         this._txtTimeTo = this.Get<TextBlock>(nameof(TXT_TimeTo));
         this._cstmLyricsDisplay = this.Get<LyricsScroller>(nameof(LRC_Display));
         this._presenterGrid = this.Get<Grid>(nameof(GRD_Content));
-
+        this._cardBar = this.Get<Card>(nameof(CRD_Bar));
+        
         if (this.DataContext is LyricsPageViewModel)
         {
             LyricsPageViewModel dataContext = (LyricsPageViewModel)this.DataContext;
@@ -113,12 +116,14 @@ public partial class LyricsPage : UserControl
     {
         this._txtTimeFrom.Opacity = 1;
         this._txtTimeTo.Opacity = 1;
+        this._cardBar.Height = 60 * App.INSTANCE.ScalingManager.CurrentScaling;
     }
 
     private void InputElement_OnPointerLeave(object? sender, PointerEventArgs e)
     {
         this._txtTimeFrom.Opacity = 0;
         this._txtTimeTo.Opacity = 0;
+        this._cardBar.Height = 40 * App.INSTANCE.ScalingManager.CurrentScaling;
     }
 
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)

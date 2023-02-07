@@ -2,9 +2,10 @@ using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using DevBase.Avalonia.Scaling;
 using OpenLyricsClient.Frontend.Models.Windows;
 using OpenLyricsClient.Frontend.View.Windows;
+using ScalingManager = OpenLyricsClient.Frontend.Scaling.ScalingManager;
+using ScalingProvider = OpenLyricsClient.Frontend.Scaling.ScalingProvider;
 
 namespace OpenLyricsClient
 {

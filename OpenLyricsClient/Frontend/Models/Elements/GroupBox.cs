@@ -15,6 +15,12 @@ public class GroupBox : Card
     public static readonly StyledProperty<string> HeaderTextProperty =
         AvaloniaProperty.Register<Card, string>(nameof(HeaderText));
 
+    public static readonly StyledProperty<double> BarHeightProperty =
+        AvaloniaProperty.Register<Card, double>(nameof(BarHeight));
+        
+    public static readonly StyledProperty<Thickness> ContentMarginProperty =
+        AvaloniaProperty.Register<Card, Thickness>(nameof(ContentMargin));
+
     public Brush HeaderBrush
     {
         get => GetValue(HeaderBrushProperty);
@@ -26,7 +32,6 @@ public class GroupBox : Card
         get => GetValue(HeaderTextBrushProperty);
         set => SetValue(HeaderTextBrushProperty, value);
     }
-
     
     public string HeaderText
     {
@@ -34,4 +39,15 @@ public class GroupBox : Card
         set => SetValue(HeaderTextProperty, value);
     }
     
+    public double BarHeight
+    {
+        get => GetValue(BarHeightProperty);
+        set => SetValue(BarHeightProperty, value);
+    }
+    
+    public Thickness ContentMargin
+    {
+        get => GetValue(ContentMarginProperty);
+        set => SetValue(ContentMarginProperty, value);
+    }
 }
