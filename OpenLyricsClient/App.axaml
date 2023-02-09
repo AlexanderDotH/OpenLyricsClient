@@ -3,7 +3,7 @@
              xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
              xmlns:local="using:OpenLyricsClient"
              xmlns:converter="clr-namespace:OpenLyricsClient.Backend.Utils.Converter"
-
+            
              x:Class="OpenLyricsClient.App">
     <Application.DataTemplates>
         <local:ViewLocator/>

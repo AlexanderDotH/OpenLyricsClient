@@ -1,7 +1,9 @@
 using System;
+using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.Frontend.Models.Windows;
 using OpenLyricsClient.Frontend.View.Windows;
 using ScalingManager = OpenLyricsClient.Frontend.Scaling.ScalingManager;
@@ -45,7 +47,7 @@ namespace OpenLyricsClient
                 desktop.Startup += Startup;
                 desktop.Exit += Exit;
                 
-                manager.SetScaling(1d);
+                manager.SetScaling(WindowUtils.GetScalingFactor());
             }
 
             base.OnFrameworkInitializationCompleted();
