@@ -47,7 +47,7 @@ namespace OpenLyricsClient.Backend.Utils
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 return 1.0;
 
-            return (200 - GetWindowsScalingFactor()) / 100;
+            return (220 - GetWindowsScalingFactor()) / 100;
         }
     }
 }
