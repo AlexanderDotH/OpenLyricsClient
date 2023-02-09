@@ -45,7 +45,7 @@ public class NoteAnimation : TemplatedControl
         FormattedText text = new FormattedText(textToMeasure,
             new Typeface(FontFamily.Parse(
                     "avares://Material.Styles/Fonts/Roboto#Roboto"), 
-                FontStyle.Normal, this.FontWeight), this.FontSize, TextAlignment.Left,
+                FontStyle.Normal, this.FontWeight), this.FontSize * App.INSTANCE.ScalingManager.CurrentScaling, TextAlignment.Left,
             TextWrapping.Wrap, new Size(this._viewbox.DesiredSize.Width, this._viewbox.DesiredSize.Height));
 
         Rect rect = new Rect(new Size(text.Bounds.Width, text.Bounds.Height));

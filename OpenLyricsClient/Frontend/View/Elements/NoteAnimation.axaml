@@ -103,19 +103,16 @@
                         <TextBlock Text="♪" 
                                    Classes="one"
                                    Foreground="{TemplateBinding UnSelectedLineBrush}"
-                                   FontSize="{TemplateBinding FontSize}"
                                    FontFamily="{TemplateBinding FontFamily}"
                                    FontWeight="{TemplateBinding FontWeight}"/>
                         <TextBlock Text="♪" 
                                    Classes="two"
                                    Foreground="{TemplateBinding UnSelectedLineBrush}"
-                                   FontSize="{TemplateBinding FontSize}"
                                    FontFamily="{TemplateBinding FontFamily}"
                                    FontWeight="{TemplateBinding FontWeight}"/>
                         <TextBlock Text="♪" 
                                    Classes="three"
                                    Foreground="{TemplateBinding UnSelectedLineBrush}"
-                                   FontSize="{TemplateBinding FontSize}"
                                    FontFamily="{TemplateBinding FontFamily}"
                                    FontWeight="{TemplateBinding FontWeight}"/>
                     </StackPanel>
@@ -134,19 +131,16 @@
                             <TextBlock Text="♪" 
                                        Classes="one"
                                        Foreground="{TemplateBinding SelectedLineBrush}"
-                                       FontSize="{TemplateBinding FontSize}"
                                        FontFamily="{TemplateBinding FontFamily}"
                                        FontWeight="{TemplateBinding FontWeight}"/>
                             <TextBlock Text="♪" 
                                        Classes="two"
                                        Foreground="{TemplateBinding SelectedLineBrush}"
-                                       FontSize="{TemplateBinding FontSize}"
                                        FontFamily="{TemplateBinding FontFamily}"
                                        FontWeight="{TemplateBinding FontWeight}"/>
                             <TextBlock Text="♪" 
                                        Classes="three"
                                        Foreground="{TemplateBinding SelectedLineBrush}"
-                                       FontSize="{TemplateBinding FontSize}"
                                        FontFamily="{TemplateBinding FontFamily}"
                                        FontWeight="{TemplateBinding FontWeight}"/>
                         </StackPanel>

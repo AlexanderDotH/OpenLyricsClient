@@ -11,6 +11,7 @@ using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.Frontend.Models.Elements.Blur;
+using OpenLyricsClient.Frontend.Scaling;
 using OpenLyricsClient.Frontend.View.Custom;
 using Brush = Avalonia.Media.Brush;
 using FontFamily = Avalonia.Media.FontFamily;
@@ -74,6 +75,8 @@ public class LyricsCard : TemplatedControl
         this._validLyricSet = false;
         this._alreadySet = false;
 
+        this.BlurSigma = 0;
+        
         Core.INSTANCE.SongHandler.SongChanged += (s, args) =>
         {
             this._templateApplied = false;
