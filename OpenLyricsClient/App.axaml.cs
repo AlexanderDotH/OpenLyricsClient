@@ -47,7 +47,7 @@ namespace OpenLyricsClient
                 desktop.Startup += Startup;
                 desktop.Exit += Exit;
                 
-                manager.SetScaling(WindowUtils.GetScalingFactor());
+                manager.SetScaling(0.5);
             }
 
             base.OnFrameworkInitializationCompleted();

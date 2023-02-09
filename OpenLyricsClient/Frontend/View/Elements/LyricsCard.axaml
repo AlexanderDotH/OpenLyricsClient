@@ -43,7 +43,7 @@
                     <elements:NoteAnimation Name="PART_NoteAnimation"
                                             IsVisible="False"
                                             FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
-                                            FontSize="{TemplateBinding FontSize, Converter={StaticResource FontSizeConverter}}"
+                                            FontSize="{TemplateBinding FontSize}"
                                             UnSelectedLineBrush="{TemplateBinding UnSelectedLineBrush}"
                                             SelectedLineBrush="{TemplateBinding SelectedLineBrush}"/>
                     

@@ -45,10 +45,10 @@ namespace OpenLyricsClient.Frontend.Scaling;
                 Register(avaloniaObject, TemplatedControl.FontSizeProperty, templatedControl.FontSize);
             }
             
-            if (avaloniaObject is NoteAnimation noteAnimation)
+            /*if (avaloniaObject is NoteAnimation noteAnimation)
             {
                 Register(avaloniaObject, NoteAnimation.FontSizeProperty, noteAnimation.FontSize);
-            }
+            }*/
             
             if (avaloniaObject is Border border)
             {
