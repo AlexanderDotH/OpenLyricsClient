@@ -41,15 +41,13 @@ namespace OpenLyricsClient.Backend.Utils
         
         public static double GetScalingFactor()
         {
-            switch (GetWindowsScalingFactor())
-            {
-                case 100: return 1.0;
-                case 125: return 0.9;
-                case 150: return 0.8;
-                case 175: return 0.7;
-                
-                default: return 1.0;
-            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                return 1.0;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                return 1.0;
+
+            return (200D - GetWindowsScalingFactor()) / 100D;
         }
     }
 }

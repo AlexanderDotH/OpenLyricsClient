@@ -31,13 +31,17 @@
             VerticalScrollBarVisibility="Auto">
             
             <StackPanel VerticalAlignment="Top" 
+                        
                         Margin="20,0,20,0">
-                <Expander Header="Application Settings"
-                          VerticalAlignment="Top"
+                <Expander VerticalAlignment="Top"
                           IsExpanded="True"
                           Background="{DynamicResource SecondaryBackgroundBrush}"
                           Foreground="{DynamicResource PrimaryFontColorBrush}"
                           ExpandDirection="Down">
+                    
+                    <Expander.Header>
+                        <TextBlock Text="Application Settings"/>
+                    </Expander.Header>
                     
                     <Grid ColumnDefinitions="Auto,Auto" 
                           RowDefinitions="Auto,Auto">
@@ -134,12 +138,16 @@
                     
                 </Expander>
                 
-                <Expander Header="Connection Settings"
-                          VerticalAlignment="Top"
+                <Expander VerticalAlignment="Top"
                           IsExpanded="True"
                           Background="{DynamicResource SecondaryBackgroundBrush}"
                           Foreground="{DynamicResource PrimaryFontColorBrush}"
                           ExpandDirection="Down">
+                    
+                    <Expander.Header>
+                        <TextBlock Text="Connection Settings"/>
+                    </Expander.Header>
+                    
                     <StackPanel>
                         <elements:GroupBox
                             HeaderBrush="#1ED760" 
@@ -189,12 +197,15 @@
                     
                 </Expander>
                 
-                <Expander Header="Advanced Settings"
-                          VerticalAlignment="Top"
+                <Expander VerticalAlignment="Top"
                           IsExpanded="True"
                           Background="{DynamicResource SecondaryBackgroundBrush}"
                           Foreground="{DynamicResource PrimaryFontColorBrush}"
                           ExpandDirection="Down">
+                    
+                    <Expander.Header>
+                        <TextBlock Text="Advanced Settings"/>
+                    </Expander.Header>
                     
                     <StackPanel>
                         <elements:GroupBox
