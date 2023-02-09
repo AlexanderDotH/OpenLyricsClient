@@ -90,37 +90,6 @@
                         <elements:GroupBox
                             HeaderBrush="{DynamicResource PrimaryThemeColorBrush}" 
                             HeaderTextBrush="{DynamicResource PrimaryThemeFontColorBrush}" 
-                            Width="200" 
-                            Height="105" 
-                            Margin="10,0,0,10"
-                            VerticalAlignment="Top" 
-                            HorizontalAlignment="Left"
-                            Background="{DynamicResource PrimaryBackgroundBrush}"                            
-                            Grid.Column="0"
-                            Grid.Row="1"
-                            HeaderText="Lyrics Selection"
-                            FontSize="12">
-                            <StackPanel>
-                                <ComboBox Name="CMBX_LyricsSelection" 
-                                          Classes="Custom"
-                                          HorizontalAlignment="Left"
-                                          VerticalAlignment="Center"
-                                          PlaceholderText="Selection Mode"
-                                          Width="180"
-                                          Background="{DynamicResource SecondaryBackgroundBrush}"
-                                          Foreground="{DynamicResource PrimaryThemeFontColorBrush}"
-                                          SelectionChanged="CMBX_LyricsSelection_OnSelectionChanged"
-                                          Margin="10,5,0,0"
-                                >
-                                    <ComboBoxItem Content="Quality"></ComboBoxItem>
-                                    <ComboBoxItem Content="Performance"></ComboBoxItem>
-                                </ComboBox>
-                            </StackPanel>
-                        </elements:GroupBox>
-                        
-                        <elements:GroupBox
-                            HeaderBrush="{DynamicResource PrimaryThemeColorBrush}" 
-                            HeaderTextBrush="{DynamicResource PrimaryThemeFontColorBrush}" 
                             Margin="10,0,0,10"
                             VerticalAlignment="Top" 
                             HorizontalAlignment="Left"
@@ -160,9 +129,6 @@
                             </Grid>
                             
                         </elements:GroupBox>
-
-
-
                     </Grid>
                     
                     

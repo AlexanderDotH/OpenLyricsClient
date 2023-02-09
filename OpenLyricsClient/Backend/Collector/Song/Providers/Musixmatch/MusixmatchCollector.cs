@@ -1,24 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
-using DevBase.Async.Task;
-using DevBase.Generic;
-using DevBaseFormat;
-using DevBaseFormat.Formats.LrcFormat;
-using DevBaseFormat.Formats.MmlFormat;
-using DevBaseFormat.Structure;
 using MusixmatchClientLib;
 using MusixmatchClientLib.API.Model.Types;
-using MusixmatchClientLib.Auth;
 using MusixmatchClientLib.Types;
 using OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch;
 using OpenLyricsClient.Backend.Debugger;
-using OpenLyricsClient.Backend.Handler.Song;
-using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
 
@@ -50,35 +38,22 @@ namespace OpenLyricsClient.Backend.Collector.Song.Providers.Musixmatch
 
             List<Track> tracks = null;
 
-            if (songRequestObject.SelectioMode == SelectionMode.PERFORMANCE)
-            {
-                tracks = await musixmatchClient.SongSearchAsync(
-                    new TrackSearchParameters
-                    {
-                        Album = songRequestObject.Album,
-                        Title = songRequestObject.SongName,
-                        Artist = songRequestObject.GetArtistsSplit()
-                    });
-            }
-            else
-            {
-                tracks = await musixmatchClient.SongSearchAsync(
-                    new TrackSearchParameters
-                    {
-                        Album = songRequestObject.Album,
-                        Title = songRequestObject.SongName,
-                        Artist = songRequestObject.GetArtistsSplit()
-                    });
-
-                if (!DataValidator.ValidateData(tracks) || DataValidator.ValidateData(tracks) && tracks.Count == 0)
+            tracks = await musixmatchClient.SongSearchAsync(
+                new TrackSearchParameters
                 {
-                    tracks = await musixmatchClient.SongSearchAsync(
-                        new TrackSearchParameters
-                        {
-                            Album = songRequestObject.FormattedSongAlbum,
-                            Title = songRequestObject.SongName
-                        });
-                }
+                    Album = songRequestObject.Album,
+                    Title = songRequestObject.SongName,
+                    Artist = songRequestObject.GetArtistsSplit()
+                });
+
+            if (!DataValidator.ValidateData(tracks) || DataValidator.ValidateData(tracks) && tracks.Count == 0)
+            {
+                tracks = await musixmatchClient.SongSearchAsync(
+                    new TrackSearchParameters
+                    {
+                        Album = songRequestObject.FormattedSongAlbum,
+                        Title = songRequestObject.SongName
+                    });
             }
 
             if (!DataValidator.ValidateData(tracks))
@@ -159,7 +134,7 @@ namespace OpenLyricsClient.Backend.Collector.Song.Providers.Musixmatch
 
         public int ProviderQuality()
         {
-            return (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.PERFORMANCE ? 10 : 10); 
+            return 10; 
         }
     }
 }

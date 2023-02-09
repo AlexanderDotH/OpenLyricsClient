@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using DevBaseApi.Apis.Deezer.Structure.Json;
-using DevBaseApi.Apis.Tidal.Structure.Json;
+using DevBase.Api.Apis.Deezer.Structure.Json;
+using DevBase.Api.Apis.Tidal.Structure.Json;
 using OpenLyricsClient.Backend.Structure.Json.NetEase.Json;
 using OpenLyricsClient.Backend.Structure.Json.NetEaseV2.Json;
 using SpotifyAPI.Web;

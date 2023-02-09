@@ -39,7 +39,6 @@ namespace OpenLyricsClient
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
-                .LogToTrace()
                 .AfterSetup(t =>
                 {
                     new Core();

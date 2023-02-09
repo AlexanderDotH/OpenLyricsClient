@@ -1,24 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using System.Windows.Markup;
-using Avalonia.Controls;
+using DevBase.Api.Apis.OpenLyricsClient.Structure.Json;
 using DevBase.Async.Task;
-using DevBase.Generic;
-using DevBaseApi.Apis.OpenLyricsClient.Structure.Json;
-using DevBaseFormat;
-using DevBaseFormat.Formats.EnvFormat;
-using DevBaseFormat.Structure;
 using Microsoft.Extensions.Configuration;
 using OpenLyricsClient.Backend.Debugger;
-using OpenLyricsClient.Backend.Environment;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.External.CefNet.Structure;
-using OpenLyricsClient.External.CefNet.Utils;
 using OpenLyricsClient.External.CefNet.View;
 using OpenLyricsClient.Frontend.View.Windows;
 using SpotifyAPI.Web;
@@ -113,8 +103,8 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
         {
             try
             {
-                DevBaseApi.Apis.OpenLyricsClient.OpenLyricsClient api =
-                    new DevBaseApi.Apis.OpenLyricsClient.OpenLyricsClient();
+                DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient api =
+                    new DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient();
 
                 JsonOpenLyricsClientAccess access =
                         await api.GetAccessToken(Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken);

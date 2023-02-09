@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using DevBase.Api.Apis.Deezer.Structure.Json;
+using DevBase.Format;
+using DevBase.Format.Formats.LrcFormat;
+using DevBase.Format.Structure;
 using DevBase.Generic;
-using DevBaseApi.Apis.Deezer.Structure.Json;
-using DevBaseFormat;
-using DevBaseFormat.Formats.LrcFormat;
-using DevBaseFormat.Structure;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
@@ -16,13 +16,13 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Deezer;
 
 public class DeezerCollector : ILyricsCollector
 {
-    private DevBaseApi.Apis.Deezer.Deezer _deezerApi;
+    private DevBase.Api.Apis.Deezer.Deezer _deezerApi;
     private Debugger<DeezerCollector> _debugger;
 
     public DeezerCollector()
     {
         this._debugger = new Debugger<DeezerCollector>(this);
-        this._deezerApi = new DevBaseApi.Apis.Deezer.Deezer();
+        this._deezerApi = new DevBase.Api.Apis.Deezer.Deezer();
     }
     
     public async Task<LyricData> GetLyrics(SongResponseObject songResponseObject)

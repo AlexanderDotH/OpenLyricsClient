@@ -118,7 +118,6 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                     DataValidator.ValidateData(song.SongMetadata.MaxTime) &&
                     DataValidator.ValidateData(song.SongMetadata.Album) &&
                     DataValidator.ValidateData(song.SongMetadata) &&
-                    DataValidator.ValidateData(Core.INSTANCE.SettingManager.Settings.LyricSelectionMode) &&
                     DataValidator.ValidateData(this._lyricCollector) &&
                     DataValidator.ValidateData(Core.INSTANCE.CacheManager))
                 {

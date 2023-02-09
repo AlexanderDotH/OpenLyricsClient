@@ -34,17 +34,6 @@ public class SettingsPageViewModel : INotifyPropertyChanged
         });*/
     }
 
-    public ObservableCollection<string> LyricsSelectionMode
-    {
-        get
-        {
-            this._lyricsSelectionMode = new ObservableCollection<string>();
-            this._lyricsSelectionMode.Add("Quality");
-            this._lyricsSelectionMode.Add("Performance");
-            return this._lyricsSelectionMode;
-        }
-    }
-
     public void DisconnectSpotify()
     {
         Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected = false;

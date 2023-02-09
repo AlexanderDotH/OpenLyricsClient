@@ -6,16 +6,12 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Romanization;
-using OpenLyricsClient.Frontend.Models.Pages;
 using OpenLyricsClient.Frontend.View.Windows;
-using SelectionMode = OpenLyricsClient.Backend.Structure.Enum.SelectionMode;
 
 namespace OpenLyricsClient.Frontend.View.Pages;
 
 public partial class SettingsPage : UserControl
 {
-    private ComboBox _comboboxMode;
-
     private Button _connectToSpotify;
     private Button _disconnectFromSpotify;
     private TextBlock _txtSpotify;
@@ -31,8 +27,6 @@ public partial class SettingsPage : UserControl
         InitializeComponent();
 
         this._loaded = false;
-        
-        this._comboboxMode = this.Get<ComboBox>(nameof(CMBX_LyricsSelection));
 
         this._connectToSpotify = this.Get<Button>(nameof(BTN_ConnectSpotify));
         this._disconnectFromSpotify = this.Get<Button>(nameof(BTN_DisconnectSpotify));
@@ -62,14 +56,6 @@ public partial class SettingsPage : UserControl
                        this._txtSpotify.Text = "Connect with Spotify";
                    }
 
-                   if (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.QUALITY)
-                   {
-                       this._comboboxMode.SelectedIndex = 0;
-                   } else if (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.PERFORMANCE)
-                   {
-                       this._comboboxMode.SelectedIndex = 1;
-                   }
-
                    this._japaneseToRomanji.IsChecked =
                        Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection
                            .JAPANESE_TO_ROMANJI);
@@ -97,8 +83,7 @@ public partial class SettingsPage : UserControl
 
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (!this._comboboxMode.IsDropDownOpen)
-            MainWindow.Instance.BeginMoveDrag(e);
+        MainWindow.Instance.BeginMoveDrag(e);
     }
 
     private void BTN_ConnectSpotify_OnClick(object? sender, RoutedEventArgs e)
@@ -122,38 +107,6 @@ public partial class SettingsPage : UserControl
     private void BTN_RefreshLyrics_OnClick(object? sender, RoutedEventArgs e)
     {
         Core.INSTANCE.SongHandler.RequestNewSong();
-    }
-
-    private void CMBX_LyricsSelection_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (!this._loaded)
-            return;
-        
-        if (this._comboboxMode.SelectedItem is ComboBoxItem)
-        {
-            ComboBoxItem selectedItem = (ComboBoxItem)this._comboboxMode.SelectedItem;
-
-            if (selectedItem.Content is string)
-            {
-                string selectedText = (string)selectedItem.Content;
-
-                switch (selectedText)
-                {
-                    case "Quality":
-                    {
-                        Core.INSTANCE.SettingManager.Settings.LyricSelectionMode = SelectionMode.QUALITY;
-                        Core.INSTANCE.SettingManager.WriteSettings();
-                        break;
-                    }
-                    case "Performance":
-                    {
-                        Core.INSTANCE.SettingManager.Settings.LyricSelectionMode = SelectionMode.PERFORMANCE;
-                        Core.INSTANCE.SettingManager.WriteSettings();
-                        break;
-                    }
-                }
-            }
-        }
     }
 
     private void CHK_JapaneseToRomanji_OnChecked(object? sender, RoutedEventArgs e)

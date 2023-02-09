@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using DevBase.Format.Structure;
 using DevBase.Generic;
-using DevBaseFormat.Structure;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure.Song;
 

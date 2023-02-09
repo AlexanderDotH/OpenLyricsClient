@@ -67,7 +67,6 @@ namespace OpenLyricsClient.Backend.Settings
             settings.TidalAccess = (TidalAccess)DefaultSetting(EnumSetting.TIDAL);
             settings.SpotifyAccess = (SpotifyAccess)DefaultSetting(EnumSetting.SPOTIFY);
             settings.RomanizeSelection = (List<RomanizeSelection>)DefaultSetting(EnumSetting.ROMANIZATION);
-            settings.LyricSelectionMode = (SelectionMode)DefaultSetting(EnumSetting.LYRICS_SELECTION_MODE);
             settings.MusixMatchToken = (List<MusixMatchToken>)DefaultSetting(EnumSetting.MUSIXMATCH_TOKENS);
 
             WriteSettings(settings);
@@ -122,10 +121,6 @@ namespace OpenLyricsClient.Backend.Settings
                     romanizeSelections.Add(RomanizeSelection.JAPANESE_TO_ROMANJI);
                     romanizeSelections.Add(RomanizeSelection.RUSSIA_TO_LATIN);
                     return romanizeSelections;
-                }
-                case EnumSetting.LYRICS_SELECTION_MODE:
-                {
-                    return SelectionMode.QUALITY;
                 }
                 case EnumSetting.MUSIXMATCH_TOKENS:
                 {

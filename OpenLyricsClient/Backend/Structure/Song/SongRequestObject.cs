@@ -15,10 +15,9 @@ namespace OpenLyricsClient.Backend.Structure.Song
         private string _album;
         private string _formattedSongAlbum;
         private long _songDuration;
-        private SelectionMode _selectioMode;
         private Song _song;
 
-        public SongRequestObject(string songName, string formattedSongName, string[] artists, long songDuration, string album, string formattedSongAlbum, SelectionMode selectioMode)
+        public SongRequestObject(string songName, string formattedSongName, string[] artists, long songDuration, string album, string formattedSongAlbum)
         {
             _songName = songName;
             _formattedSongName = formattedSongName;
@@ -26,10 +25,9 @@ namespace OpenLyricsClient.Backend.Structure.Song
             _songDuration = songDuration;
             _album = album;
             _formattedSongAlbum = formattedSongAlbum;
-            _selectioMode = selectioMode;
         }
 
-        public SongRequestObject(Song song, string songName, string formattedSongName, string[] artists, long songDuration, string album, string formattedSongAlbum, SelectionMode selectioMode)
+        public SongRequestObject(Song song, string songName, string formattedSongName, string[] artists, long songDuration, string album, string formattedSongAlbum)
         {
             _song = song;
             _songName = songName;
@@ -38,13 +36,11 @@ namespace OpenLyricsClient.Backend.Structure.Song
             _songDuration = songDuration;
             _album = album;
             _formattedSongAlbum = formattedSongAlbum;
-            _selectioMode = selectioMode;
         }
         
-        public SongRequestObject(string songName, string[] artists, long songDuration, string album,
-            SelectionMode selectioMode) :
+        public SongRequestObject(string songName, string[] artists, long songDuration, string album) :
             this(songName, SongFormatter.FormatSongName(songName), artists, songDuration, album,
-                SongFormatter.FormatSongAlbum(album), selectioMode){}
+                SongFormatter.FormatSongAlbum(album)){}
        
         public static SongRequestObject FromSong(Song song)
         {
@@ -58,8 +54,7 @@ namespace OpenLyricsClient.Backend.Structure.Song
                 song.SongMetadata.Artists,
                 song.SongMetadata.MaxTime,
                 song.SongMetadata.Album,
-                SongFormatter.FormatSongAlbum(song.SongMetadata.Album),
-                Core.INSTANCE.SettingManager.Settings.LyricSelectionMode);
+                SongFormatter.FormatSongAlbum(song.SongMetadata.Album));
 
             return songRequestObject;
         }
@@ -99,12 +94,6 @@ namespace OpenLyricsClient.Backend.Structure.Song
         {
             get => _album;
             set => _album = value;
-        }
-
-        public SelectionMode SelectioMode
-        {
-            get => _selectioMode;
-            set => _selectioMode = value;
         }
 
         public string GetArtistsSplit()

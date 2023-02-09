@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using DevBase.Format;
+using DevBase.Format.Formats.EnvFormat;
 using DevBase.Generic;
 using DevBase.IO;
-using DevBaseFormat;
-using DevBaseFormat.Formats.EnvFormat;
-using DevBaseFormat.Structure;
 
 namespace OpenLyricsClient.Backend.Environment
 {

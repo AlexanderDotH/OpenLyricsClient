@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DevBaseApi.Apis.Deezer.Structure.Json;
+using DevBase.Api.Apis.Deezer.Structure.Json;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
@@ -10,13 +10,13 @@ namespace OpenLyricsClient.Backend.Collector.Song.Providers.Deezer;
 
 public class DeezerSongCollector : ISongCollector
 {
-    private DevBaseApi.Apis.Deezer.Deezer _deezerApi;
+    private DevBase.Api.Apis.Deezer.Deezer _deezerApi;
     private Debugger<DeezerSongCollector> _debugger;
 
     public DeezerSongCollector()
     {
         this._debugger = new Debugger<DeezerSongCollector>(this);
-        this._deezerApi = new DevBaseApi.Apis.Deezer.Deezer();
+        this._deezerApi = new DevBase.Api.Apis.Deezer.Deezer();
     }
     
     public async Task<SongResponseObject> GetSong(SongRequestObject songRequestObject)

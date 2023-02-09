@@ -83,8 +83,17 @@
     <Reference Include="DevBase">
       <HintPath>..\Libraries\DevBase.dll</HintPath>
     </Reference>
+    <Reference Include="DevBase.Api">
+      <HintPath>..\Libraries\DevBase.Api.dll</HintPath>
+    </Reference>
     <Reference Include="DevBase.Avalonia">
       <HintPath>..\Libraries\DevBase.Avalonia.dll</HintPath>
+    </Reference>
+    <Reference Include="DevBase.Cryptography">
+      <HintPath>..\Libraries\DevBase.Cryptography.dll</HintPath>
+    </Reference>
+    <Reference Include="DevBase.Format">
+      <HintPath>..\Libraries\DevBase.Format.dll</HintPath>
     </Reference>
     <Reference Include="DevBaseApi">
       <HintPath>..\Libraries\DevBaseApi.dll</HintPath>

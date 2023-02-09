@@ -2,18 +2,14 @@
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows;
-using Avalonia.Styling;
+using DevBase.Format;
+using DevBase.Format.Formats.LrcFormat;
+using DevBase.Format.Structure;
 using DevBase.Generic;
 using DevBase.Typography;
 using DevBase.Web;
 using DevBase.Web.ResponseData;
-using DevBaseFormat;
-using DevBaseFormat.Formats.LrcFormat;
-using DevBaseFormat.Structure;
 using OpenLyricsClient.Backend.Debugger;
-using OpenLyricsClient.Backend.Handler.Song;
-using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Json.NetEaseV2.Json;
 using OpenLyricsClient.Backend.Structure.Lyrics;
@@ -64,27 +60,19 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
                     songResponse.Duration);
 
                 int songId = songResponse.Id;
+                
                 NetEaseV2LyricResponse lyricResponse = await GetLyricsFromEndpoint(songId);
 
-                if (songResponseObject.SongRequestObject.SelectioMode == SelectionMode.QUALITY)
-                {
-                    lyrics.Add(new Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>(songResponse, lyricResponse));
+                lyrics.Add(new Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>(songResponse, lyricResponse));
 
-                    for (int k = 0; k < lyrics.Length; k++)
+                for (int k = 0; k < lyrics.Length; k++)
+                {
+                    Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse> lyricElement = lyrics.Get(k);
+                    if (!IsGarbage(lyricElement.Item2))
                     {
-                        Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse> lyricElement = lyrics.Get(k);
-                        if (!IsGarbage(lyricElement.Item2))
-                        {
-                            this._debugger.Write("Fetched lyrics for " + songMetadata.Name + "!", DebugType.INFO);
-                            return await ParseLyricResponse(lyricElement.Item2, songMetadata);
-                        }
+                        this._debugger.Write("Fetched lyrics for " + songMetadata.Name + "!", DebugType.INFO);
+                        return await ParseLyricResponse(lyricElement.Item2, songMetadata);
                     }
-
-                }
-                else if (songResponseObject.SongRequestObject.SelectioMode == SelectionMode.PERFORMANCE)
-                {
-                    this._debugger.Write("Fetched lyrics for " + songMetadata.Name + "!", DebugType.INFO);
-                    return await ParseLyricResponse(lyricResponse, songMetadata);
                 }
             }
             
@@ -135,7 +123,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
                 string element = lines.Get(i);
 
                 if (!Regex.IsMatch(element, 
-                        DevBaseFormat.Structure.RegexHolder.REGEX_GARBAGE))
+                        DevBase.Format.Structure.RegexHolder.REGEX_GARBAGE))
                 {
                     return false;
                 }
@@ -170,7 +158,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
 
         public int ProviderQuality()
         {
-            return (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.PERFORMANCE ? 8 : 5);
+            return 5;
 
         }
     }

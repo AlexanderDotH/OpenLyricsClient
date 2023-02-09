@@ -1,22 +1,12 @@
 ﻿using System;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DevBase.Generic;
-using DevBase.Typography;
-using DevBase.Utilities;
 using DevBase.Web;
 using DevBase.Web.ResponseData;
-using DevBaseFormat;
-using DevBaseFormat.Formats.LrcFormat;
-using DevBaseFormat.Structure;
-using Microsoft.CodeAnalysis.CSharp;
 using OpenLyricsClient.Backend.Debugger;
-using OpenLyricsClient.Backend.Handler.Song;
-using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Json.NetEase.Json;
-using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
 using Squalr.Engine.Utils.Extensions;
@@ -195,7 +185,7 @@ namespace OpenLyricsClient.Backend.Collector.Song.Providers.NetEase
 
         public int ProviderQuality()
         {
-            return (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.PERFORMANCE ? 4 : 3);
+            return 3;
         }
     }
 }

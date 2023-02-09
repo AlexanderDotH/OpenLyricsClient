@@ -4,11 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using DevBase.Async.Task;
+using DevBase.Format;
+using DevBase.Format.Formats.LrcFormat;
+using DevBase.Format.Structure;
 using DevBase.Generic;
-using DevBaseFormat;
-using DevBaseFormat.Formats.LrcFormat;
-using DevBaseFormat.Formats.MmlFormat;
-using DevBaseFormat.Structure;
 using MusixmatchClientLib;
 using MusixmatchClientLib.API.Model.Types;
 using MusixmatchClientLib.Auth;
@@ -118,7 +117,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
 
         public int ProviderQuality()
         {
-            return (Core.INSTANCE.SettingManager.Settings.LyricSelectionMode == SelectionMode.PERFORMANCE ? 10 : 10); 
+            return 10; 
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
-using DevBaseApi.Apis.Tidal.Structure.Json;
-using OpenLyricsClient.Backend.Structure;
+using DevBase.Api.Apis.Tidal.Structure.Json;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
