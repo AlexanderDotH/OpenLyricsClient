@@ -29,7 +29,7 @@ namespace OpenLyricsClient.Frontend.View.Windows
         {
             InitializeComponent();
 
-            INSTANCE = this;
+            INSTANCE = this; 
             this._windowDragable = true;
 
             this._pageSelector = this.Get<Carousel>(nameof(PageSelection));
