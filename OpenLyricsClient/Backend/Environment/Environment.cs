@@ -2,19 +2,19 @@
 using System.Reflection;
 using DevBase.Format;
 using DevBase.Format.Formats.EnvFormat;
-using DevBase.Generic;
+using DevBase.Generics;
 using DevBase.IO;
 
 namespace OpenLyricsClient.Backend.Environment
 {
     class Environment
     {
-        private GenericTupleList<string, string> _elements;
+        private ATupleList<string, string> _elements;
 
         public Environment(string path)
         {
-            FileFormatParser<GenericTupleList<string, string>> environmentParser =
-                new FileFormatParser<GenericTupleList<string, string>>(new EnvParser<GenericTupleList<string, string>>());
+            FileFormatParser<ATupleList<string, string>> environmentParser =
+                new FileFormatParser<ATupleList<string, string>>(new EnvParser<ATupleList<string, string>>());
             
             if (!File.Exists(path))
                 return;
@@ -54,7 +54,7 @@ namespace OpenLyricsClient.Backend.Environment
                 }
             }
 
-            GenericList<AFileObject> files = AFile.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), false, "*.env");
+            AList<AFileObject> files = AFile.GetFiles(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), false, "*.env");
 
             for (int i = 0; i < files.Length; i++)
             {

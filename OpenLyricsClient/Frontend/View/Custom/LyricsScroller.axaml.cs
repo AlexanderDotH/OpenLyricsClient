@@ -12,7 +12,7 @@ using Avalonia.Media;
 using Avalonia.Rendering;
 using Avalonia.Threading;
 using DevBase.Async.Task;
-using DevBase.Generic;
+using DevBase.Generics;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Events.EventHandler;
@@ -62,7 +62,7 @@ public partial class LyricsScroller : UserControl
     private LyricPart _lyricPart;
     
     private LyricsCard _currentCard;
-    private GenericTupleList<LyricsCard, bool> _lyricsRoll;
+    private ATupleList<LyricsCard, bool> _lyricsRoll;
 
     private bool _useBlur;
     private int _blurItemCount;
@@ -121,7 +121,7 @@ public partial class LyricsScroller : UserControl
         this._useBlur = false;
         this._blurIncrement = 0.8F;
         this._blurItemCount = 6;
-        this._lyricsRoll = new GenericTupleList<LyricsCard, bool>();
+        this._lyricsRoll = new ATupleList<LyricsCard, bool>();
         
         this._renderTimer = new SleepRenderTimer(150);
         this._renderTimer.Tick += RenderTimerOnTick;

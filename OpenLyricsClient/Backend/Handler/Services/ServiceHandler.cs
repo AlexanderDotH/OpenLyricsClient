@@ -1,5 +1,5 @@
 ﻿using System;
-using DevBase.Generic;
+using DevBase.Generics;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Services.Services;
 using OpenLyricsClient.Backend.Handler.Services.Services.Spotify;
@@ -10,14 +10,14 @@ namespace OpenLyricsClient.Backend.Handler.Services
 {
     class ServiceHandler : IHandler
     {
-        private GenericList<IService> _services;
+        private AList<IService> _services;
         private Debugger<ServiceHandler> _debugger;
 
         public ServiceHandler()
         {
             this._debugger = new Debugger<ServiceHandler>(this);
 
-            this._services = new GenericList<IService>();
+            this._services = new AList<IService>();
 
             this._services.Add(new SpotifyService());
             //this._services.Add(new TidalService());

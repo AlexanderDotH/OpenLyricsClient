@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using DevBase.Generic;
+using DevBase.Generics;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Deezer;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase;
@@ -15,11 +15,11 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
 {
     class LyricCollector
     {
-        private GenericList<ILyricsCollector> _lyricCollectors;
+        private AList<ILyricsCollector> _lyricCollectors;
 
         public LyricCollector()
         {
-            this._lyricCollectors = new GenericList<ILyricsCollector>();
+            this._lyricCollectors = new AList<ILyricsCollector>();
             this._lyricCollectors.Add(new DeezerCollector());
             this._lyricCollectors.Add(new NetEaseCollector());
             this._lyricCollectors.Add(new NetEaseV2Collector());

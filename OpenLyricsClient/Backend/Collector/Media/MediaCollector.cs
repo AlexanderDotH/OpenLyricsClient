@@ -1,9 +1,9 @@
-using DevBase.Generic;
+using DevBase.Generics;
 
 namespace OpenLyricsClient.Backend.Collector.Media;
 
 public class MediaCollector
 {
-    private GenericList<IMediaCollector> _mediaCollector;
+    private AList<IMediaCollector> _mediaCollector;
 
 }

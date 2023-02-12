@@ -6,7 +6,7 @@ using DevBase.Api.Apis.Deezer.Structure.Json;
 using DevBase.Format;
 using DevBase.Format.Formats.LrcFormat;
 using DevBase.Format.Structure;
-using DevBase.Generic;
+using DevBase.Generics;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
@@ -81,7 +81,7 @@ public class DeezerCollector : ILyricsCollector
 
         if (DataValidator.ValidateData(fileFormatParser))
         {
-            GenericList<LyricElement> lyricElements =
+            AList<LyricElement> lyricElements =
                 fileFormatParser.FormatFromString(lrcFile).Lyrics;
 
             if (DataValidator.ValidateData(lyricElements))

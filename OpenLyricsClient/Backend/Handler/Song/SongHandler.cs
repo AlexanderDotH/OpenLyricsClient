@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DevBase.Async.Task;
-using DevBase.Generic;
+using DevBase.Generics;
 using OpenLyricsClient.Backend.Collector.Song;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Events;
@@ -22,7 +22,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
     {
         private SongStageChange _songStageChange;
 
-        private GenericTupleList<ISongProvider, EnumSongProvider> _songProviders;
+        private ATupleList<ISongProvider, EnumSongProvider> _songProviders;
         private SongProviderChooser _songProviderChooser;
 
         private bool _disposed;
@@ -39,7 +39,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
         {
             this._debugger = new Debugger<SongHandler>(this);
 
-            this._songProviders = new GenericTupleList<ISongProvider, EnumSongProvider>();
+            this._songProviders = new ATupleList<ISongProvider, EnumSongProvider>();
             this._songProviders.Add(new Tuple<ISongProvider, EnumSongProvider>(new SpotifySongProvider(), EnumSongProvider.SPOTIFY));
             //this._songProviders.Add(new Tuple<ISongProvider, EnumSongProvider>(new TidalSongProvider(), EnumSongProvider.TIDAL));
 

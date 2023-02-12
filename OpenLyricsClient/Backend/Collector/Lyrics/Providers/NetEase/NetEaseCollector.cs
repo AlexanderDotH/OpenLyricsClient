@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using DevBase.Format;
 using DevBase.Format.Formats.LrcFormat;
 using DevBase.Format.Structure;
-using DevBase.Generic;
+using DevBase.Generics;
 using DevBase.Typography;
 using DevBase.Utilities;
 using DevBase.Web;
@@ -48,13 +48,13 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase
             if (!(DataValidator.ValidateData(songResponseObject.Track)))
                 return new LyricData();
 
-            if (!(songResponseObject.Track is GenericList<NetEaseSongResponse>))
+            if (!(songResponseObject.Track is AList<NetEaseSongResponse>))
                 return new LyricData();
             
-            GenericList<NetEaseSongResponse> songResponses = (GenericList<NetEaseSongResponse>)songResponseObject.Track;
+            AList<NetEaseSongResponse> songResponses = (AList<NetEaseSongResponse>)songResponseObject.Track;
 
-            GenericList<Tuple<NetEaseSongResponse, NetEaseLyricResponse>> lyrics =
-                new GenericList<Tuple<NetEaseSongResponse, NetEaseLyricResponse>>();
+            AList<Tuple<NetEaseSongResponse, NetEaseLyricResponse>> lyrics =
+                new AList<Tuple<NetEaseSongResponse, NetEaseLyricResponse>>();
             
             for (int i = 0; i < songResponses.Length; i++)
             {
@@ -96,7 +96,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase
         {
             AString values = new AString(lyrics.NetEaseLrcResponse.Lyric);
 
-            GenericList<string> lines = values.AsList();
+            AList<string> lines = values.AsList();
 
             for (int i = 0; i < lines.Length; i++)
             {
@@ -128,7 +128,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase
 
                         if (DataValidator.ValidateData(fileFormatParser))
                         {
-                            GenericList<LyricElement> lyricElements =
+                            AList<LyricElement> lyricElements =
                                 fileFormatParser.FormatFromString(lyricResponse.NetEaseLrcResponse.Lyric).Lyrics;
 
                             if (DataValidator.ValidateData(lyricElements))

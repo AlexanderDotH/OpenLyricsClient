@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using DevBase.Format;
 using DevBase.Format.Formats.LrcFormat;
 using DevBase.Format.Structure;
-using DevBase.Generic;
+using DevBase.Generics;
 using DevBase.Typography;
 using DevBase.Web;
 using DevBase.Web.ResponseData;
@@ -41,13 +41,13 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
             if (!songResponseObject.CollectorName.Equals(this.CollectorName()))
                 return new LyricData();
 
-            if (!(songResponseObject.Track is GenericList<NetEaseV2SongResponse>))
+            if (!(songResponseObject.Track is AList<NetEaseV2SongResponse>))
                 return new LyricData();
 
-            GenericList<NetEaseV2SongResponse> response = (GenericList<NetEaseV2SongResponse>)songResponseObject.Track;
+            AList<NetEaseV2SongResponse> response = (AList<NetEaseV2SongResponse>)songResponseObject.Track;
 
-            GenericList<Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>> lyrics = 
-                new GenericList<Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>>();
+            AList<Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>> lyrics = 
+                new AList<Tuple<NetEaseV2SongResponse, NetEaseV2LyricResponse>>();
 
             for (int j = 0; j < response.Length; j++)
             {
@@ -97,7 +97,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
 
                         if (DataValidator.ValidateData(fileFormatParser))
                         {
-                            GenericList<LyricElement> lyricElements =
+                            AList<LyricElement> lyricElements =
                                 fileFormatParser.FormatFromString(lyricResponse.Lrc.Lyric).Lyrics;
 
                             if (DataValidator.ValidateData(lyricElements))
@@ -116,7 +116,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
         {
             AString values = new AString(lyrics.Lrc.Lyric);
 
-            GenericList<string> lines = values.AsList();
+            AList<string> lines = values.AsList();
 
             for (int i = 0; i < lines.Length; i++)
             {

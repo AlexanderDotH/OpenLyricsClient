@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using DevBase.Format.Structure;
-using DevBase.Generic;
+using DevBase.Generics;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure.Song;
 
@@ -32,7 +32,7 @@ namespace OpenLyricsClient.Backend.Structure.Lyrics
 
         public LyricData(LyricReturnCode lyricReturnCode, SongMetadata songMetadata, LyricType lyricType) : this(lyricReturnCode, songMetadata, null, null, lyricType) { }
 
-        public static async Task<LyricData> ConvertToData(GenericList<LyricElement> lyrics, SongMetadata songMetadata, string lyricProvider)
+        public static async Task<LyricData> ConvertToData(AList<LyricElement> lyrics, SongMetadata songMetadata, string lyricProvider)
         {
             if (lyrics == null || lyrics.Length == 0)
                 return new LyricData();

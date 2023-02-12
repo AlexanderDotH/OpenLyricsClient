@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DevBase.Format.Structure;
-using DevBase.Generic;
+using DevBase.Generics;
 using DevBase.Web;
 using DevBase.Web.ResponseData;
 using OpenLyricsClient.Backend.Debugger;
@@ -39,7 +39,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
             if (lyrics.Length == 0)
                 return new LyricData();
 
-            GenericList<LyricElement> lyricElements = new GenericList<LyricElement>();
+            AList<LyricElement> lyricElements = new AList<LyricElement>();
 
             for (int i = 0; i < lyrics.Length; i++)
             {

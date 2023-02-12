@@ -7,7 +7,7 @@ using DevBase.Async.Task;
 using DevBase.Format;
 using DevBase.Format.Formats.LrcFormat;
 using DevBase.Format.Structure;
-using DevBase.Generic;
+using DevBase.Generics;
 using MusixmatchClientLib;
 using MusixmatchClientLib.API.Model.Types;
 using MusixmatchClientLib.Auth;
@@ -85,7 +85,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
 
                 if (DataValidator.ValidateData(fileFormatParser))
                 {
-                    GenericList<LyricElement> lyricElements =
+                    AList<LyricElement> lyricElements =
                         fileFormatParser.FormatFromString(response.SubtitleBody).Lyrics;
 
                     this._debugger.Write(string.Format("Found lyrics for {0}", track.TrackName), DebugType.INFO);

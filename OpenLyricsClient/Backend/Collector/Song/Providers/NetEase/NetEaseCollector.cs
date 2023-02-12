@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using DevBase.Generic;
+using DevBase.Generics;
 using DevBase.Web;
 using DevBase.Web.ResponseData;
 using OpenLyricsClient.Backend.Debugger;
@@ -54,7 +54,7 @@ namespace OpenLyricsClient.Backend.Collector.Song.Providers.NetEase
             
             int retryPercentage = 5;
 
-            GenericList<NetEaseSongResponse> songs = new GenericList<NetEaseSongResponse>();
+            AList<NetEaseSongResponse> songs = new AList<NetEaseSongResponse>();
 
             for (int i = 0; i < RETRIES; i++)
             {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using Avalonia;
-using DevBase.Generic;
+using DevBase.Generics;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Utils;
 
@@ -16,10 +16,10 @@ namespace OpenLyricsClient.Backend.Helper
             this._lastWindow = null;
         }
 
-        public GenericList<string> LastWindows(params string[] processNames)
+        public AList<string> LastWindows(params string[] processNames)
         {
-            GenericList<string> names = new GenericList<string>(processNames);
-            GenericList<string> returnList = new GenericList<string>();
+            AList<string> names = new AList<string>(processNames);
+            AList<string> returnList = new AList<string>();
 
             for (int i = 0; i < names.Length; i++)
             {

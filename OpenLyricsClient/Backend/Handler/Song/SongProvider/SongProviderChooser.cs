@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using DevBase.Async.Task;
-using DevBase.Generic;
+using DevBase.Generics;
 using DevBase.Typography;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Services.Services;
@@ -133,8 +133,8 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
             if (!service.IsConnected())
                 return false;
 
-            GenericList<string> lastWindows = Core.INSTANCE.WindowLogger.LastWindows(service.ProcessName());
-            GenericList<string> foundProcesses = ProcessUtils.GetRunningProcesses(service.ProcessName());
+            AList<string> lastWindows = Core.INSTANCE.WindowLogger.LastWindows(service.ProcessName());
+            AList<string> foundProcesses = ProcessUtils.GetRunningProcesses(service.ProcessName());
 
             if (!lastWindows.IsEmpty())
                 if (lastWindows.Get(0).Equals(service.ProcessName()))

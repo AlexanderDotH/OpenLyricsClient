@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using DevBase.Generic;
+using DevBase.Generics;
 using DevBase.IO;
 using DevBase.Utilities;
 using Newtonsoft.Json;
@@ -19,7 +19,7 @@ namespace OpenLyricsClient.Backend.Cache
 {
     public class CacheManager
     {
-        private GenericList<CacheEntry> _cache;
+        private AList<CacheEntry> _cache;
 
         private const string CACHE_EXTENSION = ".cache";
         private const string CACHE_FOLDER_NAME = "Cache";
@@ -40,7 +40,7 @@ namespace OpenLyricsClient.Backend.Cache
             if (!Directory.Exists(CACHE_PATH))
                 Directory.CreateDirectory(CACHE_PATH);
 
-            this._cache = new GenericList<CacheEntry>();
+            this._cache = new AList<CacheEntry>();
 
             this._maxCapacity = maxCapacity;
             this._expirationMS = expirationMs;
@@ -50,7 +50,7 @@ namespace OpenLyricsClient.Backend.Cache
 
         private void ReadCache()
         {
-            GenericList<AFileObject> files = AFile.GetFiles(CACHE_PATH, false, "*" + CACHE_EXTENSION);
+            AList<AFileObject> files = AFile.GetFiles(CACHE_PATH, false, "*" + CACHE_EXTENSION);
 
             for (int i = 0; i < files.Length; i++)
             {
@@ -155,7 +155,7 @@ namespace OpenLyricsClient.Backend.Cache
 
             if (Directory.Exists(CACHE_PATH))
             {
-                GenericList<AFileObject> files = 
+                AList<AFileObject> files = 
                     AFile.GetFiles(CACHE_PATH, false, "*" + CACHE_EXTENSION);
                 
                 files.AddRange(AFile.GetFiles(CACHE_PATH, false, "*.png"));

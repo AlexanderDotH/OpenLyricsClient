@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using DevBase.Generic;
+using DevBase.Generics;
 using Microsoft.CodeAnalysis.CSharp;
 using OpenLyricsClient.Backend.Collector.Song.Providers.Deezer;
 using OpenLyricsClient.Backend.Collector.Song.Providers.Musixmatch;
@@ -17,8 +17,8 @@ namespace OpenLyricsClient.Backend.Collector.Song;
 
 public class SongCollector
 {
-    private GenericList<ISongCollector> _songCollectors;
-    private GenericTupleList<SongRequestObject,SongResponseObject> _songResponses;
+    private AList<ISongCollector> _songCollectors;
+    private ATupleList<SongRequestObject,SongResponseObject> _songResponses;
 
     private SongHandler _songHandler;
     private LyricHandler _lyricHandler;
@@ -26,13 +26,13 @@ public class SongCollector
     
     public SongCollector(SongHandler songHandler, LyricHandler lyricHandler, ArtworkHandler artworkHandler)
     {
-        this._songCollectors = new GenericList<ISongCollector>();
+        this._songCollectors = new AList<ISongCollector>();
         this._songCollectors.Add(new MusixmatchCollector());
         this._songCollectors.Add(new NetEaseCollector());
         this._songCollectors.Add(new NetEaseV2Collector());
         this._songCollectors.Add(new DeezerSongCollector());
 
-        this._songResponses = new GenericTupleList<SongRequestObject, SongResponseObject>();
+        this._songResponses = new ATupleList<SongRequestObject, SongResponseObject>();
         
         this._songHandler = songHandler;
 

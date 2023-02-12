@@ -5,7 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using DevBase.Async.Task;
-using DevBase.Generic;
+using DevBase.Generics;
 using OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch;
 using OpenLyricsClient.Backend.Structure.Enum;
 
@@ -15,12 +15,12 @@ namespace OpenLyricsClient.Backend.Collector.Token
     {
 
         private TaskSuspensionToken _collectTokenSuspensionToken;
-        private GenericList<ITokenCollector> _tokenCollector;
+        private AList<ITokenCollector> _tokenCollector;
         private bool _disposed;
 
         public TokenCollector()
         {
-            this._tokenCollector = new GenericList<ITokenCollector>();
+            this._tokenCollector = new AList<ITokenCollector>();
             this._tokenCollector.Add(new MusixmatchTokenCollector());
 
             Core.INSTANCE.TaskRegister.Register(

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using DevBase.Generic;
+using DevBase.Generics;
 
 namespace OpenLyricsClient.Backend.Utils
 {
@@ -12,11 +12,11 @@ namespace OpenLyricsClient.Backend.Utils
             return processes.Length > 0;
         }
 
-        public static GenericList<string> GetRunningProcesses(params string[] processNames)
+        public static AList<string> GetRunningProcesses(params string[] processNames)
         {
-            GenericList<string> processesToSearch = new GenericList<string>(processNames);
-            GenericList<Process> processes = new GenericList<Process>(Process.GetProcesses());
-            GenericList<string> foundProcesses = new GenericList<string>();
+            AList<string> processesToSearch = new AList<string>(processNames);
+            AList<Process> processes = new AList<Process>(Process.GetProcesses());
+            AList<string> foundProcesses = new AList<string>();
 
             for (int i = 0; i < processesToSearch.Length; i++)
             {

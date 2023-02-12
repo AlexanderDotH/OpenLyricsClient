@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using DevBase.Api.Apis.Tidal;
 using DevBase.Api.Apis.Tidal.Structure.Json;
 using DevBase.Async.Task;
-using DevBase.Generic;
+using DevBase.Generics;
 using DevBase.Typography;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Services.Services;
@@ -223,7 +223,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Tidal
         {
             int matches = 0;
             
-            GenericList<string> list = new AString(artistsAsString.Replace(" /", System.Environment.NewLine)).AsList();
+            AList<string> list = new AString(artistsAsString.Replace(" /", System.Environment.NewLine)).AsList();
 
             for (int i = 0; i < artistsAsList.Count; i++)
             {

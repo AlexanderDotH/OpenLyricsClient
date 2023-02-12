@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DevBase.Generic;
+using DevBase.Generics;
 using OpenLyricsClient.Backend.Collector.Artwork.Providers.Musixmatch;
 using OpenLyricsClient.Backend.Collector.Artwork.Providers.Spotify;
 using OpenLyricsClient.Backend.Debugger;
@@ -18,14 +18,14 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
 {
     public class ArtworkCollector
     {
-        private GenericList<IArtworkCollector> _artworkCollectors;
+        private AList<IArtworkCollector> _artworkCollectors;
         private Debugger<ArtworkCollector> _debugger;
 
         public ArtworkCollector()
         {
             this._debugger = new Debugger<ArtworkCollector>(this);
             
-            this._artworkCollectors = new GenericList<IArtworkCollector>();
+            this._artworkCollectors = new AList<IArtworkCollector>();
             this._artworkCollectors.Add(new SpotifyCollector());
             this._artworkCollectors.Add(new MusixMatchCollector());
         }
