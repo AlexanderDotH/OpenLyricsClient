@@ -11,15 +11,15 @@ public class ScrollPreviewSubPageViewModel
 {
     public ObservableCollection<LyricPart> _lyricParts;
     private LyricPart _lyricPart;
-
+    
     public ScrollPreviewSubPageViewModel()
     {
         this._lyricParts = new ObservableCollection<LyricPart>();
 
-        LyricPart part1 = new LyricPart(0, "Line 1");
-        LyricPart part2 = new LyricPart(500, "Line 2");
-        LyricPart part3 = new LyricPart(1000, "Line 3");
-        LyricPart part4 = new LyricPart(1500, "Line 4");
+        LyricPart part1 = new LyricPart(0, "We're no strangers to love");
+        LyricPart part2 = new LyricPart(500, "You know the rules and so do I");
+        LyricPart part3 = new LyricPart(1000, "A full commitment's what I'm thinking of");
+        LyricPart part4 = new LyricPart(1500, "You wouldn't get this from any other guy");
 
         this.CurrentLyricParts.AddRange(new List<LyricPart>() {part1, part2, part3, part4});
         this.CurrentLyricPart = part1;

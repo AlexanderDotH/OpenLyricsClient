@@ -33,6 +33,8 @@
                         HorizontalAlignment="Left"
                         Percentage="-1"
                         Background="{DynamicResource SecondaryBackgroundBrush}"
+                        BlurSigma="0"
+                        LyricDisplayMode="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type subPages:ScrollPreviewSubPage}}, Path=LyricDisplayMode, Mode=TwoWay}"
                         UnSelectedLineBrush="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type subPages:ScrollPreviewSubPage}}, Path=UnSelectedLineBrush, Mode=TwoWay}"
                         SelectedLineBrush="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type subPages:ScrollPreviewSubPage}}, Path=SelectedLineBrush, Mode=TwoWay}"
                         FontWeight="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type subPages:ScrollPreviewSubPage}}, Path=LyricsFontWeight, Converter={StaticResource FontWeightConverter}, Mode=TwoWay}"

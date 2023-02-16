@@ -4,7 +4,10 @@
         xmlns:blur="clr-namespace:OpenLyricsClient.Frontend.Models.Elements.Blur">
     <Design.PreviewWith>
         <Border Padding="20">
-            <elements:LyricsCard  Text="CurrentLine" ></elements:LyricsCard>
+            <elements:LyricsCard Text="CurrentLine" 
+                                 Current="True" 
+                                 Percentage="50" 
+                                 BlurSigma="0"></elements:LyricsCard>
             <!-- Add Controls for Previewer Here -->
         </Border>
     </Design.PreviewWith>

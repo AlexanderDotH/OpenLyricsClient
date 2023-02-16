@@ -5,7 +5,7 @@
         xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements">
     <Design.PreviewWith>
         <Border Padding="20">
-            <elements:GroupBox Width="100" Height="100"></elements:GroupBox>
+            <elements:GroupBox Classes="clean" Width="100" Height="100"></elements:GroupBox>
         </Border>
     </Design.PreviewWith>
     
@@ -48,6 +48,36 @@
                     
                     <ContentPresenter Name="ContentPresenter"
                                       Margin="{TemplateBinding ContentMargin}"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        
+    </Style>
+    
+        <Style Selector="elements|GroupBox.clean">
+        <Setter Property="assists:ShadowAssist.ShadowDepth" Value="Depth2"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeaderBrush" Value="{DynamicResource PrimaryColorBrush}"/>
+        <Setter Property="HeaderTextBrush" Value="#FFFFFF"></Setter>
+        <Setter Property="HeaderText" Value="Header"></Setter>
+        <Setter Property="Background" Value="{DynamicResource MaterialDesignCardBackground}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="BarHeight" Value="35"></Setter>
+        <Setter Property="ContentMargin" Value="0,45,0,0"></Setter>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <Border Name="PART_BackgroundBorder"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            assists:ShadowAssist.ShadowDepth="{TemplateBinding assists:ShadowAssist.ShadowDepth}">
+                    </Border>
+                    
+                    <ContentPresenter Name="ContentPresenter"
                                       Content="{TemplateBinding Content}"
                                       ContentTemplate="{TemplateBinding ContentTemplate}" />
                 </Panel>

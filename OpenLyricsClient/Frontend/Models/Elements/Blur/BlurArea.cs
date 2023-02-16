@@ -1,6 +1,9 @@
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Frontend.Models.Elements.Blur;
 
@@ -34,8 +37,17 @@ public class BlurArea : Control
 
     private BlurBehindRenderOperation _behindRenderOperation;
 
+    private float _sigmaX;
+    private float _sigmaY;
+    
     public BlurArea()
     {
+        Sigma = 3;
+        SigmaX = 3;
+        SigmaY = 3;
+        UseNoise = false;
+        NoiseOpacity = 0.0225;
+        
         ExperimentalAcrylicMaterial experimentalAcrylicMaterial = new ExperimentalAcrylicMaterial()
         {
             MaterialOpacity = 0.0,
@@ -47,10 +59,6 @@ public class BlurArea : Control
         DefaultAcrylicMaterial = (ImmutableExperimentalAcrylicMaterial)experimentalAcrylicMaterial.ToImmutable();
 
         Material = experimentalAcrylicMaterial;
-
-        Sigma = 3;
-        UseNoise = false;
-        NoiseOpacity = 0.0225;
         
         AffectsRender<BlurArea>(MaterialProperty);
     }
@@ -69,7 +77,10 @@ public class BlurArea : Control
             this.NoiseOpacity,
             new Rect(default, Bounds.Size));
         
-        context.Custom(this._behindRenderOperation);
+        if (!DataValidator.ValidateData(this._behindRenderOperation))
+            return;
+        
+        context?.Custom(this._behindRenderOperation);
     }
     
     public bool UseNoise
@@ -86,16 +97,24 @@ public class BlurArea : Control
     
     public float SigmaX
     {
-        get => GetValue(SigmaXProperty);
-        set => SetValue(SigmaXProperty, value);
-    }
-
-    public float SigmaY
-    {
-        get => GetValue(SigmaYProperty);
-        set => SetValue(SigmaYProperty, value);
+        get => _sigmaX;
+        set
+        {
+            _sigmaX = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SigmaX"));
+        }
     }
     
+    public float SigmaY
+    {
+        get => _sigmaY;
+        set
+        {
+            _sigmaY = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SigmaX"));
+        }
+    }
+
     public float Sigma
     {
         get
@@ -116,5 +135,12 @@ public class BlurArea : Control
         {
             SetValue(MaterialProperty, value);
         }
+    }
+    
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

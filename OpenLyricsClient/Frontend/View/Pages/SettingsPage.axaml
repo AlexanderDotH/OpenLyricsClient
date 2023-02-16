@@ -6,6 +6,8 @@
              xmlns:pages="clr-namespace:OpenLyricsClient.Frontend.Models.Pages"
              xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
              xmlns:subPages="clr-namespace:OpenLyricsClient.Frontend.View.Pages.SubPages"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:settings="clr-namespace:OpenLyricsClient.Frontend.View.Pages.Settings"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{DynamicResource PrimaryBackgroundBrush}"
              Foreground="{DynamicResource PrimaryFontColorBrush}"
@@ -16,7 +18,7 @@
         <pages:SettingsPageViewModel/>
     </Design.DataContext>
     
-    <Grid>
+    <Grid ColumnDefinitions="300, *">
         <TextBlock 
             Text="Settings"
             FontWeight="Bold"
@@ -24,7 +26,152 @@
             HorizontalAlignment="Left"
             Margin="12, 12, 0, 0"/>
         
-        <ScrollViewer
+        <ScrollViewer VerticalAlignment="Top"
+                      HorizontalAlignment="Left"
+                      Margin="30,80,0,0"
+                      Width="270"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto">
+            
+            <StackPanel Orientation="Vertical" 
+                        Spacing="20">
+                
+                <TextBlock Text="Visual"
+                           FontSize="14"
+                           Foreground="{DynamicResource SecondaryFontColorBrush}"
+                           FontWeight="Normal"
+                           Margin="0,0,0,0"/>
+                
+                <StackPanel Orientation="Vertical"
+                            Spacing="10">
+                
+                    <Button Width="260" 
+                            Height="40"
+                            Background="{DynamicResource SecondaryBackgroundBrush}">
+                        <StackPanel Orientation="Horizontal" 
+                                    Spacing="10" 
+                                    Margin="0,0,260,0"
+                                    HorizontalAlignment="Left">
+                            <avalonia:MaterialIcon 
+                                HorizontalAlignment="Left"
+                                Margin="0,0,0,0"
+                                Kind="Language"/>
+                            
+                            <TextBlock Text="Romanization"
+                                       FontSize="12"
+                                       Margin="0,0,0,0"
+                                       HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </Button>
+                    
+                    <Button Width="260" 
+                            Height="40"
+                            Background="{DynamicResource SecondaryBackgroundBrush}">
+                        <StackPanel Orientation="Horizontal" 
+                                    Spacing="10" 
+                                    Margin="0,0,260,0"
+                                    HorizontalAlignment="Left">
+                            
+                            <avalonia:MaterialIcon 
+                                HorizontalAlignment="Left"
+                                Margin="0,0,0,0"
+                                Kind="ScriptText"/>
+                            
+                            <TextBlock Text="Lyrics"
+                                       FontSize="12"
+                                       Margin="0,0,0,0"
+                                       HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </Button>
+                    
+                </StackPanel>
+                
+                <TextBlock Text="Connection"
+                           FontSize="14"
+                           Foreground="{DynamicResource SecondaryFontColorBrush}"
+                           FontWeight="Normal"
+                           Margin="0,0,0,0"/>
+                
+                 <StackPanel Orientation="Vertical"
+                            Spacing="10">
+                
+                    <Button Width="260" 
+                            Height="40"
+                            Background="{DynamicResource SecondaryBackgroundBrush}">
+                        <StackPanel Orientation="Horizontal" 
+                                    Spacing="10" 
+                                    Margin="0,0,260,0"
+                                    HorizontalAlignment="Left">
+                            <avalonia:MaterialIcon 
+                                HorizontalAlignment="Left"
+                                Margin="0,0,0,0"
+                                Kind="Spotify"/>
+                            
+                            <TextBlock Text="Spotify"
+                                       FontSize="12"
+                                       Margin="0,0,0,0"
+                                       HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </Button>
+                    
+                 </StackPanel>
+                
+                <TextBlock Text="Advanced"
+                           FontSize="14"
+                           Foreground="{DynamicResource SecondaryFontColorBrush}"
+                           FontWeight="Normal"
+                           Margin="0,0,0,0"/>
+                
+                <StackPanel Orientation="Vertical"
+                            Spacing="10">
+                
+                    <Button Width="260" 
+                            Height="40"
+                            Background="{DynamicResource SecondaryBackgroundBrush}">
+                        <StackPanel Orientation="Horizontal" 
+                                    Spacing="10" 
+                                    Margin="0,0,260,0"
+                                    HorizontalAlignment="Left">
+                            <avalonia:MaterialIcon 
+                                HorizontalAlignment="Left"
+                                Margin="0,0,0,0"
+                                Kind="ContentSave"/>
+                            
+                            <TextBlock Text="Cache"
+                                       FontSize="12"
+                                       Margin="0,0,0,0"
+                                       HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </Button>
+                    
+                </StackPanel>
+                
+                
+                
+            </StackPanel>
+            
+        </ScrollViewer>
+        
+        <Carousel Name="PageSelection"
+                  Grid.Column="1"
+                  Margin="0,60,0,0"
+                  VerticalAlignment="Top"
+                  SelectedIndex="0"
+                  HorizontalAlignment="Stretch">
+            <Carousel.Styles>
+                <Style Selector="Carousel#PageSelection:not(.notransitions)">
+                    <Setter Property="PageTransition">
+                        <PageSlide Duration="0.5" SlideOutEasing="QuadraticEaseOut"
+                                   SlideInEasing="QuadraticEaseOut" />
+                    </Setter>
+                </Style>
+            </Carousel.Styles>
+                    
+            <settings:SettingsLyrics/>
+
+        </Carousel>
+        
+        <!--<ScrollViewer
             VerticalAlignment="Top"
             Margin="0,60,0,0"
             HorizontalScrollBarVisibility="Auto" 
@@ -111,7 +258,7 @@
                                 <Border 
                                     CornerRadius="7" 
                                     Background="{DynamicResource SecondaryBackgroundBrush}">
-                                    <subPages:ScrollPreviewSubPage 
+                                    ~1~<subPages:ScrollPreviewSubPage 
                                         Margin="5,5,5,5"
                                         Background="{DynamicResource SecondaryBackgroundBrush}"
                                         SelectedLineBrush="#FFFFFF"
@@ -120,7 +267,7 @@
                                         UnSelectedLineBrush="#646464"
                                         ItemMargin="0,0,0,5"
                                         Grid.Row="0"
-                                        Grid.RowSpan="2"/>
+                                        Grid.RowSpan="2"/>@1@
                                 </Border>
                                 <StackPanel >
                                    
@@ -248,13 +395,13 @@
                     </StackPanel>
                     
                     
-                </Expander>
+                </Expander>-->
                 <TextBlock Text="Made with ♥ for Hannah" 
-                           Margin="0,0,10,10" 
+                           Margin="10" 
                            VerticalAlignment="Bottom" 
-                           HorizontalAlignment="Right"/>
+                           HorizontalAlignment="Left"/>
 
-            </StackPanel>
-        </ScrollViewer>
+            <!--</StackPanel>
+        </ScrollViewer>-->
     </Grid>
 </UserControl>

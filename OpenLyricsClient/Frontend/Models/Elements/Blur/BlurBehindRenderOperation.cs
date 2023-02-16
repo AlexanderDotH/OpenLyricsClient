@@ -6,6 +6,7 @@ using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
 using CefNet;
+using OpenLyricsClient.Backend.Utils;
 using SkiaSharp;
 
 namespace OpenLyricsClient.Frontend.Models.Elements.Blur;
@@ -86,7 +87,10 @@ class BlurBehindRenderOperation : ICustomDrawOperation
         using var backdropShader = SKShader.CreateImage(backgroundSnapshot, SKShaderTileMode.Clamp,
             SKShaderTileMode.Clamp, currentInvertedTransform);
 
-        using SKSurface blurred = SKSurface.Create(skia.GrContext, false, new SKImageInfo(
+        if (!DataValidator.ValidateData(skia.GrContext))
+            return;
+        
+        using SKSurface blurred = SKSurface.Create(skia?.GrContext, false, new SKImageInfo(
             (int)Math.Ceiling(this._bounds.Width),
             (int)Math.Ceiling(this._bounds.Height), SKImageInfo.PlatformColorType, SKAlphaType.Premul));
         

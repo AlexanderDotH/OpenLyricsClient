@@ -178,6 +178,15 @@ namespace OpenLyricsClient.Backend.Structure.Artwork
             get => this._artworkColor;
             set => this._artworkColor = value;
         }
+        
+        public Color DarkArtworkColor
+        {
+            get => new Color(
+                255,
+                (byte)Math.Clamp(this._artworkColor.R - 10, 0, 255),
+                (byte)Math.Clamp(this._artworkColor.G - 10, 0, 255),
+                (byte)Math.Clamp(this._artworkColor.B - 10, 0, 255));
+        }
 
         public byte[] Data
         {

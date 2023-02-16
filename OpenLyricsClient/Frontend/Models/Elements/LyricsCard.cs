@@ -8,6 +8,7 @@ using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Threading;
 using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.Frontend.Models.Elements.Blur;
@@ -51,6 +52,9 @@ public class LyricsCard : TemplatedControl
     public static readonly DirectProperty<LyricsCard, bool> CurrentProperty = 
         AvaloniaProperty.RegisterDirect<LyricsCard, bool>(nameof(Current), o => o.Current, (o, v) => o.Current = v);
     
+    public static readonly DirectProperty<LyricsCard, EnumLyricsDisplayMode> LyricDisplayModeProperty = 
+        AvaloniaProperty.RegisterDirect<LyricsCard, EnumLyricsDisplayMode>(nameof(LyricDisplayMode), o => o.LyricDisplayMode, (o, v) => o.LyricDisplayMode = v);
+    
     private TextBlock _presenterBlock;
     private TextBlock _greyBlock;
     private Border _border;
@@ -66,6 +70,9 @@ public class LyricsCard : TemplatedControl
     private bool _templateApplied;
     private bool _validLyricSet;
     private bool _alreadySet;
+    private bool _ignoreEvents;
+
+    private EnumLyricsDisplayMode _displayMode;
     
     public LyricsCard()
     {
@@ -74,8 +81,10 @@ public class LyricsCard : TemplatedControl
         this._templateApplied = false;
         this._validLyricSet = false;
         this._alreadySet = false;
+        this._ignoreEvents = false;
 
         this.BlurSigma = 0;
+        this._displayMode = EnumLyricsDisplayMode.KARAOKE;
         
         Core.INSTANCE.SongHandler.SongChanged += (s, args) =>
         {
@@ -84,7 +93,7 @@ public class LyricsCard : TemplatedControl
             this._alreadySet = false;
         };
 
-        LyricsScroller.INSTANCE.BlurChanged += (sender, @event) =>
+        /*LyricsScroller.INSTANCE.BlurChanged += (sender, @event) =>
         {
             if (@event.LyricPart.Equals(this.LyricPart))
             {
@@ -93,10 +102,13 @@ public class LyricsCard : TemplatedControl
                     this._blurArea.Sigma = @event.BlurSigma;
                 }
             }
-        };
+        };*/
         
         Core.INSTANCE.TickHandler += sender =>
         {
+            if (this._ignoreEvents)
+                return;
+            
             Dispatcher.UIThread.InvokeAsync(() =>
             {
                 /*if (DataValidator.ValidateData(this._blurArea))
@@ -108,6 +120,9 @@ public class LyricsCard : TemplatedControl
         
         Core.INSTANCE.LyricHandler.LyricChanged += (sender, args) =>
         {
+            if (this._ignoreEvents)
+                return;
+            
             Dispatcher.UIThread.InvokeAsync(() =>
             {
                 this.InvalidateVisual();
@@ -213,6 +228,15 @@ public class LyricsCard : TemplatedControl
         }
     }
     
+    public EnumLyricsDisplayMode LyricDisplayMode
+    {
+        get { return this._displayMode; }
+        set
+        {
+            SetAndRaise(LyricDisplayModeProperty, ref _displayMode, value);
+        }
+    }
+    
     public LyricPart LyricPart
     {
         get { return this._lyricPart; }
@@ -251,10 +275,10 @@ public class LyricsCard : TemplatedControl
         get { return GetValue(BlurSigmaProperty); }
         set
         {
-            /*
+            
             if (DataValidator.ValidateData(this._blurArea))
                 this._blurArea.Sigma = value;
-                */
+                
             
             SetValue(BlurSigmaProperty, value); 
         }
@@ -272,6 +296,11 @@ public class LyricsCard : TemplatedControl
         set { SetValue(UnSelectedLineBrushProperty, value); }
     }
 
+    public bool IgnoreEvents
+    {
+        get => _ignoreEvents;
+        set => _ignoreEvents = value;
+    }
 
     public override void Render(DrawingContext context)
     {
@@ -286,13 +315,39 @@ public class LyricsCard : TemplatedControl
         {
             this._blurArea.Sigma = this.BlurSigma;
         }
-        
-        this._presenterBlock.MaxWidth = this._greyBlock.TextLayout.Size.Width;
-        this._presenterBlock.Width = this._greyBlock.TextLayout.Size.Width;
-        
-        this._viewbox.MaxWidth = this._greyBlock.DesiredSize.Width;
-        this._viewbox.Width = ((this._viewbox.MaxWidth) / 100) * Percentage;
-        this._border.Width = ((this._viewbox.MaxWidth) / 100) * Percentage;
+
+        if (this._displayMode == EnumLyricsDisplayMode.FADE)
+        {
+            this._viewbox.IsVisible = false;
+            this._border.Width = 0;
+
+            Color color = ((SolidColorBrush)this.SelectedLineBrush).Color;
+            Color unselectedColor = ((SolidColorBrush)this.UnSelectedLineBrush).Color;
+
+            double percentage = Math.Clamp(this.Percentage / 100.0, 0, 100);
+            
+            double red = (unselectedColor.R * (1 - percentage) + color.R * percentage);
+            double green = (unselectedColor.G * (1 - percentage) + color.G * percentage);
+            double blue = (unselectedColor.B * (1 - percentage) + color.B * percentage);
+
+            Color newColor = new Color(
+                255,
+                (byte)Math.Clamp(red, 0, 255), 
+                (byte)Math.Clamp(green, 0, 255), 
+                (byte)Math.Clamp(blue, 0, 255));
+
+            this._greyBlock.Foreground = new SolidColorBrush(newColor);
+        }
+        else
+        {
+            this._viewbox.IsVisible = true;
+            this._presenterBlock.MaxWidth = this._greyBlock.TextLayout.Size.Width;
+            this._presenterBlock.Width = this._greyBlock.TextLayout.Size.Width;
+
+            this._viewbox.MaxWidth = this._greyBlock.DesiredSize.Width;
+            this._viewbox.Width = ((this._viewbox.MaxWidth) / 100) * Percentage;
+            this._border.Width = ((this._viewbox.MaxWidth) / 100) * Percentage;
+        }
 
         this._noteAnimation.Render(context);
         

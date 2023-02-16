@@ -1,11 +1,19 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Rendering;
+using Avalonia.Threading;
 using DynamicData;
+using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
+using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Frontend.Models.Elements;
 
 namespace OpenLyricsClient.Frontend.View.Pages.SubPages;
 
@@ -29,18 +37,84 @@ public partial class ScrollPreviewSubPage : UserControl
     public static readonly DirectProperty<ScrollPreviewSubPage, ObservableCollection<LyricPart>> LyricPartsProperty = 
         AvaloniaProperty.RegisterDirect<ScrollPreviewSubPage, ObservableCollection<LyricPart>>(nameof(LyricParts), o => o.LyricParts, (o, v) => o.LyricParts = v);
 
+    public static readonly DirectProperty<ScrollPreviewSubPage, EnumLyricsDisplayMode> LyricDisplayModeProperty = 
+        AvaloniaProperty.RegisterDirect<ScrollPreviewSubPage, EnumLyricsDisplayMode>(nameof(LyricPart), o => o.LyricDisplayMode, (o, v) => o.LyricDisplayMode = v);
+
     public static readonly StyledProperty<FontWeight> LyricsFontWeightProperty =
         AvaloniaProperty.Register<ScrollPreviewSubPage, FontWeight>(nameof(LyricsFontWeight));
     
     public static readonly StyledProperty<int> LyricsFontSizeProperty =
         AvaloniaProperty.Register<ScrollPreviewSubPage, int>(nameof(LyricsFontSize));
-    
+
     private ObservableCollection<LyricPart> _lyricParts;
     private LyricPart _lyricPart;
+    private EnumLyricsDisplayMode _enumLyricsDisplayMode;
+
+    private ItemsRepeater _itemsRepeater;
+
+    private UiThreadRenderTimer _uiThreadRenderTimer;
+    private int _currentSecond;
+    private double _currentPercentage;
     
     public ScrollPreviewSubPage()
     {
         InitializeComponent();
+
+        this._itemsRepeater = this.Get<ItemsRepeater>(nameof(CTRL_Repeater));
+
+        this._currentSecond = 0;
+        this._currentPercentage = 0;
+        this.LyricDisplayMode = EnumLyricsDisplayMode.FADE;
+        
+        this._uiThreadRenderTimer = new UiThreadRenderTimer(60);
+        this._uiThreadRenderTimer.Tick += delegate(TimeSpan span)
+        {
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                this._currentSecond++;
+
+                if (SelectedLine >= this._lyricParts.Count)
+                    SelectedLine = 0;
+
+                for (int i = 0; i < this._lyricParts.Count; i++)
+                {
+                    LyricsCard card = GetCard(i);
+
+                    if (!DataValidator.ValidateData(card))
+                        continue;
+                
+                    if (this.SelectedLine == i)
+                    {
+                        this._currentPercentage = Math.Clamp(this._currentPercentage + new Random().Next(0, 5), 0, 100);
+                    
+                        card.Current = true;
+                        card.IgnoreEvents = true;
+                        card.Percentage = Math.Clamp(_currentPercentage, 0, 100);
+                        card.InvalidateVisual();
+                    }
+                    else
+                    {
+                        card.Current = false;
+                        card.IgnoreEvents = true;
+                        card.Percentage = -1;
+                        card.InvalidateVisual();
+                    }
+                }
+            
+                if (this._currentSecond % (60 * 2) == 0)
+                {
+                    SelectedLine++;
+                    this._currentPercentage = 0;
+                }
+            });
+        };
+    }
+
+    
+    
+    private LyricsCard GetCard(int index)
+    {
+        return (LyricsCard)this._itemsRepeater.TryGetElement(index);
     }
 
     private void InitializeComponent()
@@ -67,6 +141,19 @@ public partial class ScrollPreviewSubPage : UserControl
         {
             this._lyricPart = value;
             SetAndRaise(LyricPartProperty, ref _lyricPart, value);
+        }
+    }
+    
+    public EnumLyricsDisplayMode LyricDisplayMode
+    {
+        get
+        {
+            return _enumLyricsDisplayMode;
+        }
+        set
+        {
+            this._enumLyricsDisplayMode = value;
+            SetAndRaise(LyricDisplayModeProperty, ref _enumLyricsDisplayMode, value);
         }
     }
 

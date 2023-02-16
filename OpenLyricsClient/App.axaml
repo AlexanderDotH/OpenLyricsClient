@@ -28,12 +28,16 @@
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/NoteAnimation.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/MaterialCheckBox.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Custom/CustomScrollViewers.axaml"/>
+        <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/Expander.axaml"/>
+        <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/ContentExpandControl.axaml"/>
+
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/Styles/Grid.axaml"/>
         
         <Style>
             
             <Style.Resources>
                 <SolidColorBrush x:Key="PrimaryThemeColorBrush" Color="#dc143c"></SolidColorBrush>
+                <SolidColorBrush x:Key="SecondaryThemeColorBrush" Color="#dc143c"></SolidColorBrush>
                 <SolidColorBrush x:Key="PrimaryThemeFontColorBrush" Color="#FFFFFF"></SolidColorBrush>
 
                 <SolidColorBrush x:Key="PrimaryColorBrush" Color="#dc143c"></SolidColorBrush>
@@ -42,6 +46,7 @@
                 <SolidColorBrush x:Key="SecondaryFontColorBrush" Color="#cdcdcd"></SolidColorBrush>
                 <SolidColorBrush x:Key="PrimaryBackgroundBrush" Color="#161616"></SolidColorBrush>
                 <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="#1E1E1E"></SolidColorBrush>
+                <SolidColorBrush x:Key="LightBackgroundBrush" Color="#323232"></SolidColorBrush>
                 <SolidColorBrush x:Key="ImageMask" Color="#f10000"></SolidColorBrush>
             </Style.Resources>
         </Style>

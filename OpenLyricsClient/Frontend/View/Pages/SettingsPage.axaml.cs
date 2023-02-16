@@ -20,6 +20,8 @@ public partial class SettingsPage : UserControl
     private CheckBox _koreanToRomanji;
     private CheckBox _russiaToLatin;
 
+    private Carousel _pageSelector;
+
     private bool _loaded;
     
     public SettingsPage()
@@ -28,15 +30,16 @@ public partial class SettingsPage : UserControl
 
         this._loaded = false;
 
-        this._connectToSpotify = this.Get<Button>(nameof(BTN_ConnectSpotify));
+        /*this._connectToSpotify = this.Get<Button>(nameof(BTN_ConnectSpotify));
         this._disconnectFromSpotify = this.Get<Button>(nameof(BTN_DisconnectSpotify));
         this._txtSpotify = this.Get<TextBlock>(nameof(TXT_ConnectSpotify));
         
         this._japaneseToRomanji = this.Get<CheckBox>(nameof(CHK_JapaneseToRomanji));
         this._koreanToRomanji = this.Get<CheckBox>(nameof(CHK_KoreanToRomanji));
-        this._russiaToLatin = this.Get<CheckBox>(nameof(CHK_RussiaToLatin));
+        this._russiaToLatin = this.Get<CheckBox>(nameof(CHK_RussiaToLatin));*/
         
-        Task.Factory.StartNew(async () =>
+        this._pageSelector = this.Get<Carousel>(nameof(PageSelection));
+        /*Task.Factory.StartNew(async () =>
         {
            while (!Core.IsDisposed())
            {
@@ -70,7 +73,7 @@ public partial class SettingsPage : UserControl
                    
                });
            }
-       });
+       });*/
         
         this._loaded = true;
 

@@ -111,6 +111,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
 
                 SolidColorBrush primaryColor = App.Current.FindResource("PrimaryColorBrush") as SolidColorBrush;
                 SolidColorBrush color = App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
+                SolidColorBrush secondaryColor = App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush;
                 SolidColorBrush textColor = App.Current.FindResource("PrimaryThemeFontColorBrush") as SolidColorBrush;
 
                 await Dispatcher.UIThread.InvokeAsync(() =>
@@ -125,6 +126,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                     }
                     
                     color.Color = artworkCache.ArtworkColor;
+                    secondaryColor.Color = artworkCache.DarkArtworkColor;
                     
                     if (artworkCache.GetBrightness() < 30)
                     {
