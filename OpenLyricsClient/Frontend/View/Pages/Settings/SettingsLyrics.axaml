@@ -66,11 +66,14 @@
                            </TextBlock>
                            
                            <Grid Margin="0,10,0,0" 
-                                 ColumnDefinitions="Auto, Auto"
+                                 ColumnDefinitions="Auto, 5, Auto"
                                  HorizontalAlignment="Center">
-                               <RadioButton Grid.Column="0" 
-                                            Classes="Button" 
-                                            GroupName="3">
+                               <elements:RadioButton RippleBrush="{DynamicResource LightBackgroundBrush}" 
+                                                     SelectionBrush="{DynamicResource LightBackgroundBrush}"
+                                                     CornerRadius="10"
+                                                     Grid.Column="0" 
+                                                     Classes="Button" 
+                                                     GroupName="3">
                                    <StackPanel Orientation="Vertical" 
                                                Spacing="10"
                                                Width="300">
@@ -88,11 +91,14 @@
                                                   HorizontalAlignment="Center"
                                                   Foreground="{DynamicResource PrimaryFontColorBrush}"/>
                                    </StackPanel>
-                               </RadioButton>
+                               </elements:RadioButton>
                                
-                               <RadioButton Grid.Column="1" 
-                                            Classes="Button" 
-                                            GroupName="3">
+                               <elements:RadioButton RippleBrush="{DynamicResource LightBackgroundBrush}" 
+                                                     SelectionBrush="{DynamicResource LightBackgroundBrush}" 
+                                                     Grid.Column="2" 
+                                                     CornerRadius="10"
+                                                     Classes="Button" 
+                                                     GroupName="3">
                                    <StackPanel Orientation="Vertical" 
                                                Spacing="10"
                                                Width="300">
@@ -110,7 +116,7 @@
                                                   HorizontalAlignment="Center"
                                                   Foreground="{DynamicResource PrimaryFontColorBrush}"/>
                                    </StackPanel>
-                               </RadioButton>
+                               </elements:RadioButton>
                            </Grid>
                        </StackPanel>
                    </elements:GroupBox>

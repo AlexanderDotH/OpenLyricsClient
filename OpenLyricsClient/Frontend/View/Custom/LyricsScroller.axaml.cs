@@ -255,6 +255,7 @@ public partial class LyricsScroller : UserControl
             {
                 LyricsCard cItem = (LyricsCard)item;
                 cItem.BlurSigma = blurSigma;
+                cItem.InvalidateVisual();
             }
         }
         catch (Exception e)
@@ -287,12 +288,14 @@ public partial class LyricsScroller : UserControl
                 {
                     for (int j = 0; j < this._blurItemCount; j++)
                     {
-                        //TryBlurItem(i - j, IsSynced && this._isResynced ? currentSize : 0);
-                        if (i + j < this._lyricParts.Count)
+                        TryBlurItem(i - j, IsSynced && this._isResynced ? currentSize : 0);
+                        TryBlurItem(i + j, IsSynced && this._isResynced ? currentSize : 0);
+                        currentSize += _blurIncrement;
+                        /*if (i + j < this._lyricParts.Count)
                         {
                             TryBlurItem(i + j, IsSynced && this._isResynced ? currentSize : 0);
                             currentSize += _blurIncrement;
-                        }
+                        }*/
                     }
                 }
                 

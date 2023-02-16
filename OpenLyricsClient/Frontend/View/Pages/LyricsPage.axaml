@@ -168,7 +168,7 @@
                                 Minimum="0"
                                 Maximum="100"
                                 Value="{Binding Percentage}"
-                                Margin="10, 0,10,8">
+                                Margin="10, 0,10,10">
                        <ProgressBar.Transitions>
                            <Transitions>
                                <BrushTransition Property="Foreground"

@@ -84,7 +84,7 @@ public class LyricsCard : TemplatedControl
         this._ignoreEvents = false;
 
         this.BlurSigma = 0;
-        this._displayMode = EnumLyricsDisplayMode.KARAOKE;
+        this.LyricDisplayMode = EnumLyricsDisplayMode.FADE;
         
         Core.INSTANCE.SongHandler.SongChanged += (s, args) =>
         {

@@ -8,6 +8,7 @@
              xmlns:subPages="clr-namespace:OpenLyricsClient.Frontend.View.Pages.SubPages"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:settings="clr-namespace:OpenLyricsClient.Frontend.View.Pages.Settings"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{DynamicResource PrimaryBackgroundBrush}"
              Foreground="{DynamicResource PrimaryFontColorBrush}"
@@ -18,7 +19,7 @@
         <pages:SettingsPageViewModel/>
     </Design.DataContext>
     
-    <Grid ColumnDefinitions="300, *">
+    <Grid ColumnDefinitions="Auto, *">
         <TextBlock 
             Text="Settings"
             FontWeight="Bold"
@@ -34,7 +35,7 @@
                       HorizontalScrollBarVisibility="Auto">
             
             <StackPanel Orientation="Vertical" 
-                        Spacing="20">
+                        Spacing="15">
                 
                 <TextBlock Text="Visual"
                            FontSize="14"
@@ -45,41 +46,52 @@
                 <StackPanel Orientation="Vertical"
                             Spacing="10">
                 
-                    <Button Width="260" 
-                            Height="40"
-                            Background="{DynamicResource SecondaryBackgroundBrush}">
+                    <Button Name="BTN_Romanization" 
+                            assists:ButtonAssist.CornerRadius="10"
+                            Width="260" 
+                            Height="46"
+                            Background="{DynamicResource SecondaryBackgroundBrush}"
+                            Click="BTN_Romanization_OnClick">
                         <StackPanel Orientation="Horizontal" 
+                                    VerticalAlignment="Center"
                                     Spacing="10" 
                                     Margin="0,0,260,0"
                                     HorizontalAlignment="Left">
                             <avalonia:MaterialIcon 
+                                Width="20"
+                                Height="20"
+                                VerticalAlignment="Center"
                                 HorizontalAlignment="Left"
-                                Margin="0,0,0,0"
                                 Kind="Language"/>
                             
                             <TextBlock Text="Romanization"
-                                       FontSize="12"
-                                       Margin="0,0,0,0"
+                                       FontSize="13"
+                                       VerticalAlignment="Center"
                                        HorizontalAlignment="Left"/>
                         </StackPanel>
                     </Button>
                     
-                    <Button Width="260" 
-                            Height="40"
-                            Background="{DynamicResource SecondaryBackgroundBrush}">
+                    <Button Name="BTN_Lyrics" Width="260" 
+                            assists:ButtonAssist.CornerRadius="10"
+                            Height="45"
+                            Background="{DynamicResource SecondaryBackgroundBrush}"
+                            Click="BTN_Lyrics_OnClick">
                         <StackPanel Orientation="Horizontal" 
                                     Spacing="10" 
                                     Margin="0,0,260,0"
                                     HorizontalAlignment="Left">
                             
                             <avalonia:MaterialIcon 
+                                Width="20"
+                                Height="20"
+                                VerticalAlignment="Center"
                                 HorizontalAlignment="Left"
                                 Margin="0,0,0,0"
                                 Kind="ScriptText"/>
                             
                             <TextBlock Text="Lyrics"
-                                       FontSize="12"
-                                       Margin="0,0,0,0"
+                                       FontSize="13"
+                                       VerticalAlignment="Center"
                                        HorizontalAlignment="Left"/>
                         </StackPanel>
                     </Button>
@@ -95,21 +107,27 @@
                  <StackPanel Orientation="Vertical"
                             Spacing="10">
                 
-                    <Button Width="260" 
-                            Height="40"
-                            Background="{DynamicResource SecondaryBackgroundBrush}">
+                    <Button Name="BTN_Spotify" 
+                            assists:ButtonAssist.CornerRadius="10"
+                            Width="260" 
+                            Height="45"
+                            Background="{DynamicResource SecondaryBackgroundBrush}"
+                            Click="BTN_Spotify_OnClick">
                         <StackPanel Orientation="Horizontal" 
                                     Spacing="10" 
                                     Margin="0,0,260,0"
                                     HorizontalAlignment="Left">
                             <avalonia:MaterialIcon 
+                                Width="20"
+                                Height="20"
+                                VerticalAlignment="Center"
                                 HorizontalAlignment="Left"
                                 Margin="0,0,0,0"
                                 Kind="Spotify"/>
                             
                             <TextBlock Text="Spotify"
-                                       FontSize="12"
-                                       Margin="0,0,0,0"
+                                       FontSize="13"
+                                       VerticalAlignment="Center"
                                        HorizontalAlignment="Left"/>
                         </StackPanel>
                     </Button>
@@ -125,21 +143,27 @@
                 <StackPanel Orientation="Vertical"
                             Spacing="10">
                 
-                    <Button Width="260" 
-                            Height="40"
-                            Background="{DynamicResource SecondaryBackgroundBrush}">
+                    <Button Name="BTN_Cache" 
+                            assists:ButtonAssist.CornerRadius="10"
+                            Width="260" 
+                            Height="45"
+                            Background="{DynamicResource SecondaryBackgroundBrush}"
+                            Click="BTN_Cache_OnClick">
                         <StackPanel Orientation="Horizontal" 
                                     Spacing="10" 
                                     Margin="0,0,260,0"
                                     HorizontalAlignment="Left">
                             <avalonia:MaterialIcon 
+                                Width="20"
+                                Height="20"
+                                VerticalAlignment="Center"
                                 HorizontalAlignment="Left"
                                 Margin="0,0,0,0"
                                 Kind="ContentSave"/>
                             
                             <TextBlock Text="Cache"
-                                       FontSize="12"
-                                       Margin="0,0,0,0"
+                                       FontSize="13"
+                                       VerticalAlignment="Center"
                                        HorizontalAlignment="Left"/>
                         </StackPanel>
                     </Button>
@@ -161,12 +185,16 @@
             <Carousel.Styles>
                 <Style Selector="Carousel#PageSelection:not(.notransitions)">
                     <Setter Property="PageTransition">
-                        <PageSlide Duration="0.5" SlideOutEasing="QuadraticEaseOut"
+                        <PageSlide Duration="0.2" 
+                                   Orientation="Vertical"
+                                   SlideOutEasing="QuadraticEaseOut" 
                                    SlideInEasing="QuadraticEaseOut" />
                     </Setter>
                 </Style>
             </Carousel.Styles>
                     
+            <settings:SettingsRomanization/>
+            
             <settings:SettingsLyrics/>
 
         </Carousel>

@@ -19,7 +19,7 @@
             
            <StackPanel Margin="0,20,0,0"
                        HorizontalAlignment="Center"
-                       Width="600">
+                       Width="800">
                
                <StackPanel Orientation="Vertical" 
                            Spacing="10">
@@ -70,7 +70,7 @@
                                            <StackPanel Orientation="Vertical" 
                                                        HorizontalAlignment="Left" 
                                                        VerticalAlignment="Stretch"
-                                                       Width="440"
+                                                       Width="660"
                                                        Spacing="2">
                                            
                                                <TextBlock FontSize="15"
@@ -164,7 +164,7 @@
                                            <StackPanel Orientation="Vertical" 
                                                        HorizontalAlignment="Left" 
                                                        VerticalAlignment="Stretch"
-                                                       Width="440"
+                                                       Width="660"
                                                        Spacing="2">
                                            
                                                <TextBlock FontSize="15"
@@ -258,7 +258,7 @@
                                            <StackPanel Orientation="Vertical" 
                                                        HorizontalAlignment="Left" 
                                                        VerticalAlignment="Stretch"
-                                                       Width="440"
+                                                       Width="660"
                                                        Spacing="2">
                                            
                                                <TextBlock FontSize="15"

@@ -30,6 +30,7 @@
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Custom/CustomScrollViewers.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/Expander.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/ContentExpandControl.axaml"/>
+        <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/RadioButton.axaml"/>
 
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/Styles/Grid.axaml"/>
         
@@ -39,6 +40,7 @@
                 <SolidColorBrush x:Key="PrimaryThemeColorBrush" Color="#dc143c"></SolidColorBrush>
                 <SolidColorBrush x:Key="SecondaryThemeColorBrush" Color="#dc143c"></SolidColorBrush>
                 <SolidColorBrush x:Key="PrimaryThemeFontColorBrush" Color="#FFFFFF"></SolidColorBrush>
+                <SolidColorBrush x:Key="SecondaryThemeFontColorBrush" Color="#FFFFFF"></SolidColorBrush>
 
                 <SolidColorBrush x:Key="PrimaryColorBrush" Color="#dc143c"></SolidColorBrush>
                 <SolidColorBrush x:Key="SecondaryColorBrush" Color="#9c0720"></SolidColorBrush>
