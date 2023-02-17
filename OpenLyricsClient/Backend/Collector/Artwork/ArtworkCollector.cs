@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DevBase.Generics;
+using OpenLyricsClient.Backend.Collector.Artwork.Providers.Deezer;
 using OpenLyricsClient.Backend.Collector.Artwork.Providers.Musixmatch;
 using OpenLyricsClient.Backend.Collector.Artwork.Providers.Spotify;
 using OpenLyricsClient.Backend.Debugger;
@@ -27,6 +28,7 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
             
             this._artworkCollectors = new AList<IArtworkCollector>();
             this._artworkCollectors.Add(new SpotifyCollector());
+            this._artworkCollectors.Add(new DeezerCollector());
             this._artworkCollectors.Add(new MusixMatchCollector());
         }
 
