@@ -25,15 +25,13 @@ public class SpotifyCollector : IArtworkCollector
                 songResponseObject.SongRequestObject.Song.TrackObject))
             return new Structure.Artwork.Artwork();
 
-        Structure.Song.Song song = songResponseObject.SongRequestObject.Song;
-
-        if (song.DataOrigin != DataOrigin.SPOTIFY)
+        if (!songResponseObject.CollectorName.Equals(this.CollectorName()))
             return new Structure.Artwork.Artwork();
 
-        if (!(song.TrackObject is FullTrack))
+        if (!(songResponseObject.Track is FullTrack))
             return new Structure.Artwork.Artwork();
 
-        FullTrack track = (FullTrack)song.TrackObject;
+        FullTrack track = (FullTrack)songResponseObject.Track;
 
         Image maxImage = new Image();
         maxImage.Height = 0;

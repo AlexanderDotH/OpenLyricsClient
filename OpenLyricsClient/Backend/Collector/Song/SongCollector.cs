@@ -5,6 +5,7 @@ using OpenLyricsClient.Backend.Collector.Song.Providers.Deezer;
 using OpenLyricsClient.Backend.Collector.Song.Providers.Musixmatch;
 using OpenLyricsClient.Backend.Collector.Song.Providers.NetEase;
 using OpenLyricsClient.Backend.Collector.Song.Providers.NetEaseV2;
+using OpenLyricsClient.Backend.Collector.Song.Providers.Spotify;
 using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Handler.Artwork;
@@ -27,6 +28,7 @@ public class SongCollector
     public SongCollector(SongHandler songHandler, LyricHandler lyricHandler, ArtworkHandler artworkHandler)
     {
         this._songCollectors = new AList<ISongCollector>();
+        this._songCollectors.Add(new SpotifyCollector());
         this._songCollectors.Add(new MusixmatchCollector());
         this._songCollectors.Add(new NetEaseCollector());
         this._songCollectors.Add(new NetEaseV2Collector());
