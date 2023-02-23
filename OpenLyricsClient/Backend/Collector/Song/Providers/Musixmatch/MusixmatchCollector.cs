@@ -38,13 +38,18 @@ namespace OpenLyricsClient.Backend.Collector.Song.Providers.Musixmatch
 
             List<Track> tracks = null;
 
+            PaginationParameters paginationParameters = new PaginationParameters
+            {
+                 PageSize = 100
+            };
+            
             tracks = await musixmatchClient.SongSearchAsync(
                 new TrackSearchParameters
                 {
                     Album = songRequestObject.Album,
                     Title = songRequestObject.SongName,
                     Artist = songRequestObject.GetArtistsSplit()
-                });
+                }, paginationParameters);
 
             if (!DataValidator.ValidateData(tracks) || DataValidator.ValidateData(tracks) && tracks.Count == 0)
             {
@@ -52,8 +57,9 @@ namespace OpenLyricsClient.Backend.Collector.Song.Providers.Musixmatch
                     new TrackSearchParameters
                     {
                         Album = songRequestObject.FormattedSongAlbum,
-                        Title = songRequestObject.SongName
-                    });
+                        Title = songRequestObject.SongName,
+                         
+                    }, paginationParameters);
             }
 
             if (!DataValidator.ValidateData(tracks))

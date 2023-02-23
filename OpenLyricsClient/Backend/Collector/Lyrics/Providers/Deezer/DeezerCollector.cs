@@ -46,15 +46,9 @@ public class DeezerCollector : ILyricsCollector
 
         JsonDeezerLyricsResponse lyricsResponse = await _deezerApi.GetLyrics(Convert.ToString(track.id));
 
-        SongMetadata songMetadata = SongMetadata.ToSongMetadata(
-            track.title,
-            track.album.title,
-            DataConverter.ToArtists(track.artist),
-            track.duration);
-        
         if (!DataValidator.ValidateData(lyricsResponse))
         {
-            this._debugger.Write("Could not find lyrics for " + songMetadata.Name + "!", DebugType.ERROR);
+            this._debugger.Write("Could not find lyrics for " + track.title + "!", DebugType.ERROR);
             return new LyricData();
         }
 
@@ -64,14 +58,14 @@ public class DeezerCollector : ILyricsCollector
                 lyricsResponse.data.track.lyrics,
                 lyricsResponse.data.track.lyrics.synchronizedLines))
         {
-            this._debugger.Write("Could not find lyrics for " + songMetadata.Name + "!", DebugType.ERROR);
+            this._debugger.Write("Could not find lyrics for " + track.title + "!", DebugType.ERROR);
             return new LyricData();
         }
         
-        return await ParseLyricData(lyricsResponse.data.track.lyrics, songMetadata);
+        return await ParseLyricData(lyricsResponse.data.track.lyrics, track);
     }
 
-    private async Task<LyricData> ParseLyricData(JsonDeezerLyricsTrackResponseLyricsResponse lyrics, SongMetadata songMetadata)
+    private async Task<LyricData> ParseLyricData(JsonDeezerLyricsTrackResponseLyricsResponse lyrics, JsonDeezerSearchDataResponse track)
     {
         string lrcFile = ConvertToLRC(lyrics.synchronizedLines);
 
@@ -86,7 +80,14 @@ public class DeezerCollector : ILyricsCollector
 
             if (DataValidator.ValidateData(lyricElements))
             {
-                this._debugger.Write("Fetched lyrics for " + songMetadata.Name + "!", DebugType.INFO);
+                this._debugger.Write("Fetched lyrics for " + track.title + "!", DebugType.INFO);
+                
+                SongMetadata songMetadata = SongMetadata.ToSongMetadata(
+                    track.title,
+                    track.album.title,
+                    DataConverter.ToArtists(track.artist),
+                    track.duration);
+                
                 return await LyricData.ConvertToData(lyricElements, songMetadata, this.CollectorName());
             }
         }

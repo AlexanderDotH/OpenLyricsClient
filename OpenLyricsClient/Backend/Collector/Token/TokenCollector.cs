@@ -42,7 +42,7 @@ namespace OpenLyricsClient.Backend.Collector.Token
                     await collector.CollectToken();
                 }
 
-                await Task.Delay(15000);
+                await Task.Delay(20000);
             }
         }
 
