@@ -9,7 +9,9 @@ using Avalonia.Rendering;
 using Avalonia.Threading;
 using DevBase.Generics;
 using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Romanization;
+using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Frontend.View.Windows;
 
 namespace OpenLyricsClient.Frontend.View.Pages;
@@ -243,6 +245,15 @@ public partial class SettingsPage : UserControl
     private void BTN_Romanization_OnClick(object? sender, RoutedEventArgs e)
     {
         SelectPage(0);
+
+        Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
+        
+        DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient api =
+            new DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient();
+        
+        api.SubmitAiSync(currentSong.SongMetadata.Name, currentSong.SongMetadata.Album,
+            currentSong.SongMetadata.MaxTime, "large-v2", currentSong.SongMetadata.Artists).GetAwaiter().GetResult();
+        
         Core.INSTANCE.ServiceHandler.AuthorizeService("Spotify");
     }
 

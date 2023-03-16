@@ -28,7 +28,6 @@
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
     <PackageReference Include="Avalonia.X11" Version="0.10.18" />
     <PackageReference Include="AvaloniaColorPicker" Version="1.3.4" />
-    <PackageReference Include="DevBase.Api" Version="1.0.1" />
     <PackageReference Include="DevBase.Avalonia" Version="1.0.0" />
     <PackageReference Include="DevBase.Format" Version="1.0.0" />
     <PackageReference Include="Kawazu" Version="1.1.4" />
@@ -84,31 +83,10 @@
       <HintPath>..\Libraries\CefNet.Avalonia.dll</HintPath>
     </Reference>
     <Reference Include="DevBase">
-      <HintPath>..\Libraries\DevBase.dll</HintPath>
+      <HintPath>..\..\DevBase\Publish\DevBase.dll</HintPath>
     </Reference>
     <Reference Include="DevBase.Api">
-      <HintPath>..\Libraries\DevBase.Api.dll</HintPath>
-    </Reference>
-    <Reference Include="DevBase.Avalonia">
-      <HintPath>..\Libraries\DevBase.Avalonia.dll</HintPath>
-    </Reference>
-    <Reference Include="DevBase.Cryptography">
-      <HintPath>..\Libraries\DevBase.Cryptography.dll</HintPath>
-    </Reference>
-    <Reference Include="DevBase.Format">
-      <HintPath>..\Libraries\DevBase.Format.dll</HintPath>
-    </Reference>
-    <Reference Include="DevBaseApi">
-      <HintPath>..\Libraries\DevBaseApi.dll</HintPath>
-    </Reference>
-    <Reference Include="DevBaseAvalonia">
-      <HintPath>..\Libraries\DevBaseAvalonia.dll</HintPath>
-    </Reference>
-    <Reference Include="DevBaseColor">
-      <HintPath>..\Libraries\DevBaseColor.dll</HintPath>
-    </Reference>
-    <Reference Include="DevBaseFormat">
-      <HintPath>..\Libraries\DevBaseFormat.dll</HintPath>
+      <HintPath>..\..\DevBase\Publish\DevBase.Api.dll</HintPath>
     </Reference>
     <Reference Include="HangeulRomanizer">
       <HintPath>..\Libraries\HangeulRomanizer.dll</HintPath>
