@@ -19,8 +19,6 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
     {
         private IConfiguration _configurationManager;
 
-        private string _baseAuthUrl;
-        private string _redirectUrl;
         
         private TaskSuspensionToken _refreshTokenSuspensionToken;
 
@@ -31,9 +29,6 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
         {
             this._debugger = new Debugger<SpotifyService>(this);
             this._disposed = false;
-
-            this._baseAuthUrl = "https://www.openlyricsclient.com/connect/spotify/begin";
-            this._redirectUrl = "https://www.openlyricsclient.com/connect/spotify/complete";
 
             Core.INSTANCE.TaskRegister.Register(
                 out _refreshTokenSuspensionToken,
@@ -126,9 +121,9 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                CefAuthWindow cefAuthWindow = new CefAuthWindow("https://openlyricsclient.com/connect/spotify/begin", "/complete");
+                CefAuthWindow cefAuthWindow = new CefAuthWindow("https://openlyricsclient.com/api/auth/spotify/begin", "/welcome");
              
-                cefAuthWindow.Width = 500;
+                cefAuthWindow.Width = 700;
                 cefAuthWindow.Height = 600;
                 cefAuthWindow.Title = "Connect to spotify";
              
@@ -140,7 +135,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             } 
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                ProcessStartInfo processStartInfo = new ProcessStartInfo("https://www.openlyricsclient.com/connect/spotify/begin/listener");
+                ProcessStartInfo processStartInfo = new ProcessStartInfo("https://openlyricsclient.com/api/auth/spotify/begin/listener");
                 processStartInfo.UseShellExecute = true;
                 Process.Start(processStartInfo);
                 
@@ -151,11 +146,16 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             
             if (!DataValidator.ValidateData(token))
                 return;
+
+            string t = token.RefreshToken;
+            
+            if (token.RefreshToken.EndsWith("&"))
+                t = token.RefreshToken.Substring(0, token.RefreshToken.Length - 1);
             
             SpotifyClient client = new SpotifyClient(token.AccessToken);
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.UserData = await client.UserProfile.Current();
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken = token.AccessToken;
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken = token.RefreshToken;
+            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken = t;
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime =
                 DateTimeOffset.Now.AddHours(1).ToUnixTimeMilliseconds();
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected = true;

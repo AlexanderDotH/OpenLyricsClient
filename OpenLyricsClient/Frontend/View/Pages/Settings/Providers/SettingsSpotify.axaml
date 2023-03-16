@@ -1,0 +1,144 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:subPages="clr-namespace:OpenLyricsClient.Frontend.View.Pages.SubPages"
+             mc:Ignorable="d"
+             d:DesignWidth="1000"
+             d:DesignHeight="1000"
+             x:Class="OpenLyricsClient.Frontend.View.Pages.Settings.Providers.SettingsSpotify">
+    
+    <Grid Background="{DynamicResource PrimaryBackgroundBrush}">
+        
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalAlignment="Top"
+                      Margin="10,0,10,0">
+            
+           <StackPanel Margin="0,20,0,0"
+                       HorizontalAlignment="Center"
+                       Width="800">
+               
+               <StackPanel Orientation="Vertical" 
+                           Spacing="10">
+               
+                 <elements:GroupBox Classes="clean" 
+                                    Background="{DynamicResource SecondaryBackgroundBrush}">
+                       
+                     <StackPanel Margin="15" 
+                                 Orientation="Vertical" 
+                                 Spacing="10">
+                           
+                           <TextBlock FontSize="16"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      FontWeight="Bold"
+                                      Text="Spotify">
+                           </TextBlock>
+                           
+                           <TextBlock FontSize="14"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      FontWeight="Normal"
+                                      TextWrapping="Wrap"
+                                      Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                      Text="Spotify is a popular music streaming service that offers a huge library of songs, albums, and podcasts.">
+                           </TextBlock>
+                           
+                       </StackPanel>
+                 </elements:GroupBox>
+                   
+                   <elements:GroupBox Classes="clean" 
+                                      Background="{DynamicResource SecondaryBackgroundBrush}">
+                       
+                       <StackPanel Margin="15" 
+                                   Orientation="Vertical" 
+                                   Spacing="15">
+                           
+                           <TextBlock FontSize="16"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      FontWeight="Bold"
+                                      Text="Let's get started">
+                           </TextBlock>
+                           
+                           <StackPanel Orientation="Vertical" 
+                                       Spacing="10"
+                                       >
+                               
+                               <TextBlock FontSize="14"
+                                          VerticalAlignment="Top"
+                                          HorizontalAlignment="Left"
+                                          FontWeight="Normal"
+                                          TextWrapping="Wrap"
+                                          Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                          Text="By enabling the Spotify Integration you can easily find lyrics for the currently playing song on Spotify.">
+                               </TextBlock>
+                               
+                               <Button Background="#1ED760">
+                                   <TextBlock FontSize="14"
+                                              VerticalAlignment="Top"
+                                              HorizontalAlignment="Left"
+                                              FontWeight="Normal"
+                                              TextWrapping="Wrap"
+                                              Foreground="{DynamicResource PrimaryThemeFontColorBrush}"
+                                              Text="Connect with Spotify">
+                                   </TextBlock>
+                               </Button>
+                           </StackPanel>
+                           
+                       </StackPanel>
+                   </elements:GroupBox>
+                   
+                   <elements:GroupBox Classes="clean" 
+                                      Background="{DynamicResource SecondaryBackgroundBrush}">
+                       
+                       <StackPanel Margin="15" 
+                                   Orientation="Vertical" 
+                                   Spacing="15">
+                           
+                           <TextBlock FontSize="16"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      FontWeight="Bold"
+                                      Text="You are up and running!">
+                           </TextBlock>
+                           
+                           <StackPanel Orientation="Vertical" 
+                                       Spacing="10"
+                                       >
+                               
+                               <TextBlock FontSize="14"
+                                          VerticalAlignment="Top"
+                                          HorizontalAlignment="Left"
+                                          FontWeight="Normal"
+                                          TextWrapping="Wrap"
+                                          Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                          Text="Welcome User!">
+                               </TextBlock>
+                               
+                               <Grid Name="GRD_Profile"></Grid>
+                               
+                               <Button Background="Red">
+                                   <TextBlock FontSize="14"
+                                              VerticalAlignment="Top"
+                                              HorizontalAlignment="Left"
+                                              FontWeight="Normal"
+                                              TextWrapping="Wrap"
+                                              Foreground="{DynamicResource PrimaryThemeFontColorBrush}"
+                                              Text="Disconnect from Spotify">
+                                   </TextBlock>
+                               </Button>
+                           </StackPanel>
+                           
+                       </StackPanel>
+                   </elements:GroupBox>
+               </StackPanel>
+           </StackPanel>
+        </ScrollViewer>
+    </Grid>
+    
+</UserControl>

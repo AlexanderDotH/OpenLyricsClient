@@ -27,8 +27,6 @@ namespace OpenLyricsClient.Backend.Cache
                 append += songRequestObject.SongName;
                 append += songRequestObject.Album;
                 append += songRequestObject.Artists;
-                append += songRequestObject.FormattedSongName;
-                append += songRequestObject.FormattedSongAlbum;
                 append += songRequestObject.SongDuration;
 
                 this._id = CryptoUtils.ToMD5(append);

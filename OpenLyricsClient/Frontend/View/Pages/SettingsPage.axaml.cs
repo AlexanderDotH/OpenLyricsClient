@@ -243,6 +243,7 @@ public partial class SettingsPage : UserControl
     private void BTN_Romanization_OnClick(object? sender, RoutedEventArgs e)
     {
         SelectPage(0);
+        Core.INSTANCE.ServiceHandler.AuthorizeService("Spotify");
     }
 
     private void BTN_Lyrics_OnClick(object? sender, RoutedEventArgs e)

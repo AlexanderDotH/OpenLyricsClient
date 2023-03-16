@@ -64,7 +64,7 @@ public partial class ScrollPreviewSubPage : UserControl
 
         this._currentSecond = 0;
         this._currentPercentage = 0;
-        this.LyricDisplayMode = EnumLyricsDisplayMode.FADE;
+        this.LyricDisplayMode = EnumLyricsDisplayMode.KARAOKE;
         
         this._uiThreadRenderTimer = new UiThreadRenderTimer(60);
         this._uiThreadRenderTimer.Tick += delegate(TimeSpan span)
