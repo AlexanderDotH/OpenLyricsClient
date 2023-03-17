@@ -112,7 +112,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             return;
         }
         
-        if (currentSong.Lyrics.LyricParts.IsNullOrEmpty())
+        if (currentSong!.Lyrics!.LyricParts!.IsNullOrEmpty())
             return;
 
         if (!DataValidator.ValidateData(this.CurrentLyricParts))
@@ -121,11 +121,11 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             return;
         }
 
-        if (!(AreListsEqual(this.CurrentLyricParts, currentSong.Lyrics.LyricParts)))
+        if (!(AreListsEqual(this.CurrentLyricParts, currentSong?.Lyrics?.LyricParts!)))
         {
             Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                this.CurrentLyricParts =  new ObservableCollection<LyricPart>(currentSong.Lyrics.LyricParts);
+                this.CurrentLyricParts =  new ObservableCollection<LyricPart>(currentSong?.Lyrics?.LyricParts!);
             });
         }
     }

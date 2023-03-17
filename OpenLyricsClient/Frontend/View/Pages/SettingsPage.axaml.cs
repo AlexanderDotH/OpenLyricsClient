@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -246,20 +247,34 @@ public partial class SettingsPage : UserControl
     {
         SelectPage(0);
 
-        Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
-        
-        DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient api =
-            new DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient();
-        
-        api.SubmitAiSync(currentSong.SongMetadata.Name, currentSong.SongMetadata.Album,
-            currentSong.SongMetadata.MaxTime, "large-v2", currentSong.SongMetadata.Artists).GetAwaiter().GetResult();
-        
         Core.INSTANCE.ServiceHandler.AuthorizeService("Spotify");
     }
 
     private void BTN_Lyrics_OnClick(object? sender, RoutedEventArgs e)
     {
         SelectPage(1);
+        
+        try
+        {
+            if (Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify").IsConnected())
+            {
+                Task.Factory.StartNew(async () =>
+                {
+                    Song currentSong = Core.INSTANCE.SongHandler.CurrentSong;
+        
+                    DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient api =
+                        new DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient();
+        
+                    await api.SubmitAiSync(currentSong.SongMetadata.Name, currentSong.SongMetadata.Album,
+                        currentSong.SongMetadata.MaxTime, "large-v2", currentSong.SongMetadata.Artists);
+
+                });
+            }
+        }
+        catch (Exception exception)
+        {
+            Debug.WriteLine(exception.Message);
+        }
     }
 
     private void BTN_Spotify_OnClick(object? sender, RoutedEventArgs e)

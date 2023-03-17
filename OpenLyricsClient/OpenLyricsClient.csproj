@@ -28,7 +28,10 @@
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
     <PackageReference Include="Avalonia.X11" Version="0.10.18" />
     <PackageReference Include="AvaloniaColorPicker" Version="1.3.4" />
+    <PackageReference Include="DevBase" Version="1.0.1" />
+    <PackageReference Include="DevBase.Api" Version="1.0.6" />
     <PackageReference Include="DevBase.Avalonia" Version="1.0.0" />
+    <PackageReference Include="DevBase.Cryptography" Version="1.0.0" />
     <PackageReference Include="DevBase.Format" Version="1.0.0" />
     <PackageReference Include="Kawazu" Version="1.1.4" />
     <PackageReference Include="Material.Avalonia" Version="2.5.1" />
@@ -81,12 +84,6 @@
     </Reference>
     <Reference Include="CefNet.Avalonia">
       <HintPath>..\Libraries\CefNet.Avalonia.dll</HintPath>
-    </Reference>
-    <Reference Include="DevBase">
-      <HintPath>..\..\DevBase\Publish\DevBase.dll</HintPath>
-    </Reference>
-    <Reference Include="DevBase.Api">
-      <HintPath>..\..\DevBase\Publish\DevBase.Api.dll</HintPath>
     </Reference>
     <Reference Include="HangeulRomanizer">
       <HintPath>..\Libraries\HangeulRomanizer.dll</HintPath>
