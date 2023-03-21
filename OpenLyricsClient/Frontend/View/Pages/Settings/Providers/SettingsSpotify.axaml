@@ -24,32 +24,6 @@
                
                <StackPanel Orientation="Vertical" 
                            Spacing="10">
-               
-                 <elements:GroupBox Classes="clean" 
-                                    Background="{DynamicResource SecondaryBackgroundBrush}">
-                       
-                     <StackPanel Margin="15" 
-                                 Orientation="Vertical" 
-                                 Spacing="10">
-                           
-                           <TextBlock FontSize="16"
-                                      VerticalAlignment="Top"
-                                      HorizontalAlignment="Left"
-                                      FontWeight="Bold"
-                                      Text="Spotify">
-                           </TextBlock>
-                           
-                           <TextBlock FontSize="14"
-                                      VerticalAlignment="Top"
-                                      HorizontalAlignment="Left"
-                                      FontWeight="Normal"
-                                      TextWrapping="Wrap"
-                                      Foreground="{DynamicResource SecondaryFontColorBrush}"
-                                      Text="Spotify is a popular music streaming service that offers a huge library of songs, albums, and podcasts.">
-                           </TextBlock>
-                           
-                       </StackPanel>
-                 </elements:GroupBox>
                    
                    <elements:GroupBox Classes="clean" 
                                       Background="{DynamicResource SecondaryBackgroundBrush}">
@@ -62,32 +36,67 @@
                                       VerticalAlignment="Top"
                                       HorizontalAlignment="Left"
                                       FontWeight="Bold"
-                                      Text="Let's get started">
+                                      Text="Spotify">
                            </TextBlock>
                            
                            <StackPanel Orientation="Vertical" 
                                        Spacing="10"
                                        >
                                
-                               <TextBlock FontSize="14"
-                                          VerticalAlignment="Top"
-                                          HorizontalAlignment="Left"
-                                          FontWeight="Normal"
-                                          TextWrapping="Wrap"
-                                          Foreground="{DynamicResource SecondaryFontColorBrush}"
-                                          Text="By enabling the Spotify Integration you can easily find lyrics for the currently playing song on Spotify.">
-                               </TextBlock>
+                               <Grid ColumnDefinitions="Auto,1, Auto"
+                                     >
+                                   
+                                   <StackPanel Spacing="20"
+                                               VerticalAlignment="Center"
+                                               Grid.Column="0"
+                                               Width="380">
+                                       <TextBlock FontSize="14"
+                                                  VerticalAlignment="Top"
+                                                  HorizontalAlignment="Left"
+                                                  FontWeight="Normal"
+                                                  TextWrapping="Wrap"
+                                                  Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                                  Text="Connect the OpenLyricsClient with Spotify and start singing to you favorite songs.">
+                                       </TextBlock>
                                
-                               <Button Background="#1ED760">
-                                   <TextBlock FontSize="14"
-                                              VerticalAlignment="Top"
-                                              HorizontalAlignment="Left"
-                                              FontWeight="Normal"
-                                              TextWrapping="Wrap"
-                                              Foreground="{DynamicResource PrimaryThemeFontColorBrush}"
-                                              Text="Connect with Spotify">
-                                   </TextBlock>
-                               </Button>
+                                       <Button Grid.Column="0" 
+                                               Grid.Row="1"
+                                               Background="#1ED760">
+                                           <TextBlock FontSize="14"
+                                                      HorizontalAlignment="Left"
+                                                      FontWeight="Normal"
+                                                      TextWrapping="Wrap"
+                                                      Foreground="{DynamicResource PrimaryBackgroundBrush}"
+                                                      Text="Lets get started">
+                                           </TextBlock>
+                                       </Button>
+                                   </StackPanel>
+                                   
+                                   <Panel Grid.Column="1" 
+                                          Grid.RowSpan="2" 
+                                          Width="1" 
+                                          Margin="20,0,20,0"
+                                          Background="{DynamicResource LightBackgroundBrush}"/>
+                                   
+                                   <StackPanel Spacing="15" 
+                                               Grid.Column="2"
+                                               Width="350">
+                                       <TextBlock Grid.Column="2" 
+                                                  Grid.RowSpan="2" 
+                                                  FontSize="14"
+                                                  VerticalAlignment="Top"
+                                                  HorizontalAlignment="Left"
+                                                  FontWeight="Normal"
+                                                  TextWrapping="Wrap"
+                                                  Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                                  Text="Spotify is a digital music streaming service that gives users access to millions of songs and other audio content, such as podcasts. Spotify allows users to create playlists, save music, and listen to music online and offline. It is available on a range of devices, including desktop, laptop, and mobile.">
+                                       </TextBlock>    
+                                   </StackPanel>
+                                   
+                                   
+                               </Grid>
+                               
+                               
                            </StackPanel>
                            
                        </StackPanel>

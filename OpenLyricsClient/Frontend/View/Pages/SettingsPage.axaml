@@ -9,6 +9,7 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:settings="clr-namespace:OpenLyricsClient.Frontend.View.Pages.Settings"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:providers="clr-namespace:OpenLyricsClient.Frontend.View.Pages.Settings.Providers"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{DynamicResource PrimaryBackgroundBrush}"
              Foreground="{DynamicResource PrimaryFontColorBrush}"
@@ -196,6 +197,8 @@
             <settings:SettingsRomanization/>
             
             <settings:SettingsLyrics/>
+            
+            <providers:SettingsSpotify/>
 
         </Carousel>
         

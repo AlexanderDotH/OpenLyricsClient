@@ -19,7 +19,6 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
     {
         private IConfiguration _configurationManager;
 
-        
         private TaskSuspensionToken _refreshTokenSuspensionToken;
 
         private Debugger<SpotifyService> _debugger;
