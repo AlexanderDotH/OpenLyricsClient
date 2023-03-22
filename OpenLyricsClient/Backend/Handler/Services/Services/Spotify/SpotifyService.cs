@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using DevBase.Api.Apis.OpenLyricsClient.Structure.Json;
 using DevBase.Async.Task;
+using DevBase.Generics;
 using Microsoft.Extensions.Configuration;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Structure.Enum;
+using OpenLyricsClient.Backend.Structure.Other;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.External.CefNet.Structure;
 using OpenLyricsClient.External.CefNet.View;
@@ -83,6 +86,30 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             }
         }
 
+        public async Task<SpotifyStatistics> GetStatistics(string accessToken = "")
+        {
+            SpotifyClient client = new SpotifyClient(accessToken.Equals(String.Empty) ? GetAccessToken() : accessToken);
+
+            PersonalizationTopRequest topRequest = new PersonalizationTopRequest
+            {
+                Limit = 5
+            };
+            
+            Paging<FullArtist> topArtistsResponse = await client.Personalization.GetTopArtists(topRequest);
+            Paging<FullTrack> topTracksResponse = await client.Personalization.GetTopTracks(topRequest);
+
+            AList<FullArtist> topArtists = new AList<FullArtist>(topArtistsResponse.Items!.ToList());
+            AList<FullTrack> topTracks = new AList<FullTrack>(topTracksResponse.Items!.ToList());
+
+            SpotifyStatistics statistics = new SpotifyStatistics
+            {
+                TopArtists = topArtists.GetAsArray(),
+                TopTracks = topTracks.GetAsArray()
+            };
+
+            return statistics;
+        }
+
         public string GetAccessToken()
         {
             // Task.Factory.StartNew(async() =>
@@ -102,7 +129,10 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
                 JsonOpenLyricsClientAccess access =
                         await api.GetAccessToken(Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken);
-                
+
+                SpotifyStatistics statistics = await GetStatistics(access.AccessToken);
+
+                Core.INSTANCE.SettingManager.Settings.SpotifyAccess.Statistics = statistics;
                 Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken = access.AccessToken;
                 Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime = 
                     DateTimeOffset.Now.AddHours(1).ToUnixTimeMilliseconds();
@@ -150,9 +180,13 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             
             if (token.RefreshToken.EndsWith("&"))
                 t = token.RefreshToken.Substring(0, token.RefreshToken.Length - 1);
-            
+
             SpotifyClient client = new SpotifyClient(token.AccessToken);
+            
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.UserData = await client.UserProfile.Current();
+            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.Statistics =
+                await this.GetStatistics(token.AccessToken);
+
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken = token.AccessToken;
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken = t;
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime =

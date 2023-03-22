@@ -11,6 +11,7 @@ using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Romanization;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Enum;
+using OpenLyricsClient.Backend.Structure.Other;
 using SharpDX.Text;
 using SpotifyAPI.Web;
 
@@ -99,7 +100,12 @@ namespace OpenLyricsClient.Backend.Settings
                     privateUser.Uri = "";
                     privateUser.DisplayName = "";
 
+                    SpotifyStatistics statistics = new SpotifyStatistics();
+                    statistics.TopArtists = Array.Empty<FullArtist>();
+                    statistics.TopTracks = Array.Empty<FullTrack>();
+
                     spotifyAccess.UserData = privateUser;
+                    spotifyAccess.Statistics = statistics;
 
                     return spotifyAccess;
                 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenLyricsClient.Backend.Structure.Other;
 using SpotifyAPI.Web;
 
 namespace OpenLyricsClient.Backend.Structure
@@ -10,5 +11,7 @@ namespace OpenLyricsClient.Backend.Structure
         public long SpotifyExpireTime { get; set; }
         public bool IsSpotifyConnected { get; set; }
         public PrivateUser UserData { get; set; }
+        
+        public SpotifyStatistics Statistics { get; set; }
     }
 }

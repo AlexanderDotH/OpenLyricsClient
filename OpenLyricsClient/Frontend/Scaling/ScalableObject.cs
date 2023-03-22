@@ -65,6 +65,13 @@ namespace OpenLyricsClient.Frontend.Scaling;
                 Register(avaloniaObject, Decorator.PaddingProperty, decorator.Padding);
             }
 
+            if (avaloniaObject is Image image)
+            {
+                Register(avaloniaObject, Avalonia.Controls.Image.MarginProperty, image.Margin);
+                Register(avaloniaObject, Avalonia.Controls.Image.WidthProperty, image.Width);
+                Register(avaloniaObject, Avalonia.Controls.Image.HeightProperty, image.Height);
+            }
+            
             if (avaloniaObject is FloatingButton floatingButton)
             {
                 Register(avaloniaObject, FloatingButton.MinHeightProperty, floatingButton.MinHeight);

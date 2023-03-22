@@ -6,10 +6,15 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              xmlns:subPages="clr-namespace:OpenLyricsClient.Frontend.View.Pages.SubPages"
+             xmlns:providers="clr-namespace:OpenLyricsClient.Frontend.Models.Pages.Settings.Providers"
              mc:Ignorable="d"
              d:DesignWidth="1000"
              d:DesignHeight="1000"
              x:Class="OpenLyricsClient.Frontend.View.Pages.Settings.Providers.SettingsSpotify">
+    
+    <UserControl.DataContext>
+        <providers:SettingsSpotifyViewModel/>
+    </UserControl.DataContext>
     
     <Grid Background="{DynamicResource PrimaryBackgroundBrush}">
         
@@ -125,8 +130,9 @@
                                           HorizontalAlignment="Left"
                                           FontWeight="Normal"
                                           TextWrapping="Wrap"
+                                          Margin="5,5,0,0"
                                           Foreground="{DynamicResource SecondaryFontColorBrush}"
-                                          Text="Welcome User!">
+                                          Text="{Binding UserGreeting}">
                                </TextBlock>
                                
                                <Grid Name="GRD_Profile"></Grid>
