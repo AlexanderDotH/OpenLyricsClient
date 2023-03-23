@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using DevBase.Web;
 using Microsoft.Extensions.Primitives;
 using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Events.EventArgs;
 
 namespace OpenLyricsClient.Frontend.Models.Pages.Settings.Providers;
 
@@ -16,7 +22,12 @@ public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
 
     public SettingsSpotifyViewModel()
     {
-        
+        Core.INSTANCE.SettingManager.SettingsChanged += SettingManagerOnSettingsChanged;
+    }
+
+    private void SettingManagerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UserGreeting"));
     }
 
     public string UserGreeting
@@ -32,11 +43,11 @@ public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
                     stringBuilder.Append("morning");
                     break;
 
-                case > 12:
+                case < 19:
                     stringBuilder.Append("midday");
                     break;
 
-                case < 19:
+                case < 24:
                     stringBuilder.Append("evening");
                     break;
             }

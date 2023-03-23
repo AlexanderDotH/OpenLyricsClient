@@ -15,6 +15,8 @@ using OpenLyricsClient.External.CefNet.Structure;
 using OpenLyricsClient.External.CefNet.View;
 using OpenLyricsClient.Frontend.View.Windows;
 using SpotifyAPI.Web;
+using SimpleArtist = OpenLyricsClient.Backend.Structure.Other.SimpleArtist;
+using SimpleTrack = OpenLyricsClient.Backend.Structure.Other.SimpleTrack;
 
 namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 {
@@ -103,8 +105,8 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
             SpotifyStatistics statistics = new SpotifyStatistics
             {
-                TopArtists = topArtists.GetAsArray(),
-                TopTracks = topTracks.GetAsArray()
+                TopArtists = SimpleArtist.ConvertTo(topArtists),
+                TopTracks = SimpleTrack.ConvertTo(topTracks)
             };
 
             return statistics;

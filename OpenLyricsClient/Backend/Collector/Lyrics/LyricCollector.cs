@@ -21,8 +21,8 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
         {
             this._lyricCollectors = new AList<ILyricsCollector>();
             this._lyricCollectors.Add(new DeezerCollector());
-            this._lyricCollectors.Add(new NetEaseCollector());
-            this._lyricCollectors.Add(new NetEaseV2Collector());
+            /*this._lyricCollectors.Add(new NetEaseCollector());
+            this._lyricCollectors.Add(new NetEaseV2Collector());*/
             this._lyricCollectors.Add(new MusixmatchCollector());
             this._lyricCollectors.Add(new TextylCollector());
         }
@@ -54,11 +54,13 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
                 if (lyricData.LyricReturnCode != LyricReturnCode.SUCCESS)
                     continue;
 
-                if (!Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
+                Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, lyricData);
+                
+                /*if (!Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
                 {
                     Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, lyricData);
                     return;
-                }
+                }*/
             }
 
             // if (!Core.INSTANCE.CacheManager.IsInCache(songRequestObject))

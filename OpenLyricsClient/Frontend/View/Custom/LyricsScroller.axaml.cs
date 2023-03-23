@@ -163,7 +163,7 @@ public partial class LyricsScroller : UserControl
     {
         if (!this._isResynced)
         {
-            float step = Math.Abs(this._scrollTo - this._currentScrollOffset) / this._scrollSpeed;
+            float step = Math.Abs(this._scrollTo - this._currentScrollOffset) / (this._scrollSpeed * 0.1f);
         
             if (this._currentScrollOffset < _scrollTo)
             {
@@ -466,7 +466,7 @@ public partial class LyricsScroller : UserControl
             lineSize += line.Height;
         }
 
-        Size returnVal = new Size(text.Bounds.Width, Math.Round(lineSize + this.ItemMargin.Bottom + 5));
+        Size returnVal = new Size(text.Bounds.Width, Math.Floor(lineSize + this.ItemMargin.Bottom + 5));
         return returnVal;
     }
 

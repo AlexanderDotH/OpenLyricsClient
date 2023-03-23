@@ -310,7 +310,7 @@ public class LyricsCard : TemplatedControl
                 this._border, 
                 this._noteAnimation)))
             return;
-        
+
         if (DataValidator.ValidateData(this._blurArea))
         {
             this._blurArea.Sigma = this.BlurSigma;

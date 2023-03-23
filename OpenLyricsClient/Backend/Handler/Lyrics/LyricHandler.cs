@@ -218,20 +218,22 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
         public async Task FireLyricsSearch(SongResponseObject songResponseObject, SongChangedEventArgs songChangedEventArgs)
         {
-            if (songChangedEventArgs.EventType == EventType.POST)
+            if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
+                return;
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            for (int i = 0; i < 5; i++)
             {
-                if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
-                    return;
-
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
-
                 songChangedEventArgs.Song.State = SongState.SEARCHING_LYRICS;
                 await this._lyricCollector.CollectLyrics(songResponseObject);
                 songChangedEventArgs.Song.State = SongState.SEARCHING_FINISHED;
 
-                this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
+                await Task.Delay(1500);
             }
+
+            this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
         }
         
         protected virtual void LyricChangedEvent(LyricChangedEventArgs lyricChangedEventArgs)

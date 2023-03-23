@@ -14,6 +14,8 @@ using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Other;
 using SharpDX.Text;
 using SpotifyAPI.Web;
+using SimpleArtist = OpenLyricsClient.Backend.Structure.Other.SimpleArtist;
+using SimpleTrack = OpenLyricsClient.Backend.Structure.Other.SimpleTrack;
 
 namespace OpenLyricsClient.Backend.Settings
 {
@@ -101,8 +103,8 @@ namespace OpenLyricsClient.Backend.Settings
                     privateUser.DisplayName = "";
 
                     SpotifyStatistics statistics = new SpotifyStatistics();
-                    statistics.TopArtists = Array.Empty<FullArtist>();
-                    statistics.TopTracks = Array.Empty<FullTrack>();
+                    statistics.TopArtists = Array.Empty<SimpleArtist>();
+                    statistics.TopTracks = Array.Empty<SimpleTrack>();
 
                     spotifyAccess.UserData = privateUser;
                     spotifyAccess.Statistics = statistics;
