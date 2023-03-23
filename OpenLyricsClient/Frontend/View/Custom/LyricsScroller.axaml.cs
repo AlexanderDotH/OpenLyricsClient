@@ -95,7 +95,7 @@ public partial class LyricsScroller : UserControl
     public LyricsScroller()
     {
         INSTANCE = this;
-        
+
         InitializeComponent();
 
         this._viewModel = new LyricsScrollerViewModel();

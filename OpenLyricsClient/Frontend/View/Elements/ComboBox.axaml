@@ -4,7 +4,7 @@
         xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles">
     <Design.PreviewWith>
         <Border Padding="20" Height="200">
-          <ComboBox Classes="Custom" Width="200" PlaceholderText="Test" >
+          <ComboBox Classes="Custom" Width="200" PlaceholderText="Test">
             <ComboBox.Items>
               <ComboBoxItem Content="Item 1" />
               <ComboBoxItem Content="Item 2" />

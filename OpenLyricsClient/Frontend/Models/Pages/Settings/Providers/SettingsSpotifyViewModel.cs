@@ -11,6 +11,7 @@ using DevBase.Web;
 using Microsoft.Extensions.Primitives;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
+using OpenLyricsClient.Frontend.Structure;
 
 namespace OpenLyricsClient.Frontend.Models.Pages.Settings.Providers;
 

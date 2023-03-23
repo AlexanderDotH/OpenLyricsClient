@@ -230,7 +230,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                 await this._lyricCollector.CollectLyrics(songResponseObject);
                 songChangedEventArgs.Song.State = SongState.SEARCHING_FINISHED;
 
-                await Task.Delay(1500);
+                await Task.Delay(1500); 
             }
 
             this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);

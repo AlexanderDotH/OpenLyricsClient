@@ -7,6 +7,8 @@
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              xmlns:subPages="clr-namespace:OpenLyricsClient.Frontend.View.Pages.SubPages"
              xmlns:providers="clr-namespace:OpenLyricsClient.Frontend.Models.Pages.Settings.Providers"
+             xmlns:structure="clr-namespace:OpenLyricsClient.Frontend.Structure"
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
              mc:Ignorable="d"
              d:DesignWidth="1000"
              d:DesignHeight="1000"
@@ -118,35 +120,96 @@
                                       VerticalAlignment="Top"
                                       HorizontalAlignment="Left"
                                       FontWeight="Bold"
-                                      Text="You are up and running!">
+                                      Text="{Binding UserGreeting}">
                            </TextBlock>
                            
                            <StackPanel Orientation="Vertical" 
                                        Spacing="10"
                                        >
                                
-                               <TextBlock FontSize="14"
-                                          VerticalAlignment="Top"
-                                          HorizontalAlignment="Left"
-                                          FontWeight="Normal"
-                                          TextWrapping="Wrap"
-                                          Margin="5,5,0,0"
-                                          Foreground="{DynamicResource SecondaryFontColorBrush}"
-                                          Text="{Binding UserGreeting}">
-                               </TextBlock>
-                               
                                <Grid Name="GRD_Profile"></Grid>
                                
-                               <Button Background="Red">
-                                   <TextBlock FontSize="14"
-                                              VerticalAlignment="Top"
-                                              HorizontalAlignment="Left"
-                                              FontWeight="Normal"
-                                              TextWrapping="Wrap"
-                                              Foreground="{DynamicResource PrimaryThemeFontColorBrush}"
-                                              Text="Disconnect from Spotify">
-                                   </TextBlock>
-                               </Button>
+                               <Grid ColumnDefinitions="Auto, Auto">
+                                  
+                                  <StackPanel Grid.Column="0">
+                                       <TextBlock Text="Top Artists"
+                                          Margin="10,0,0,10"/>
+                               
+                                       <ListBox Width="200"
+                                                Name="LST_TopArtists" 
+                                                HorizontalAlignment="Left"
+                                                Margin="15,0,0,0"
+                                                Background="Transparent"
+                                                VirtualizationMode="None">
+                                           
+                                           <ListBox.ItemTemplate>
+                                               <DataTemplate>
+                                                   <StackPanel Orientation="Horizontal" Spacing="15" Height="45">
+                                                       
+                                                       <Grid>
+                                                           <Image Stretch="Fill"
+                                                                  VerticalAlignment="Center" 
+                                                                  Width="45"
+                                                                  Height="45"
+                                                                  Source="{Binding Image}"
+                                                                  Margin="0,0,0,2"/>
+                                                           <Border CornerRadius="10" 
+                                                                   Width="53" 
+                                                                   Height="52"  
+                                                                   BorderThickness="5" 
+                                                                   BorderBrush="{DynamicResource SecondaryBackgroundBrush}"/>
+                                                       </Grid>
+                                                       
+                                                       <TextBlock VerticalAlignment="Center" 
+                                                                  Text="{Binding Text}"/>
+                                                   </StackPanel>
+                                               </DataTemplate>
+                                           </ListBox.ItemTemplate>
+
+                                       </ListBox>
+                                  </StackPanel>
+                                  
+                                  <StackPanel Margin="60,0,0,0" 
+                                              Grid.Column="1">
+                                      
+                                      <TextBlock Text="Top Tracks"
+                                                 Margin="10,0,0,10"/>
+                                      
+                                      <ListBox Width="200"
+                                               Name="LST_TopTracks" 
+                                               HorizontalAlignment="Right"
+                                               Margin="15,0,0,0"
+                                               Background="Transparent"
+                                               VirtualizationMode="None">
+                                   
+                                          <ListBox.ItemTemplate>
+                                              <DataTemplate>
+                                                  <StackPanel Orientation="Horizontal" Spacing="15" Height="45">
+                                                      
+                                                      <Grid>
+                                                          <Image Stretch="Fill"
+                                                                 VerticalAlignment="Center" 
+                                                                 Width="45"
+                                                                 Height="45"
+                                                                 Source="{Binding Image}"
+                                                                 Margin="0,0,0,2"/>
+                                                          <Border CornerRadius="10" 
+                                                                  Width="53" 
+                                                                  Height="52"  
+                                                                  BorderThickness="5" 
+                                                                  BorderBrush="{DynamicResource SecondaryBackgroundBrush}"/>
+                                                      </Grid>
+                                                      
+                                                      <TextBlock VerticalAlignment="Center" 
+                                                                 Text="{Binding Text}"/>
+                                                  </StackPanel>
+                                            </DataTemplate>
+                                          </ListBox.ItemTemplate>
+
+                                      </ListBox>
+                                  </StackPanel>
+                                  
+                              </Grid>
                            </StackPanel>
                            
                        </StackPanel>
