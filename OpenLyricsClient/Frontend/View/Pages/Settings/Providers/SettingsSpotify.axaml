@@ -139,8 +139,7 @@
                                                 Name="LST_TopArtists" 
                                                 HorizontalAlignment="Left"
                                                 Margin="15,0,0,0"
-                                                Background="Transparent"
-                                                VirtualizationMode="None">
+                                                Background="Transparent">
                                            
                                            <ListBox.ItemTemplate>
                                                <DataTemplate>
@@ -179,9 +178,8 @@
                                                Name="LST_TopTracks" 
                                                HorizontalAlignment="Right"
                                                Margin="15,0,0,0"
-                                               Background="Transparent"
-                                               VirtualizationMode="None">
-                                   
+                                               Background="Transparent">
+                                          
                                           <ListBox.ItemTemplate>
                                               <DataTemplate>
                                                   <StackPanel Orientation="Horizontal" Spacing="15" Height="45">

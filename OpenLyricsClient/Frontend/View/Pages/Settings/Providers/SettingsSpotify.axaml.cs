@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AsyncImageLoader;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
@@ -72,7 +73,7 @@ public partial class SettingsSpotify : UserControl
         this._topArtists = this.Get<ListBox>(nameof(LST_TopArtists));
         this._topTracks = this.Get<ListBox>(nameof(LST_TopTracks));
     }
-    
+
     private void SettingManagerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
     {
         ProfileImageUpdate();

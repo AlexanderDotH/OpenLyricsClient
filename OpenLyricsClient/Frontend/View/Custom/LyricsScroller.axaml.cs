@@ -163,7 +163,7 @@ public partial class LyricsScroller : UserControl
     {
         if (!this._isResynced)
         {
-            float step = Math.Abs(this._scrollTo - this._currentScrollOffset) / (this._scrollSpeed * 0.1f);
+            float step = Math.Abs(this._scrollTo - this._currentScrollOffset) / (this._scrollSpeed * 0.3f);
         
             if (this._currentScrollOffset < _scrollTo)
             {
