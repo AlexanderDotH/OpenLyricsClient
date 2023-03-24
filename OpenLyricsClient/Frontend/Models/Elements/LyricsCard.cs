@@ -316,7 +316,8 @@ public class LyricsCard : TemplatedControl
             this._blurArea.Sigma = this.BlurSigma;
         }
 
-        if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode == EnumLyricsDisplayMode.FADE)
+        if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode == EnumLyricsDisplayMode.FADE && !this._ignoreEvents ||
+            LyricDisplayMode == EnumLyricsDisplayMode.FADE && this._ignoreEvents)
         {
             this._viewbox.IsVisible = false;
             this._border.Width = 0;
@@ -338,7 +339,8 @@ public class LyricsCard : TemplatedControl
 
             this._greyBlock.Foreground = new SolidColorBrush(newColor);
         }
-        else
+        else if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode == EnumLyricsDisplayMode.KARAOKE && !this._ignoreEvents ||
+                 LyricDisplayMode == EnumLyricsDisplayMode.KARAOKE && this._ignoreEvents)
         {
             this._greyBlock.Foreground = this.UnSelectedLineBrush;
             

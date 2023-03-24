@@ -134,7 +134,7 @@ public class NoteAnimation : TemplatedControl
             {
                 for (int i = 0; i < this._notes.Length; i++)
                 {
-                    if (i <= 3)
+                    if (i <= 2)
                     {
                         this._notes[i].Foreground = ((SolidColorBrush)this.UnSelectedLineBrush);
                     }
@@ -160,7 +160,7 @@ public class NoteAnimation : TemplatedControl
         {
             for (int i = 0; i < this._notes.Length; i++)
             {
-                if (i <= 3)
+                if (i <= 2)
                 {
                     this._notes[i].Foreground = ((SolidColorBrush)this.UnSelectedLineBrush);
                 }
