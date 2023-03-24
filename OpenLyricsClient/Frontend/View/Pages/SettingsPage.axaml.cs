@@ -246,15 +246,13 @@ public partial class SettingsPage : UserControl
     private void BTN_Romanization_OnClick(object? sender, RoutedEventArgs e)
     {
         SelectPage(0);
-
-        Core.INSTANCE.ServiceHandler.AuthorizeService("Spotify");
     }
 
     private void BTN_Lyrics_OnClick(object? sender, RoutedEventArgs e)
     {
         SelectPage(1);
         
-        try
+        /*try
         {
             if (Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify").IsConnected())
             {
@@ -274,7 +272,7 @@ public partial class SettingsPage : UserControl
         catch (Exception exception)
         {
             Debug.WriteLine(exception.Message);
-        }
+        }*/
     }
 
     private void BTN_Spotify_OnClick(object? sender, RoutedEventArgs e)

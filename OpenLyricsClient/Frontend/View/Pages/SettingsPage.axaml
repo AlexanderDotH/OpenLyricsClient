@@ -38,7 +38,7 @@
             <StackPanel Orientation="Vertical" 
                         Spacing="15">
                 
-                <TextBlock Text="Visual"
+                <TextBlock Text="Apperience"
                            FontSize="14"
                            Foreground="{DynamicResource SecondaryFontColorBrush}"
                            FontWeight="Normal"
@@ -99,7 +99,7 @@
                     
                 </StackPanel>
                 
-                <TextBlock Text="Connection"
+                <TextBlock Text="Services"
                            FontSize="14"
                            Foreground="{DynamicResource SecondaryFontColorBrush}"
                            FontWeight="Normal"

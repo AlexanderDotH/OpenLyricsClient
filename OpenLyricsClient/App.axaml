@@ -31,6 +31,8 @@
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/Expander.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/ContentExpandControl.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/RadioButton.axaml"/>
+        <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/AvalonPresenterList.axaml"/>
+
 
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/Styles/Grid.axaml"/>
         

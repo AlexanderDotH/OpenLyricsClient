@@ -63,11 +63,24 @@
                                                   FontWeight="Normal"
                                                   TextWrapping="Wrap"
                                                   Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                                  IsVisible="{Binding !IsConnected}"
                                                   Text="Connect the OpenLyricsClient with Spotify and start singing to you favorite songs.">
+                                       </TextBlock>
+                                       
+                                       <TextBlock FontSize="14"
+                                                  VerticalAlignment="Top"
+                                                  HorizontalAlignment="Left"
+                                                  FontWeight="Normal"
+                                                  TextWrapping="Wrap"
+                                                  Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                                  IsVisible="{Binding IsConnected}"
+                                                  Text="Your spotify account is connected with the OpenLyricsClient. Go on and listen to you favorite music!">
                                        </TextBlock>
                                
                                        <Button Grid.Column="0" 
                                                Grid.Row="1"
+                                               IsVisible="{Binding !IsConnected}"
+                                               Command="{Binding ConnectToSpotify}"
                                                Background="#1ED760">
                                            <TextBlock FontSize="14"
                                                       HorizontalAlignment="Left"
@@ -75,6 +88,20 @@
                                                       TextWrapping="Wrap"
                                                       Foreground="{DynamicResource PrimaryBackgroundBrush}"
                                                       Text="Lets get started">
+                                           </TextBlock>
+                                       </Button>
+                                       
+                                       <Button Grid.Column="0" 
+                                               Grid.Row="1"
+                                               IsVisible="{Binding IsConnected}"
+                                               Command="{Binding DisconnectFromSpotify}"
+                                               Background="#FF4040">
+                                           <TextBlock FontSize="14"
+                                                      HorizontalAlignment="Left"
+                                                      FontWeight="Normal"
+                                                      TextWrapping="Wrap"
+                                                      Foreground="{DynamicResource PrimaryBackgroundBrush}"
+                                                      Text="Just remove me">
                                            </TextBlock>
                                        </Button>
                                    </StackPanel>
@@ -110,6 +137,7 @@
                    </elements:GroupBox>
                    
                    <elements:GroupBox Classes="clean" 
+                                      IsVisible="{Binding IsConnected}"
                                       Background="{DynamicResource SecondaryBackgroundBrush}">
                        
                        <StackPanel Margin="15" 
@@ -127,87 +155,49 @@
                                        Spacing="10"
                                        >
                                
-                               <Grid Name="GRD_Profile"></Grid>
+                               <StackPanel Orientation="Horizontal"
+                                           Spacing="20">
+                                   <Grid Name="GRD_Profile" 
+                                         Margin="5,0,0,0"
+                                         VerticalAlignment="Center"></Grid>
+                                   
+                                   <StackPanel Orientation="Vertical" 
+                                               Spacing="8"
+                                               VerticalAlignment="Center">
+                                       <TextBlock Text="{Binding UserFollower}"
+                                                FontSize="13"/>
+                                       <TextBlock Text="{Binding UserPlan}"
+                                                  FontSize="13"/>
+                                   </StackPanel>
+                                   
+                               </StackPanel>
                                
-                               <Grid ColumnDefinitions="Auto, Auto">
+                               <Grid ColumnDefinitions="Auto, Auto" Margin="0,10,0,0">
                                   
-                                  <StackPanel Grid.Column="0">
-                                       <TextBlock Text="Top Artists"
-                                          Margin="10,0,0,10"/>
+                                  <StackPanel Grid.Column="0"
+                                              Spacing="10">
+                                      
+                                      <TextBlock Text="Top Artists"
+                                                 Margin="10,0,0,10"/>
                                
-                                       <ListBox Width="200"
-                                                Name="LST_TopArtists" 
-                                                HorizontalAlignment="Left"
-                                                Margin="15,0,0,0"
-                                                Background="Transparent">
-                                           
-                                           <ListBox.ItemTemplate>
-                                               <DataTemplate>
-                                                   <StackPanel Orientation="Horizontal" Spacing="15" Height="45">
-                                                       
-                                                       <Grid>
-                                                           <Image Stretch="Fill"
-                                                                  VerticalAlignment="Center" 
-                                                                  Width="45"
-                                                                  Height="45"
-                                                                  Source="{Binding Image}"
-                                                                  Margin="0,0,0,2"/>
-                                                           <Border CornerRadius="10" 
-                                                                   Width="53" 
-                                                                   Height="52"  
-                                                                   BorderThickness="5" 
-                                                                   BorderBrush="{DynamicResource SecondaryBackgroundBrush}"/>
-                                                       </Grid>
-                                                       
-                                                       <TextBlock VerticalAlignment="Center" 
-                                                                  Text="{Binding Text}"/>
-                                                   </StackPanel>
-                                               </DataTemplate>
-                                           </ListBox.ItemTemplate>
-
-                                       </ListBox>
+                                       <elements:AvalonPresenterList Name="LST_TopArtists"
+                                                                     Width="200"
+                                                                     HorizontalAlignment="Left"
+                                                                     Margin="15,0,0,0"/>
                                   </StackPanel>
                                   
                                   <StackPanel Margin="60,0,0,0" 
+                                              Spacing="10"
                                               Grid.Column="1">
                                       
                                       <TextBlock Text="Top Tracks"
                                                  Margin="10,0,0,10"/>
                                       
-                                      <ListBox Width="200"
-                                               Name="LST_TopTracks" 
-                                               HorizontalAlignment="Right"
-                                               Margin="15,0,0,0"
-                                               Background="Transparent">
-                                          
-                                          <ListBox.ItemTemplate>
-                                              <DataTemplate>
-                                                  <StackPanel Orientation="Horizontal" Spacing="15" Height="45">
-                                                      
-                                                      <Grid>
-                                                          <Image Stretch="Fill"
-                                                                 VerticalAlignment="Center" 
-                                                                 Width="45"
-                                                                 Height="45"
-                                                                 Source="{Binding Image}"
-                                                                 Margin="0,0,0,2"/>
-                                                          <Border CornerRadius="10" 
-                                                                  Width="53" 
-                                                                  Height="52"  
-                                                                  BorderThickness="5" 
-                                                                  BorderBrush="{DynamicResource SecondaryBackgroundBrush}"/>
-                                                      </Grid>
-                                                      
-                                                      <TextBlock VerticalAlignment="Center" 
-                                                                 Text="{Binding Text}"/>
-                                                  </StackPanel>
-                                            </DataTemplate>
-                                          </ListBox.ItemTemplate>
-
-                                      </ListBox>
+                                      <elements:AvalonPresenterList Name="LST_TopTracks"
+                                                                    HorizontalAlignment="Right"
+                                                                    Margin="15,0,0,0"/>
                                   </StackPanel>
-                                  
-                              </Grid>
+                               </Grid>
                            </StackPanel>
                            
                        </StackPanel>

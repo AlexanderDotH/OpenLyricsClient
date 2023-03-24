@@ -31,8 +31,8 @@ public partial class SettingsSpotify : UserControl
 
     private Image _profileImage;
 
-    private ListBox _topArtists;
-    private ListBox _topTracks;
+    private AvalonPresenterList _topArtists;
+    private AvalonPresenterList _topTracks;
     
     public SettingsSpotify()
     {
@@ -45,7 +45,7 @@ public partial class SettingsSpotify : UserControl
         image.Height = 70;
         image.VerticalAlignment = VerticalAlignment.Center;
         image.HorizontalAlignment = HorizontalAlignment.Left;
-        image.Margin = new Thickness(15, 5, 0, 10);
+        image.Margin = new Thickness(5, 0, 0, 0);
 
         this._profileImage = image;
 
@@ -56,7 +56,7 @@ public partial class SettingsSpotify : UserControl
         border.Height = 78;
         border.VerticalAlignment = VerticalAlignment.Center;
         border.HorizontalAlignment = HorizontalAlignment.Left;
-        border.Margin = new Thickness(10, 5, 0, 10);
+        border.Margin = new Thickness(0, 0, 0, 0);
         border.BorderThickness = new Thickness(5);
         border.BorderBrush = primaryBackColor;
         border.CornerRadius = new CornerRadius(8);
@@ -70,8 +70,8 @@ public partial class SettingsSpotify : UserControl
         this._gridProfile.Children.Add(image);
         this._gridProfile.Children.Add(border);
 
-        this._topArtists = this.Get<ListBox>(nameof(LST_TopArtists));
-        this._topTracks = this.Get<ListBox>(nameof(LST_TopTracks));
+        this._topArtists = this.Get<AvalonPresenterList>(nameof(LST_TopArtists));
+        this._topTracks = this.Get<AvalonPresenterList>(nameof(LST_TopTracks));
     }
 
     private void SettingManagerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
@@ -103,7 +103,7 @@ public partial class SettingsSpotify : UserControl
         {
             SimpleArtist[] artists = Core.INSTANCE?.SettingManager?.Settings?.SpotifyAccess?.Statistics?.TopArtists!;
 
-            AList<ListBoxElement> elements = new AList<ListBoxElement>();
+            AList<AvalonPresenterElement> elements = new AList<AvalonPresenterElement>();
 
             for (int i = 0; i < artists.Length; i++)
             {
@@ -116,21 +116,21 @@ public partial class SettingsSpotify : UserControl
                 ResponseData data = await request.GetResponseAsync();
                 MemoryStream buffer = new MemoryStream(data.Content);
                 
-                ListBoxElement element = new ListBoxElement();
+                AvalonPresenterElement element = new AvalonPresenterElement();
                 element.Text = artist.Name;
                 element.Image = new Bitmap(buffer);
                 
                 elements.Add(element);
             }
             
-            await Dispatcher.UIThread.InvokeAsync(() => this._topArtists.Items = elements.GetAsList());
+            await Dispatcher.UIThread.InvokeAsync(() => this._topArtists.Elements = elements.GetAsList());
         });
         
         Task.Factory.StartNew(async () =>
         {
             SimpleTrack[] tracks = Core.INSTANCE?.SettingManager?.Settings?.SpotifyAccess?.Statistics?.TopTracks!;
 
-            AList<ListBoxElement> elements = new AList<ListBoxElement>();
+            AList<AvalonPresenterElement> elements = new AList<AvalonPresenterElement>();
 
             for (int i = 0; i < tracks.Length; i++)
             {
@@ -143,14 +143,14 @@ public partial class SettingsSpotify : UserControl
                 ResponseData data = await request.GetResponseAsync();
                 MemoryStream buffer = new MemoryStream(data.Content);
                 
-                ListBoxElement element = new ListBoxElement();
+                AvalonPresenterElement element = new AvalonPresenterElement();
                 element.Text = track.Name;
                 element.Image = new Bitmap(buffer);
                 
                 elements.Add(element);
             }
             
-            await Dispatcher.UIThread.InvokeAsync(() => this._topTracks.Items = elements.GetAsList());
+            await Dispatcher.UIThread.InvokeAsync(() => this._topTracks.Elements = elements.GetAsList());
         });
     }
     
