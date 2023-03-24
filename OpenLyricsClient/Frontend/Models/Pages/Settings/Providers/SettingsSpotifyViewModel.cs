@@ -15,6 +15,7 @@ using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Frontend.Structure;
 using ReactiveUI;
+using SharpDX.DirectInput;
 using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Frontend.Models.Pages.Settings.Providers;
@@ -34,15 +35,27 @@ public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
         ConnectToSpotify = ReactiveCommand.CreateFromTask(StartSpotifyAuthFlow);
     }
     
-    public void DisconnectSpotify()
+    private void DisconnectSpotify()
     {
         Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected = false;
         Core.INSTANCE.SettingManager.WriteSettings();
     }
     
-    public async Task StartSpotifyAuthFlow()
+    private async Task StartSpotifyAuthFlow()
     {
-        Core.INSTANCE.ServiceHandler.AuthorizeService("Spotify");
+        /*if (Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected == false && 
+            Core.INSTANCE.SettingManager.Settings.SpotifyAccess?.Statistics != null &&
+            Core.INSTANCE.SettingManager.Settings.SpotifyAccess?.UserData?.DisplayName != string.Empty)
+        {
+            Core.INSTANCE.SettingManager.Settings.SpotifyAccess!.IsSpotifyConnected = true;
+            Core.INSTANCE.SettingManager.WriteSettings();
+        }
+        else
+        {
+            await Core.INSTANCE.ServiceHandler.AuthorizeService("Spotify");
+        }*/
+        await Core.INSTANCE.ServiceHandler.AuthorizeService("Spotify");
+
     }
 
     private void SettingManagerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)

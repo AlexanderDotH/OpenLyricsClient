@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using DevBase.Generics;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Services.Services;
@@ -43,9 +44,9 @@ namespace OpenLyricsClient.Backend.Handler.Services
             return GetAccessToken(GetServiceByName(serviceName));
         }
 
-        public void AuthorizeService(string serviceName)
+        public async Task AuthorizeService(string serviceName)
         {
-            GetServiceByName(serviceName).StartAuthorization();
+            await GetServiceByName(serviceName).StartAuthorization();
         }
 
         public IService GetServiceByName(string serviceName)
