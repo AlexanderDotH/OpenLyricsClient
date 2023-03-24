@@ -101,6 +101,18 @@ public class NoteAnimation : TemplatedControl
         if(!(DataValidator.ValidateData(this._viewbox) || DataValidator.ValidateData(this._border)))
             return;
         
+        for (int i = 0; i < this._notes.Length; i++)
+        {
+            if (i <= 2)
+            {
+                this._notes[i].Foreground = ((SolidColorBrush)this.UnSelectedLineBrush);
+            }
+            else
+            {
+                this._notes[i].Foreground = ((SolidColorBrush)this.SelectedLineBrush);
+            }
+        }
+        
         if (this._current)
         {
             double realSize = (this.GetBounds("♪").Width * 3) + (3 * 8) + 8;
@@ -110,14 +122,14 @@ public class NoteAnimation : TemplatedControl
                 this._viewbox.IsVisible = false;
                 this._border.Width = 0;
                 
-                Color color = ((SolidColorBrush)this.SelectedLineBrush).Color;
-                Color unselectedColor = ((SolidColorBrush)this.UnSelectedLineBrush).Color;
+                Color color = ((SolidColorBrush)this.UnSelectedLineBrush).Color;
+                Color otherColor = ((SolidColorBrush)this.SelectedLineBrush).Color;
 
                 double percentage = Math.Clamp(this.Percentage / 100.0, 0, 100);
             
-                double red = (unselectedColor.R * (1 - percentage) + color.R * percentage);
-                double green = (unselectedColor.G * (1 - percentage) + color.G * percentage);
-                double blue = (unselectedColor.B * (1 - percentage) + color.B * percentage);
+                double red = (otherColor.R * (1 - percentage) + color.R * percentage);
+                double green = (otherColor.G * (1 - percentage) + color.G * percentage);
+                double blue = (otherColor.B * (1 - percentage) + color.B * percentage);
 
                 Color newColor = new Color(
                     255,

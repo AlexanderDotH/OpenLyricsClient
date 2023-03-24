@@ -316,33 +316,44 @@ public class LyricsCard : TemplatedControl
             this._blurArea.Sigma = this.BlurSigma;
         }
 
+        this._greyBlock.Foreground = this.UnSelectedLineBrush;
+        this._presenterBlock.Foreground = this.SelectedLineBrush;
+        
         if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode == EnumLyricsDisplayMode.FADE && !this._ignoreEvents ||
             LyricDisplayMode == EnumLyricsDisplayMode.FADE && this._ignoreEvents)
         {
+            this._presenterBlock.Foreground = this.UnSelectedLineBrush;
+            this._greyBlock.Foreground = this.UnSelectedLineBrush;
+            
             this._viewbox.IsVisible = false;
             this._border.Width = 0;
 
-            Color color = ((SolidColorBrush)this.SelectedLineBrush).Color;
-            Color unselectedColor = ((SolidColorBrush)this.UnSelectedLineBrush).Color;
+            if (this._current)
+            {
+                Color color = ((SolidColorBrush)this.UnSelectedLineBrush).Color;
+                Color otherColor = ((SolidColorBrush)this.SelectedLineBrush).Color;
 
-            double percentage = Math.Clamp(this.Percentage / 100.0, 0, 100);
+                double percentage = Math.Clamp(this.Percentage / 100.0, 0, 100);
             
-            double red = (unselectedColor.R * (1 - percentage) + color.R * percentage);
-            double green = (unselectedColor.G * (1 - percentage) + color.G * percentage);
-            double blue = (unselectedColor.B * (1 - percentage) + color.B * percentage);
+                double red = (otherColor.R * (1 - percentage) + color.R * percentage);
+                double green = (otherColor.G * (1 - percentage) + color.G * percentage);
+                double blue = (otherColor.B * (1 - percentage) + color.B * percentage);
 
-            Color newColor = new Color(
-                255,
-                (byte)Math.Clamp(red, 0, 255), 
-                (byte)Math.Clamp(green, 0, 255), 
-                (byte)Math.Clamp(blue, 0, 255));
+                Color newColor = new Color(
+                    255,
+                    (byte)Math.Clamp(red, 0, 255), 
+                    (byte)Math.Clamp(green, 0, 255), 
+                    (byte)Math.Clamp(blue, 0, 255));
 
-            this._greyBlock.Foreground = new SolidColorBrush(newColor);
+                this._greyBlock.Foreground = new SolidColorBrush(newColor);
+                this._presenterBlock.Foreground = new SolidColorBrush(newColor);
+            }
         }
         else if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode == EnumLyricsDisplayMode.KARAOKE && !this._ignoreEvents ||
                  LyricDisplayMode == EnumLyricsDisplayMode.KARAOKE && this._ignoreEvents)
         {
-            this._greyBlock.Foreground = this.UnSelectedLineBrush;
+            
+            //this._greyBlock.Foreground = this.UnSelectedLineBrush;
             
             this._viewbox.IsVisible = true;
             this._presenterBlock.MaxWidth = this._greyBlock.TextLayout.Size.Width;
@@ -354,8 +365,52 @@ public class LyricsCard : TemplatedControl
         }
 
         this._noteAnimation.Render(context);
+        
+        if (!this._current)
+        {
+        }
 
         base.Render(context);
+    }
+
+    protected override void OnTemplateChanged(AvaloniaPropertyChangedEventArgs e)
+    {
+        base.OnTemplateChanged(e);
+
+    }
+
+    protected override void OnDataContextBeginUpdate()
+    {
+        /*if (Percentage < 0 || !Current)
+        {
+            if (DataValidator.ValidateData(this._border))
+            {
+                this._border.IsVisible = false;
+            }
+
+            if (DataValidator.ValidateData(this._presenterBlock))
+            {
+                this._presenterBlock.IsVisible = false;
+            }
+        }
+        else
+        {
+            if (DataValidator.ValidateData(this._border))
+            {
+                this._border.IsVisible = true;
+            }
+
+            if (DataValidator.ValidateData(this._presenterBlock))
+            {
+                this._presenterBlock.IsVisible = true;
+            }
+        }*/
+        
+        if (!Current)
+        {
+            //Percentage = int.MinValue;
+        }
+        base.OnDataContextBeginUpdate();
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
