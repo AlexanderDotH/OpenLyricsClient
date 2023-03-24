@@ -354,52 +354,8 @@ public class LyricsCard : TemplatedControl
         }
 
         this._noteAnimation.Render(context);
-        
-        if (!this._current)
-        {
-        }
 
         base.Render(context);
-    }
-
-    protected override void OnTemplateChanged(AvaloniaPropertyChangedEventArgs e)
-    {
-        base.OnTemplateChanged(e);
-
-    }
-
-    protected override void OnDataContextBeginUpdate()
-    {
-        /*if (Percentage < 0 || !Current)
-        {
-            if (DataValidator.ValidateData(this._border))
-            {
-                this._border.IsVisible = false;
-            }
-
-            if (DataValidator.ValidateData(this._presenterBlock))
-            {
-                this._presenterBlock.IsVisible = false;
-            }
-        }
-        else
-        {
-            if (DataValidator.ValidateData(this._border))
-            {
-                this._border.IsVisible = true;
-            }
-
-            if (DataValidator.ValidateData(this._presenterBlock))
-            {
-                this._presenterBlock.IsVisible = true;
-            }
-        }*/
-        
-        if (!Current)
-        {
-            //Percentage = int.MinValue;
-        }
-        base.OnDataContextBeginUpdate();
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
