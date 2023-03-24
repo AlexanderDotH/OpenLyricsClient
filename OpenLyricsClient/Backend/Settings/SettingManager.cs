@@ -70,6 +70,7 @@ namespace OpenLyricsClient.Backend.Settings
             settings.TidalAccess = (TidalAccess)DefaultSetting(EnumSetting.TIDAL);
             settings.SpotifyAccess = (SpotifyAccess)DefaultSetting(EnumSetting.SPOTIFY);
             settings.RomanizeSelection = (List<RomanizeSelection>)DefaultSetting(EnumSetting.ROMANIZATION);
+            settings.DisplayPreferences = (LyricsDisplayPreferences)DefaultSetting(EnumSetting.DISPLAY_PREFERENCES);
             settings.MusixMatchToken = (List<MusixMatchToken>)DefaultSetting(EnumSetting.MUSIXMATCH_TOKENS);
 
             WriteSettings(settings);
@@ -133,6 +134,12 @@ namespace OpenLyricsClient.Backend.Settings
                 case EnumSetting.MUSIXMATCH_TOKENS:
                 {
                     return new List<MusixMatchToken>();
+                }
+                case EnumSetting.DISPLAY_PREFERENCES:
+                {
+                    LyricsDisplayPreferences lyricsDisplayPreferences = new LyricsDisplayPreferences();
+                    lyricsDisplayPreferences.DisplayMode = EnumLyricsDisplayMode.KARAOKE;
+                    return lyricsDisplayPreferences;
                 }
             }
 

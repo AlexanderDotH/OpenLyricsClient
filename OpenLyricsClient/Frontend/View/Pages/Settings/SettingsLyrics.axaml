@@ -6,11 +6,16 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              xmlns:subPages="clr-namespace:OpenLyricsClient.Frontend.View.Pages.SubPages"
+             xmlns:settings="clr-namespace:OpenLyricsClient.Frontend.Models.Pages.Settings"
              mc:Ignorable="d"
              d:DesignWidth="1000"
              d:DesignHeight="1000"
              x:Class="OpenLyricsClient.Frontend.View.Pages.Settings.SettingsLyrics">
     
+    <UserControl.DataContext>
+        <settings:SettingsLyricsViewModel/>
+    </UserControl.DataContext>
+
     <Grid Background="{DynamicResource PrimaryBackgroundBrush}">
         
         <ScrollViewer VerticalScrollBarVisibility="Auto"
@@ -73,6 +78,8 @@
                                                      CornerRadius="10"
                                                      Grid.Column="0" 
                                                      Classes="Button" 
+                                                     Command="{Binding SwitchToKaraokeModeCommand}"
+                                                     IsChecked="{Binding IsKaraoke}"
                                                      GroupName="3">
                                    <StackPanel Orientation="Vertical" 
                                                Spacing="10"
@@ -98,6 +105,8 @@
                                                      Grid.Column="2" 
                                                      CornerRadius="10"
                                                      Classes="Button" 
+                                                     Command="{Binding SwitchToFadeModeCommand}"
+                                                     IsChecked="{Binding IsFade}"
                                                      GroupName="3">
                                    <StackPanel Orientation="Vertical" 
                                                Spacing="10"

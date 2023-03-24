@@ -10,6 +10,7 @@ namespace OpenLyricsClient.Backend.Settings
         public SpotifyAccess SpotifyAccess { get; set; }
         public TidalAccess TidalAccess { get; set; }
         public List<RomanizeSelection> RomanizeSelection { get; set; }
+        public LyricsDisplayPreferences DisplayPreferences { get; set; }
         public List<MusixMatchToken> MusixMatchToken { get; set; }
         
     }

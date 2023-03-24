@@ -15,6 +15,7 @@ using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Frontend.Structure;
 using ReactiveUI;
+using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Frontend.Models.Pages.Settings.Providers;
 
@@ -94,6 +95,10 @@ public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
         get
         {
             string? product = Core.INSTANCE?.SettingManager?.Settings?.SpotifyAccess?.UserData?.Product;
+
+            if (product.IsNullOrEmpty())
+                return string.Empty;
+            
             string formated = product?.Substring(0, 1).ToUpper() + product?.Substring(1, product.Length - 1);
             
             return string.Format("{0} Plan",  formated);

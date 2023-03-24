@@ -11,7 +11,6 @@ namespace OpenLyricsClient.Backend.Structure
         public long SpotifyExpireTime { get; set; }
         public bool IsSpotifyConnected { get; set; }
         public PrivateUser UserData { get; set; }
-        
         public SpotifyStatistics Statistics { get; set; }
     }
 }

@@ -4,6 +4,9 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
+using DevBase.Generics;
+using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Frontend.Models.Elements;
@@ -26,12 +29,16 @@ public class NoteAnimation : TemplatedControl
     private Border _border;
     
     private bool _current;
-    
+
+    private AList<TextBlock> _notes;
+
     public NoteAnimation()
     {
         FontSize = 30;
         FontWeight = FontWeight.Bold;
         this._current = false;
+
+        this._notes = new AList<TextBlock>();
     }
     
     public Rect GetBounds(string textToMeasure)
@@ -56,6 +63,16 @@ public class NoteAnimation : TemplatedControl
     {
         var viewBox = e.NameScope.Find("PART_Viewbox");
         var border = e.NameScope.Find("PART_BackgroundBorder");
+
+        for (int i = 1; i < 6; i++)
+        {
+            var note = e.NameScope.Find("NOTE_" + i);
+
+            if (note is TextBlock)
+            {
+                this._notes.Add((TextBlock)note);
+            }
+        }
         
         if (viewBox is Viewbox)
         {
@@ -88,19 +105,71 @@ public class NoteAnimation : TemplatedControl
         {
             double realSize = (this.GetBounds("♪").Width * 3) + (3 * 8) + 8;
             
-            double scaled = Math.Round(((realSize) / 100) * this.Percentage);
-            double scaledB = Math.Round(((realSize) / 100) * this.Percentage);
+            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode == EnumLyricsDisplayMode.FADE)
+            {
+                this._viewbox.IsVisible = false;
+                this._border.Width = 0;
+                
+                Color color = ((SolidColorBrush)this.SelectedLineBrush).Color;
+                Color unselectedColor = ((SolidColorBrush)this.UnSelectedLineBrush).Color;
 
-            this._viewbox.Width = scaled;
-            this._viewbox.MaxWidth = scaled;
+                double percentage = Math.Clamp(this.Percentage / 100.0, 0, 100);
+            
+                double red = (unselectedColor.R * (1 - percentage) + color.R * percentage);
+                double green = (unselectedColor.G * (1 - percentage) + color.G * percentage);
+                double blue = (unselectedColor.B * (1 - percentage) + color.B * percentage);
+
+                Color newColor = new Color(
+                    255,
+                    (byte)Math.Clamp(red, 0, 255), 
+                    (byte)Math.Clamp(green, 0, 255), 
+                    (byte)Math.Clamp(blue, 0, 255));
+
+                for (int i = 0; i < this._notes.Length; i++)
+                {
+                    this._notes[i].Foreground = new SolidColorBrush(newColor);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < this._notes.Length; i++)
+                {
+                    if (i <= 3)
+                    {
+                        this._notes[i].Foreground = ((SolidColorBrush)this.UnSelectedLineBrush);
+                    }
+                    else
+                    {
+                        this._notes[i].Foreground = ((SolidColorBrush)this.SelectedLineBrush);
+                    }
+                }
+                
+                double scaled = Math.Round(((realSize) / 100) * this.Percentage);
+                double scaledB = Math.Round(((realSize) / 100) * this.Percentage);
+
+                this._viewbox.Width = scaled;
+                this._viewbox.MaxWidth = scaled;
         
-            this._border.Width = scaledB;
-            this._border.MaxWidth = scaledB;
+                this._border.Width = scaledB;
+                this._border.MaxWidth = scaledB;
+            }
             
             return;
         }
         else
         {
+            for (int i = 0; i < this._notes.Length; i++)
+            {
+                if (i <= 3)
+                {
+                    this._notes[i].Foreground = ((SolidColorBrush)this.UnSelectedLineBrush);
+                }
+                else
+                {
+                    this._notes[i].Foreground = ((SolidColorBrush)this.SelectedLineBrush);
+                }
+            }
+            
             this._viewbox.Width = -10;
             this._viewbox.MaxWidth = -10;
 

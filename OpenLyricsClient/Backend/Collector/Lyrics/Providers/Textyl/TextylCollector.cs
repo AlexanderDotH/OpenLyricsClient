@@ -32,7 +32,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
 
             if (!DataValidator.ValidateData(lyrics) || lyrics.IsNullOrEmpty())
             {
-                this._debugger.Write("Could not find lyrics for " + songResponseObject.SongRequestObject.SongName + "!", DebugType.ERROR);
+                /*this._debugger.Write("Could not find lyrics for " + songResponseObject.SongRequestObject.SongName + "!", DebugType.ERROR);*/
                 return new LyricData();
             }
 
@@ -58,26 +58,25 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
             string requestUrl = Uri.EscapeUriString(string.Format("{0}/lyrics?q={1}", this._baseUrl,
                 songRequestObject.FormattedSongName));
 
-            this._debugger.Write("Textyl request: " + requestUrl, DebugType.INFO);
+            /*this._debugger.Write("Textyl request: " + requestUrl, DebugType.INFO);*/
 
             try
             {
                 Request request = new Request(requestUrl);
                 ResponseData response = await request.GetResponseAsync();
 
-                if (response.GetContentAsString().Contains("No lyrics available"))
+                string content = response.GetContentAsString();
+                
+                if (content.Contains("No lyrics available"))
                     return null;
 
                 TextylLyricReponse[] reponse =
-                    new JsonDeserializer<TextylLyricReponse[]>().Deserialize(response.GetContentAsString());
+                    new JsonDeserializer<TextylLyricReponse[]>().Deserialize(content);
 
                 if (reponse != null)
                     return reponse;
             }
-            catch (Exception e)
-            {
-                this._debugger.Write(e);
-            }
+            catch (Exception e) { }
 
             return null;
         }

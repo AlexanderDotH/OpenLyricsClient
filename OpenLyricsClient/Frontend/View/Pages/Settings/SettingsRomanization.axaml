@@ -5,11 +5,16 @@
              xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:settings="clr-namespace:OpenLyricsClient.Frontend.Models.Pages.Settings"
              mc:Ignorable="d"
              d:DesignWidth="1000"
              d:DesignHeight="1000"
              x:Class="OpenLyricsClient.Frontend.View.Pages.Settings.SettingsRomanization">
     
+    <UserControl.DataContext>
+        <settings:SettingsRomanizationViewModel/>
+    </UserControl.DataContext>
+
     <Grid Background="{DynamicResource PrimaryBackgroundBrush}">
         
         <ScrollViewer VerticalScrollBarVisibility="Auto"
@@ -136,6 +141,8 @@
                                          HorizontalAlignment="Right"
                                          Background="{DynamicResource PrimaryThemeColorBrush}"
                                          assists:ToggleSwitchAssist.SwitchTrackOnBackground="{DynamicResource SecondaryThemeColorBrush}"
+                                         Command="{Binding JapaneseCommand}"
+                                         IsChecked="{Binding IsJapaneseEnabled}"
                                          Margin="0,0,15,0"></ToggleSwitch>
                        </Grid>
                        
@@ -230,6 +237,8 @@
                                          HorizontalAlignment="Right"
                                          Background="{DynamicResource PrimaryThemeColorBrush}"
                                          assists:ToggleSwitchAssist.SwitchTrackOnBackground="{DynamicResource SecondaryThemeColorBrush}"
+                                         Command="{Binding KoreanCommand}"
+                                         IsChecked="{Binding IsKoreanEnabled}"
                                          Margin="0,0,15,0"></ToggleSwitch>
                        </Grid>
                        
@@ -324,6 +333,8 @@
                                          HorizontalAlignment="Right"
                                          Background="{DynamicResource PrimaryThemeColorBrush}"
                                          assists:ToggleSwitchAssist.SwitchTrackOnBackground="{DynamicResource SecondaryThemeColorBrush}"
+                                         Command="{Binding RussianCommand}"
+                                         IsChecked="{Binding IsRussianEnabled}"
                                          Margin="0,0,15,0"></ToggleSwitch>
                        </Grid>
                        

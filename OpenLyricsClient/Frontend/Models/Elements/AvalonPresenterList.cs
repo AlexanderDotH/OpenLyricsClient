@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls.Primitives;
 using OpenLyricsClient.Frontend.Structure;
@@ -7,13 +9,13 @@ namespace OpenLyricsClient.Frontend.Models.Elements;
 
 public class AvalonPresenterList : TemplatedControl
 {
-    public static readonly DirectProperty<AvalonPresenterList, List<AvalonPresenterElement>> ElementsProperty = 
+    public static DirectProperty<AvalonPresenterList, List<AvalonPresenterElement>> ElementsProperty = 
         AvaloniaProperty.RegisterDirect<AvalonPresenterList, List<AvalonPresenterElement>>(nameof(Elements), 
             o => o.Elements, 
             (o, v) => o.Elements = v);
 
     private List<AvalonPresenterElement> _elements;
-    
+
     public List<AvalonPresenterElement> Elements
     {
         get
@@ -22,7 +24,6 @@ public class AvalonPresenterList : TemplatedControl
         }
         set
         {
-            this._elements = value;
             SetAndRaise(ElementsProperty, ref _elements, value);
         }
     }

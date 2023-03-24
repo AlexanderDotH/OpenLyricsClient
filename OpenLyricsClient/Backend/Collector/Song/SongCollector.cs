@@ -50,16 +50,14 @@ public class SongCollector
 
         SongRequestObject songRequestObject = SongRequestObject.FromSong(songChangedEventArgs.Song);
 
-        if (Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject))
-            return;
-
         this._songCollectors.Sort(new SongCollectorComparer());
 
         AList<SongResponseObject> foundSongs = new AList<SongResponseObject>();
 
         for (int i = 0; i < this._songCollectors.Length; i++)
         {
-            if (Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject))
+            if (Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject) && 
+                Core.INSTANCE.CacheManager.IsArtworkInCache(songRequestObject))
                 continue;
 
             ISongCollector songCollector = this._songCollectors.Get(i);
@@ -68,34 +66,24 @@ public class SongCollector
             if (!(DataValidator.ValidateData(songResponseObject)))
                 continue;
 
-            foundSongs.Add(songResponseObject);
-        }
-
-        for (int i = 0; i < foundSongs.Length; i++)
-        {
-            SongResponseObject currentSong = foundSongs.Get(i);
-
-            if (DataValidator.ValidateData(currentSong))
-            {
-                if (Core.INSTANCE.CacheManager.IsLyricsInCache(currentSong.SongRequestObject) && 
-                    Core.INSTANCE.CacheManager.IsArtworkInCache(currentSong.SongRequestObject))
-                    break;
+            if (Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject) && 
+                Core.INSTANCE.CacheManager.IsArtworkInCache(songRequestObject))
+                break;
                             
-                if (!Core.INSTANCE.CacheManager.IsLyricsInCache(currentSong.SongRequestObject))
+            if (!Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject))
+            {
+                Task.Factory?.StartNew(async () =>
                 {
-                    Task.Factory?.StartNew(async () =>
-                    {
-                        await this._lyricHandler.FireLyricsSearch(currentSong, songChangedEventArgs);
-                    });
-                }
+                    await this._lyricHandler.FireLyricsSearch(songResponseObject, songChangedEventArgs);
+                });
+            }
 
-                if (!Core.INSTANCE.CacheManager.IsArtworkInCache(currentSong.SongRequestObject))
+            if (!Core.INSTANCE.CacheManager.IsArtworkInCache(songResponseObject.SongRequestObject))
+            {
+                Task.Factory?.StartNew(async () =>
                 {
-                    Task.Factory?.StartNew(async () =>
-                    {
-                        await this._artworkHandler.FireArtworkSearch(currentSong, songChangedEventArgs);
-                    });
-                }
+                    await this._artworkHandler.FireArtworkSearch(songResponseObject, songChangedEventArgs);
+                });
             }
         }
     }

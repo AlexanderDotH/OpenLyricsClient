@@ -84,7 +84,7 @@ public class LyricsCard : TemplatedControl
         this._ignoreEvents = false;
 
         this.BlurSigma = 0;
-        this.LyricDisplayMode = EnumLyricsDisplayMode.KARAOKE;
+        this.LyricDisplayMode = Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode;
         
         Core.INSTANCE.SongHandler.SongChanged += (s, args) =>
         {
@@ -316,7 +316,7 @@ public class LyricsCard : TemplatedControl
             this._blurArea.Sigma = this.BlurSigma;
         }
 
-        if (this._displayMode == EnumLyricsDisplayMode.FADE)
+        if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode == EnumLyricsDisplayMode.FADE)
         {
             this._viewbox.IsVisible = false;
             this._border.Width = 0;
@@ -340,6 +340,8 @@ public class LyricsCard : TemplatedControl
         }
         else
         {
+            this._greyBlock.Foreground = this.UnSelectedLineBrush;
+            
             this._viewbox.IsVisible = true;
             this._presenterBlock.MaxWidth = this._greyBlock.TextLayout.Size.Width;
             this._presenterBlock.Width = this._greyBlock.TextLayout.Size.Width;

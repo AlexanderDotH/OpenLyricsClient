@@ -84,9 +84,6 @@ public partial class SettingsSpotify : UserControl
     {
         Task.Factory.StartNew(async() =>
         {
-            if (!Core.INSTANCE!.ServiceHandler.IsConnected("Spotify"))
-                return;
-            
             Request request =
                 new Request(Core.INSTANCE?.SettingManager?.Settings?.SpotifyAccess?.UserData?.Images[0]?.Url!);
             ResponseData responseData = await request.GetResponseAsync();
