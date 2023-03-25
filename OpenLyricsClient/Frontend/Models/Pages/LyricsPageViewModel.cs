@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Rendering;
@@ -38,6 +39,7 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     {
         Core.INSTANCE.TickHandler += OnTickHandler;
         Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
+        Core.INSTANCE.SettingManager.SettingsChanged += SettingManagerOnSettingsChanged;
 
         this._currentSongName = string.Empty;
         this._currentArtists = string.Empty;
@@ -49,11 +51,20 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         this._time = 0;
     }
 
+    private void SettingManagerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UiBackground"));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UiForeground"));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedColor"));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UnSelectedColor"));
+    }
+
     private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
     {
         this._time = 0;
     }
 
+    // RECODE NEEDED My eyes are bleeding
     private void OnTickHandler(object sender)
     {
         Song song = Core.INSTANCE.SongHandler.CurrentSong;
@@ -164,8 +175,51 @@ public class LyricsPageViewModel : INotifyPropertyChanged
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Artwork"));
         }
     }
-
     
+    public SolidColorBrush SelectedColor
+    {
+        get
+        {
+            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+                return App.Current.FindResource("PrimaryThemeFontColorBrush") as SolidColorBrush;
+            
+            return App.Current.FindResource("PrimaryThemeFontColorBrush") as SolidColorBrush;
+        }
+    }
+    
+    public SolidColorBrush UnSelectedColor
+    {
+        get
+        {
+            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+                return App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush;
+            
+            return App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush;
+        }
+    }
+
+    public SolidColorBrush UiBackground
+    {
+        get
+        {
+            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+                return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
+            
+            return App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;
+        }
+    }
+    
+    public SolidColorBrush UiForeground
+    {
+        get
+        {
+            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+                return App.Current.FindResource("PrimaryFontColorBrush") as SolidColorBrush;
+            
+            return App.Current.FindResource("PrimaryFontColorBrush") as SolidColorBrush;
+        }
+    }
+
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

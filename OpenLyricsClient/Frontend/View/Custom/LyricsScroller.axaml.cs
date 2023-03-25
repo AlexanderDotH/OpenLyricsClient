@@ -37,11 +37,11 @@ public partial class LyricsScroller : UserControl
     public static readonly StyledProperty<int> SelectedLineProperty =
         AvaloniaProperty.Register<LyricsScroller, int>(nameof(SelectedLine));
 
-    public static readonly StyledProperty<Brush> SelectedLineBrushProperty =
-        AvaloniaProperty.Register<LyricsScroller, Brush>(nameof(SelectedLineBrush));
+    public static readonly StyledProperty<SolidColorBrush> SelectedLineBrushProperty =
+        AvaloniaProperty.Register<LyricsScroller, SolidColorBrush>(nameof(SelectedLineBrush));
 
-    public static readonly StyledProperty<Brush> UnSelectedLineBrushProperty =
-        AvaloniaProperty.Register<LyricsScroller, Brush>(nameof(UnSelectedLineBrush));
+    public static readonly StyledProperty<SolidColorBrush> UnSelectedLineBrushProperty =
+        AvaloniaProperty.Register<LyricsScroller, SolidColorBrush>(nameof(UnSelectedLineBrush));
     
     public static readonly StyledProperty<Thickness> ItemMarginProperty =
         AvaloniaProperty.Register<LyricsScroller, Thickness>(nameof(ItemMargin));
@@ -569,13 +569,13 @@ public partial class LyricsScroller : UserControl
         }
     }
 
-    public Brush SelectedLineBrush
+    public SolidColorBrush SelectedLineBrush
     {
         get { return GetValue(SelectedLineBrushProperty); }
         set { SetValue(SelectedLineBrushProperty, value); }
     }
     
-    public Brush UnSelectedLineBrush
+    public SolidColorBrush UnSelectedLineBrush
     {
         get { return GetValue(UnSelectedLineBrushProperty); }
         set { SetValue(UnSelectedLineBrushProperty, value); }

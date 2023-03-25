@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.Threading;
 using DevBase.Async.Task;
 using JetBrains.Annotations;
@@ -58,6 +60,8 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             Core.INSTANCE.SettingManager.SettingsChanged += (sender, args) =>
             {
                 this.CurrentLyricParts = null;
+                
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UiBackground"));
             };
         }
     }
@@ -200,6 +204,17 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             _percentage = value;
             _oldPercentage = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Percentage"));
+        }
+    }
+
+    public SolidColorBrush UiBackground
+    {
+        get
+        {
+            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+                return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
+            
+            return App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;
         }
     }
 

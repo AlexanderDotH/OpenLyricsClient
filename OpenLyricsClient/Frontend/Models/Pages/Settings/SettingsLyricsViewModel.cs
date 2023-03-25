@@ -16,10 +16,13 @@ public class SettingsLyricsViewModel : ViewModelBase, INotifyPropertyChanged
     public ReactiveCommand<Unit, Unit> SwitchToKaraokeModeCommand { get; }
     public ReactiveCommand<Unit, Unit> SwitchToFadeModeCommand { get; }
     
+    public ReactiveCommand<Unit, Unit> ToggleArtworkBackgroundCommand { get; }
+
     public SettingsLyricsViewModel()
     {
         SwitchToKaraokeModeCommand = ReactiveCommand.Create(SwitchToKaraoke);
         SwitchToFadeModeCommand = ReactiveCommand.Create(SwitchToFade);
+        ToggleArtworkBackgroundCommand = ReactiveCommand.Create(ToggleArtworkBackground);
     }
 
     private void SwitchToKaraoke()
@@ -33,6 +36,14 @@ public class SettingsLyricsViewModel : ViewModelBase, INotifyPropertyChanged
         Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode = EnumLyricsDisplayMode.FADE;
         Core.INSTANCE.SettingManager.WriteSettings();
     }
+    
+    private void ToggleArtworkBackground()
+    {
+        Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground =
+            !Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground;
+
+        Core.INSTANCE.SettingManager.WriteSettings();
+    }
 
     public bool IsKaraoke
     {
@@ -42,6 +53,11 @@ public class SettingsLyricsViewModel : ViewModelBase, INotifyPropertyChanged
     public bool IsFade
     {
         get => Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode == EnumLyricsDisplayMode.FADE;
+    }
+    
+    public bool UseArtworkBackground
+    {
+        get => Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground;
     }
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

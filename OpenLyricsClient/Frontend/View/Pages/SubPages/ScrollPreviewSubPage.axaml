@@ -11,8 +11,6 @@
              LyricParts="{Binding CurrentLyricParts, Mode=TwoWay}"
              LyricsFontSize="{Binding LyricsFontSize, Mode=TwoWay, Converter={StaticResource FontSizeConverter}}"
              LyricsFontWeight="{Binding LyricsFontWeight, Mode=TwoWay, Converter={StaticResource FontWeightConverter}}"
-             UnSelectedLineBrush="{Binding UnSelectedLineBrush}"
-             SelectedLineBrush="{Binding SelectedLineBrush}"
              x:Class="OpenLyricsClient.Frontend.View.Pages.SubPages.ScrollPreviewSubPage">
     
     <UserControl.Resources>
@@ -35,8 +33,6 @@
                         Background="{DynamicResource SecondaryBackgroundBrush}"
                         BlurSigma="0"
                         LyricDisplayMode="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type subPages:ScrollPreviewSubPage}}, Path=LyricDisplayMode, Mode=TwoWay}"
-                        UnSelectedLineBrush="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type subPages:ScrollPreviewSubPage}}, Path=UnSelectedLineBrush, Mode=TwoWay}"
-                        SelectedLineBrush="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type subPages:ScrollPreviewSubPage}}, Path=SelectedLineBrush, Mode=TwoWay}"
                         FontWeight="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type subPages:ScrollPreviewSubPage}}, Path=LyricsFontWeight, Converter={StaticResource FontWeightConverter}, Mode=TwoWay}"
                         FontSize="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type subPages:ScrollPreviewSubPage}}, Path=LyricsFontSize, Converter={StaticResource FontSizeConverter}, Mode=TwoWay}"
                         Margin="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type subPages:ScrollPreviewSubPage}}, Path=ItemMargin, Mode=TwoWay}"></elements:LyricsCard>

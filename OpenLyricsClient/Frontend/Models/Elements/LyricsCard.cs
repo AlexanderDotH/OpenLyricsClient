@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -20,19 +23,13 @@ using FontStyle = Avalonia.Media.FontStyle;
 
 namespace OpenLyricsClient.Frontend.Models.Elements;
 
-public class LyricsCard : TemplatedControl
+public class LyricsCard : TemplatedControl, INotifyPropertyChanged
 {
     public static readonly StyledProperty<string> TextProperty =
         AvaloniaProperty.Register<LyricsCard, string>(nameof(Text));
 
     public static readonly StyledProperty<double> PercentageProperty =
         AvaloniaProperty.Register<LyricsCard, double>(nameof(Percentage));
-    
-    public static readonly StyledProperty<Brush> SelectedLineBrushProperty =
-        AvaloniaProperty.Register<UserControl, Brush>(nameof(SelectedLineBrush));
-    
-    public static readonly StyledProperty<Brush> UnSelectedLineBrushProperty =
-        AvaloniaProperty.Register<UserControl, Brush>(nameof(UnSelectedLineBrush));
     
     public static readonly StyledProperty<FontWeight> FontWeightProperty =
         AvaloniaProperty.Register<LyricsCard, FontWeight>(nameof(FontWeight));
@@ -73,6 +70,8 @@ public class LyricsCard : TemplatedControl
     private bool _ignoreEvents;
 
     private EnumLyricsDisplayMode _displayMode;
+    
+    public event PropertyChangedEventHandler? PropertyChanged;
     
     public LyricsCard()
     {
@@ -116,6 +115,13 @@ public class LyricsCard : TemplatedControl
                     this._blurArea.Sigma = this.BlurSigma;
                 }*/
             });
+        };
+
+        Core.INSTANCE.SettingManager.SettingsChanged += (sender, args) =>
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedLineBrush"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UnSelectedLineBrush"));
+            //SelectedLineBrush
         };
         
         Core.INSTANCE.LyricHandler.LyricChanged += (sender, args) =>
@@ -283,17 +289,33 @@ public class LyricsCard : TemplatedControl
             SetValue(BlurSigmaProperty, value); 
         }
     }
-
-    public Brush SelectedLineBrush
+    
+    public SolidColorBrush SelectedLineBrush
     {
-        get { return GetValue(SelectedLineBrushProperty); }
-        set { SetValue(SelectedLineBrushProperty, value); }
+        get
+        {
+            if (this._ignoreEvents)
+                return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
+            
+            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+                return App.Current.FindResource("PrimaryThemeFontColorBrush") as SolidColorBrush;
+            
+            return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
+        }
     }
     
-    public Brush UnSelectedLineBrush
+    public SolidColorBrush UnSelectedLineBrush
     {
-        get { return GetValue(UnSelectedLineBrushProperty); }
-        set { SetValue(UnSelectedLineBrushProperty, value); }
+        get
+        {
+            if (this._ignoreEvents)
+                return SolidColorBrush.Parse("#646464");
+            
+            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+                return App.Current.FindResource("LightThemeFontColorBrush") as SolidColorBrush;
+            
+            return SolidColorBrush.Parse("#646464");
+        }
     }
 
     public bool IgnoreEvents
@@ -318,7 +340,7 @@ public class LyricsCard : TemplatedControl
 
         this._greyBlock.Foreground = this.UnSelectedLineBrush;
         this._presenterBlock.Foreground = this.SelectedLineBrush;
-        
+
         if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode == EnumLyricsDisplayMode.FADE && !this._ignoreEvents ||
             LyricDisplayMode == EnumLyricsDisplayMode.FADE && this._ignoreEvents)
         {
@@ -353,7 +375,10 @@ public class LyricsCard : TemplatedControl
                  LyricDisplayMode == EnumLyricsDisplayMode.KARAOKE && this._ignoreEvents)
         {
             
-            //this._greyBlock.Foreground = this.UnSelectedLineBrush;
+            this._greyBlock.Foreground = this.UnSelectedLineBrush;
+            this._presenterBlock.Foreground = this.SelectedLineBrush;
+
+            this._border.Opacity = Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground ? 0.1 : 1.0;
             
             this._viewbox.IsVisible = true;
             this._presenterBlock.MaxWidth = this._greyBlock.TextLayout.Size.Width;
@@ -479,5 +504,18 @@ public class LyricsCard : TemplatedControl
     public void ApplyScaling(double scalingFactor)
     {
         throw new NotImplementedException();
+    }
+    
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
     }
 }

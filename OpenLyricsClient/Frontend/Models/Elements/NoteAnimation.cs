@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -11,17 +14,11 @@ using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Frontend.Models.Elements;
 
-public class NoteAnimation : TemplatedControl
+public class NoteAnimation : TemplatedControl, INotifyPropertyChanged
 {
     public static readonly StyledProperty<double> PercentageProperty =
         AvaloniaProperty.Register<NoteAnimation, double>(nameof(Percentage));
     
-    public static readonly StyledProperty<Brush> SelectedLineBrushProperty =
-        AvaloniaProperty.Register<NoteAnimation, Brush>(nameof(SelectedLineBrush));
-
-    public static readonly StyledProperty<Brush> UnSelectedLineBrushProperty =
-        AvaloniaProperty.Register<NoteAnimation, Brush>(nameof(UnSelectedLineBrush));
-
     public static readonly DirectProperty<LyricsCard, bool> CurrentProperty = 
         AvaloniaProperty.RegisterDirect<LyricsCard, bool>(nameof(Current), o => o.Current, (o, v) => o.Current = v);
 
@@ -31,12 +28,20 @@ public class NoteAnimation : TemplatedControl
     private bool _current;
 
     private AList<TextBlock> _notes;
+    
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public NoteAnimation()
     {
         FontSize = 30;
         FontWeight = FontWeight.Bold;
         this._current = false;
+
+        Core.INSTANCE.SettingManager.SettingsChanged += (sender, args) =>
+        {
+            OnPropertyChanged("SelectedLineBrush");
+            OnPropertyChanged("UnSelectedLineBrush");
+        };
 
         this._notes = new AList<TextBlock>();
     }
@@ -101,7 +106,7 @@ public class NoteAnimation : TemplatedControl
         if(!(DataValidator.ValidateData(this._viewbox) || DataValidator.ValidateData(this._border)))
             return;
         
-        for (int i = 0; i < this._notes.Length; i++)
+        /*for (int i = 0; i < this._notes.Length; i++)
         {
             if (i <= 2)
             {
@@ -111,7 +116,10 @@ public class NoteAnimation : TemplatedControl
             {
                 this._notes[i].Foreground = ((SolidColorBrush)this.SelectedLineBrush);
             }
-        }
+        }*/
+        
+        this._border.Opacity = Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground ? 0.1 : 1.0;
+        this.Foreground = ((SolidColorBrush)this.SelectedLineBrush);
         
         if (this._current)
         {
@@ -192,16 +200,39 @@ public class NoteAnimation : TemplatedControl
         base.Render(context);
     }
 
-    public Brush SelectedLineBrush
+    public SolidColorBrush SelectedLineBrush
     {
-        get { return GetValue(SelectedLineBrushProperty); }
-        set { SetValue(SelectedLineBrushProperty, value); }
+        get
+        {
+            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+                return App.Current.FindResource("PrimaryThemeFontColorBrush") as SolidColorBrush;
+            
+            return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
+        }
     }
     
-    public Brush UnSelectedLineBrush
+    public SolidColorBrush UnSelectedLineBrush
     {
-        get { return GetValue(UnSelectedLineBrushProperty); }
-        set { SetValue(UnSelectedLineBrushProperty, value); }
+        get
+        {
+            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+                return App.Current.FindResource("LightThemeFontColorBrush") as SolidColorBrush;
+            
+            return SolidColorBrush.Parse("#646464");
+        }
+    }
+    
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
     }
 
     public bool Current

@@ -12,6 +12,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DevBase.Async.Task;
 using Material.Styles;
+using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.Frontend.Models.Pages;
@@ -28,6 +29,8 @@ public partial class LyricsPage : UserControl
     private LyricsScroller _cstmLyricsDisplay;
     private Grid _presenterGrid;
     private Card _cardBar;
+
+    private Border _artworkBorder;
     
     private Image _artworkImage;
     private string _oldImagePath;
@@ -62,6 +65,9 @@ public partial class LyricsPage : UserControl
 
         SolidColorBrush primaryBackColor = App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;
         
+        if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+            primaryBackColor = App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush;
+        
         Border border = new Border();
         border.Width = 328;
         border.Height = 328;
@@ -71,6 +77,8 @@ public partial class LyricsPage : UserControl
         border.BorderThickness = new Thickness(5);
         border.BorderBrush = primaryBackColor;
         border.CornerRadius = new CornerRadius(8);
+
+        this._artworkBorder = border;
         
         this._artworkImage = image;
         this._oldImagePath = string.Empty;
@@ -104,6 +112,16 @@ public partial class LyricsPage : UserControl
                 
                 this._oldImagePath = this._lyricsPageViewModel.Artwork;
             });
+        }
+
+        if (e.PropertyName.Equals("UiBackground"))
+        {
+            SolidColorBrush primaryBackColor = App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;
+        
+            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+                primaryBackColor = App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush;
+
+            this._artworkBorder.BorderBrush = primaryBackColor;
         }
     }
 

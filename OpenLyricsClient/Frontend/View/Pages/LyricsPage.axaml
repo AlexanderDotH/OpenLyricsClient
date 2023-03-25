@@ -12,8 +12,8 @@
              xmlns:pages="clr-namespace:OpenLyricsClient.Frontend.Models.Pages"
              xmlns:blur="clr-namespace:OpenLyricsClient.Frontend.Models.Elements.Blur"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
-             Background="{DynamicResource PrimaryBackgroundBrush}"
-             Foreground="{DynamicResource PrimaryFontColorBrush}"
+             Background="{Binding UiBackground}"
+             Foreground="{Binding UiForeground}"
              Name="PG_LyricsPage"
              EffectiveViewportChanged="Layoutable_OnEffectiveViewportChanged"
              x:Class="OpenLyricsClient.Frontend.View.Pages.LyricsPage">
@@ -56,12 +56,18 @@
     </UserControl.Styles>
     
     <Grid PointerPressed="InputElement_OnPointerPressed" Name="GRD_Page" >
-        <TextBlock 
-            Text="Lyrics"
-            FontWeight="Bold"
-            FontSize="18"
-            HorizontalAlignment="Left"
-            Margin="12, 12, 0, 0"></TextBlock>
+        
+        <Border HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="10, 10, 0, 0"
+                CornerRadius="5"
+                Background="{DynamicResource SecondaryBackgroundBrush}">
+            <TextBlock 
+                Margin="8"
+                Text="Lyrics"
+                FontWeight="Bold"
+                FontSize="18"></TextBlock>
+        </Border>
         
         <Grid Name="GRD_Content"
             HorizontalAlignment="Left"
@@ -104,10 +110,8 @@
             
             <custom1:LyricsScroller
                 Name="LRC_Display"
-                SelectedLineBrush="{DynamicResource PrimaryThemeColorBrush}"
                 FontSize="30"
                 LyricsFontWeight="Bold"
-                UnSelectedLineBrush="#646464"
                 ItemMargin="0,0,0,70"/>
             
             <!--<Panel HorizontalAlignment="Left" 

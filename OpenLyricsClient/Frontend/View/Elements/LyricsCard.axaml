@@ -46,9 +46,7 @@
                     <elements:NoteAnimation Name="PART_NoteAnimation"
                                             IsVisible="False"
                                             FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
-                                            FontSize="{TemplateBinding FontSize}"
-                                            UnSelectedLineBrush="{TemplateBinding UnSelectedLineBrush}"
-                                            SelectedLineBrush="{TemplateBinding SelectedLineBrush}"/>
+                                            FontSize="{TemplateBinding FontSize}"/>
                     
                     <TextBlock Name="PART_TextBlock1"
                                Classes="grow"
@@ -57,8 +55,7 @@
                                TextWrapping="Wrap"
                                FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
                                FontSize="{TemplateBinding FontSize}"
-                               Margin="5,0,5,5"
-                               Foreground="{TemplateBinding UnSelectedLineBrush}">
+                               Margin="5,0,5,5">
                         <TextBlock.Transitions>
                             <Transitions>
                                 <BrushTransition Property="Foreground"
@@ -82,8 +79,7 @@
                                    FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
                                    FontSize="{TemplateBinding FontSize}"
                                    Margin="5,0,5,5"
-                                   Width="{TemplateBinding Width}"
-                                   Foreground="{TemplateBinding SelectedLineBrush}">
+                                   Width="{TemplateBinding Width}">
                             <TextBlock.Transitions>
                                 <Transitions>
                                     <BrushTransition Property="Foreground"

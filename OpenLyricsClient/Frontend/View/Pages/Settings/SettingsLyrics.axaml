@@ -129,6 +129,43 @@
                            </Grid>
                        </StackPanel>
                    </elements:GroupBox>
+                   
+                   <elements:GroupBox Classes="clean" 
+                                      Background="{DynamicResource SecondaryBackgroundBrush}">
+                       
+                       <StackPanel Margin="15" 
+                                   Orientation="Vertical" 
+                                   Spacing="10">
+                           
+                           <TextBlock FontSize="16"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      FontWeight="Bold"
+                                      Text="Experimental">
+                           </TextBlock>
+                           
+                           <Grid Margin="0">
+                               <TextBlock FontSize="14"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Left"
+                                          FontWeight="Normal"
+                                          TextWrapping="Wrap"
+                                          Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                          Text="Artwork color as Background color">
+                               </TextBlock>
+                           
+                               <ToggleSwitch VerticalAlignment="Center"
+                                             HorizontalAlignment="Right"
+                                             Background="{DynamicResource PrimaryThemeColorBrush}"
+                                             assists:ToggleSwitchAssist.SwitchTrackOnBackground="{DynamicResource SecondaryThemeColorBrush}"
+                                             Command="{Binding ToggleArtworkBackgroundCommand}"
+                                             IsChecked="{Binding UseArtworkBackground}"
+                                             Margin="0,0,15,0"></ToggleSwitch>
+                           </Grid>
+                       </StackPanel>
+                       
+                      
+                   </elements:GroupBox>
                </StackPanel>
            </StackPanel>
         </ScrollViewer>

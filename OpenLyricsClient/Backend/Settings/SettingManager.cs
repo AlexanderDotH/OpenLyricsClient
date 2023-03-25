@@ -139,6 +139,7 @@ namespace OpenLyricsClient.Backend.Settings
                 {
                     LyricsDisplayPreferences lyricsDisplayPreferences = new LyricsDisplayPreferences();
                     lyricsDisplayPreferences.DisplayMode = EnumLyricsDisplayMode.KARAOKE;
+                    lyricsDisplayPreferences.ArtworkBackground = false;
                     return lyricsDisplayPreferences;
                 }
             }

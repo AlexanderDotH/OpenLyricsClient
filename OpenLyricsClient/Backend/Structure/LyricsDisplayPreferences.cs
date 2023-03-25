@@ -5,4 +5,5 @@ namespace OpenLyricsClient.Backend.Structure;
 public class LyricsDisplayPreferences
 {
     public EnumLyricsDisplayMode DisplayMode { get; set; }
+    public bool ArtworkBackground { get; set; }
 }

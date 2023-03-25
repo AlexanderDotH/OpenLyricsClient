@@ -114,6 +114,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                 SolidColorBrush secondaryColor = App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush;
                 SolidColorBrush textColor = App.Current.FindResource("PrimaryThemeFontColorBrush") as SolidColorBrush;
                 SolidColorBrush secondaryTextColor = App.Current.FindResource("SecondaryThemeFontColorBrush") as SolidColorBrush;
+                SolidColorBrush lightTextColor = App.Current.FindResource("LightThemeFontColorBrush") as SolidColorBrush;
 
                 await Dispatcher.UIThread.InvokeAsync(() =>
                 {
@@ -128,16 +129,22 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                     
                     color.Color = artworkCache.ArtworkColor;
                     secondaryColor.Color = artworkCache.DarkArtworkColor;
+
+                    byte light = 120;
+                    byte primary = 22;
+                    byte secondary = 40;
                     
                     if (artworkCache.GetBrightness() < 30)
                     {
-                        textColor.Color = new Color(255, 255, 255, 255);
-                        secondaryTextColor.Color = new Color(255, 245, 245, 245);
+                        lightTextColor.Color = new Color(255, (byte)(color.Color.R - light), (byte)(color.Color.G - light), (byte)(color.Color.B - light));
+                        textColor.Color = new Color(255, (byte)(255 - primary), (byte)(255 - primary), (byte)(255 - primary));
+                        secondaryTextColor.Color = new Color(255, (byte)(255 - secondary), (byte)(255 - secondary), (byte)(255 - secondary));
                     }
                     else
                     {
-                        textColor.Color = new Color(255, 10, 10, 10);
-                        secondaryTextColor.Color = new Color(255, 0, 0, 0);
+                        lightTextColor.Color = new Color(255, light, light, light);
+                        textColor.Color = new Color(255, primary, primary, primary);
+                        secondaryTextColor.Color = new Color(255, secondary, secondary, secondary);
                     }
                 });
             }
