@@ -151,7 +151,7 @@
                                           FontWeight="Normal"
                                           TextWrapping="Wrap"
                                           Foreground="{DynamicResource SecondaryFontColorBrush}"
-                                          Text="Artwork color as Background color">
+                                          Text="Artwork color as background color">
                                </TextBlock>
                            
                                <ToggleSwitch VerticalAlignment="Center"

@@ -97,7 +97,10 @@ public partial class LyricsPage : UserControl
         if (e.PropertyName.IsNullOrEmpty())
             return;
 
-        if (e.PropertyName.Equals("Artwork") && !this._oldImagePath.Equals(this._lyricsPageViewModel.Artwork))
+        if (DataValidator.ValidateData(this._lyricsPageViewModel.Artwork) && 
+            !this._lyricsPageViewModel.Artwork.IsNullOrEmpty() &&
+            e.PropertyName!.Equals("Artwork") && 
+            !this._oldImagePath.Equals(this._lyricsPageViewModel.Artwork))
         {
             Dispatcher.UIThread.InvokeAsync(() =>
             {

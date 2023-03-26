@@ -40,7 +40,8 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         Core.INSTANCE.TickHandler += OnTickHandler;
         Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
         Core.INSTANCE.SettingManager.SettingsChanged += SettingManagerOnSettingsChanged;
-
+        Core.INSTANCE.ArtworkHandler.ArtworkAppliedHandler += ArtworkHandlerOnArtworkAppliedHandler;
+        
         this._currentSongName = string.Empty;
         this._currentArtists = string.Empty;
         this._currentAlbumName = string.Empty;
@@ -49,6 +50,11 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         this._currentMaxTime = string.Empty;
 
         this._time = 0;
+    }
+
+    private void ArtworkHandlerOnArtworkAppliedHandler(object sender, ArtworkAppliedEventArgs args)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Artwork"));
     }
 
     private void SettingManagerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
@@ -61,6 +67,10 @@ public class LyricsPageViewModel : INotifyPropertyChanged
 
     private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
     {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SongName"));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Artists"));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Album"));
+
         this._time = 0;
     }
 
@@ -71,15 +81,6 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         
         if (!DataValidator.ValidateData(song))
             return;
-
-        if (!this._currentSongName.Equals(song.SongMetadata.Name))
-            SongName = song.SongMetadata.Name;
-
-        if (!this._currentArtists.Equals(song.SongMetadata.FullArtists))
-            Artists = song.SongMetadata.FullArtists;
-        
-        if (!this._currentAlbumName.Equals(song.SongMetadata.Album))
-            AlbumName = song.SongMetadata.Album;
 
         if (!this._time.Equals(song.Time))
         {
@@ -92,50 +93,18 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         
         if (!this._currentMaxTime.Equals(song.MaxProgressString))
             CurrentMaxTime = song.MaxProgressString;
-
-        if (DataValidator.ValidateData(song.Artwork))
-        {
-            Artwork artwork = song.Artwork;
-
-            if (DataValidator.ValidateData(artwork))
-            {
-                if (!DataValidator.ValidateData(this._artwork) || 
-                      DataValidator.ValidateData(this._artwork) && !this._artwork.Equals(artwork))
-                    Artwork = artwork.FilePath;
-            }
-        }
     }
 
-    public string SongName
+    public string? SongName
     {
-        get => this._currentSongName;
-        set
-        {
-            this._currentSongName = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SongName"));
-        }
+        get => Core.INSTANCE?.SongHandler?.CurrentSong?.SongMetadata?.Name!;
     }
     
     public string Artists
     {
-        get => this._currentArtists;
-        set
-        {
-            this._currentArtists = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Artists"));
-        }
+        get => Core.INSTANCE?.SongHandler?.CurrentSong?.SongMetadata?.FullArtists!;
     }
-    
-    public string AlbumName
-    {
-        get => this._currentAlbumName;
-        set
-        {
-            this._currentAlbumName = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AlbumName"));
-        }
-    }
-    
+
     public double Percentage
     {
         get => this._currentPercentage;
@@ -168,12 +137,7 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     
     public string Artwork
     {
-        get => this._artwork;
-        set
-        {
-            this._artwork = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Artwork"));
-        }
+        get => Core.INSTANCE?.SongHandler?.CurrentSong?.Artwork?.FilePath!;
     }
     
     public SolidColorBrush SelectedColor

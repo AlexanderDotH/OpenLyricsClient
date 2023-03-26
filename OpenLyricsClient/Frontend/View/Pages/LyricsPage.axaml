@@ -23,7 +23,6 @@
     </UserControl.DataContext>
     
     <UserControl.Styles>
-        
         <Style Selector="StackPanel">
             <Setter Property="Transitions">
                 <Transitions>

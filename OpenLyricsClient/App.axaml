@@ -44,6 +44,9 @@
                 <SolidColorBrush x:Key="PrimaryThemeFontColorBrush" Color="#FFFFFF"></SolidColorBrush>
                 <SolidColorBrush x:Key="SecondaryThemeFontColorBrush" Color="#FFFFFF"></SolidColorBrush>
                 <SolidColorBrush x:Key="LightThemeFontColorBrush" Color="#FFFFFF"></SolidColorBrush>
+                
+                <SolidColorBrush x:Key="SelectedLineFontColorBrush" Color="#FFFFFF"></SolidColorBrush>
+                <SolidColorBrush x:Key="UnSelectedLineFontColorBrush" Color="#FFFFFF"></SolidColorBrush>
 
                 <SolidColorBrush x:Key="PrimaryColorBrush" Color="#dc143c"></SolidColorBrush>
                 <SolidColorBrush x:Key="SecondaryColorBrush" Color="#9c0720"></SolidColorBrush>

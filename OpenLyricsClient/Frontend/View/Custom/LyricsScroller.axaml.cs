@@ -444,6 +444,16 @@ public partial class LyricsScroller : UserControl
 
     private Size GetRenderedSize(int index)
     {
+        /*var itemContainer = _itemsRepeater.TryGetElement(index);
+
+        if (itemContainer == null)
+            itemContainer = _itemsRepeater.GetOrCreateElement(index);
+        
+        var constraint = new Size(this.DesiredSize.Width - 5, this.DesiredSize.Height);
+        itemContainer.Measure(constraint);
+
+        return itemContainer.DesiredSize;*/
+        
         if (index < 0)
             return new Size(0, 0);
         

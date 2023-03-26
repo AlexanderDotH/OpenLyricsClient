@@ -154,8 +154,8 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             {
                 CefAuthWindow cefAuthWindow = new CefAuthWindow("https://openlyricsclient.com/api/auth/spotify/begin", "/welcome");
              
-                cefAuthWindow.Width = 700;
-                cefAuthWindow.Height = 600;
+                cefAuthWindow.Width = 1100;
+                cefAuthWindow.Height = 850;
                 cefAuthWindow.Title = "Connect to spotify";
              
                 cefAuthWindow.ShowDialog<string>(MainWindow.Instance);

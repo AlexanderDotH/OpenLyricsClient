@@ -39,8 +39,6 @@ namespace OpenLyricsClient.Backend
         private LyricHandler _lyricHandler;
         private ArtworkHandler _artworkHandler;
         
-        
-        
         private CacheManager _cacheManager;
 
         private TokenCollector _tokenCollector;
@@ -58,7 +56,6 @@ namespace OpenLyricsClient.Backend
         public event TickEventHandler TickHandler;
         public event SlowTickEventHandler SlowTickHandler;
 
-        
         public Core()
         {
             INSTANCE = this;
@@ -154,6 +151,11 @@ namespace OpenLyricsClient.Backend
         public SettingManager SettingManager
         {
             get => _settingManager;
+        }
+
+        public ArtworkHandler ArtworkHandler
+        {
+            get => _artworkHandler;
         }
 
         public ServiceHandler ServiceHandler

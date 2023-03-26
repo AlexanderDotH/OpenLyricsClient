@@ -205,7 +205,7 @@ public class NoteAnimation : TemplatedControl, INotifyPropertyChanged
         get
         {
             if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
-                return App.Current.FindResource("PrimaryThemeFontColorBrush") as SolidColorBrush;
+                return App.Current.FindResource("SelectedLineFontColorBrush") as SolidColorBrush;
             
             return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
         }
@@ -216,7 +216,7 @@ public class NoteAnimation : TemplatedControl, INotifyPropertyChanged
         get
         {
             if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
-                return App.Current.FindResource("LightThemeFontColorBrush") as SolidColorBrush;
+                return App.Current.FindResource("UnSelectedLineFontColorBrush") as SolidColorBrush;
             
             return SolidColorBrush.Parse("#646464");
         }

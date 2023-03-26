@@ -54,8 +54,7 @@ public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
         {
             await Core.INSTANCE.ServiceHandler.AuthorizeService("Spotify");
         }*/
-        await Core.INSTANCE.ServiceHandler.AuthorizeService("Spotify");
-
+        Core.INSTANCE.ServiceHandler.AuthorizeService("Spotify");
     }
 
     private void SettingManagerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)

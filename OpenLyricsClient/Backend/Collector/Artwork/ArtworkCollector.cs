@@ -9,6 +9,8 @@ using OpenLyricsClient.Backend.Collector.Artwork.Providers.Deezer;
 using OpenLyricsClient.Backend.Collector.Artwork.Providers.Musixmatch;
 using OpenLyricsClient.Backend.Collector.Artwork.Providers.Spotify;
 using OpenLyricsClient.Backend.Debugger;
+using OpenLyricsClient.Backend.Events.EventArgs;
+using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Artwork;
@@ -20,12 +22,9 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
     public class ArtworkCollector
     {
         private AList<IArtworkCollector> _artworkCollectors;
-        private Debugger<ArtworkCollector> _debugger;
 
         public ArtworkCollector()
         {
-            this._debugger = new Debugger<ArtworkCollector>(this);
-            
             this._artworkCollectors = new AList<IArtworkCollector>();
             this._artworkCollectors.Add(new SpotifyCollector());
             this._artworkCollectors.Add(new DeezerCollector());
@@ -59,8 +58,6 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
                     Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, artwork);
                 }
             }
-
         }
-
     }
 }
