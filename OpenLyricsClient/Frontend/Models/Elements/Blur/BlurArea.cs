@@ -1,9 +1,14 @@
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Events.EventArgs;
+using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Frontend.View.Custom;
 
 namespace OpenLyricsClient.Frontend.Models.Elements.Blur;
 
@@ -40,6 +45,8 @@ public class BlurArea : Control
     private float _sigmaX;
     private float _sigmaY;
     
+    private LyricPart _lyricPart;
+    
     public BlurArea()
     {
         Sigma = 3;
@@ -60,11 +67,27 @@ public class BlurArea : Control
 
         Material = experimentalAcrylicMaterial;
         
+        //LyricsScroller.INSTANCE.BlurChanged += INSTANCEOnBlurChanged;
+        
         AffectsRender<BlurArea>(MaterialProperty);
     }
-    
+
+    /*private void INSTANCEOnBlurChanged(object sender, BlurChangedEventArgs blurchangedevent)
+    {
+        if (this._lyricPart == null)
+            return;
+        
+        if (blurchangedevent.LyricPart == this._lyricPart)
+        {
+            this.Sigma = blurchangedevent.BlurSigma;
+            this.InvalidateVisual();
+        }
+    }*/
+
     public override void Render(DrawingContext context)
     {
+        base.Render(context);
+        
         ImmutableExperimentalAcrylicMaterial material = Material != null
             ? (ImmutableExperimentalAcrylicMaterial)Material.ToImmutable()
             : DefaultAcrylicMaterial;
@@ -95,6 +118,12 @@ public class BlurArea : Control
         set => SetValue(NoiseOpacityProperty, value);
     }
     
+    public LyricPart LyricPart
+    {
+        get => _lyricPart;
+        set => _lyricPart = value;
+    }
+
     public float SigmaX
     {
         get => _sigmaX;
@@ -102,6 +131,7 @@ public class BlurArea : Control
         {
             _sigmaX = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SigmaX"));
+            InvalidateVisual();
         }
     }
     
@@ -112,6 +142,7 @@ public class BlurArea : Control
         {
             _sigmaY = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SigmaX"));
+            InvalidateVisual();
         }
     }
 
@@ -125,6 +156,7 @@ public class BlurArea : Control
         {
             SigmaX = value;
             SigmaY = value;
+            InvalidateVisual();
         }
     }
     

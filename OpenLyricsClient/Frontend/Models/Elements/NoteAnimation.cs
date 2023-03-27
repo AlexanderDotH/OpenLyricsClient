@@ -103,6 +103,8 @@ public class NoteAnimation : TemplatedControl, INotifyPropertyChanged
 
     public override void Render(DrawingContext context)
     {
+        base.Render(context);
+        
         if(!(DataValidator.ValidateData(this._viewbox) || DataValidator.ValidateData(this._border)))
             return;
         
@@ -197,7 +199,6 @@ public class NoteAnimation : TemplatedControl, INotifyPropertyChanged
             this._border.MaxWidth = -10;
         }
 
-        base.Render(context);
     }
 
     public SolidColorBrush SelectedLineBrush

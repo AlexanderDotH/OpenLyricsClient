@@ -82,6 +82,7 @@ public partial class LyricsScroller : UserControl
     
     private CustomScrollViewer _scrollViewer;
     private ItemsRepeater _itemsRepeater;
+    private ItemsRepeater _hiddenRepeater;
 
     private Grid _gradientTop;
     private Grid _gradientBottom;
@@ -103,6 +104,7 @@ public partial class LyricsScroller : UserControl
 
         this._scrollViewer = this.Get<CustomScrollViewer>(nameof(CTRL_Viewer));
         this._itemsRepeater = this.Get<ItemsRepeater>(nameof(CTRL_Repeater));
+        this._hiddenRepeater = this.Get<ItemsRepeater>(nameof(HIDDEN_CTRL_Repeater));
             
         this._gradientTop = this.Get<Grid>(nameof(GradientTop));
         this._gradientBottom = this.Get<Grid>(nameof(GradientBottom));
@@ -118,14 +120,14 @@ public partial class LyricsScroller : UserControl
         this._scrollSpeed = 15;
         this._oldIndex = 0;
 
-        this._useBlur = false;
+        this._useBlur = true;
         this._blurIncrement = 0.8F;
         this._blurItemCount = 6;
         this._lyricsRoll = new ATupleList<LyricsCard, bool>();
         
         this._renderTimer = new SleepRenderTimer(150);
         this._renderTimer.Tick += RenderTimerOnTick;
-
+        
         this._uiThreadRenderTimer = new UiThreadRenderTimer(150);
         this._uiThreadRenderTimer.Tick += UiThreadRenderTimerOnTick;
     }
@@ -242,10 +244,10 @@ public partial class LyricsScroller : UserControl
         if (index < 0)
             return;
         
-        /*if (index > this._lyricParts.Count - 1)
-            return;*/
+        if (index > this._lyricParts.Count - 1)
+            return;
         
-        //BlurChangedEvent(new BlurChangedEventArgs(blurSigma, this._lyricParts[index]));
+        BlurChangedEvent(new BlurChangedEventArgs(blurSigma, this._lyricParts[index]));
 
         try
         {
@@ -282,20 +284,16 @@ public partial class LyricsScroller : UserControl
                 }
             }*/
             
+            
             if (i == selectedLine)
             {
-                if (this._useBlur)
+                if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.LyricsBlur)
                 {
-                    for (int j = 0; j < this._blurItemCount; j++)
+                    for (int j = 1; j < this._blurItemCount; j++)
                     {
                         TryBlurItem(i - j, IsSynced && this._isResynced ? currentSize : 0);
                         TryBlurItem(i + j, IsSynced && this._isResynced ? currentSize : 0);
-                        currentSize += _blurIncrement;
-                        /*if (i + j < this._lyricParts.Count)
-                        {
-                            TryBlurItem(i + j, IsSynced && this._isResynced ? currentSize : 0);
-                            currentSize += _blurIncrement;
-                        }*/
+                        currentSize += this._blurIncrement;
                     }
                 }
                 
@@ -381,15 +379,6 @@ public partial class LyricsScroller : UserControl
 
         untilPos -= (float)GetRenderedSize(index).Height / 2;
 
-        /*
-        int itemCount = 0;
-        
-        while (GetRenderedSize(itemCount).Height > untilPos)
-        {
-            itemCount++;
-        }
-        */
-
         return startAt - untilPos + startMargin;
     }
     
@@ -444,17 +433,23 @@ public partial class LyricsScroller : UserControl
 
     private Size GetRenderedSize(int index)
     {
-        /*var itemContainer = _itemsRepeater.TryGetElement(index);
+        var realItem = this._itemsRepeater.TryGetElement(index);
+
+        var itemContainer = this._hiddenRepeater.TryGetElement(index);
 
         if (itemContainer == null)
-            itemContainer = _itemsRepeater.GetOrCreateElement(index);
+            itemContainer = this._hiddenRepeater.GetOrCreateElement(index);
         
-        var constraint = new Size(this.DesiredSize.Width - 5, this.DesiredSize.Height);
+        var constraint = new Size(this.DesiredSize.Width, this.DesiredSize.Height);
         itemContainer.Measure(constraint);
 
-        return itemContainer.DesiredSize;*/
+        Size s = itemContainer.DesiredSize;
         
-        if (index < 0)
+        realItem?.InvalidateVisual();
+        
+        return s;
+        
+        /*if (index < 0)
             return new Size(0, 0);
         
         if (this.FontWeight <= 0)
@@ -477,7 +472,7 @@ public partial class LyricsScroller : UserControl
         }
 
         Size returnVal = new Size(text.Bounds.Width, Math.Floor(lineSize + this.ItemMargin.Bottom + 5));
-        return returnVal;
+        return returnVal;*/
     }
 
     public void Reset([CallerMemberName] string memberName = "")

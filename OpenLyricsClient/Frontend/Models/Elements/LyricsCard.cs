@@ -285,8 +285,20 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
             if (DataValidator.ValidateData(this._blurArea))
                 this._blurArea.Sigma = value;
                 
-            
             SetValue(BlurSigmaProperty, value); 
+
+            OnPropertyChanged("Blur");
+
+            if (this._noteAnimation != null)
+                this._noteAnimation.InvalidateVisual();
+
+            if (this._blurArea != null)
+                this._blurArea.Sigma = value;
+
+            /*if (this._greyBlock != null && this._lyricPart != null && this._lyricPart.Part != null)
+                this._greyBlock!.Text = this._lyricPart?.Part + " | " + value;*/
+            
+            InvalidateVisual();
         }
     }
     
@@ -389,6 +401,9 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
             this._border.Width = ((this._viewbox.MaxWidth) / 100) * Percentage;
         }
 
+        if (this._blurArea != null)
+            this._blurArea.LyricPart = this._lyricPart;
+        
         this._noteAnimation.Render(context);
         
         if (!this._current)

@@ -17,12 +17,14 @@ public class SettingsLyricsViewModel : ViewModelBase, INotifyPropertyChanged
     public ReactiveCommand<Unit, Unit> SwitchToFadeModeCommand { get; }
     
     public ReactiveCommand<Unit, Unit> ToggleArtworkBackgroundCommand { get; }
+    public ReactiveCommand<Unit, Unit> ToggleLyricsBlurCommand { get; }
 
     public SettingsLyricsViewModel()
     {
         SwitchToKaraokeModeCommand = ReactiveCommand.Create(SwitchToKaraoke);
         SwitchToFadeModeCommand = ReactiveCommand.Create(SwitchToFade);
         ToggleArtworkBackgroundCommand = ReactiveCommand.Create(ToggleArtworkBackground);
+        ToggleLyricsBlurCommand = ReactiveCommand.Create(ToggleLyricsBlur);
     }
 
     private void SwitchToKaraoke()
@@ -44,6 +46,14 @@ public class SettingsLyricsViewModel : ViewModelBase, INotifyPropertyChanged
 
         Core.INSTANCE.SettingManager.WriteSettings();
     }
+    
+    private void ToggleLyricsBlur()
+    {
+        Core.INSTANCE.SettingManager.Settings.DisplayPreferences.LyricsBlur =
+            !Core.INSTANCE.SettingManager.Settings.DisplayPreferences.LyricsBlur;
+
+        Core.INSTANCE.SettingManager.WriteSettings();
+    }
 
     public bool IsKaraoke
     {
@@ -58,6 +68,11 @@ public class SettingsLyricsViewModel : ViewModelBase, INotifyPropertyChanged
     public bool UseArtworkBackground
     {
         get => Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground;
+    }
+    
+    public bool IsBlurred
+    {
+        get => Core.INSTANCE.SettingManager.Settings.DisplayPreferences.LyricsBlur;
     }
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

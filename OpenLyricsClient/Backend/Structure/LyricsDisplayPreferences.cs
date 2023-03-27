@@ -6,4 +6,5 @@ public class LyricsDisplayPreferences
 {
     public EnumLyricsDisplayMode DisplayMode { get; set; }
     public bool ArtworkBackground { get; set; }
+    public bool LyricsBlur { get; set; }
 }
