@@ -64,7 +64,6 @@ public partial class LyricsScroller : UserControl
     private LyricsCard _currentCard;
     private ATupleList<LyricsCard, bool> _lyricsRoll;
 
-    private bool _useBlur;
     private int _blurItemCount;
     private float _blurIncrement;
     
@@ -120,7 +119,6 @@ public partial class LyricsScroller : UserControl
         this._scrollSpeed = 15;
         this._oldIndex = 0;
 
-        this._useBlur = true;
         this._blurIncrement = 0.8F;
         this._blurItemCount = 6;
         this._lyricsRoll = new ATupleList<LyricsCard, bool>();
@@ -244,10 +242,10 @@ public partial class LyricsScroller : UserControl
         if (index < 0)
             return;
         
-        if (index > this._lyricParts.Count - 1)
+        if (index > this._lyricParts?.Count)
             return;
         
-        BlurChangedEvent(new BlurChangedEventArgs(blurSigma, this._lyricParts[index]));
+        BlurChangedEvent(new BlurChangedEventArgs(blurSigma, this._lyricParts![index]));
 
         try
         {
@@ -284,10 +282,11 @@ public partial class LyricsScroller : UserControl
                 }
             }*/
             
+            bool useBlur = Core.INSTANCE.SettingManager.Settings.DisplayPreferences.LyricsBlur;
             
             if (i == selectedLine)
             {
-                if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.LyricsBlur)
+                if (useBlur)
                 {
                     for (int j = 1; j < this._blurItemCount; j++)
                     {
@@ -307,7 +306,7 @@ public partial class LyricsScroller : UserControl
             }
             else
             {
-                if (!this.IsSynced)
+                if (!this.IsSynced || !useBlur)
                 {
                     TryBlurItem(i, 0);
                 }
@@ -596,12 +595,6 @@ public partial class LyricsScroller : UserControl
     {
         get { return GetValue(LyricsFontWeightProperty); }
         set { SetValue(LyricsFontWeightProperty, value); }
-    }
-
-    public bool UseBlur
-    {
-        get => this._useBlur;
-        set => this._useBlur = value;
     }
 
     public float BlurIncrement
