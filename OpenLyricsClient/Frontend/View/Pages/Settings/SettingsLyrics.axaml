@@ -172,7 +172,7 @@
                                           FontWeight="Normal"
                                           TextWrapping="Wrap"
                                           Foreground="{DynamicResource SecondaryFontColorBrush}"
-                                          Text="Lyrics blur">
+                                          Text="Lyrics blur"> 
                                </TextBlock>
                            
                                <ToggleSwitch VerticalAlignment="Center"
