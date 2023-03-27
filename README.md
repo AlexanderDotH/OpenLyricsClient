@@ -10,7 +10,8 @@ Introducing OpenLyricsClient - the ultimate lyrics tool for singing enthusiasts.
 <br>
 <br>
 <br>
-
+Simple and intuitive to use, OpenLyricsClient offers a user-friendly interface that lets you personalize the tool to suit your preferences. Whether you're belting out your favorite ballads or jamming along to the latest pop hits, this versatile tool has got you covered. So why wait? Download OpenLyricsClient today and take your singing experience to the next level.
+<br>
 
 Some previews:
 <p float="center">
