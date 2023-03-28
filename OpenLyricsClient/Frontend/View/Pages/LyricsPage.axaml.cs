@@ -65,7 +65,7 @@ public partial class LyricsPage : UserControl
 
         SolidColorBrush primaryBackColor = App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;
         
-        if (Core.INSTANCE!.SettingManager!.Settings!.DisplayPreferences != null && 
+        if (Core.INSTANCE!.SettingManager!.Settings?.DisplayPreferences != null && 
             Core.INSTANCE!.SettingManager!.Settings!.DisplayPreferences!.ArtworkBackground!)
             primaryBackColor = App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush;
         
