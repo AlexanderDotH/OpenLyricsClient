@@ -2,6 +2,8 @@ using System;
 using System.Reactive;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input;
+using OpenLyricsClient.Frontend.Scaling;
 using ReactiveUI;
 using IViewModel = OpenLyricsClient.Frontend.Scaling.IViewModel;
 
@@ -74,11 +76,14 @@ namespace OpenLyricsClient.Frontend.Models.Windows
                     this._prevWidth = desktop.MainWindow.Width;
                     this._prevHeight = desktop.MainWindow.Height;
                     desktop.MainWindow.WindowState = WindowState.FullScreen;
+
                     this._isFullScreen = true;
                 }
                 else
                 {
+
                     desktop.MainWindow.WindowState = WindowState.Normal;
+
                     desktop.MainWindow.Width = this._prevWidth;
                     desktop.MainWindow.Height = this._prevHeight;
                     this._isFullScreen = false;

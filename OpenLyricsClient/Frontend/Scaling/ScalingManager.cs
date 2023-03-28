@@ -14,6 +14,8 @@ namespace OpenLyricsClient.Frontend.Scaling;
     /// </summary>
     public class ScalingManager
     {
+        private static ScalingManager _instance;
+        
         private const double minimumScaling = 0.2d;
 
         private double previousScaling = 1d;
@@ -54,6 +56,7 @@ namespace OpenLyricsClient.Frontend.Scaling;
         /// <param name="viewModel">The <see cref="IViewModel"/> implemented by the view model belonging to the <paramref name="window"/>.</param>
         public ScalingManager(ScalableWindow window, IViewModel viewModel)
         {
+            _instance = this;
             this.viewModel = viewModel;
             this.window = window;
             ScalableMainWindow = new ScalableObject(window); 
@@ -100,6 +103,7 @@ namespace OpenLyricsClient.Frontend.Scaling;
         private double windowScalingFactor = 1d;
         private Point mouseDownPosition = default;
         private bool windowNeedsRefresh = false;
+        private bool onlyScaleOnStartup = false;
 
         private void Window_EndResize(object? sender, PointerReleasedEventArgs e)
         {
@@ -149,6 +153,9 @@ namespace OpenLyricsClient.Frontend.Scaling;
 
         private void Window_PropertyChanged(object sender, AvaloniaPropertyChangedEventArgs e)
         {
+            if (onlyScaleOnStartup)
+                return;
+            
             Type propertyType = e.Property.PropertyType;
             if (propertyType == typeof(WindowState))
             {
@@ -307,5 +314,22 @@ namespace OpenLyricsClient.Frontend.Scaling;
                     }
                 }
             }
+        }
+
+        public bool OnlyScaleOnStartup
+        {
+            get => onlyScaleOnStartup;
+            set => onlyScaleOnStartup = value;
+        }
+
+        public bool WindowNeedsRefresh
+        {
+            get => windowNeedsRefresh;
+            set => windowNeedsRefresh = value;
+        }
+
+        public static ScalingManager Instance
+        {
+            get => _instance;
         }
     }

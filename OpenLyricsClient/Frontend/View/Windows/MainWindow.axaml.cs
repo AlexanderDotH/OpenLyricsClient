@@ -116,5 +116,6 @@ namespace OpenLyricsClient.Frontend.View.Windows
         public override event EventHandler<PointerPressedEventArgs> BeginResize;
         public override event EventHandler<PointerEventArgs> Resize;
         public override event EventHandler<PointerReleasedEventArgs> EndResize;
+      
     }
 }
