@@ -12,7 +12,13 @@ Introducing OpenLyricsClient - the ultimate lyrics tool for singing enthusiasts.
 <br>
 <br>
 
-[Download](https://github.com/AlexanderDotH/OpenLyricsClient/releases/tag/v0.0.2) &bull; [Contact me](https://discordapp.com/users/241640038780239873) &bull; [More projects](https://github.com/AlexanderDotH)
+<p align="center">
+  <a href="https://github.com/AlexanderDotH/OpenLyricsClient/releases/tag/v0.0.2">Download</a>
+  <a>&#8226;</a>
+  <a href="https://discordapp.com/users/241640038780239873">Contact me</a>
+  <a>&#8226;</a>
+  <a href="https://github.com/AlexanderDotH">More Projects</a>
+</p>
 
 <br>
 
