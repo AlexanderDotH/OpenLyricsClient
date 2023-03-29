@@ -4,7 +4,6 @@
 <img align="left" src="https://alexh.space/images/openlyricsclient/logo.png" alt="drawing" width="200"/> 
 <br>
 <br>
-<br>
 Introducing OpenLyricsClient - the ultimate lyrics tool for singing enthusiasts. <br>
 With OpenLyricsClient, you'll never miss a beat - it gets the lyrics for almost any song with ease.
 
