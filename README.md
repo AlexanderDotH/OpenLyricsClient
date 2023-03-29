@@ -48,7 +48,7 @@ Don't you ever want to sing along to songs in other languages? Simply use the ro
 Currently Supported languages:
 * Japanese
 * Korean
-* Russia
+* Russian
 
 <p float="center">
   <img src="https://alexh.space/images/openlyricsclient/romanization_preview.png" width="70%" />
@@ -63,7 +63,7 @@ Lets get started by linking you spotify account:
 </p>
 
 <br>
-Imagin reading this readme until this point
+Imagine reading this readme until this point
 <br>
 <br>
 
