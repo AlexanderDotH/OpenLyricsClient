@@ -10,7 +10,7 @@ Introducing OpenLyricsClient - the ultimate lyrics tool for singing enthusiasts.
 <br>
 <br>
 
-**If you want to test it now just take a look at the releases**
+[More projects](https://github.com/AlexanderDotH) &bull; [Download](https://github.com/AlexanderDotH/OpenLyricsClient/releases/tag/v0.0.2) &bull; [Contact me](https://discordapp.com/users/241640038780239873)
 
 <br>
 
@@ -27,13 +27,36 @@ Some previews:
 
 ---
 
-You want to blur some things up? Just enable it!
+You want to blur some things up? Just enable it! Its 2 clicks away!
 <p float="center">
-  <img src="https://alexh.space/images/openlyricsclient/dark1-preview.png" width="50%" />
+  <img src="https://alexh.space/images/openlyricsclient/settings_lyrics_preview.png" width="70%" />
 </p>
 
+---
+
+Don't you ever want to sing along to songs in other languages? Simply use the romanization feature!
+
+Currently Supported languages:
+* Japanese
+* Korean
+* Russia
+
+<p float="center">
+  <img src="https://alexh.space/images/openlyricsclient/romanization_preview.png" width="70%" />
+</p>
+
+---
+
+Lets get started by linking you spotify account:
+
+<p float="center">
+  <img src="https://alexh.space/images/openlyricsclient/spotify_preview.png" width="70%" />
+</p>
 
 <br>
+Imagin reading this readme until this point
 <br>
-This tool is currently in the alpha stage and will be available as soon as possible.
-If you have questions go and ask me on discord: Alex.#8988
+<br>
+
+**This tool is currently in the alpha stage and will be available as soon as possible.
+If you have questions go and ask me on discord: Alex.#8988**
