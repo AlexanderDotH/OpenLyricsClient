@@ -12,6 +12,7 @@ With OpenLyricsClient, you'll never miss a beat - it gets the lyrics for almost 
 <br>
 <br>
 <br>
+<br>
 <p align="center">
   <a href="https://github.com/AlexanderDotH/OpenLyricsClient/releases/tag/v0.0.2">Download</a>
   <a>&#8226;</a>
