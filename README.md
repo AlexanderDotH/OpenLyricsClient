@@ -4,14 +4,17 @@
 <img align="left" src="https://alexh.space/images/openlyricsclient/logo.png" alt="drawing" width="200"/> 
 <br>
 <br>
-Introducing OpenLyricsClient - the ultimate lyrics tool for singing enthusiasts. This modern and customizable tool is designed to work seamlessly with popular services like Spotify, YouTube, and more, providing quick and easy access to accurate song lyrics. With OpenLyricsClient, you'll never miss a beat - it gets the lyrics for almost any song with ease.
+<br>
+Introducing OpenLyricsClient - the ultimate lyrics tool for singing enthusiasts. <br>
+With OpenLyricsClient, you'll never miss a beat - it gets the lyrics for almost any song with ease.
 
 <br>
 <br>
 <br>
 <br>
 <br>
-
+<br>
+<br>
 <p align="center">
   <a href="https://github.com/AlexanderDotH/OpenLyricsClient/releases/tag/v0.0.2">Download</a>
   <a>&#8226;</a>
