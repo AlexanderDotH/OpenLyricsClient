@@ -1,4 +1,5 @@
 # OpenLyricsClient
+<img src="https://badgen.net/badge/testing/alpha/orange?icon=github" width="10%" />
 
 <img align="left" src="https://alexh.space/images/openlyricsclient/logo.png" alt="drawing" width="200"/> 
 <br>
@@ -9,8 +10,9 @@ Introducing OpenLyricsClient - the ultimate lyrics tool for singing enthusiasts.
 <br>
 <br>
 <br>
+<br>
 
-[More projects](https://github.com/AlexanderDotH) &bull; [Download](https://github.com/AlexanderDotH/OpenLyricsClient/releases/tag/v0.0.2) &bull; [Contact me](https://discordapp.com/users/241640038780239873)
+[Download](https://github.com/AlexanderDotH/OpenLyricsClient/releases/tag/v0.0.2) &bull; [Contact me](https://discordapp.com/users/241640038780239873) &bull; [More projects](https://github.com/AlexanderDotH)
 
 <br>
 
