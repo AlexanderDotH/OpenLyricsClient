@@ -15,7 +15,6 @@
              Background="{Binding UiBackground}"
              Foreground="{Binding UiForeground}"
              Name="PG_LyricsPage"
-             EffectiveViewportChanged="Layoutable_OnEffectiveViewportChanged"
              x:Class="OpenLyricsClient.Frontend.View.Pages.LyricsPage">
     
     <UserControl.DataContext>

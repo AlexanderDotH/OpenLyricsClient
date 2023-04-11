@@ -98,7 +98,7 @@ public partial class LyricsPage : UserControl
         if (e.PropertyName.IsNullOrEmpty())
             return;
 
-        if (DataValidator.ValidateData(this._lyricsPageViewModel.Artwork!) && 
+        if (DataValidator.ValidateData(this._lyricsPageViewModel.Artwork) && 
             !this._lyricsPageViewModel.Artwork.IsNullOrEmpty() &&
             e.PropertyName!.Equals("Artwork") && 
             !this._oldImagePath.Equals(this._lyricsPageViewModel.Artwork))
@@ -153,51 +153,11 @@ public partial class LyricsPage : UserControl
         MainWindow.Instance.BeginMoveDrag(e);
     }
 
-    private void Layoutable_OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
-    {
-        if (this._cstmLyricsDisplay != null)
-        {
-            /*this._cstmLyricsDisplay.Reset();
-            this._cstmLyricsDisplay.Reload();
-            this._cstmLyricsDisplay.ResyncOffset();*/
-        }
-    }
-
     private void Button_OnClick(object? sender, RoutedEventArgs e)
     {
         if (this._cstmLyricsDisplay != null)
         {
             this._cstmLyricsDisplay.ResyncOffset();
         }
-    }
-
-    public string SongName
-    {
-        get { return "Never gonna give you up"; }
-    }
-    
-    public string Artists
-    {
-        get { return "Rick Astley"; }
-    }
-    
-    public string AlbumName
-    {
-        get { return "Example Album"; }
-    }
-
-    public string CurrentTime
-    {
-        get { return "0:00"; }
-    }
-
-    public string CurrentMaxTime
-    {
-        get { return "10:00"; }
-    }
-    
-    public double Percentage
-    {
-        get { return 0; }
     }
 }
