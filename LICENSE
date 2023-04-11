@@ -1,0 +1,34 @@
+LICENSE for OpenLyricsClient
+
+Copyright (c) 2023 Alexander Heuschkel
+
+This software, OpenLyricsClient, is licensed to you, the "Licensee", under the following legally binding terms and conditions:
+
+1. Use of the Code: The code in this repository is provided for non-commercial purposes only. 
+Licensee is strictly prohibited from using the code for any commercial purposes, including but not limited to 
+selling, distributing, or incorporating into any commercial product or service.
+
+2. Modifications: Licensee may make modifications to the code, 
+but such modifications must remain within the GitHub repository owned by Alexander Heuschkel, the owner of OpenLyricsClient. 
+Modifications cannot be released outside of this repository without obtaining explicit written permission from Alexander Heuschkel.
+
+3. Distribution: Only the owner, Alexander Heuschkel, is granted the right to release OpenLyricsClient on any third-party website. 
+Any other distribution of the software on a third-party website is strictly prohibited without obtaining prior written permission from Alexander Heuschkel.
+
+4. Third-Party Code: Any third-party code used in OpenLyricsClient is subject to the terms and conditions of its respective owner. 
+If the owner of the third-party code requests the removal of their code from OpenLyricsClient, Licensee must comply with such request promptly.
+
+5. Payment Restriction: OpenLyricsClient is granted the limited right to bypass payment restrictions for private use only. 
+Licensee is strictly prohibited from releasing or sharing any methods or tools for bypassing payment restrictions on the internet.
+
+6. Owner's Rights: The owner, Alexander Heuschkel, reserves the right to 
+modify, update, or revoke any of the rules and conditions of this license at any time, without prior notice.
+
+7. No Warranty: OpenLyricsClient is provided "as is" without any warranty or guarantee of any kind, 
+including but not limited to accuracy, reliability, or fitness for a particular purpose. 
+Licensee assumes all risks and responsibilities associated with the use of this software.
+
+This license represents the entire agreement between Licensee and Alexander Heuschkel 
+regarding the use of OpenLyricsClient and supersedes any prior agreements or understandings, 
+whether written or verbal. By using OpenLyricsClient, Licensee agrees to be bound by the terms and conditions of this license. 
+If Licensee does not agree with any of the terms, Licensee is not permitted to use, modify, or distribute the software.
