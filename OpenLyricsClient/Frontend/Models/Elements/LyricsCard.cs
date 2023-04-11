@@ -281,10 +281,14 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
         get { return GetValue(BlurSigmaProperty); }
         set
         {
-            
+
             if (DataValidator.ValidateData(this._blurArea))
+            {
                 this._blurArea.Sigma = value;
-                
+
+                this._blurArea.IsVisible = value != 0;
+            }
+            
             SetValue(BlurSigmaProperty, value); 
 
             OnPropertyChanged("Blur");

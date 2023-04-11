@@ -52,7 +52,6 @@
                                Classes="grow"
                                HorizontalAlignment="Left"
                                Text="{TemplateBinding Text}"
-                               TextWrapping="Wrap"
                                FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
                                FontSize="{TemplateBinding FontSize}"
                                Margin="5,0,5,5">
@@ -75,7 +74,6 @@
                                    VerticalAlignment="Top"
                                    HorizontalAlignment="Left"
                                    Text="{TemplateBinding Text}"
-                                   TextWrapping="Wrap"
                                    FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
                                    FontSize="{TemplateBinding FontSize}"
                                    Margin="5,0,5,5"
@@ -91,6 +89,7 @@
                     </Viewbox>
                     
                     <blur:BlurArea 
+                        IsVisible="False"
                         Name="PART_BlurArea"
                         SigmaX="{TemplateBinding BlurSigma}" 
                         SigmaY="{TemplateBinding BlurSigma}" 

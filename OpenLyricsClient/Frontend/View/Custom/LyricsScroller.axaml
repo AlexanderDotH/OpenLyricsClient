@@ -22,7 +22,6 @@
     <Grid Background="{Binding UiBackground}">
         <custom1:CustomScrollViewer Name="CTRL_Viewer">
             <Grid>
-                
                 <ItemsRepeater Name="HIDDEN_CTRL_Repeater" 
                                IsVisible="False" 
                                Items="{Binding CurrentLyricParts}">

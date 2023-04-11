@@ -242,7 +242,7 @@ public partial class LyricsScroller : UserControl
         if (index < 0)
             return;
         
-        if (index > this._lyricParts?.Count)
+        if (index > this._lyricParts?.Count - 1)
             return;
         
         BlurChangedEvent(new BlurChangedEventArgs(blurSigma, this._lyricParts![index]));
@@ -376,7 +376,7 @@ public partial class LyricsScroller : UserControl
         
         float untilPos = (float)this._scrollViewer.Viewport.Height / 2.0F;
 
-        untilPos -= (float)GetRenderedSize(index).Height / 2;
+        untilPos -= (float)GetRenderedSize(index).Height / 2.0F;
 
         return startAt - untilPos + startMargin;
     }
