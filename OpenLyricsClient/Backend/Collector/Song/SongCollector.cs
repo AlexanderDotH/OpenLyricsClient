@@ -29,11 +29,12 @@ public class SongCollector
     public SongCollector(SongHandler songHandler, LyricHandler lyricHandler, ArtworkHandler artworkHandler)
     {
         this._songCollectors = new AList<ISongCollector>();
-        this._songCollectors.Add(new SpotifyCollector());
+        
         this._songCollectors.Add(new MusixmatchCollector());
         this._songCollectors.Add(new NetEaseCollector());
         this._songCollectors.Add(new NetEaseV2Collector());
         this._songCollectors.Add(new DeezerSongCollector());
+        this._songCollectors.Add(new SpotifyCollector());
 
         this._songResponses = new ATupleList<SongRequestObject, SongResponseObject>();
 
@@ -49,8 +50,6 @@ public class SongCollector
             return;
 
         SongRequestObject songRequestObject = SongRequestObject.FromSong(songChangedEventArgs.Song);
-
-        this._songCollectors.Sort(new SongCollectorComparer());
 
         AList<SongResponseObject> foundSongs = new AList<SongResponseObject>();
 

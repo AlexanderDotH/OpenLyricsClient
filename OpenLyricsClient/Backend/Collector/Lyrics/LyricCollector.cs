@@ -22,11 +22,12 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
         public LyricCollector()
         {
             this._lyricCollectors = new AList<ILyricsCollector>();
-            /*this._lyricCollectors.Add(new DeezerCollector());
+            
+            this._lyricCollectors.Add(new MusixmatchCollector());
+            this._lyricCollectors.Add(new DeezerCollector());
             this._lyricCollectors.Add(new NetEaseCollector());
             this._lyricCollectors.Add(new NetEaseV2Collector());
-            this._lyricCollectors.Add(new MusixmatchCollector());
-            this._lyricCollectors.Add(new TextylCollector());*/
+            this._lyricCollectors.Add(new TextylCollector());
             this._lyricCollectors.Add(new OpenLyricsClientCollector());
         }
 
@@ -46,8 +47,6 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
             if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
                 return;
             
-            this._lyricCollectors.Sort(new CollectorComparer());
-
             for (int i = 0; i < this._lyricCollectors.Length; i++)
             {
                 if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))

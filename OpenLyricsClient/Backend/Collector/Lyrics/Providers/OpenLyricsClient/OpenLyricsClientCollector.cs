@@ -71,6 +71,6 @@ public class OpenLyricsClientCollector : ILyricsCollector
     // It should be the last provider so save some cost at my endpoint
     public int ProviderQuality()
     {
-        return -1;
+        return 0;
     }
 }
