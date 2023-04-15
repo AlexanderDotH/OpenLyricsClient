@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using DevBase.Web;
-using Microsoft.Extensions.Primitives;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Frontend.Structure;

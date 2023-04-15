@@ -49,7 +49,6 @@ namespace OpenLyricsClient.Backend
         private TaskRegister _taskRegister;
 
         private WindowLogger _windowLogger;
-        private Environment.Environment _environment;
 
         private TaskSuspensionToken _tickSuspensionToken;
 
@@ -67,7 +66,6 @@ namespace OpenLyricsClient.Backend
             this._cancellationTokenSource = new CancellationTokenSource();
 
             this._debugger = new Debugger<Core>(this);
-            this._environment = Backend.Environment.Environment.FindEnvironmentFile(System.Environment.GetCommandLineArgs());
 
             this._taskRegister = new TaskRegister();
 
@@ -186,11 +184,6 @@ namespace OpenLyricsClient.Backend
         public CancellationTokenSource CancellationTokenSource
         {
             get { return this._cancellationTokenSource; }
-        }
-
-        public Environment.Environment Environment
-        {
-            get => this._environment;
         }
 
         public LyricHandler LyricHandler

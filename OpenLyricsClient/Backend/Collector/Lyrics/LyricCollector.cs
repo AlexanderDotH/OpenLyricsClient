@@ -4,6 +4,7 @@ using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Deezer;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2;
+using OpenLyricsClient.Backend.Collector.Lyrics.Providers.OpenLyricsClient;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
@@ -16,15 +17,17 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
     class LyricCollector
     {
         private AList<ILyricsCollector> _lyricCollectors;
-
+        private SongRequestObject _lastRequest;
+        
         public LyricCollector()
         {
             this._lyricCollectors = new AList<ILyricsCollector>();
-            this._lyricCollectors.Add(new DeezerCollector());
+            /*this._lyricCollectors.Add(new DeezerCollector());
             this._lyricCollectors.Add(new NetEaseCollector());
             this._lyricCollectors.Add(new NetEaseV2Collector());
             this._lyricCollectors.Add(new MusixmatchCollector());
-            this._lyricCollectors.Add(new TextylCollector());
+            this._lyricCollectors.Add(new TextylCollector());*/
+            this._lyricCollectors.Add(new OpenLyricsClientCollector());
         }
 
         public async Task CollectLyrics(SongResponseObject songResponseObject)
@@ -34,6 +37,11 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
             
             if (!DataValidator.ValidateData(songResponseObject.SongRequestObject))
                 return;
+            
+            if (songResponseObject.SongRequestObject == this._lastRequest)
+                return;
+            
+            this._lastRequest = songResponseObject.SongRequestObject;
             
             if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
                 return;
@@ -56,6 +64,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
 
                 Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, lyricData);
                 
+
                 /*if (!Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
                 {
                     Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, lyricData);

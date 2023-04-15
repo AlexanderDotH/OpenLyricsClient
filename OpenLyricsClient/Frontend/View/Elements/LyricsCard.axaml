@@ -54,6 +54,7 @@
                                Text="{TemplateBinding Text}"
                                FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
                                FontSize="{TemplateBinding FontSize}"
+                               TextWrapping="Wrap"
                                Margin="5,0,5,5">
                         <TextBlock.Transitions>
                             <Transitions>
@@ -77,6 +78,7 @@
                                    FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
                                    FontSize="{TemplateBinding FontSize}"
                                    Margin="5,0,5,5"
+                                   TextWrapping="Wrap"
                                    Width="{TemplateBinding Width}">
                             <TextBlock.Transitions>
                                 <Transitions>

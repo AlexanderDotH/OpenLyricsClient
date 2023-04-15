@@ -251,6 +251,16 @@ public partial class SettingsPage : UserControl
     private void BTN_Lyrics_OnClick(object? sender, RoutedEventArgs e)
     {
         SelectPage(1);
+    }
+
+    private void BTN_Spotify_OnClick(object? sender, RoutedEventArgs e)
+    {
+        SelectPage(2);
+    }
+
+    private void BTN_Cache_OnClick(object? sender, RoutedEventArgs e)
+    {
+        SelectPage(3);
         
         /*try
         {
@@ -262,7 +272,7 @@ public partial class SettingsPage : UserControl
         
                     DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient api =
                         new DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient();
-        
+        api
                     await api.SubmitAiSync(currentSong.SongMetadata.Name, currentSong.SongMetadata.Album,
                         currentSong.SongMetadata.MaxTime, "large-v2", currentSong.SongMetadata.Artists);
 
@@ -273,15 +283,5 @@ public partial class SettingsPage : UserControl
         {
             Debug.WriteLine(exception.Message);
         }*/
-    }
-
-    private void BTN_Spotify_OnClick(object? sender, RoutedEventArgs e)
-    {
-        SelectPage(2);
-    }
-
-    private void BTN_Cache_OnClick(object? sender, RoutedEventArgs e)
-    {
-        SelectPage(3);
     }
 }
