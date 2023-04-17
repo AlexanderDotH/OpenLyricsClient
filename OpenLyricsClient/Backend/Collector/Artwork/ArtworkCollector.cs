@@ -28,7 +28,7 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
             this._artworkCollectors = new AList<IArtworkCollector>();
             this._artworkCollectors.Add(new SpotifyCollector());
             this._artworkCollectors.Add(new DeezerCollector());
-            this._artworkCollectors.Add(new MusixMatchCollector());
+            //this._artworkCollectors.Add(new MusixMatchCollector());
         }
 
         public async Task CollectArtwork(SongResponseObject songResponseObject)

@@ -5,6 +5,7 @@ using OpenLyricsClient.Backend.Structure.Lyrics;
 
 namespace OpenLyricsClient.Backend.Structure.Song
 {
+    [Serializable]
     public class Song
     {
         private SongMetadata _songMetadata;

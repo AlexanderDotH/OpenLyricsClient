@@ -359,8 +359,9 @@ public partial class LyricsScroller : UserControl
         if (this._lyricParts.IsNullOrEmpty())
             return 0;
         
-        float untilPos = (float)this._scrollViewer.Viewport.Height / 2.0F;
-        untilPos -= (float)GetRenderedSize(0).Height / 2.0F;
+        float untilPos = (float)this._scrollViewer.Viewport.Height / 2.25F;
+        
+        //untilPos -= (float)GetRenderedSize(0).Height / 2.0F;
 
         return untilPos;
     }
@@ -374,9 +375,9 @@ public partial class LyricsScroller : UserControl
             startAt += (float)GetRenderedSize(i).Height;
         }
         
-        float untilPos = (float)this._scrollViewer.Viewport.Height / 2.0F;
+        float untilPos = (float)this._scrollViewer.Viewport.Height / 2.25F;
 
-        untilPos -= (float)GetRenderedSize(index).Height / 2.0F;
+        //untilPos -= (float)GetRenderedSize(index).Height / 2.0F;
 
         return startAt - untilPos + startMargin;
     }

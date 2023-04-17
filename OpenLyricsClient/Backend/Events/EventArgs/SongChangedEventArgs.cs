@@ -1,9 +1,11 @@
-﻿using OpenLyricsClient.Backend.Handler.Song;
+﻿using System;
+using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Song;
 
 namespace OpenLyricsClient.Backend.Events.EventArgs
 {
+    [Serializable]
     public class SongChangedEventArgs : System.EventArgs
     {
         private Song _song;

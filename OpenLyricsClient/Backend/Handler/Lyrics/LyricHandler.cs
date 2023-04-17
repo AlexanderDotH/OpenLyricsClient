@@ -224,14 +224,9 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            for (int i = 0; i < 5; i++)
-            {
-                songChangedEventArgs.Song.State = SongState.SEARCHING_LYRICS;
-                await this._lyricCollector.CollectLyrics(songResponseObject);
-                songChangedEventArgs.Song.State = SongState.SEARCHING_FINISHED;
-
-                await Task.Delay(1500); 
-            }
+            songChangedEventArgs.Song.State = SongState.SEARCHING_LYRICS;
+            await this._lyricCollector.CollectLyrics(songResponseObject);
+            songChangedEventArgs.Song.State = SongState.SEARCHING_FINISHED;
 
             this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
         }

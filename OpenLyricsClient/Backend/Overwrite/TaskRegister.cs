@@ -1,4 +1,5 @@
-﻿using DevBase.Async.Task;
+﻿using System;
+using DevBase.Async.Task;
 using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Overwrite;
@@ -15,5 +16,13 @@ public class TaskRegister : DevBase.Async.Task.TaskRegister
         }
 
         token = new TaskSuspensionToken();
+    }
+    
+    public void Register(Action action, object type, bool startAfterCreation = true)
+    {
+        if (!AvaloniaUtils.IsInPreviewerMode())
+        {
+            this.RegisterTask(action, type, startAfterCreation);
+        }
     }
 }

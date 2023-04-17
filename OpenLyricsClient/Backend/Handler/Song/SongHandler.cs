@@ -66,6 +66,9 @@ namespace OpenLyricsClient.Backend.Handler.Song
 
         private void OnSongChanged(object sender, SongChangedEventArgs songChangedEventArgs)
         {
+            if (songChangedEventArgs.EventType == EventType.PRE)
+                return;
+            
             Task.Factory.StartNew(async () =>
             {
                 await this._songCollector.FireSongCollector(songChangedEventArgs);

@@ -6,6 +6,8 @@ using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.OpenLyricsClient;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl;
+using OpenLyricsClient.Backend.Events;
+using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Lyrics;
@@ -17,7 +19,9 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
     class LyricCollector
     {
         private AList<ILyricsCollector> _lyricCollectors;
-        private SongRequestObject _lastRequest;
+        private SongResponseObject _last;
+        private int _lastRetry;
+        private bool _isBusy;
         
         public LyricCollector()
         {
@@ -25,32 +29,35 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
             
             this._lyricCollectors.Add(new MusixmatchCollector());
             this._lyricCollectors.Add(new DeezerCollector());
-            this._lyricCollectors.Add(new NetEaseCollector());
+            /*this._lyricCollectors.Add(new NetEaseCollector());
             this._lyricCollectors.Add(new NetEaseV2Collector());
-            this._lyricCollectors.Add(new TextylCollector());
+            this._lyricCollectors.Add(new TextylCollector());*/
             this._lyricCollectors.Add(new OpenLyricsClientCollector());
+            
+           // Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
         }
 
         public async Task CollectLyrics(SongResponseObject songResponseObject)
         {
+            /*if (_isBusy || this._last == songResponseObject)
+                return;*/
+            
             if (!DataValidator.ValidateData(songResponseObject))
                 return;
             
             if (!DataValidator.ValidateData(songResponseObject.SongRequestObject))
                 return;
             
-            if (songResponseObject.SongRequestObject == this._lastRequest)
-                return;
-            
-            this._lastRequest = songResponseObject.SongRequestObject;
-            
             if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
                 return;
+
+            /*this._isBusy = true;
+            this._last = songResponseObject;*/
             
             for (int i = 0; i < this._lyricCollectors.Length; i++)
             {
                 if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
-                    break;
+                    return;
 
                 ILyricsCollector collector = this._lyricCollectors.Get(i);
                 LyricData lyricData = await collector.GetLyrics(songResponseObject);
@@ -62,17 +69,10 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
                     continue;
 
                 Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, lyricData);
-                
-
-                /*if (!Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
-                {
-                    Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, lyricData);
-                    return;
-                }*/
+                return;
             }
 
-            // if (!Core.INSTANCE.CacheManager.IsInCache(songRequestObject))
-            //     Core.INSTANCE.CacheManager.AddToCache(songRequestObject, new LyricData());
+            //this._isBusy = false;
         }
     }
 }

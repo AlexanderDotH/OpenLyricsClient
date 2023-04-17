@@ -31,8 +31,8 @@ public class SongCollector
         this._songCollectors = new AList<ISongCollector>();
         
         this._songCollectors.Add(new MusixmatchCollector());
-        this._songCollectors.Add(new NetEaseCollector());
-        this._songCollectors.Add(new NetEaseV2Collector());
+        /*this._songCollectors.Add(new NetEaseCollector());
+        this._songCollectors.Add(new NetEaseV2Collector());*/
         this._songCollectors.Add(new DeezerSongCollector());
         this._songCollectors.Add(new SpotifyCollector());
 
@@ -50,8 +50,6 @@ public class SongCollector
             return;
 
         SongRequestObject songRequestObject = SongRequestObject.FromSong(songChangedEventArgs.Song);
-
-        AList<SongResponseObject> foundSongs = new AList<SongResponseObject>();
 
         for (int i = 0; i < this._songCollectors.Length; i++)
         {
