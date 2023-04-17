@@ -67,10 +67,11 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
                 if (!DataValidator.ValidateData(lyricData))
                     continue;
 
-                if (lyricData.LyricReturnCode != LyricReturnCode.SUCCESS)
-                    continue;
+                /*if (lyricData.LyricReturnCode != LyricReturnCode.SUCCESS)
+                    continue;*/
 
                 Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, lyricData);
+                
                 return;
             }
 

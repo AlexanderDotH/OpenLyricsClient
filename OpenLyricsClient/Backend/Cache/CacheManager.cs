@@ -278,13 +278,13 @@ namespace OpenLyricsClient.Backend.Cache
         {
             CacheData cacheData = GetDataByRequest(songRequestObject);
 
-            if (!DataValidator.ValidateData(cacheData))
+            if (!DataValidator.ValidateData(cacheData, cacheData.LyricData))
                 return false;
             
             return onlyCheckName ? 
                 cacheData.LyricData?.SongMetadata?.Name.SequenceEqual(songRequestObject.SongName) == true && 
-                cacheData.LyricData?.LyricReturnCode == LyricReturnCode.SUCCESS : 
-                cacheData.LyricData?.LyricReturnCode == LyricReturnCode.SUCCESS;
+                cacheData.LyricData.LyricType == LyricType.TEXT : 
+                cacheData.LyricData.LyricType == LyricType.TEXT;
         }
         
         public bool IsArtworkInCache(SongRequestObject songRequestObject)
