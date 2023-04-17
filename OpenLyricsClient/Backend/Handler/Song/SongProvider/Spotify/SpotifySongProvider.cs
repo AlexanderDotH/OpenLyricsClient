@@ -106,12 +106,11 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
         {
             while (!this._disposed)
             {
+                await Task.Delay(750);
                 await this._updateSongDataSuspensionToken.WaitForRelease();
 
                 if (!this._service.IsConnected())
                     continue;
-
-                await Task.Delay(750);
 
                 if (DataValidator.ValidateData(this._spotifyClient) && 
                     DataValidator.ValidateData(this._currentSong))
