@@ -41,6 +41,8 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
         {
             /*if (_isBusy || this._last == songResponseObject)
                 return;*/
+
+            bool alreadeCollected = false;
             
             if (!DataValidator.ValidateData(songResponseObject))
                 return;

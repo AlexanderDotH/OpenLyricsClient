@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using DevBase.Generics;
 using DevBase.IO;
@@ -273,17 +274,17 @@ namespace OpenLyricsClient.Backend.Cache
             return data.Artwork;
         }
 
-        public bool IsLyricsInCache(SongRequestObject songRequestObject)
+        public bool IsLyricsInCache(SongRequestObject songRequestObject, bool onlyCheckName = false)
         {
             CacheData cacheData = GetDataByRequest(songRequestObject);
 
             if (!DataValidator.ValidateData(cacheData))
-                return true;
-
-            if (!DataValidator.ValidateData(cacheData.LyricData))
-                return true;
+                return false;
             
-            return cacheData.LyricData.LyricReturnCode == LyricReturnCode.SUCCESS;
+            return onlyCheckName ? 
+                cacheData.LyricData?.SongMetadata?.Name.SequenceEqual(songRequestObject.SongName) == true && 
+                cacheData.LyricData?.LyricReturnCode == LyricReturnCode.SUCCESS : 
+                cacheData.LyricData?.LyricReturnCode == LyricReturnCode.SUCCESS;
         }
         
         public bool IsArtworkInCache(SongRequestObject songRequestObject)

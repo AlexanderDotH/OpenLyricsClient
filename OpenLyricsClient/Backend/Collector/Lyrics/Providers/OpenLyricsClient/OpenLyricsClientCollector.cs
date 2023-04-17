@@ -14,6 +14,8 @@ public class OpenLyricsClientCollector : ILyricsCollector
     private DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient _openLyricsClient;
     private JsonOpenLyricsClientSubscription _subscription;
 
+    private string _lastSong;
+    
     public OpenLyricsClientCollector()
     {
         this._openLyricsClient = new DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient(
@@ -35,6 +37,14 @@ public class OpenLyricsClientCollector : ILyricsCollector
 
         if (!DataValidator.ValidateData(songResponseObject.Track))
             return new LyricData();
+
+        if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject, true))
+            return new LyricData();
+        
+        /*if (this._lastSong == songResponseObject.SongRequestObject.SongName)
+            return new LyricData();
+
+        this._lastSong = songResponseObject.SongRequestObject.SongName;*/
 
         SongMetadata metadata = songResponseObject.SongRequestObject.Song.SongMetadata;
 
