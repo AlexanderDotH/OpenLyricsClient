@@ -29,21 +29,14 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
             
             this._lyricCollectors.Add(new MusixmatchCollector());
             this._lyricCollectors.Add(new DeezerCollector());
-            /*this._lyricCollectors.Add(new NetEaseCollector());
+            this._lyricCollectors.Add(new NetEaseCollector());
             this._lyricCollectors.Add(new NetEaseV2Collector());
-            this._lyricCollectors.Add(new TextylCollector());*/
+            this._lyricCollectors.Add(new TextylCollector());
             this._lyricCollectors.Add(new OpenLyricsClientCollector());
-            
-           // Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
         }
 
         public async Task CollectLyrics(SongResponseObject songResponseObject)
         {
-            /*if (_isBusy || this._last == songResponseObject)
-                return;*/
-
-            bool alreadeCollected = false;
-            
             if (!DataValidator.ValidateData(songResponseObject))
                 return;
             
@@ -53,9 +46,6 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
             if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
                 return;
 
-            /*this._isBusy = true;
-            this._last = songResponseObject;*/
-            
             for (int i = 0; i < this._lyricCollectors.Length; i++)
             {
                 if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
@@ -67,11 +57,10 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
                 if (!DataValidator.ValidateData(lyricData))
                     continue;
 
-                /*if (lyricData.LyricReturnCode != LyricReturnCode.SUCCESS)
-                    continue;*/
+                if (lyricData.LyricReturnCode != LyricReturnCode.SUCCESS)
+                    continue;
 
                 Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, lyricData);
-                
                 return;
             }
 

@@ -44,7 +44,7 @@ public class DeezerCollector : ILyricsCollector
         
         JsonDeezerSearchDataResponse track = (JsonDeezerSearchDataResponse)songResponseObject.Track;
 
-        JsonDeezerLyricsResponse lyricsResponse = await _deezerApi.GetLyrics(Convert.ToString(track.id));
+        JsonDeezerLyricsResponse lyricsResponse = await this._deezerApi.GetLyrics(Convert.ToString(track.id));
 
         if (!DataValidator.ValidateData(lyricsResponse))
         {
@@ -55,8 +55,7 @@ public class DeezerCollector : ILyricsCollector
         if (!DataValidator.ValidateData(
                 lyricsResponse.data,
                 lyricsResponse.data.track,
-                lyricsResponse.data.track.lyrics,
-                lyricsResponse.data.track.lyrics.synchronizedLines))
+                lyricsResponse.data.track.lyrics))
         {
             this._debugger.Write("Could not find lyrics for " + track.title + "!", DebugType.ERROR);
             return new LyricData();

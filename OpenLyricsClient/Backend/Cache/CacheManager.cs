@@ -282,8 +282,7 @@ namespace OpenLyricsClient.Backend.Cache
                 return false;
             
             return onlyCheckName ? 
-                cacheData.LyricData?.SongMetadata?.Name.SequenceEqual(songRequestObject.SongName) == true && 
-                cacheData.LyricData.LyricType == LyricType.TEXT : 
+                cacheData.LyricData?.SongMetadata?.Name.SequenceEqual(songRequestObject.SongName) == true: 
                 cacheData.LyricData.LyricType == LyricType.TEXT;
         }
         

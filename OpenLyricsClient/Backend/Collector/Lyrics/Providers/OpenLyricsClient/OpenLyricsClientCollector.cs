@@ -38,7 +38,7 @@ public class OpenLyricsClientCollector : ILyricsCollector
         if (!DataValidator.ValidateData(songResponseObject.Track))
             return new LyricData();
 
-        if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject, true))
+        if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
             return new LyricData();
         
         /*if (this._lastSong == songResponseObject.SongRequestObject.SongName)

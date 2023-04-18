@@ -63,24 +63,16 @@ public class SongCollector
             if (!(DataValidator.ValidateData(songResponseObject)))
                 continue;
 
-            if (Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject) && 
-                Core.INSTANCE.CacheManager.IsArtworkInCache(songRequestObject))
-                break;
-                            
-            if (!Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject))
-            {
-                Task.Factory?.StartNew(async () =>
-                {
-                    await this._lyricHandler.FireLyricsSearch(songResponseObject, songChangedEventArgs);
-                });
-            }
-
             if (!Core.INSTANCE.CacheManager.IsArtworkInCache(songResponseObject.SongRequestObject))
             {
-                Task.Factory?.StartNew(async () =>
-                {
-                    await this._artworkHandler.FireArtworkSearch(songResponseObject, songChangedEventArgs);
-                });
+                Task.Factory.StartNew(async () =>
+                    await this._artworkHandler.FireArtworkSearch(songResponseObject, songChangedEventArgs));
+            }
+            
+            if (!Core.INSTANCE.CacheManager.IsLyricsInCache(songRequestObject))
+            {
+                Task.Factory.StartNew(async () =>
+                    await this._lyricHandler.FireLyricsSearch(songResponseObject, songChangedEventArgs));
             }
         }
     }
