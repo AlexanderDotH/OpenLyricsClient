@@ -40,6 +40,9 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
             
             for (int i = 0; i < this._artworkCollectors.Length; i++)
             {
+                if (Core.INSTANCE.CacheManager.IsArtworkInCache(songResponseObject.SongRequestObject))
+                    continue;
+                
                 IArtworkCollector artworkCollector = this._artworkCollectors.Get(i);
 
                 Structure.Artwork.Artwork artwork = await artworkCollector.GetArtwork(songResponseObject);
@@ -48,9 +51,6 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
                     continue;
                 
                 if (artwork.ReturnCode != ArtworkReturnCode.SUCCESS || artwork.Data == null)
-                    continue;
-
-                if (Core.INSTANCE.CacheManager.IsArtworkInCache(songResponseObject.SongRequestObject))
                     continue;
 
                 if (artwork.ReturnCode == ArtworkReturnCode.SUCCESS)
