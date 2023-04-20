@@ -46,7 +46,7 @@ public partial class LyricsPage : UserControl
 
         this._txtTimeFrom = this.Get<TextBlock>(nameof(TXT_TimeFrom));
         this._txtTimeTo = this.Get<TextBlock>(nameof(TXT_TimeTo));
-        this._cstmLyricsDisplay = this.Get<LyricsScroller>(nameof(LRC_Display));
+        //this._cstmLyricsDisplay = this.Get<LyricsScroller>(nameof(LRC_Display));
         this._presenterGrid = this.Get<Grid>(nameof(GRD_Content));
         this._cardBar = this.Get<Card>(nameof(CRD_Bar));
         
@@ -61,7 +61,7 @@ public partial class LyricsPage : UserControl
         image.Height = 320;
         image.VerticalAlignment = VerticalAlignment.Center;
         image.HorizontalAlignment = HorizontalAlignment.Center;
-        image.Margin = new Thickness(0, 0, 0, 60);
+        image.Margin = new Thickness(0, 0, 0, 0);
 
         SolidColorBrush primaryBackColor = App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;
         
@@ -74,7 +74,7 @@ public partial class LyricsPage : UserControl
         border.Height = 328;
         border.VerticalAlignment = VerticalAlignment.Center;
         border.HorizontalAlignment = HorizontalAlignment.Center;
-        border.Margin = new Thickness(0, 0, 0, 60);
+        border.Margin = new Thickness(0, 0, 0, 0);
         border.BorderThickness = new Thickness(5);
         border.BorderBrush = primaryBackColor;
         border.CornerRadius = new CornerRadius(8);
@@ -151,7 +151,7 @@ public partial class LyricsPage : UserControl
 
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        MainWindow.Instance.BeginMoveDrag(e);
+        //MainWindow.Instance.BeginMoveDrag(e);
     }
 
     private void Button_OnClick(object? sender, RoutedEventArgs e)

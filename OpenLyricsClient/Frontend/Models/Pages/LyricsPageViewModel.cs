@@ -37,10 +37,10 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     
     public LyricsPageViewModel()
     {
-        Core.INSTANCE.TickHandler += OnTickHandler;
+        /*Core.INSTANCE.TickHandler += OnTickHandler;
         Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
         Core.INSTANCE.SettingManager.SettingsChanged += SettingManagerOnSettingsChanged;
-        Core.INSTANCE.ArtworkHandler.ArtworkAppliedHandler += ArtworkHandlerOnArtworkAppliedHandler;
+        Core.INSTANCE.ArtworkHandler.ArtworkAppliedHandler += ArtworkHandlerOnArtworkAppliedHandler;*/
         
         this._currentSongName = string.Empty;
         this._currentArtists = string.Empty;
@@ -90,20 +90,32 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         
         if (!this._currentTime.Equals(song.ProgressString))
             CurrentTime = song.ProgressString;
-        
+         
         if (!this._currentMaxTime.Equals(song.MaxProgressString))
             CurrentMaxTime = song.MaxProgressString;
     }
 
-    public string? SongName
+    /*public string? SongName
     {
         get => Core.INSTANCE?.SongHandler?.CurrentSong?.SongMetadata?.Name!;
+    }*/
+
+    
+    
+    public string? SongName
+    {
+        get => "Never gonna give htfrhtfhfthrfthtfyou up";
     }
     
     public string Artists
     {
-        get => Core.INSTANCE?.SongHandler?.CurrentSong?.SongMetadata?.FullArtists!;
+        get => "Rick Astley";
     }
+    
+    /*public string Artists
+    {
+        get => Core.INSTANCE?.SongHandler?.CurrentSong?.SongMetadata?.FullArtists!;
+    }*/
 
     public double Percentage
     {

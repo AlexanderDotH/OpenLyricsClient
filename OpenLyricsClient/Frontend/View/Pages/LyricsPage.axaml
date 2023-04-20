@@ -67,37 +67,72 @@
                 FontSize="18"></TextBlock>
         </Border>
         
-        <Grid Name="GRD_Content"
-            HorizontalAlignment="Left"
-            Width="500">
+        <Grid Name="GRD_Info"
+              Background="Blue"
+              HorizontalAlignment="Left"
+              Width="500">
             
-            <styles:Card Name="CRD_SongInfo" 
-                         Width="{Binding ElementName=UGRD_SongInfo, Path=Width}"
-                         MaxWidth="320"
-                         Height="{Binding ElementName=STPNL_SongInfo, Path=Height}"
-                         VerticalAlignment="Center"
-                         HorizontalAlignment="Center"
-                         Margin="0,340,0,0"
-                         Background="{DynamicResource SecondaryBackgroundBrush}">
-
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Name="TXT_Title"
-                               Text="{Binding SongName}"
-                               TextWrapping="Wrap"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Top"
-                               FontWeight="Bold"
-                               FontSize="20"></TextBlock>
+            <StackPanel Orientation="Vertical" Spacing="5">
                 
-                    <TextBlock Name="TXT_Artists" 
-                               Text="{Binding Artists}"
-                               TextWrapping="Wrap"
-                               HorizontalAlignment="Left"
-                               VerticalAlignment="Bottom"
-                               Margin="0,4,0,0"
-                               FontSize="12"></TextBlock>
-                </StackPanel>
-            </styles:Card>
+                <Grid Name="GRD_Content">
+                    <Grid Width="320"
+                          Height="320"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Center"
+                          Background="Red"
+                          Margin="0,0,0,0"></Grid>
+                </Grid>
+                
+                <styles:Card Name="CRD_SongInfo" 
+                             Width="320"
+                             MaxWidth="320"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             Margin="0, 0,0,0"
+                             CornerRadius="8"
+                             Background="{DynamicResource SecondaryBackgroundBrush}">
+
+                    <StackPanel Orientation="Vertical" Spacing="10">
+                        <StackPanel Orientation="Vertical" Spacing="5">
+                            
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Name="TXT_Title"
+                                           Width="320"
+                                           Text="{Binding SongName}"
+                                           TextWrapping="Wrap"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Top"
+                                           FontWeight="Bold"
+                                           FontSize="20"></TextBlock>
+                            </StackPanel>
+                           
+                            <TextBlock Name="TXT_Artists" 
+                                       Width="320"
+                                       Text="{Binding Artists}"
+                                       TextWrapping="Wrap"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Bottom"
+                                       Margin="0,0,0,0"
+                                       FontSize="13"></TextBlock>
+                        </StackPanel>
+                        
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                             <Border CornerRadius="7" Background="{DynamicResource LightBackgroundBrush}" Width="25" Height="25">
+                                 <TextBlock Text="Ai" 
+                                            VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center"/>
+                             </Border>
+                        </StackPanel>
+                        
+                        <StackPanel Orientation="Horizontal">
+                            <Button Background="Red" 
+                                    CornerRadius="15" 
+                                    Width="30" 
+                                    Height="30">
+                        </StackPanel>
+                    </StackPanel>
+                </styles:Card>
+            </StackPanel>
         </Grid>
         
         <Grid Name="GRD_Presenter"
@@ -106,11 +141,12 @@
               
               Margin="500,50,5,50">
             
+            <!--
             <custom1:LyricsScroller
                 Name="LRC_Display"
                 FontSize="30"
                 LyricsFontWeight="Bold"
-                ItemMargin="0,0,0,70"/>
+                ItemMargin="0,0,0,70"/>-->
             
             <!--<Panel HorizontalAlignment="Left" 
                    VerticalAlignment="Center"
@@ -118,6 +154,7 @@
                    Margin="0,0,0,0">
                   <elements:SearchingAnimation></elements:SearchingAnimation>
             </Panel>-->
+            
         </Grid>
         
         <Button Name="BTN_SyncMode"
