@@ -100,7 +100,7 @@
                             <Grid ColumnDefinitions="*, 25">
                                 <TextBlock Grid.Column="0"
                                            Name="TXT_Title"
-                                           Width="320"
+                                           Width="285"
                                            Text="{Binding SongName}"
                                            TextWrapping="Wrap"
                                            HorizontalAlignment="Left"
@@ -114,10 +114,22 @@
                                         Width="25" 
                                         Height="25"
                                         IsVisible="{Binding AiBadge}">
+                                    <ToolTip.Tip>
+                                        <TextBlock Text="This song was synchronized using Ai"></TextBlock>
+                                    </ToolTip.Tip>
                                     <TextBlock Text="Ai" 
                                                VerticalAlignment="Center" 
                                                HorizontalAlignment="Center"/>
                                 </Border>
+                                
+                                <!--<Border Grid.Column="3" 
+                                        CornerRadius="7" 
+                                        Background="{DynamicResource LightBackgroundBrush}" 
+                                        Width="25" 
+                                        Height="25"
+                                        ToolTip.Tip="Published on: March 2023">
+                                    <avalonia:MaterialIcon Kind="Information" VerticalAlignment="Center" HorizontalAlignment="Center"></avalonia:MaterialIcon>
+                                </Border>-->
                             </Grid>
                            
                             <TextBlock Name="TXT_Artists" 
