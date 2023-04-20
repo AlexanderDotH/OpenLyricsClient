@@ -68,18 +68,20 @@
         </Border>
         
         <Grid Name="GRD_Info"
-              Background="Blue"
+              Background="{DynamicResource PrimaryBackgroundBrush}"
               HorizontalAlignment="Left"
               Width="500">
             
-            <StackPanel Orientation="Vertical" Spacing="5">
+            <StackPanel Orientation="Vertical" 
+                        Spacing="5"
+                        VerticalAlignment="Center">
                 
                 <Grid Name="GRD_Content">
                     <Grid Width="320"
                           Height="320"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Center"
-                          Background="Red"
+                          Background="{DynamicResource PrimaryBackgroundBrush}"
                           Margin="0,0,0,0"></Grid>
                 </Grid>
                 
@@ -92,11 +94,12 @@
                              CornerRadius="8"
                              Background="{DynamicResource SecondaryBackgroundBrush}">
 
-                    <StackPanel Orientation="Vertical" Spacing="10">
+                    <StackPanel Orientation="Vertical" Spacing="20">
                         <StackPanel Orientation="Vertical" Spacing="5">
                             
-                            <StackPanel Orientation="Horizontal" Spacing="10">
-                                <TextBlock Name="TXT_Title"
+                            <Grid ColumnDefinitions="*, 25">
+                                <TextBlock Grid.Column="0"
+                                           Name="TXT_Title"
                                            Width="320"
                                            Text="{Binding SongName}"
                                            TextWrapping="Wrap"
@@ -104,7 +107,18 @@
                                            VerticalAlignment="Top"
                                            FontWeight="Bold"
                                            FontSize="20"></TextBlock>
-                            </StackPanel>
+                                
+                                <Border Grid.Column="1" 
+                                        CornerRadius="7" 
+                                        Background="{DynamicResource LightBackgroundBrush}" 
+                                        Width="25" 
+                                        Height="25"
+                                        IsVisible="{Binding AiBadge}">
+                                    <TextBlock Text="Ai" 
+                                               VerticalAlignment="Center" 
+                                               HorizontalAlignment="Center"/>
+                                </Border>
+                            </Grid>
                            
                             <TextBlock Name="TXT_Artists" 
                                        Width="320"
@@ -116,19 +130,31 @@
                                        FontSize="13"></TextBlock>
                         </StackPanel>
                         
-                        <StackPanel Orientation="Horizontal" Spacing="10">
-                             <Border CornerRadius="7" Background="{DynamicResource LightBackgroundBrush}" Width="25" Height="25">
-                                 <TextBlock Text="Ai" 
-                                            VerticalAlignment="Center" 
-                                            HorizontalAlignment="Center"/>
-                             </Border>
-                        </StackPanel>
-                        
-                        <StackPanel Orientation="Horizontal">
-                            <Button Background="Red" 
-                                    CornerRadius="15" 
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center" Spacing="20">
+                            <Button Background="{DynamicResource LightBackgroundBrush}" 
+                                    CornerRadius="20" 
                                     Width="30" 
-                                    Height="30">
+                                    Height="30"
+                                    assists:ShadowAssist.ShadowDepth="Depth2">
+                                <avalonia:MaterialIcon Kind="StepBackward"/>
+                            </Button>
+                            
+                            <Button Background="{DynamicResource LightBackgroundBrush}" 
+                                    CornerRadius="20" 
+                                    Width="35" 
+                                    Height="35"
+                                    assists:ShadowAssist.ShadowDepth="Depth2">
+                                <avalonia:MaterialIcon Kind="Pause"/>
+                            </Button>
+                            
+                            <Button Background="{DynamicResource LightBackgroundBrush}" 
+                                    CornerRadius="20" 
+                                    Width="30" 
+                                    Height="30"
+                                    assists:ShadowAssist.ShadowDepth="Depth2">
+                                <avalonia:MaterialIcon Kind="StepForward"/>
+                            </Button>
                         </StackPanel>
                     </StackPanel>
                 </styles:Card>
@@ -141,12 +167,12 @@
               
               Margin="500,50,5,50">
             
-            <!--
+            
             <custom1:LyricsScroller
                 Name="LRC_Display"
                 FontSize="30"
                 LyricsFontWeight="Bold"
-                ItemMargin="0,0,0,70"/>-->
+                ItemMargin="0,0,0,70"/>
             
             <!--<Panel HorizontalAlignment="Left" 
                    VerticalAlignment="Center"

@@ -39,6 +39,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
         private const int LYRIC_OFFSET = 0;
 
         public event LyricChangedEventHandler LyricChanged;
+        public event LyricsFoundEventHandler LyricsFound;
 
         public LyricHandler(SongHandler songHandler)
         {
@@ -144,6 +145,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                     {
                         song.Lyrics = lyricData;
                         song.State = SongState.HAS_LYRICS_AVAILABLE;
+                        LyricsFoundEvent();
                     }
                     else if (lyricData.LyricReturnCode == LyricReturnCode.FAILED)
                     {
@@ -235,6 +237,12 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
         {
             LyricChangedEventHandler lyricChangedEventHandler = LyricChanged;
             lyricChangedEventHandler?.Invoke(this, lyricChangedEventArgs);
+        }
+        
+        protected virtual void LyricsFoundEvent()
+        {
+            LyricsFoundEventHandler foundEventHandler = LyricsFound;
+            foundEventHandler?.Invoke(this);
         }
 
         public void Dispose()

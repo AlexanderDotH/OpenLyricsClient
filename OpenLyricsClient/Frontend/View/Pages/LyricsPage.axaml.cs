@@ -46,7 +46,7 @@ public partial class LyricsPage : UserControl
 
         this._txtTimeFrom = this.Get<TextBlock>(nameof(TXT_TimeFrom));
         this._txtTimeTo = this.Get<TextBlock>(nameof(TXT_TimeTo));
-        //this._cstmLyricsDisplay = this.Get<LyricsScroller>(nameof(LRC_Display));
+        this._cstmLyricsDisplay = this.Get<LyricsScroller>(nameof(LRC_Display));
         this._presenterGrid = this.Get<Grid>(nameof(GRD_Content));
         this._cardBar = this.Get<Card>(nameof(CRD_Bar));
         

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -37,10 +38,11 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     
     public LyricsPageViewModel()
     {
-        /*Core.INSTANCE.TickHandler += OnTickHandler;
+        Core.INSTANCE.TickHandler += OnTickHandler;
         Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
         Core.INSTANCE.SettingManager.SettingsChanged += SettingManagerOnSettingsChanged;
-        Core.INSTANCE.ArtworkHandler.ArtworkAppliedHandler += ArtworkHandlerOnArtworkAppliedHandler;*/
+        Core.INSTANCE.ArtworkHandler.ArtworkAppliedHandler += ArtworkHandlerOnArtworkAppliedHandler;
+        Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
         
         this._currentSongName = string.Empty;
         this._currentArtists = string.Empty;
@@ -50,6 +52,11 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         this._currentMaxTime = string.Empty;
 
         this._time = 0;
+    }
+
+    private void LyricHandlerOnLyricsFound(object sender)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AiBadge"));
     }
 
     private void ArtworkHandlerOnArtworkAppliedHandler(object sender, ArtworkAppliedEventArgs args)
@@ -95,27 +102,32 @@ public class LyricsPageViewModel : INotifyPropertyChanged
             CurrentMaxTime = song.MaxProgressString;
     }
 
-    /*public string? SongName
+    public string? SongName
     {
         get => Core.INSTANCE?.SongHandler?.CurrentSong?.SongMetadata?.Name!;
-    }*/
+    }
 
     
     
-    public string? SongName
+    /*public string? SongName
     {
-        get => "Never gonna give htfrhtfhfthrfthtfyou up";
+        get => "Never gonna give up";
     }
     
     public string Artists
     {
         get => "Rick Astley";
+    }*/
+
+    public bool AiBadge
+    {
+        get => Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricProvider.SequenceEqual("OpenLyricsClient") == true;
     }
     
-    /*public string Artists
+    public string Artists
     {
         get => Core.INSTANCE?.SongHandler?.CurrentSong?.SongMetadata?.FullArtists!;
-    }*/
+    }
 
     public double Percentage
     {
