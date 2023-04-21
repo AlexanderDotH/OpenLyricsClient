@@ -112,6 +112,36 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             return statistics;
         }
 
+        public async Task UpdatePlayback(EnumPlayback playback)
+        {
+            SpotifyClient spotifyClient = new SpotifyClient(GetAccessToken());
+            Structure.Song.Song song = Core.INSTANCE.SongHandler?.CurrentSong!;
+            
+            switch (playback)
+            {
+                case EnumPlayback.PREVOUS_TRACK:
+                {
+                    await spotifyClient.Player.SkipPrevious();
+                    break;
+                }
+                case EnumPlayback.NEXT_TRACK:
+                {
+                    await spotifyClient.Player.SkipNext();
+                    break;
+                }
+                case EnumPlayback.PAUSE:
+                {
+                    await spotifyClient.Player.PausePlayback();
+                    break;
+                }
+                case EnumPlayback.RESUME:
+                {
+                    await spotifyClient.Player.ResumePlayback();
+                    break;
+                }
+            }
+        }
+        
         public string GetAccessToken()
         {
             // Task.Factory.StartNew(async() =>

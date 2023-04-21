@@ -156,8 +156,12 @@
                                     CornerRadius="20" 
                                     Width="35" 
                                     Height="35"
+                                    Command="{Binding UpdatePlaybackCommand}"
                                     assists:ShadowAssist.ShadowDepth="Depth2">
-                                <avalonia:MaterialIcon Kind="Pause"/>
+                                <Panel>
+                                    <avalonia:MaterialIcon Kind="Pause" IsVisible="{Binding IsSongPlaying}"/>
+                                    <avalonia:MaterialIcon Kind="Resume" IsVisible="{Binding !IsSongPlaying}"/>
+                                </Panel>
                             </Button>
                             
                             <Button Background="{DynamicResource LightBackgroundBrush}" 

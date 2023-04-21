@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -13,10 +14,12 @@ using Avalonia.Threading;
 using DevBase.Async.Task;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
+using OpenLyricsClient.Backend.Handler.Services.Services.Spotify;
 using OpenLyricsClient.Backend.Structure.Artwork;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
+using ReactiveUI;
 
 namespace OpenLyricsClient.Frontend.Models.Pages;
 
@@ -36,8 +39,14 @@ public class LyricsPageViewModel : INotifyPropertyChanged
 
     private string _artwork;
     
+    public ReactiveCommand<Unit, Unit> UpdatePlaybackCommand { get; }
+
+    
     public LyricsPageViewModel()
     {
+        UpdatePlaybackCommand = ReactiveCommand.CreateFromTask(UpdatePlayback);
+
+        
         Core.INSTANCE.TickHandler += OnTickHandler;
         Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
         Core.INSTANCE.SettingManager.SettingsChanged += SettingManagerOnSettingsChanged;
@@ -52,6 +61,21 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         this._currentMaxTime = string.Empty;
 
         this._time = 0;
+    }
+
+    public async Task UpdatePlayback()
+    {
+        Song song = Core.INSTANCE.SongHandler?.CurrentSong!;
+        SpotifyService service = (SpotifyService)Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
+        
+        if (song.Paused)
+        {
+            await service.UpdatePlayback(EnumPlayback.RESUME);
+        }
+        else
+        {
+            await service.UpdatePlayback(EnumPlayback.PAUSE);
+        }
     }
 
     private void LyricHandlerOnLyricsFound(object sender)
@@ -95,6 +119,8 @@ public class LyricsPageViewModel : INotifyPropertyChanged
             this._time = song.Time;
         }
         
+        
+        
         if (!this._currentTime.Equals(song.ProgressString))
             CurrentTime = song.ProgressString;
          
@@ -107,7 +133,15 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         get => Core.INSTANCE?.SongHandler?.CurrentSong?.SongMetadata?.Name!;
     }
 
+    public bool IsSongPlaying
+    {
+        get => Core.INSTANCE.SongHandler?.CurrentSong?.Paused! == false;
+    }
     
+    public bool IsSongPaused
+    {
+        get => Core.INSTANCE.SongHandler?.CurrentSong?.Paused! == true;
+    }
     
     /*public string? SongName
     {

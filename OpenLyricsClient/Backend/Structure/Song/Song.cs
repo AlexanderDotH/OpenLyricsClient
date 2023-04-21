@@ -15,6 +15,7 @@ namespace OpenLyricsClient.Backend.Structure.Song
         private SongState _state;
         private Object _trackObject;
         private DataOrigin _dataOrigin;
+        private EnumPlayback _playback;
 
         private bool _firstUpdate;
 
@@ -109,6 +110,12 @@ namespace OpenLyricsClient.Backend.Structure.Song
             set => this._artwork = value;
         }
 
+        public EnumPlayback Playback
+        {
+            get => _playback;
+            set => _playback = value;
+        }
+
         public long Time
         {
             get => _time;
@@ -145,7 +152,10 @@ namespace OpenLyricsClient.Backend.Structure.Song
         public bool Paused
         {
             get => _paused;
-            set => _paused = value;
+            set
+            {
+                _paused = value;
+            }
         }
 
         public long TimeStamp
