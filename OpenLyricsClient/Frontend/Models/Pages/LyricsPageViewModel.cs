@@ -15,6 +15,7 @@ using DevBase.Async.Task;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Handler.Services.Services.Spotify;
+using OpenLyricsClient.Backend.Handler.Song.SongProvider;
 using OpenLyricsClient.Backend.Structure.Artwork;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Song;
@@ -40,18 +41,20 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     private string _artwork;
     
     public ReactiveCommand<Unit, Unit> UpdatePlaybackCommand { get; }
-
+    public ReactiveCommand<Unit, Unit> PreviousSongCommand { get; }
+    public ReactiveCommand<Unit, Unit> NextSongCommand { get; }
     
     public LyricsPageViewModel()
     {
         UpdatePlaybackCommand = ReactiveCommand.CreateFromTask(UpdatePlayback);
+        PreviousSongCommand = ReactiveCommand.CreateFromTask(()=>SkipSong(EnumPlayback.PREVOUS_TRACK));
+        NextSongCommand = ReactiveCommand.CreateFromTask(()=>SkipSong(EnumPlayback.NEXT_TRACK));
 
-        
-        Core.INSTANCE.TickHandler += OnTickHandler;
         Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
         Core.INSTANCE.SettingManager.SettingsChanged += SettingManagerOnSettingsChanged;
         Core.INSTANCE.ArtworkHandler.ArtworkAppliedHandler += ArtworkHandlerOnArtworkAppliedHandler;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
+        Core.INSTANCE.SongHandler.SongUpdated += SongHandlerOnSongUpdated;
         
         this._currentSongName = string.Empty;
         this._currentArtists = string.Empty;
@@ -63,69 +66,74 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         this._time = 0;
     }
 
+    private void SongHandlerOnSongUpdated(object sender)
+    {
+        OnPropertyChanged("SongName");
+        OnPropertyChanged("Artists");
+        /*OnPropertyChanged("Album");*/
+        OnPropertyChanged("IsSongPlaying");
+        OnPropertyChanged("CurrentTime");
+        OnPropertyChanged("Percentage");
+        OnPropertyChanged("CurrentMaxTime");
+        OnPropertyChanged("IsPlayerAvailable");
+    }
+
     public async Task UpdatePlayback()
     {
-        Song song = Core.INSTANCE.SongHandler?.CurrentSong!;
-        SpotifyService service = (SpotifyService)Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
+        try
+        {
+            Song song = Core.INSTANCE.SongHandler?.CurrentSong!;
+            SpotifyService service = (SpotifyService)Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
         
-        if (song.Paused)
-        {
-            await service.UpdatePlayback(EnumPlayback.RESUME);
+            if (song.Paused)
+            {
+                await service.UpdatePlayback(EnumPlayback.RESUME);
+            }
+            else
+            {
+                await service.UpdatePlayback(EnumPlayback.PAUSE);
+            }
+
+            await Dispatcher.UIThread.InvokeAsync(() => OnPropertyChanged("IsSongPlaying"));
         }
-        else
+        catch (Exception e) { }
+    }
+
+    public async Task SkipSong(EnumPlayback playback)
+    {
+        try
         {
-            await service.UpdatePlayback(EnumPlayback.PAUSE);
+            SpotifyService service = (SpotifyService)Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
+            await service.UpdatePlayback(playback);
         }
+        catch (Exception e) { }
     }
 
     private void LyricHandlerOnLyricsFound(object sender)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AiBadge"));
+        OnPropertyChanged("AiBadge");
     }
 
     private void ArtworkHandlerOnArtworkAppliedHandler(object sender, ArtworkAppliedEventArgs args)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Artwork"));
+        OnPropertyChanged("Artwork");
     }
 
     private void SettingManagerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UiBackground"));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UiForeground"));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedColor"));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UnSelectedColor"));
+        OnPropertyChanged("UiBackground");
+        OnPropertyChanged("UiForeground");
+        OnPropertyChanged("SelectedColor");
+        OnPropertyChanged("UnSelectedColor");
     }
 
     private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SongName"));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Artists"));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Album"));
+        OnPropertyChanged("SongName");
+        OnPropertyChanged("Artists");
+        OnPropertyChanged("Album");
 
         this._time = 0;
-    }
-
-    // RECODE NEEDED My eyes are bleeding
-    private void OnTickHandler(object sender)
-    {
-        Song song = Core.INSTANCE.SongHandler.CurrentSong;
-        
-        if (!DataValidator.ValidateData(song))
-            return;
-
-        if (!this._time.Equals(song.Time))
-        {
-            Percentage = song.GetPercentage();
-            this._time = song.Time;
-        }
-        
-        
-        
-        if (!this._currentTime.Equals(song.ProgressString))
-            CurrentTime = song.ProgressString;
-         
-        if (!this._currentMaxTime.Equals(song.MaxProgressString))
-            CurrentMaxTime = song.MaxProgressString;
     }
 
     public string? SongName
@@ -136,6 +144,11 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     public bool IsSongPlaying
     {
         get => Core.INSTANCE.SongHandler?.CurrentSong?.Paused! == false;
+    }
+
+    public bool IsPlayerAvailable
+    {
+        get => Core.INSTANCE.SongHandler?.SongProvider! == EnumSongProvider.SPOTIFY;
     }
     
     public bool IsSongPaused
@@ -165,11 +178,16 @@ public class LyricsPageViewModel : INotifyPropertyChanged
 
     public double Percentage
     {
-        get => this._currentPercentage;
-        set
+        get
         {
-            this._currentPercentage = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Percentage"));
+            Song song = Core.INSTANCE.SongHandler.CurrentSong;
+
+            if (DataValidator.ValidateData(song))
+            {
+                return song.GetPercentage();
+            }
+
+            return 0;
         }
     }
 
@@ -185,12 +203,7 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     
     public string CurrentMaxTime
     {
-        get => this._currentMaxTime;
-        set
-        {
-            this._currentMaxTime = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentMaxTime"));
-        }
+        get => Core.INSTANCE.SongHandler?.CurrentSong?.MaxProgressString!;
     }
     
     public string Artwork

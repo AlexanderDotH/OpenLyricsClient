@@ -80,7 +80,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             try
             {
                 CurrentlyPlayingContext currentlyPlayingContext = await new SpotifyClient(GetAccessToken()).Player.GetCurrentPlayback();
-                return DataValidator.ValidateData(currentlyPlayingContext) && currentlyPlayingContext.IsPlaying;
+                return DataValidator.ValidateData(currentlyPlayingContext);
             }
             catch (Exception e)
             {

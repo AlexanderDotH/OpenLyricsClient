@@ -112,6 +112,11 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
                 if (!this._service.IsConnected())
                     continue;
 
+                if (!DataValidator.ValidateData(this._currentSong))
+                {
+                    await UpdateCurrentPlaybackTrack();
+                }
+                
                 if (DataValidator.ValidateData(this._spotifyClient) && 
                     DataValidator.ValidateData(this._currentSong))
                 {
@@ -126,6 +131,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
                                 SpotifyDataMerger.ValidateUpdateAndMerge(this._currentSong, currentTrack);
                             this._currentSong =
                                 SpotifyDataMerger.ValidateUpdatePlayBack(this._currentSong, currentTrack);
+                            await Core.INSTANCE.SongHandler.SongUpdatedEvent();
                         }
                     }
                     catch (Exception e)

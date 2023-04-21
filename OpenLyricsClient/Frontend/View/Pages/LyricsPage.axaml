@@ -106,7 +106,7 @@
                                            HorizontalAlignment="Left"
                                            VerticalAlignment="Top"
                                            FontWeight="Bold"
-                                           FontSize="20"></TextBlock>
+                                           FontSize="20"/>
                                 
                                 <Border Grid.Column="1" 
                                         CornerRadius="7" 
@@ -143,11 +143,14 @@
                         </StackPanel>
                         
                         <StackPanel Orientation="Horizontal"
-                                    HorizontalAlignment="Center" Spacing="20">
+                                    HorizontalAlignment="Center" 
+                                    IsVisible="{Binding IsPlayerAvailable}"
+                                    Spacing="20">
                             <Button Background="{DynamicResource LightBackgroundBrush}" 
                                     CornerRadius="20" 
                                     Width="30" 
                                     Height="30"
+                                    Command="{Binding PreviousSongCommand}"
                                     assists:ShadowAssist.ShadowDepth="Depth2">
                                 <avalonia:MaterialIcon Kind="StepBackward"/>
                             </Button>
@@ -160,7 +163,7 @@
                                     assists:ShadowAssist.ShadowDepth="Depth2">
                                 <Panel>
                                     <avalonia:MaterialIcon Kind="Pause" IsVisible="{Binding IsSongPlaying}"/>
-                                    <avalonia:MaterialIcon Kind="Resume" IsVisible="{Binding !IsSongPlaying}"/>
+                                    <avalonia:MaterialIcon Kind="Play" IsVisible="{Binding !IsSongPlaying}"/>
                                 </Panel>
                             </Button>
                             
@@ -168,6 +171,7 @@
                                     CornerRadius="20" 
                                     Width="30" 
                                     Height="30"
+                                    Command="{Binding NextSongCommand}"
                                     assists:ShadowAssist.ShadowDepth="Depth2">
                                 <avalonia:MaterialIcon Kind="StepForward"/>
                             </Button>

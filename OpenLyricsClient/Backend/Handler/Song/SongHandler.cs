@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using DevBase.Async.Task;
 using DevBase.Generics;
 using OpenLyricsClient.Backend.Collector.Song;
@@ -34,6 +36,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
         private SongCollector _songCollector;
         
         public event SongChangedEventHandler SongChanged;
+        public event SongUpdatedEventHandler SongUpdated;
 
         public SongHandler()
         {
@@ -156,6 +159,11 @@ namespace OpenLyricsClient.Backend.Handler.Song
             return this._songProviders.FindEntry(enumSongProvider);
         }
 
+        public EnumSongProvider SongProvider
+        {
+            get => this._songProviderChooser.GetSongProvider();
+        }
+
         private Structure.Song.Song GetCurrentSong()
         {
             if (DataValidator.ValidateData(this._songProviderChooser))
@@ -180,6 +188,15 @@ namespace OpenLyricsClient.Backend.Handler.Song
         {
             SongChangedEventHandler songChangedEventHandler = SongChanged;
             songChangedEventHandler?.Invoke(this, songChangedEventArgs);
+        }
+        
+        public async Task SongUpdatedEvent()
+        {
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                SongUpdatedEventHandler songUpdatedEvent = SongUpdated;
+                songUpdatedEvent?.Invoke(this);
+            });
         }
         
         public Structure.Song.Song CurrentSong

@@ -39,6 +39,7 @@
                                         </Grid>
                                                        
                                         <TextBlock VerticalAlignment="Center" 
+                                                   TextWrapping="Wrap"
                                                    Text="{Binding Text}"/>
                                     </StackPanel>
                                 </DataTemplate>

@@ -25,12 +25,8 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
         public static Structure.Song.Song UpdatePlayBack(Structure.Song.Song song, CurrentlyPlayingContext playbackContext)
         {
             song.Paused = !playbackContext.IsPlaying;
-            if (!song.Paused)
-            {
-                song.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                song.ProgressMs = playbackContext.ProgressMs;
-            }
-
+            song.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            song.ProgressMs = playbackContext.ProgressMs;
             return song;
         }
 

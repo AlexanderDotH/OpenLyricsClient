@@ -100,7 +100,7 @@ public partial class LyricsPage : UserControl
 
         if (DataValidator.ValidateData(this._lyricsPageViewModel.Artwork))
         {
-            if (e.PropertyName!.Equals("Artwork") &&
+            if (e.PropertyName?.Equals("Artwork") == true &&
                 !this._oldImagePath.Equals(this._lyricsPageViewModel.Artwork))
             {
                 Dispatcher.UIThread.InvokeAsync(() =>

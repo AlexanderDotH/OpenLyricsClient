@@ -211,7 +211,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
     {
         get
         {
-            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+            if (Core.INSTANCE.SettingManager.Settings?.DisplayPreferences?.ArtworkBackground == true)
                 return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
             
             return App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;
