@@ -71,7 +71,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl
                     return null;
 
                 TextylLyricReponse[] reponse =
-                    new JsonDeserializer<TextylLyricReponse[]>().Deserialize(content);
+                    new JsonDeserializer().Deserialize<TextylLyricReponse[]>(content);
 
                 if (reponse != null)
                     return reponse;

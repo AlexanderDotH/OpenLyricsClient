@@ -1,9 +1,10 @@
 ﻿using DevBase.Generics;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace OpenLyricsClient.Backend.Utils
 {
-    public class JsonDeserializer<T>
+    public class JsonDeserializer
     {
         private JsonSerializerSettings _serializerSettings;
         private AList<string> _errorList;
@@ -23,11 +24,19 @@ namespace OpenLyricsClient.Backend.Utils
             };
         }
 
-        public T Deserialize(string input)
+        public T Deserialize<T>(string input)
         {
             return JsonConvert.DeserializeObject<T>(input, this._serializerSettings);
         }
 
+        public JObject Serialize(object structure)
+        {
+            string serialized = JsonConvert.SerializeObject(structure, this._serializerSettings);
+            return JObject.Parse(serialized);
+        }
+        
+        public JObject ToJObject<T>(T data) => JObject.FromObject(data);
+        
         public AList<string> ErrorList
         {
             get => _errorList;

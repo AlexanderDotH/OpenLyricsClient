@@ -14,6 +14,7 @@ using OpenLyricsClient.Backend.Handler.Services;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Helper;
 using OpenLyricsClient.Backend.Settings;
+using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Structure.Enum;
 using TaskRegister = OpenLyricsClient.Backend.Overwrite.TaskRegister;
 
@@ -33,6 +34,7 @@ namespace OpenLyricsClient.Backend
         private Debugger<Core> _debugger;
 
         private SettingManager _settingManager;
+        private SettingsHandler _settingsHandler;
 
         private ServiceHandler _serviceHandler;
         private SongHandler _songHandler;
@@ -83,7 +85,11 @@ namespace OpenLyricsClient.Backend
 
             this._settingManager = new SettingManager(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + 
                                                       string.Format("{0}OpenLyricsClient{0}", System.IO.Path.DirectorySeparatorChar));
-
+            
+            this._settingsHandler = new SettingsHandler(
+                System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) +
+                string.Format("{0}OpenLyricsClient{0}", System.IO.Path.DirectorySeparatorChar));
+            
             this._cacheManager = new CacheManager(10, TimeSpan.FromMinutes(5).Milliseconds);
 
             this._tokenCollector = new TokenCollector();

@@ -172,7 +172,7 @@ namespace OpenLyricsClient.Backend.Collector.Song.Providers.NetEase
 
             if (responseData.StatusCode == HttpStatusCode.OK)
             {
-                return new JsonDeserializer<NetEaseSearchResponse>().Deserialize(responseData.GetContentAsString());
+                return new JsonDeserializer().Deserialize<NetEaseSearchResponse>(responseData.GetContentAsString());
             }
 
             return null;

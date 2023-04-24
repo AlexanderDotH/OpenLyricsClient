@@ -60,7 +60,7 @@ namespace OpenLyricsClient.Backend.Cache
                 string id = ifo.FileInfo.Name.Replace(CACHE_EXTENSION, string.Empty);
 
                 JsonCacheData jsonLyricData =
-                    new JsonDeserializer<JsonCacheData>().Deserialize(FileUtils.ReadFileString(ifo.FileInfo));
+                    new JsonDeserializer().Deserialize<JsonCacheData>(FileUtils.ReadFileString(ifo.FileInfo));
 
                 if (this._cache.Length + 1 > this._maxCapacity)
                     continue;
@@ -224,7 +224,7 @@ namespace OpenLyricsClient.Backend.Cache
                     return null;
                 
                 JsonCacheData jsonLyricData =
-                    new JsonDeserializer<JsonCacheData>().Deserialize(data);
+                    new JsonDeserializer().Deserialize<JsonCacheData>(data);
                 
                 GCHandle.Alloc(data).Free();
                 
