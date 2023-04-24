@@ -157,6 +157,11 @@ namespace OpenLyricsClient.Backend
             get => _settingManager;
         }
 
+        public SettingsHandler SettingsHandler
+        {
+            get => this._settingsHandler;
+        }
+
         public ArtworkHandler ArtworkHandler
         {
             get => _artworkHandler;

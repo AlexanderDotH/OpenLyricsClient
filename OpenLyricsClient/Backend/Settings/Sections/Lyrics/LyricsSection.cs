@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using DevBase.Api.Serializer;
+using DevBase.Generics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenLyricsClient.Backend.Structure.Enum;
@@ -21,9 +23,9 @@ public class LyricsSection : ISettingSection
     
     public async Task WriteToDisk()
     {
-        await using FileStream stream = this._file.OpenWrite();
+        await using FileStream stream = this._file.Open(FileMode.Create, FileAccess.Write);;
         await using StreamWriter writer = new StreamWriter(stream);
-
+        
         await writer.WriteAsync(this._data?.ToString());
     }
 
@@ -49,7 +51,7 @@ public class LyricsSection : ISettingSection
 
     public T GetValue<T>(string field)
     {
-        return this._data[field].Value<T>();
+        return (T)this._data[field].ToObject<T>();
     }
 
     public async Task SetValue<T>(string field, T value)
@@ -62,7 +64,9 @@ public class LyricsSection : ISettingSection
     {
         Structure structure = new Structure
         {
-            Selection = EnumLyricsDisplayMode.KARAOKE
+            Selection = EnumLyricsDisplayMode.KARAOKE,
+            ArtworkBackground = false,
+            LyricsBlur = false
         };
         
         return new JsonDeserializer().Serialize(structure);

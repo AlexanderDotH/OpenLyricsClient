@@ -4,6 +4,7 @@ using System.Reactive;
 using System.Runtime.CompilerServices;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Romanization;
+using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Structure.Enum;
 using ReactiveUI;
 
@@ -29,50 +30,46 @@ public class SettingsLyricsViewModel : ViewModelBase, INotifyPropertyChanged
 
     private void SwitchToKaraoke()
     {
-        Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode = EnumLyricsDisplayMode.KARAOKE;
-        Core.INSTANCE.SettingManager.WriteSettings();
+        Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?
+            .SetValue("Selection Mode", EnumLyricsDisplayMode.KARAOKE);
     }
     
     private void SwitchToFade()
     {
-        Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode = EnumLyricsDisplayMode.FADE;
-        Core.INSTANCE.SettingManager.WriteSettings();
+        Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?
+            .SetValue("Selection Mode", EnumLyricsDisplayMode.FADE);
     }
     
     private void ToggleArtworkBackground()
     {
-        Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground =
-            !Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground;
-
-        Core.INSTANCE.SettingManager.WriteSettings();
+        Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?
+            .SetValue("Artwork Background", !UseArtworkBackground);
     }
     
     private void ToggleLyricsBlur()
     {
-        Core.INSTANCE.SettingManager.Settings.DisplayPreferences.LyricsBlur =
-            !Core.INSTANCE.SettingManager.Settings.DisplayPreferences.LyricsBlur;
-
-        Core.INSTANCE.SettingManager.WriteSettings();
+        Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?
+            .SetValue("Blur Lyrics", !IsBlurred);
     }
 
     public bool IsKaraoke
     {
-        get => Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode == EnumLyricsDisplayMode.KARAOKE;
+        get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?.GetValue<EnumLyricsDisplayMode>("Selection Mode") == EnumLyricsDisplayMode.KARAOKE;
     }
     
     public bool IsFade
     {
-        get => Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode == EnumLyricsDisplayMode.FADE;
+        get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?.GetValue<EnumLyricsDisplayMode>("Selection Mode") == EnumLyricsDisplayMode.FADE;
     }
     
     public bool UseArtworkBackground
     {
-        get => Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground;
+        get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?.GetValue<bool>("Artwork Background") == true;
     }
     
     public bool IsBlurred
     {
-        get => Core.INSTANCE.SettingManager.Settings.DisplayPreferences.LyricsBlur;
+        get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?.GetValue<bool>("Blur Lyrics") == true;
     }
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

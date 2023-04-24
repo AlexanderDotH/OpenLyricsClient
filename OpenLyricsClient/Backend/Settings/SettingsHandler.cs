@@ -15,7 +15,7 @@ public class SettingsHandler
         this._sections = new AList<ISettingSection>();
 
         this._sections.Add(new LyricsSection(string.Format("{0}{1}", 
-            workingDirectory, "lyrics-preferences.json")));
+            workingDirectory, "Lyrics Preferences.json")));
 
         Task.Factory.StartNew(Initialize).GetAwaiter().GetResult();
     }
