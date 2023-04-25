@@ -16,6 +16,7 @@ using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Helper;
+using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
@@ -57,7 +58,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             Core.INSTANCE.TickHandler += OnLyricsSyncTickHandler;
             Core.INSTANCE.TickHandler += OnLyricsSyncPercentageTickHandler;
 
-            Core.INSTANCE.SettingManager.SettingsChanged += (sender, args) =>
+            Core.INSTANCE.SettingsHandler.SettingsChanged += (sender, args) =>
             {
                 this.CurrentLyricParts = null;
                 
@@ -211,7 +212,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
     {
         get
         {
-            if (Core.INSTANCE.SettingManager.Settings?.DisplayPreferences?.ArtworkBackground == true)
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?.GetValue<bool>("Artwork Background") == true)
                 return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
             
             return App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;

@@ -10,6 +10,7 @@ using Avalonia.Rendering;
 using Avalonia.Threading;
 using DynamicData;
 using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
@@ -64,7 +65,7 @@ public partial class ScrollPreviewSubPage : UserControl
 
         this._currentSecond = 0;
         this._currentPercentage = 0;
-        this.LyricDisplayMode = Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode;
+        this.LyricDisplayMode = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<EnumLyricsDisplayMode>("Selection Mode");
         
         this._uiThreadRenderTimer = new UiThreadRenderTimer(60);
         this._uiThreadRenderTimer.Tick += delegate(TimeSpan span)

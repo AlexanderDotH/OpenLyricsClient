@@ -4,16 +4,18 @@ namespace OpenLyricsClient.Backend.Events.EventArgs;
 
 public class SettingsChangedEventArgs : System.EventArgs
 {
-    private Settings.Settings _settings;
+    private Object _section;
+    private string _field;
 
-    public SettingsChangedEventArgs(Settings.Settings settings)
+    public Object Section
     {
-        _settings = settings;
+        get => _section;
+        set => _section = value;
     }
 
-    public Settings.Settings Settings
+    public string Field
     {
-        get => _settings;
-        set => _settings = value;
+        get => _field;
+        set => _field = value;
     }
 }

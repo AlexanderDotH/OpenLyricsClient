@@ -8,6 +8,7 @@ using DevBase.Async.Task;
 using DevBase.Generics;
 using Microsoft.Extensions.Configuration;
 using OpenLyricsClient.Backend.Debugger;
+using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Other;
 using OpenLyricsClient.Backend.Utils;
@@ -47,26 +48,25 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
                 await this._refreshTokenSuspensionToken.WaitForRelease();
                 await Task.Delay(1000);
 
-                if (Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected)
-                {
-                    if (Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken != null)
-                    {
-                        long now = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                        long settings = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime;
+                if (IsConnected())
+                    continue;
+                
+                long now = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                long settings = Core.INSTANCE.SettingsHandler.Settings<SpotifySection>()
+                    .GetValue<long>("SpotifyExpireTime");
                         
-                        if (now > settings)
-                        {
-                            await RefreshTokenRequest();
-                            this._debugger.Write("Refreshed Spotify Token", DebugType.DEBUG);
-                        }
-                    }
+                if (now > settings)
+                {
+                    await RefreshTokenRequest();
+                    this._debugger.Write("Refreshed Spotify Token", DebugType.DEBUG);
                 }
             }
         }
 
         public bool IsConnected()
         {
-            return Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected && Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken != null;
+            return Core.INSTANCE.SettingsHandler.Settings<SpotifySection>().GetValue<bool>("IsSpotifyConnected")
+                   && Core.INSTANCE.SettingsHandler.Settings<SpotifySection>().GetValue<string>("AccessToken") != null;
         }
 
         public async Task<bool> TestConnection()
@@ -74,7 +74,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             if (!IsConnected())
                 return false;
 
-            if (!DataValidator.ValidateData(Core.INSTANCE.SettingManager.Settings.SpotifyAccess))
+            if (!DataValidator.ValidateData(GetAccessToken()))
                 return false;
 
             try
@@ -149,7 +149,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             //     await RefreshTokenRequest();
             //
             // }).Wait(Core.INSTANCE.CancellationTokenSource.Token);
-            return Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken;
+            return Core.INSTANCE.SettingsHandler.Settings<SpotifySection>().GetValue<string>("AccessToken");
         }
 
         private async Task RefreshTokenRequest()
@@ -160,15 +160,22 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
                     new DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient();
 
                 JsonOpenLyricsClientAccess access =
-                        await api.GetAccessToken(Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken);
-
+                        await api.GetAccessToken(Core.INSTANCE.SettingsHandler.Settings<SpotifySection>().GetValue<string>("RefreshToken"));
+                
                 SpotifyStatistics statistics = await GetStatistics(access.AccessToken);
+               
+                Core.INSTANCE.SettingsHandler.Settings<SpotifySection>()
+                    .SetValue("Statistics", statistics);
+            
+                Core.INSTANCE.SettingsHandler.Settings<SpotifySection>()
+                    .SetValue("AccessToken", access.AccessToken);
+            
+                Core.INSTANCE.SettingsHandler.Settings<SpotifySection>()
+                    .SetValue("SpotifyExpireTime", DateTimeOffset.Now.AddHours(1).ToUnixTimeMilliseconds());
 
-                Core.INSTANCE.SettingManager.Settings.SpotifyAccess.Statistics = statistics;
-                Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken = access.AccessToken;
-                Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime = 
-                    DateTimeOffset.Now.AddHours(1).ToUnixTimeMilliseconds();
-                Core.INSTANCE.SettingManager.WriteSettings();
+                await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(SpotifySection), "Statistics");
+                await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(SpotifySection), "AccessToken");
+                await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(SpotifySection), "SpotifyExpireTime");
             }
             catch (Exception e)
             {
@@ -208,52 +215,37 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             if (!DataValidator.ValidateData(token))
                 return;
 
-            string t = token.RefreshToken;
+            String t = token.RefreshToken;
             
             if (token.RefreshToken.EndsWith("&"))
                 t = token.RefreshToken.Substring(0, token.RefreshToken.Length - 1);
 
             SpotifyClient client = new SpotifyClient(token.AccessToken);
+
+            Core.INSTANCE.SettingsHandler.Settings<SpotifySection>()
+                .SetValue("UserData", await client.UserProfile.Current());
             
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.UserData = await client.UserProfile.Current();
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.Statistics =
-                await this.GetStatistics(token.AccessToken);
-
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken = token.AccessToken;
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken = t;
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.SpotifyExpireTime =
-                DateTimeOffset.Now.AddHours(1).ToUnixTimeMilliseconds();
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected = true;
-            Core.INSTANCE.SettingManager.WriteSettings();
+            Core.INSTANCE.SettingsHandler.Settings<SpotifySection>()
+                .SetValue("Statistics", await this.GetStatistics(token.AccessToken));
             
-             /*
-             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-             {
-                 ProcessStartInfo processStartInfo = new ProcessStartInfo(url);
-                 processStartInfo.UseShellExecute = true;
-                 Process.Start(processStartInfo);
-             }
+            Core.INSTANCE.SettingsHandler.Settings<SpotifySection>()
+                .SetValue("AccessToken", token.AccessToken);
+            
+            Core.INSTANCE.SettingsHandler.Settings<SpotifySection>()
+                .SetValue("RefreshToken", t);
+            
+            Core.INSTANCE.SettingsHandler.Settings<SpotifySection>()
+                .SetValue("SpotifyExpireTime", DateTimeOffset.Now.AddHours(1).ToUnixTimeMilliseconds());
 
-             Listener.Listener l = new Listener.Listener("http://localhost:8080/", "/callback", "code");
+            Core.INSTANCE.SettingsHandler.Settings<SpotifySection>()
+                .SetValue<Boolean>("IsSpotifyConnected", true);
 
-             string token = string.Empty;
-             bool running = false;
-             while (!l.Finished && !running)
-             {
-                 if (l.Response != null)
-                 {
-                     token = l.Response;
-                     running = true;
-                 }
-             }
-             
-
-             /*BearerAccessRefreshToken bearerAccessRefresh = await _userAccountsService.RequestAccessRefreshToken(token);
-
-             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.RefreshToken = bearerAccessRefresh.RefreshToken;
-             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.BearerAccess = bearerAccessRefresh;
-             Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected = true;
-             Core.INSTANCE.SettingManager.WriteSettings();*/
+            await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(SpotifySection), "UserData");
+            await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(SpotifySection), "Statistics");
+            await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(SpotifySection), "AccessToken");
+            await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(SpotifySection), "RefreshToken");
+            await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(SpotifySection), "SpotifyExpireTime");
+            await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(SpotifySection), "IsSpotifyConnected");
         }
 
         string IService.ServiceName()

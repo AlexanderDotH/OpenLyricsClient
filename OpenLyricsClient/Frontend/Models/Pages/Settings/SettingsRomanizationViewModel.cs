@@ -26,7 +26,7 @@ public class SettingsRomanizationViewModel : ViewModelBase, INotifyPropertyChang
     
     private void CheckOrUncheckAndWrite(RomanizeSelection selection)
     {
-        if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(selection))
+        /*if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(selection))
         {
             Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Remove(selection);
         }
@@ -35,11 +35,11 @@ public class SettingsRomanizationViewModel : ViewModelBase, INotifyPropertyChang
             Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Add(selection);
         }
         
-        Core.INSTANCE.SettingManager.WriteSettings();
+        Core.INSTANCE.SettingManager.WriteSettings();*/
     }
 
     private bool IsAvailable(RomanizeSelection selection) =>
-        Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(selection);
+        true;
     
     private void Japanese()
     {

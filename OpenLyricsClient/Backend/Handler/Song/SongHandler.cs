@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using DevBase.Async.Task;
@@ -13,7 +12,6 @@ using OpenLyricsClient.Backend.Handler.Artwork;
 using OpenLyricsClient.Backend.Handler.Lyrics;
 using OpenLyricsClient.Backend.Handler.Song.SongProvider;
 using OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify;
-using OpenLyricsClient.Backend.Handler.Song.SongProvider.Tidal;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;

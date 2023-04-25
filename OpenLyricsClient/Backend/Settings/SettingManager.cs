@@ -27,7 +27,7 @@ namespace OpenLyricsClient.Backend.Settings
 
         private const string SETTING_FILE_NAME = "settings.json";
         
-        public event SettingsChangedEventHandler SettingsChanged;
+        //public event SettingsChangedEventHandler SettingsChanged;
         
         public SettingManager(string workingFolder)
         {
@@ -153,9 +153,6 @@ namespace OpenLyricsClient.Backend.Settings
             string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
 
             File.WriteAllText(this._settingsFilePath.FileInfo.FullName, json);
-            
-            if (fireEvent)
-                SettingsChangedEvent(new SettingsChangedEventArgs(settings));
         }
         
         public void WriteSettings(bool fireEvent = true)
@@ -182,21 +179,17 @@ namespace OpenLyricsClient.Backend.Settings
             return JsonConvert.DeserializeObject<Settings>(content);
         }
         
-        public Settings Settings
+        /*public Settings Settings
         {
             get => _settings;
             set => _settings = value;
-        }
+        }*/
 
         public string WorkingDirectory
         {
             get => _workingDirectory;
         }
         
-        protected virtual void SettingsChangedEvent(SettingsChangedEventArgs settingsChangedEventArgs)
-        {
-            SettingsChangedEventHandler settingsChangedEventHandler = SettingsChanged;
-            settingsChangedEventHandler?.Invoke(this, settingsChangedEventArgs);
-        }
+        
     }
 }

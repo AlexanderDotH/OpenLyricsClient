@@ -30,8 +30,6 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             this._debugger = new Debugger<SpotifySongProvider>(this);
             this._disposed = false;
 
-            this._spotifyClient = new SpotifyClient(Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken);
-
             this._service = Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
 
             Core.INSTANCE.TaskRegister.Register(
@@ -174,14 +172,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
 
         private SpotifyClient GetPlayerApi()
         {
-            if (this._accessToken != Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken)
-            {
-                this._spotifyClient =
-                    new SpotifyClient(Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken);
-                this._accessToken = Core.INSTANCE.SettingManager.Settings.SpotifyAccess.AccessToken;
-            }
-
-            return this._spotifyClient;
+            return new SpotifyClient(Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify").GetAccessToken());
         }
 
         public void Dispose()

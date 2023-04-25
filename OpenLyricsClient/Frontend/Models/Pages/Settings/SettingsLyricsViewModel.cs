@@ -32,24 +32,28 @@ public class SettingsLyricsViewModel : ViewModelBase, INotifyPropertyChanged
     {
         Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?
             .SetValue("Selection Mode", EnumLyricsDisplayMode.KARAOKE);
+        Core.INSTANCE.SettingsHandler.TriggerEvent(this, "Selection Mode");
     }
     
     private void SwitchToFade()
     {
         Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?
             .SetValue("Selection Mode", EnumLyricsDisplayMode.FADE);
+        Core.INSTANCE.SettingsHandler.TriggerEvent(this, "Selection Mode");
     }
     
     private void ToggleArtworkBackground()
     {
         Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?
             .SetValue("Artwork Background", !UseArtworkBackground);
+        Core.INSTANCE.SettingsHandler.TriggerEvent(this, "Artwork Background");
     }
     
     private void ToggleLyricsBlur()
     {
         Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?
             .SetValue("Blur Lyrics", !IsBlurred);
+        Core.INSTANCE.SettingsHandler.TriggerEvent(this, "Blur Lyrics");
     }
 
     public bool IsKaraoke

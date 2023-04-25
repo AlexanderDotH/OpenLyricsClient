@@ -4,7 +4,6 @@ using DevBase.Generics;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Services.Services;
 using OpenLyricsClient.Backend.Handler.Services.Services.Spotify;
-using OpenLyricsClient.Backend.Handler.Services.Services.Tidal;
 using OpenLyricsClient.Backend.Utils;
 
 namespace OpenLyricsClient.Backend.Handler.Services

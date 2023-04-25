@@ -11,6 +11,8 @@ using Avalonia.Data;
 using Avalonia.Media;
 using Avalonia.Threading;
 using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
+using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
@@ -83,7 +85,7 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
         this._ignoreEvents = false;
 
         this.BlurSigma = 0;
-        this.LyricDisplayMode = Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode;
+        this.LyricDisplayMode = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<EnumLyricsDisplayMode>("Selection Mode");
         
         Core.INSTANCE.SongHandler.SongChanged += (s, args) =>
         {
@@ -117,7 +119,7 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
             });
         };
 
-        Core.INSTANCE.SettingManager.SettingsChanged += (sender, args) =>
+        Core.INSTANCE.SettingsHandler.SettingsChanged += (sender, args) =>
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedLineBrush"));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UnSelectedLineBrush"));
@@ -313,7 +315,7 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
             if (this._ignoreEvents)
                 return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
             
-            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
                 return App.Current.FindResource("SelectedLineFontColorBrush") as SolidColorBrush;
             
             return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
@@ -327,7 +329,7 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
             if (this._ignoreEvents)
                 return SolidColorBrush.Parse("#646464");
             
-            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
                 return App.Current.FindResource("UnSelectedLineFontColorBrush") as SolidColorBrush;
             
             return SolidColorBrush.Parse("#646464");
@@ -357,7 +359,10 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
         this._greyBlock.Foreground = this.UnSelectedLineBrush;
         this._presenterBlock.Foreground = this.SelectedLineBrush;
 
-        if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode == EnumLyricsDisplayMode.FADE && !this._ignoreEvents ||
+        EnumLyricsDisplayMode displayMode = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()
+            .GetValue<EnumLyricsDisplayMode>("Selection Mode");
+        
+        if (displayMode == EnumLyricsDisplayMode.FADE && !this._ignoreEvents ||
             LyricDisplayMode == EnumLyricsDisplayMode.FADE && this._ignoreEvents)
         {
             this._presenterBlock.Foreground = this.UnSelectedLineBrush;
@@ -387,14 +392,13 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
                 this._presenterBlock.Foreground = new SolidColorBrush(newColor);
             }
         }
-        else if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode == EnumLyricsDisplayMode.KARAOKE && !this._ignoreEvents ||
+        else if (displayMode == EnumLyricsDisplayMode.KARAOKE && !this._ignoreEvents ||
                  LyricDisplayMode == EnumLyricsDisplayMode.KARAOKE && this._ignoreEvents)
         {
-            
             this._greyBlock.Foreground = this.UnSelectedLineBrush;
             this._presenterBlock.Foreground = this.SelectedLineBrush;
 
-            this._border.Opacity = Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground ? 0.1 : 1.0;
+            this._border.Opacity = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background") ? 0.1 : 1.0;
             
             this._viewbox.IsVisible = true;
             this._presenterBlock.MaxWidth = this._greyBlock.TextLayout.Size.Width;

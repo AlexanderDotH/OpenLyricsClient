@@ -37,7 +37,7 @@ namespace OpenLyricsClient.Backend.Romanization
             //if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Count == 0)
             //    return text;
 
-            if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection.JAPANESE_TO_ROMANJI) && DataValidator.ValidateData(this._kawazuConverter))
+            /*if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection.JAPANESE_TO_ROMANJI) && DataValidator.ValidateData(this._kawazuConverter))
             {
                 if (Utilities.HasJapanese(text))
                 {
@@ -62,6 +62,7 @@ namespace OpenLyricsClient.Backend.Romanization
                     return this._russiaConverter.Process(text);
                 }
             }
+            */
 
             return text;
         }

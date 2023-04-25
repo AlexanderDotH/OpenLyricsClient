@@ -68,7 +68,6 @@
         </Border>
         
         <Grid Name="GRD_Info"
-              Background="{DynamicResource PrimaryBackgroundBrush}"
               HorizontalAlignment="Left"
               Width="500">
             

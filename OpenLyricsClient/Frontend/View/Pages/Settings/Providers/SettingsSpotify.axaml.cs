@@ -15,6 +15,9 @@ using DevBase.Web;
 using MusixmatchClientLib.Web.ResponseData;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
+using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
+using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
+using OpenLyricsClient.Backend.Structure.Other;
 using OpenLyricsClient.Frontend.Models.Elements;
 using OpenLyricsClient.Frontend.Structure;
 using SpotifyAPI.Web;
@@ -61,7 +64,7 @@ public partial class SettingsSpotify : UserControl
         border.BorderBrush = primaryBackColor;
         border.CornerRadius = new CornerRadius(8);
 
-        Core.INSTANCE.SettingManager.SettingsChanged += SettingManagerOnSettingsChanged;
+        Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
         
         //image.Source = new Bitmap("C:\\Users\\alexa\\Desktop\\ab6775700000ee85216a8ba62f36357fee22d1d5.jpg");
         ProfileImageUpdate();
@@ -74,7 +77,7 @@ public partial class SettingsSpotify : UserControl
         this._topTracks = this.Get<AvalonPresenterList>(nameof(LST_TopTracks));
     }
 
-    private void SettingManagerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
+    private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
     {
         ProfileImageUpdate();
         LoadStats();
@@ -85,7 +88,7 @@ public partial class SettingsSpotify : UserControl
         Task.Factory.StartNew(async() =>
         {
             Request request =
-                new Request(Core.INSTANCE?.SettingManager?.Settings?.SpotifyAccess?.UserData?.Images[0]?.Url!);
+                new Request(Core.INSTANCE?.SettingsHandler?.Settings<SpotifySection>()?.GetValue<PrivateUser>("UserData")?.Images[0]?.Url!);
             ResponseData responseData = await request.GetResponseAsync();
                 
             MemoryStream ms = new MemoryStream(responseData.Content);
@@ -98,7 +101,7 @@ public partial class SettingsSpotify : UserControl
     {
         Task.Factory.StartNew(async () =>
         {
-            SimpleArtist[] artists = Core.INSTANCE?.SettingManager?.Settings?.SpotifyAccess?.Statistics?.TopArtists!;
+            SimpleArtist[] artists = Core.INSTANCE?.SettingsHandler.Settings<SpotifySection>()?.GetValue<SpotifyStatistics>("Statistics").TopArtists;
 
             AList<AvalonPresenterElement> elements = new AList<AvalonPresenterElement>();
 
@@ -125,7 +128,7 @@ public partial class SettingsSpotify : UserControl
         
         Task.Factory.StartNew(async () =>
         {
-            SimpleTrack[] tracks = Core.INSTANCE?.SettingManager?.Settings?.SpotifyAccess?.Statistics?.TopTracks!;
+            SimpleTrack[] tracks = Core.INSTANCE?.SettingsHandler.Settings<SpotifySection>()?.GetValue<SpotifyStatistics>("Statistics").TopTracks;
 
             AList<AvalonPresenterElement> elements = new AList<AvalonPresenterElement>();
 

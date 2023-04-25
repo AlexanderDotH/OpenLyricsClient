@@ -34,7 +34,9 @@ namespace OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch
         {
             bool settingsChanged = false;
 
-            try
+            return;
+            
+            /*try
             {
                 if (!DataValidator.ValidateData(Core.INSTANCE.SettingManager.Settings.MusixMatchToken))
                     return;
@@ -75,12 +77,12 @@ namespace OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch
             }
             
             if (settingsChanged)
-                Core.INSTANCE.SettingManager.WriteSettings(false);
+                Core.INSTANCE.SettingManager.WriteSettings(false);*/
         }
         
         public MusixMatchToken GetToken()
         {
-            List<MusixMatchToken> tokens = Core.INSTANCE.SettingManager.Settings.MusixMatchToken;
+            /*List<MusixMatchToken> tokens = Core.INSTANCE.SettingManager.Settings.MusixMatchToken;
 
             if (tokens.Count == 0)
                 return null;
@@ -91,9 +93,9 @@ namespace OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch
             if (token.Usage <= 0)
             {
                 Core.INSTANCE.SettingManager.Settings.MusixMatchToken.Remove(token);
-            }
+            }*/
             
-            return token;
+            return null;
         }
     }
 }

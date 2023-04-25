@@ -14,6 +14,7 @@ using OpenLyricsClient.Backend.Handler.Services;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Helper;
 using OpenLyricsClient.Backend.Settings;
+using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Structure.Enum;
 using TaskRegister = OpenLyricsClient.Backend.Overwrite.TaskRegister;
@@ -106,6 +107,8 @@ namespace OpenLyricsClient.Backend
             this._songHandler = songHandler;
 
             _loaded = true;
+
+            SettingsHandler.TriggerGlobal();
         }
 
         private async Task TickTask()

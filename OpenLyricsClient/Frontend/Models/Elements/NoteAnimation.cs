@@ -9,6 +9,8 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using DevBase.Generics;
 using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
+using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Utils;
 
@@ -37,7 +39,7 @@ public class NoteAnimation : TemplatedControl, INotifyPropertyChanged
         FontWeight = FontWeight.Bold;
         this._current = false;
 
-        Core.INSTANCE.SettingManager.SettingsChanged += (sender, args) =>
+        Core.INSTANCE.SettingsHandler.SettingsChanged += (sender, args) =>
         {
             OnPropertyChanged("SelectedLineBrush");
             OnPropertyChanged("UnSelectedLineBrush");
@@ -120,14 +122,14 @@ public class NoteAnimation : TemplatedControl, INotifyPropertyChanged
             }
         }*/
         
-        this._border.Opacity = Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground ? 0.1 : 1.0;
+        this._border.Opacity = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background") ? 0.1 : 1.0;
         this.Foreground = ((SolidColorBrush)this.SelectedLineBrush);
         
         if (this._current)
         {
             double realSize = (this.GetBounds("♪").Width * 3) + (3 * 8) + 8;
             
-            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.DisplayMode == EnumLyricsDisplayMode.FADE)
+            if (Core.INSTANCE.SettingsHandler.Settings<SpotifySection>()?.GetValue<EnumLyricsDisplayMode>("Selection Mode") == EnumLyricsDisplayMode.FADE)
             {
                 this._viewbox.IsVisible = false;
                 this._border.Width = 0;
@@ -205,7 +207,7 @@ public class NoteAnimation : TemplatedControl, INotifyPropertyChanged
     {
         get
         {
-            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
                 return App.Current.FindResource("SelectedLineFontColorBrush") as SolidColorBrush;
             
             return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
@@ -216,7 +218,7 @@ public class NoteAnimation : TemplatedControl, INotifyPropertyChanged
     {
         get
         {
-            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
                 return App.Current.FindResource("UnSelectedLineFontColorBrush") as SolidColorBrush;
             
             return SolidColorBrush.Parse("#646464");

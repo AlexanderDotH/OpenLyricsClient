@@ -16,6 +16,7 @@ using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Handler.Services.Services.Spotify;
 using OpenLyricsClient.Backend.Handler.Song.SongProvider;
+using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Structure.Artwork;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Song;
@@ -51,7 +52,7 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         NextSongCommand = ReactiveCommand.CreateFromTask(()=>SkipSong(EnumPlayback.NEXT_TRACK));
 
         Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
-        Core.INSTANCE.SettingManager.SettingsChanged += SettingManagerOnSettingsChanged;
+        Core.INSTANCE.SettingsHandler.SettingsChanged += SettingManagerOnSettingsChanged;
         Core.INSTANCE.ArtworkHandler.ArtworkAppliedHandler += ArtworkHandlerOnArtworkAppliedHandler;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
         Core.INSTANCE.SongHandler.SongUpdated += SongHandlerOnSongUpdated;
@@ -215,7 +216,7 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     {
         get
         {
-            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
                 return App.Current.FindResource("PrimaryThemeFontColorBrush") as SolidColorBrush;
             
             return App.Current.FindResource("PrimaryThemeFontColorBrush") as SolidColorBrush;
@@ -226,7 +227,7 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     {
         get
         {
-            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
                 return App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush;
             
             return App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush;
@@ -237,7 +238,7 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     {
         get
         {
-            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
                 return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
             
             return App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;
@@ -248,7 +249,7 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     {
         get
         {
-            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
                 return App.Current.FindResource("PrimaryFontColorBrush") as SolidColorBrush;
             
             return App.Current.FindResource("PrimaryFontColorBrush") as SolidColorBrush;

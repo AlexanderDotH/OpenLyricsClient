@@ -12,9 +12,11 @@ using Avalonia.Media.Imaging;
 using DevBase.Web;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
+using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
 using OpenLyricsClient.Frontend.Structure;
 using ReactiveUI;
 using SharpDX.DirectInput;
+using SpotifyAPI.Web;
 using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Frontend.Models.Pages.Settings.Providers;
@@ -28,16 +30,16 @@ public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
 
     public SettingsSpotifyViewModel()
     {
-        Core.INSTANCE.SettingManager.SettingsChanged += SettingManagerOnSettingsChanged;
+        Core.INSTANCE.SettingsHandler.SettingsChanged += SettingManagerOnSettingsChanged;
         
-        DisconnectFromSpotify = ReactiveCommand.Create(DisconnectSpotify);
+        DisconnectFromSpotify = ReactiveCommand.CreateFromTask(DisconnectSpotify);
         ConnectToSpotify = ReactiveCommand.CreateFromTask(StartSpotifyAuthFlow);
     }
     
-    private void DisconnectSpotify()
+    private async Task DisconnectSpotify()
     {
-        Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected = false;
-        Core.INSTANCE.SettingManager.WriteSettings();
+        Core.INSTANCE.SettingsHandler.Settings<SpotifySection>().SetValue("IsSpotifyConnected", false);
+        await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(SpotifySection), "IsSpotifyConnected");
     }
     
     private async Task StartSpotifyAuthFlow()
@@ -58,6 +60,9 @@ public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
 
     private void SettingManagerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
     {
+        if (settingschangedeventargs.Section != typeof(SpotifySection))
+            return;
+        
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UserGreeting"));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UserFollower"));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UserPlan"));
@@ -86,7 +91,7 @@ public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
                     break;
             }
 
-            stringBuilder.Append(string.Format(" {0}!", Core.INSTANCE?.SettingManager?.Settings?.SpotifyAccess?.UserData?.DisplayName!));
+            stringBuilder.Append(string.Format(" {0}!", Core.INSTANCE?.SettingsHandler?.Settings<SpotifySection>()?.GetValue<PrivateUser>("UserData")?.DisplayName));
 
             return stringBuilder.ToString();
         }
@@ -96,7 +101,7 @@ public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
     {
         get
         {
-            int? follower = Core.INSTANCE?.SettingManager?.Settings?.SpotifyAccess?.UserData?.Followers?.Total!;
+            int? follower = Core.INSTANCE?.SettingsHandler?.Settings<SpotifySection>()?.GetValue<PrivateUser>("UserData")?.Followers?.Total;
             return string.Format("{0} follower", follower);
         }
     }
@@ -105,7 +110,7 @@ public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
     {
         get
         {
-            string? product = Core.INSTANCE?.SettingManager?.Settings?.SpotifyAccess?.UserData?.Product;
+            string? product = Core.INSTANCE?.SettingsHandler?.Settings<SpotifySection>()?.GetValue<PrivateUser>("UserData")?.Product;
 
             if (product.IsNullOrEmpty())
                 return string.Empty;

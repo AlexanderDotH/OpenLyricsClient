@@ -14,6 +14,7 @@ using DevBase.Async.Task;
 using Material.Styles;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventHandler;
+using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.Frontend.Models.Pages;
 using OpenLyricsClient.Frontend.View.Windows;
@@ -65,8 +66,7 @@ public partial class LyricsPage : UserControl
 
         SolidColorBrush primaryBackColor = App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;
         
-        if (Core.INSTANCE!.SettingManager!.Settings?.DisplayPreferences != null && 
-            Core.INSTANCE!.SettingManager!.Settings!.DisplayPreferences!.ArtworkBackground!)
+        if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?.GetValue<bool>("Artwork Background") == true)
             primaryBackColor = App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush;
         
         Border border = new Border();
@@ -122,8 +122,8 @@ public partial class LyricsPage : UserControl
         if (e.PropertyName.Equals("UiBackground"))
         {
             SolidColorBrush primaryBackColor = App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;
-        
-            if (Core.INSTANCE.SettingManager.Settings.DisplayPreferences.ArtworkBackground)
+
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?.GetValue<bool>("Artwork Background") == true)
                 primaryBackColor = App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush;
 
             this._artworkBorder.BorderBrush = primaryBackColor;

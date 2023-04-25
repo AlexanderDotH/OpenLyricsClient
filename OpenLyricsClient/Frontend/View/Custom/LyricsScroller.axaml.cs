@@ -16,6 +16,7 @@ using DevBase.Generics;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Events.EventHandler;
+using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
@@ -282,7 +283,7 @@ public partial class LyricsScroller : UserControl
                 }
             }*/
             
-            bool useBlur = Core.INSTANCE.SettingManager.Settings.DisplayPreferences.LyricsBlur;
+            bool useBlur = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Blur Lyrics");
             
             if (i == selectedLine)
             {
