@@ -83,6 +83,8 @@ namespace OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch
                 return null;
             
             MusixMatchToken token = tokens[new Random().Next(0, tokens.Count)];
+
+            Core.INSTANCE.SettingsHandler.Settings<TokenSection>()?.RemoveUsage(token);
             token.Usage--;
 
             if (token.Usage <= 0)

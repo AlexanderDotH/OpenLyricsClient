@@ -129,7 +129,7 @@ public class NoteAnimation : TemplatedControl, INotifyPropertyChanged
         {
             double realSize = (this.GetBounds("♪").Width * 3) + (3 * 8) + 8;
             
-            if (Core.INSTANCE.SettingsHandler.Settings<SpotifySection>()?.GetValue<EnumLyricsDisplayMode>("Selection Mode") == EnumLyricsDisplayMode.FADE)
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?.GetValue<EnumLyricsDisplayMode>("Selection Mode") == EnumLyricsDisplayMode.FADE)
             {
                 this._viewbox.IsVisible = false;
                 this._border.Width = 0;

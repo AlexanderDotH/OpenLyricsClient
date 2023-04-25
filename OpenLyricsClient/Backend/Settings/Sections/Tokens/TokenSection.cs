@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using DevBase.Api.Serializer;
@@ -62,6 +63,28 @@ public class TokenSection : ISettingSection
         tokens.Remove(token);
         
         await SetValue("Tokens", tokens);
+    }
+    
+    public async Task RemoveUsage(MusixMatchToken token)
+    {
+        List<MusixMatchToken> tokens = GetValue<List<MusixMatchToken>>("Tokens");
+
+        for (int i = 0; i < tokens.Capacity; i++)
+        {
+            MusixMatchToken currentToken = tokens[i];
+            if (currentToken.Token.SequenceEqual(token.Token))
+            {
+                MusixMatchToken newToken = new MusixMatchToken
+                {
+                    Token = currentToken.Token,
+                    ExpirationDate = currentToken.ExpirationDate,
+                    Usage = (short)(currentToken.Usage - 1)
+                };
+
+                await RemoveToken(token);
+                await AddToken(newToken);
+            }
+        }
     }
 
     public T GetValue<T>(string field)

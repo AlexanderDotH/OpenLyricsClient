@@ -48,7 +48,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
                 await this._refreshTokenSuspensionToken.WaitForRelease();
                 await Task.Delay(1000);
 
-                if (IsConnected())
+                if (!IsConnected())
                     continue;
                 
                 long now = DateTimeOffset.Now.ToUnixTimeMilliseconds();

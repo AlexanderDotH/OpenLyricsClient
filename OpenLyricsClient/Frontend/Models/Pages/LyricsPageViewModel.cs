@@ -169,7 +169,7 @@ public class LyricsPageViewModel : INotifyPropertyChanged
 
     public bool AiBadge
     {
-        get => Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricProvider.SequenceEqual("OpenLyricsClient") == true;
+        get => Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricProvider?.SequenceEqual("OpenLyricsClient") == true;
     }
     
     public string Artists
