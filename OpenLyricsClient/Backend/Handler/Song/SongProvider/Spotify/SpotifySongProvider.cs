@@ -32,6 +32,8 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
 
             this._service = Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
 
+            this._spotifyClient = GetPlayerApi();
+
             Core.INSTANCE.TaskRegister.Register(
                 out _updateSongDataSuspensionToken,
                 new Task(async () => await UpdateSongDataTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
@@ -172,7 +174,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
 
         private SpotifyClient GetPlayerApi()
         {
-            return new SpotifyClient(Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify").GetAccessToken());
+            return new SpotifyClient(this._service.GetAccessToken());
         }
 
         public void Dispose()

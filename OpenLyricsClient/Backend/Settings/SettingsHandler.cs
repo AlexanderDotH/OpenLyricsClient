@@ -6,6 +6,8 @@ using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Settings.Sections;
 using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
+using OpenLyricsClient.Backend.Settings.Sections.Romanization;
+using OpenLyricsClient.Backend.Settings.Sections.Tokens;
 using OpenLyricsClient.Backend.Structure.Enum;
 
 namespace OpenLyricsClient.Backend.Settings;
@@ -25,6 +27,12 @@ public class SettingsHandler
         
         this._sections.Add(new SpotifySection(string.Format("{0}{1}", 
             workingDirectory, "Spotify Access.json")));
+        
+        this._sections.Add(new TokenSection(string.Format("{0}{1}", 
+            workingDirectory, "Tokens.json")));
+        
+        this._sections.Add(new RomanizationSection(string.Format("{0}{1}", 
+            workingDirectory, "Romanization.json")));
 
         Task.Factory.StartNew(Initialize).GetAwaiter().GetResult();
     }

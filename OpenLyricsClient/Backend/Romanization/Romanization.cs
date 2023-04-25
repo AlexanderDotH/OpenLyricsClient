@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using HangeulRomanizer;
 using Kawazu;
+using OpenLyricsClient.Backend.Settings.Sections.Romanization;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Utils;
 using Romanization;
@@ -34,10 +36,13 @@ namespace OpenLyricsClient.Backend.Romanization
             if (!DataValidator.ValidateData(text))
                 return text;
 
-            //if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Count == 0)
-            //    return text;
+            List<RomanizeSelection> selections = Core.INSTANCE.SettingsHandler.Settings<RomanizationSection>()
+                .GetValue<List<RomanizeSelection>>("Selections");
 
-            /*if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection.JAPANESE_TO_ROMANJI) && DataValidator.ValidateData(this._kawazuConverter))
+            if (selections.Count == 0)
+                return text;
+
+            if (selections.Contains(RomanizeSelection.JAPANESE_TO_ROMANJI) && DataValidator.ValidateData(this._kawazuConverter))
             {
                 if (Utilities.HasJapanese(text))
                 {
@@ -46,7 +51,7 @@ namespace OpenLyricsClient.Backend.Romanization
                 }
             }
 
-            if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection.KOREAN_TO_ROMANJI) && DataValidator.ValidateData(this._koreanConverter))
+            if (selections.Contains(RomanizeSelection.KOREAN_TO_ROMANJI) && DataValidator.ValidateData(this._koreanConverter))
             {
                 if (LanguageUtils.IsKorean(text))
                 {
@@ -55,14 +60,13 @@ namespace OpenLyricsClient.Backend.Romanization
                 }
             }
 
-            if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(RomanizeSelection.RUSSIA_TO_LATIN) && DataValidator.ValidateData(this._russiaConverter))
+            if (selections.Contains(RomanizeSelection.RUSSIA_TO_LATIN) && DataValidator.ValidateData(this._russiaConverter))
             {
                 if (this._russiaConverter.IsPartOfCulture(text))
                 {
                     return this._russiaConverter.Process(text);
                 }
             }
-            */
 
             return text;
         }

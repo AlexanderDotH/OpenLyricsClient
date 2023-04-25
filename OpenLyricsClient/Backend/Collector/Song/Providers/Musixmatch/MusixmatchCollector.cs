@@ -6,6 +6,7 @@ using MusixmatchClientLib.API.Model.Types;
 using MusixmatchClientLib.Types;
 using OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch;
 using OpenLyricsClient.Backend.Debugger;
+using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
@@ -26,12 +27,12 @@ namespace OpenLyricsClient.Backend.Collector.Song.Providers.Musixmatch
             if (!DataValidator.ValidateData(songRequestObject))
                 return null;
 
-            string token = MusixmatchTokenCollector.Instance.GetToken().Token;
+            MusixMatchToken token = await MusixmatchTokenCollector.Instance.GetToken();
 
             if (!DataValidator.ValidateData(token))
                 return null;
 
-            MusixmatchClient musixmatchClient = new MusixmatchClient(token);
+            MusixmatchClient musixmatchClient = new MusixmatchClient(token.Token);
 
             if (!DataValidator.ValidateData(musixmatchClient))
                 return null;

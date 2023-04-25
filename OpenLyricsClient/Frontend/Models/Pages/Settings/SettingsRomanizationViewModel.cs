@@ -3,8 +3,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reactive;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Romanization;
+using OpenLyricsClient.Backend.Settings.Sections.Romanization;
 using ReactiveUI;
 
 namespace OpenLyricsClient.Frontend.Models.Pages.Settings;
@@ -19,41 +21,41 @@ public class SettingsRomanizationViewModel : ViewModelBase, INotifyPropertyChang
     
     public SettingsRomanizationViewModel()
     {
-        JapaneseCommand = ReactiveCommand.Create(Japanese);
-        KoreanCommand = ReactiveCommand.Create(Korean);
-        RussianCommand = ReactiveCommand.Create(Russian);
+        JapaneseCommand = ReactiveCommand.CreateFromTask(Japanese);
+        KoreanCommand = ReactiveCommand.CreateFromTask(Korean);
+        RussianCommand = ReactiveCommand.CreateFromTask(Russian);
     }
     
-    private void CheckOrUncheckAndWrite(RomanizeSelection selection)
+    private async Task CheckOrUncheckAndWrite(RomanizeSelection selection)
     {
-        /*if (Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Contains(selection))
+        if (Core.INSTANCE.SettingsHandler.Settings<RomanizationSection>()!.ContainsdRomanization(selection))
         {
-            Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Remove(selection);
+            await Core.INSTANCE.SettingsHandler.Settings<RomanizationSection>()?.RemoveRomanization(selection);
         }
         else
         {
-            Core.INSTANCE.SettingManager.Settings.RomanizeSelection.Add(selection);
+            await Core.INSTANCE.SettingsHandler.Settings<RomanizationSection>()?.AddRomanization(selection);
         }
-        
-        Core.INSTANCE.SettingManager.WriteSettings();*/
+
+        await Core.INSTANCE.SettingsHandler?.TriggerEvent(typeof(RomanizationSection), "Selections");
     }
 
     private bool IsAvailable(RomanizeSelection selection) =>
-        true;
+        Core.INSTANCE.SettingsHandler.Settings<RomanizationSection>()!.ContainsdRomanization(selection);
     
-    private void Japanese()
+    private async Task Japanese()
     {
-        CheckOrUncheckAndWrite(RomanizeSelection.JAPANESE_TO_ROMANJI);
+        await CheckOrUncheckAndWrite(RomanizeSelection.JAPANESE_TO_ROMANJI);
     }
     
-    private void Korean()
+    private async Task Korean()
     {
-        CheckOrUncheckAndWrite(RomanizeSelection.KOREAN_TO_ROMANJI);
+        await CheckOrUncheckAndWrite(RomanizeSelection.KOREAN_TO_ROMANJI);
     }
     
-    private void Russian()
+    private async Task Russian()
     {
-        CheckOrUncheckAndWrite(RomanizeSelection.RUSSIA_TO_LATIN);
+        await CheckOrUncheckAndWrite(RomanizeSelection.RUSSIA_TO_LATIN);
     }
 
     public bool IsJapaneseEnabled

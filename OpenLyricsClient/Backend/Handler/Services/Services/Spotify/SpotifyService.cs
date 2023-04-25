@@ -65,8 +65,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
         public bool IsConnected()
         {
-            return Core.INSTANCE.SettingsHandler.Settings<SpotifySection>().GetValue<bool>("IsSpotifyConnected")
-                   && Core.INSTANCE.SettingsHandler.Settings<SpotifySection>().GetValue<string>("AccessToken") != null;
+            return Core.INSTANCE.SettingsHandler.Settings<SpotifySection>().GetValue<bool>("IsSpotifyConnected") == true;
         }
 
         public async Task<bool> TestConnection()

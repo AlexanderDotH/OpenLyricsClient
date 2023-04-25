@@ -40,12 +40,12 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
             if (!songResponseObject.CollectorName.Equals(this.CollectorName()))
                 return new LyricData();
             
-            string token = MusixmatchTokenCollector.Instance.GetToken().Token;
+            MusixMatchToken token = await MusixmatchTokenCollector.Instance.GetToken();
 
             if (!DataValidator.ValidateData(token))
                 return new LyricData();
 
-            MusixmatchClient musixmatchClient = new MusixmatchClient(token);
+            MusixmatchClient musixmatchClient = new MusixmatchClient(token.Token);
 
             if (!DataValidator.ValidateData(musixmatchClient))
                 return new LyricData();

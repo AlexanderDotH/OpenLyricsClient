@@ -34,7 +34,6 @@ namespace OpenLyricsClient.Backend
 
         private Debugger<Core> _debugger;
 
-        private SettingManager _settingManager;
         private SettingsHandler _settingsHandler;
 
         private ServiceHandler _serviceHandler;
@@ -84,14 +83,13 @@ namespace OpenLyricsClient.Backend
             
             this._windowLogger = new WindowLogger();
 
-            this._settingManager = new SettingManager(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + 
-                                                      string.Format("{0}OpenLyricsClient{0}", System.IO.Path.DirectorySeparatorChar));
-            
-            this._settingsHandler = new SettingsHandler(
+            string workingDirectory =
                 System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) +
-                string.Format("{0}OpenLyricsClient{0}", System.IO.Path.DirectorySeparatorChar));
+                string.Format("{0}OpenLyricsClient{0}", System.IO.Path.DirectorySeparatorChar);
             
-            this._cacheManager = new CacheManager(10, TimeSpan.FromMinutes(5).Milliseconds);
+            this._settingsHandler = new SettingsHandler(workingDirectory);
+            
+            this._cacheManager = new CacheManager(workingDirectory, 10, TimeSpan.FromMinutes(5).Milliseconds);
 
             this._tokenCollector = new TokenCollector();
 
@@ -153,11 +151,6 @@ namespace OpenLyricsClient.Backend
         {
             SlowTickEventHandler slowTickEventHandler = SlowTickHandler;
             slowTickEventHandler?.Invoke(this);
-        }
-
-        public SettingManager SettingManager
-        {
-            get => _settingManager;
         }
 
         public SettingsHandler SettingsHandler

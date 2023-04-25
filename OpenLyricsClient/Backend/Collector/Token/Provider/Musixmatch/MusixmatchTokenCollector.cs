@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MusixmatchClientLib.Auth;
+using OpenLyricsClient.Backend.Settings.Sections.Tokens;
 using OpenLyricsClient.Backend.Structure;
 
 namespace OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch
@@ -32,16 +33,15 @@ namespace OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch
 
         public async Task CollectToken()
         {
-            bool settingsChanged = false;
-
-            return;
+            List<MusixMatchToken> tokens = Core.INSTANCE.SettingsHandler.Settings<TokenSection>()
+                .GetValue<List<MusixMatchToken>>("Tokens");
             
-            /*try
+            try
             {
-                if (!DataValidator.ValidateData(Core.INSTANCE.SettingManager.Settings.MusixMatchToken))
+                if (!DataValidator.ValidateData(tokens))
                     return;
 
-                if (Core.INSTANCE.SettingManager.Settings.MusixMatchToken.Count > this._tokenLimit)
+                if (tokens.Count > this._tokenLimit)
                     return;
 
                 string token = await new MusixmatchToken("").IssueNewTokenAsync();
@@ -52,37 +52,32 @@ namespace OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch
                 mxmToken.ExpirationDate = expiresIn;
                 mxmToken.Usage = 5;
 
-                Core.INSTANCE.SettingManager.Settings.MusixMatchToken.Add(mxmToken);
+                await Core.INSTANCE.SettingsHandler.Settings<TokenSection>()!.AddToken(mxmToken);
 
-                _debugger.Write("Requested new musixmatch token", DebugType.INFO);
-
-                settingsChanged = true;
+                this._debugger.Write("Requested new musixmatch token", DebugType.INFO);
             }
             catch (Exception e)
             {
-                _debugger.Write(e);
+                this._debugger.Write(e);
             }
 
             //Check expiration date
-            for (int i = 0; i < Core.INSTANCE.SettingManager.Settings.MusixMatchToken.Count; i++)
+            for (int i = 0; i < tokens.Count; i++)
             {
-                MusixMatchToken token = Core.INSTANCE.SettingManager.Settings.MusixMatchToken[i];
+                MusixMatchToken token = tokens[i];
 
                 if (DateTimeOffset.Now.ToUnixTimeMilliseconds() >
                     token.ExpirationDate)
                 {
-                    Core.INSTANCE.SettingManager.Settings.MusixMatchToken.Remove(token);
-                    settingsChanged = true;
+                    await Core.INSTANCE.SettingsHandler.Settings<TokenSection>()!.RemoveToken(token);
                 }
             }
-            
-            if (settingsChanged)
-                Core.INSTANCE.SettingManager.WriteSettings(false);*/
         }
         
-        public MusixMatchToken GetToken()
+        public async Task<MusixMatchToken> GetToken()
         {
-            /*List<MusixMatchToken> tokens = Core.INSTANCE.SettingManager.Settings.MusixMatchToken;
+            List<MusixMatchToken> tokens = Core.INSTANCE.SettingsHandler.Settings<TokenSection>()
+                .GetValue<List<MusixMatchToken>>("Tokens");
 
             if (tokens.Count == 0)
                 return null;
@@ -92,10 +87,10 @@ namespace OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch
 
             if (token.Usage <= 0)
             {
-                Core.INSTANCE.SettingManager.Settings.MusixMatchToken.Remove(token);
-            }*/
+                await Core.INSTANCE.SettingsHandler.Settings<TokenSection>()!.RemoveToken(token);
+            }
             
-            return null;
+            return token;
         }
     }
 }

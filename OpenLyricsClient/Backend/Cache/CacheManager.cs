@@ -31,9 +31,9 @@ namespace OpenLyricsClient.Backend.Cache
 
         private Debugger<CacheManager> _debugger;
 
-        public CacheManager(int maxCapacity, int expirationMs)
+        public CacheManager(string workingDirectory, int maxCapacity, int expirationMs)
         {
-            CACHE_PATH = string.Format("{1}{2}{0}", Path.DirectorySeparatorChar, Core.INSTANCE.SettingManager.WorkingDirectory,
+            CACHE_PATH = string.Format("{1}{2}{0}", Path.DirectorySeparatorChar, workingDirectory,
                 CACHE_FOLDER_NAME);
             
             this._debugger = new Debugger<CacheManager>(this);
