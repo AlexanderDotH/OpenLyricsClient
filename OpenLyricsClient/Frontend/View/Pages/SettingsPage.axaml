@@ -141,6 +141,42 @@
                     
                  </StackPanel>
                 
+                <TextBlock Text="Account"
+                           FontSize="14"
+                           Foreground="{DynamicResource SecondaryFontColorBrush}"
+                           FontWeight="Normal"
+                           Margin="0,0,0,0"/>
+                
+                <StackPanel Orientation="Vertical"
+                            Spacing="10">
+                
+                    <Button Name="BTN_Profile" 
+                            assists:ButtonAssist.CornerRadius="10"
+                            Width="260" 
+                            Height="45"
+                            Background="{DynamicResource SecondaryBackgroundBrush}"
+                            Click="BTN_Profile_OnClick">
+                        <StackPanel Orientation="Horizontal" 
+                                    Spacing="10" 
+                                    Margin="0,0,260,0"
+                                    HorizontalAlignment="Left">
+                            <avalonia:MaterialIcon 
+                                Width="20"
+                                Height="20"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left"
+                                Margin="0,0,0,0"
+                                Kind="User"/>
+                            
+                            <TextBlock Text="Profile"
+                                       FontSize="13"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </Button>
+                    
+                </StackPanel>
+                
                 <TextBlock Text="Advanced"
                            FontSize="14"
                            Foreground="{DynamicResource SecondaryFontColorBrush}"
@@ -207,6 +243,8 @@
             <providers:SettingsSpotify/>
             
             <settings:SettingsCache/>
+            
+            <settings:SettingsUserPage/>
 
         </Carousel>
         

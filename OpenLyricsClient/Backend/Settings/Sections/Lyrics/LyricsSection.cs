@@ -23,10 +23,7 @@ public class LyricsSection : ISettingSection
     
     public async Task WriteToDisk()
     {
-        await using FileStream stream = this._file.Open(FileMode.Create, FileAccess.Write);;
-        await using StreamWriter writer = new StreamWriter(stream);
-        
-        await writer.WriteAsync(this._data?.ToString());
+        await File.WriteAllTextAsync(this._file.FullName, this._data.ToString());
     }
 
     public async Task ReadFromDisk()

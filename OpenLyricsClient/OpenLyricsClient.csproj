@@ -78,6 +78,9 @@
       <DependentUpon>LyricsScroller.axaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Frontend\View\Pages\Settings\SettingsUserPage.axaml.cs">
+      <DependentUpon>SettingsUserPage.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="CefNet">
