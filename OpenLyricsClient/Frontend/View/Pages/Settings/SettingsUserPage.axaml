@@ -87,7 +87,7 @@
 
                                     
                                     <StackPanel Orientation="Horizontal" Spacing="10">
-                                        <TextBlock Text="Your plan"
+                                        <TextBlock Text="Product"
                                                    FontWeight="Light"
                                                    Margin="0,5,0,0"
                                                    FontSize="15"/>
@@ -118,12 +118,8 @@
                                             </StackPanel>
                                         </Border>
                                     </StackPanel>
-
                                 </StackPanel>
                             </Grid>
-                            
-                           
-                            
                         </StackPanel>
                     </elements:GroupBox>
                 </StackPanel>
