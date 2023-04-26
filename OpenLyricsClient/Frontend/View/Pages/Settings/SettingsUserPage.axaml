@@ -1,0 +1,134 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
+             xmlns:settings="clr-namespace:OpenLyricsClient.Frontend.Models.Pages.Settings"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" 
+             d:DesignWidth="1000"
+             d:DesignHeight="1000"
+             x:Class="OpenLyricsClient.Frontend.View.Pages.Settings.SettingsUserPage">
+    
+    <UserControl.DataContext>
+        <settings:SettingsUserPageViewModel/>
+    </UserControl.DataContext>
+    
+    <Grid Background="{DynamicResource PrimaryBackgroundBrush}">
+        
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalAlignment="Top"
+                      Margin="10,0,10,0">
+            
+            <StackPanel Margin="0,20,0,0"
+                        HorizontalAlignment="Center"
+                        Width="800">
+               
+                <StackPanel Orientation="Vertical" 
+                            Spacing="10">
+                    
+                    <elements:GroupBox Classes="clean" 
+                                       Background="{DynamicResource SecondaryBackgroundBrush}">
+                        
+                        <StackPanel Margin="15" 
+                                    Orientation="Vertical" 
+                                    Spacing="15">
+                           
+                            <TextBlock FontSize="16"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Bold"
+                                       Text="Profile">
+                            </TextBlock>
+                            
+                            <TextBlock Text="Here you can get your user information and you current plan"></TextBlock>
+                            
+                            <Grid ColumnDefinitions="Auto, Auto, Auto" Height="200">
+                               <Border Grid.Column="0" 
+                                       Width="125" 
+                                       Height="125"
+                                       Margin="40,0,0,0"
+                                       Background="{DynamicResource LightBackgroundBrush}" 
+                                       CornerRadius="30">
+                                   <avalonia:MaterialIcon Kind="User" 
+                                                          Width="80"
+                                                          Height="80"/>
+                               </Border>
+                                
+                                <Panel Grid.Column="1" 
+                                       Width="2" 
+                                       Background="{DynamicResource LightBackgroundBrush}"
+                                       Margin="50"></Panel>
+                                
+                                <StackPanel Grid.Column="3"
+                                            VerticalAlignment="Center"
+                                            Spacing="10">
+                                
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBlock Text="User Identification"
+                                                   FontWeight="Light"
+                                                   FontSize="15"/>
+                                        
+                                        <TextBlock Text="3649q694"
+                                                   FontWeight="Bold"
+                                                   FontSize="15"/>
+                                    </StackPanel>
+                                
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBlock Text="Secret"
+                                                   FontWeight="Light"
+                                                   FontSize="15"/>
+                                        
+                                        <TextBlock Text="3649q694"
+                                                   FontWeight="Bold"
+                                                   FontSize="15"/>
+                                    </StackPanel>
+
+                                    
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBlock Text="Your plan"
+                                                   FontWeight="Light"
+                                                   Margin="0,5,0,0"
+                                                   FontSize="15"/>
+                                        
+                                        <Border CornerRadius="10" Background="{DynamicResource LightBackgroundBrush}">
+                                            <StackPanel Orientation="Horizontal" Spacing="0">
+                                                <TextBlock Text="OpenLyricsClient"
+                                                           FontWeight="Light"
+                                                           Margin="5,5,0,5"
+                                                           FontSize="15"/>
+                                                
+                                                <Border CornerRadius="10">
+                                                    <TextBlock Text="Plus"
+                                                               FontWeight="Bold"
+                                                               VerticalAlignment="Bottom"
+                                                               Margin="4,4,5,5"
+                                                               FontSize="16">
+                                                        
+                                                        <TextBlock.Foreground>
+                                                            <RadialGradientBrush Center="0.5,0.5" Radius="0.5">
+                                                                <GradientStop Color="Blue" Offset="0" />
+                                                                <GradientStop Color="Cyan" Offset="0.5" />
+                                                                <GradientStop Color="White" Offset="1" />
+                                                            </RadialGradientBrush>
+                                                        </TextBlock.Foreground>
+                                                    </TextBlock>
+                                                </Border>
+                                                
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+
+                                </StackPanel>
+                            </Grid>
+                            
+                           
+                            
+                        </StackPanel>
+                    </elements:GroupBox>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
