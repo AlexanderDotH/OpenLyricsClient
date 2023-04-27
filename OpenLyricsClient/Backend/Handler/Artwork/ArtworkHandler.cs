@@ -195,7 +195,10 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                     Core.INSTANCE.CacheManager.WriteToCache(songRequestObject, artworkCache);
                 }
 
-                if (this._oldArtwork != artworkCache)
+                if (!DataValidator.ValidateData(artworkCache))
+                    continue;
+                
+                if (this._oldArtwork == null || this._oldArtwork != artworkCache)
                     ArtworkFoundEvent(songRequestObject, artworkCache);
 
                 this._oldArtwork = artworkCache;

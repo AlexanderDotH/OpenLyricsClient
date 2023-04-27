@@ -67,24 +67,21 @@ public class TokenSection : ISettingSection
     
     public async Task RemoveUsage(MusixMatchToken token)
     {
-        /*List<MusixMatchToken> tokens = GetValue<List<MusixMatchToken>>("Tokens");
+        List<MusixMatchToken> tokens = GetValue<List<MusixMatchToken>>("Tokens");
 
         for (int i = 0; i < tokens.Capacity; i++)
         {
             MusixMatchToken currentToken = tokens[i];
             if (currentToken.Token.SequenceEqual(token.Token))
             {
-                MusixMatchToken newToken = new MusixMatchToken
-                {
-                    Token = currentToken.Token,
-                    ExpirationDate = currentToken.ExpirationDate,
-                    Usage = (short)(currentToken.Usage - 1)
-                };
+                currentToken.Usage--;
 
-                await RemoveToken(token);
-                await AddToken(newToken);
+                if (currentToken.Usage <= 0)
+                    tokens.Remove(currentToken);
+                
+                await SetValue("Tokens", tokens);
             }
-        }*/
+        }
     }
 
     public T GetValue<T>(string field)

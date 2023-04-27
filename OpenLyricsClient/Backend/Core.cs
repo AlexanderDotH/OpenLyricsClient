@@ -21,10 +21,6 @@ using TaskRegister = OpenLyricsClient.Backend.Overwrite.TaskRegister;
 
 namespace OpenLyricsClient.Backend
 {
-    // Ideas:
-    // Textfarbe im fade zum nächsten lyric zeitpunkt ändern,
-    // also die aktuelle textfarbe ist grün und wird rot, wenn der textabschnitt dran kommt
-
     class Core
     {
         public static Core INSTANCE;
