@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using DevBase.Api.Apis.OpenLyricsClient.Structure.Json;
 using Newtonsoft.Json.Linq;
+using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Settings;
+using OpenLyricsClient.Backend.Settings.Sections.Account;
 using OpenLyricsClient.Backend.Structure;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Structure.Other;
 using OpenLyricsClient.Backend.Utils;
-using SpotifyAPI.Web;
-using SimpleArtist = SpotifyAPI.Web.SimpleArtist;
-using SimpleTrack = SpotifyAPI.Web.SimpleTrack;
+using OpenLyricsClient = DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient;
 
-namespace OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
-
-public class SpotifySection : ISettingSection
+public class AccountSection : ISettingSection
 {
     private FileInfo _file;
     private JObject _data;
 
-    public SpotifySection(string filePath)
+    public AccountSection(string filePath)
     {
         this._file = new FileInfo(filePath);
     }
@@ -64,36 +62,18 @@ public class SpotifySection : ISettingSection
 
     public JObject Defaults()
     {
-        PrivateUser privateUser = new PrivateUser
+        JsonOpenLyricsClientSubscription account = 
+            new DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient(Core.INSTANCE.Sealing.ServerPublicKey)
+                .CreateSubscription()
+                .GetAwaiter()
+                .GetResult();
+        
+        Structure structure = new Structure
         {
-            Country = string.Empty,
-            Email = string.Empty,
-            Followers = null,
-            Href = string.Empty,
-            Id = string.Empty,
-            Images = null,
-            Product = string.Empty,
-            Type = "",
-            Uri = "",
-            DisplayName = ""
-        };
-
-        SpotifyStatistics statistics = new SpotifyStatistics
-        {
-            TopTracks = null,
-            TopArtists = null
+            UserID = account.UserID,
+            UserSecret = account.UserSecret
         };
         
-        SpotifyAccess spotifyAccess = new SpotifyAccess
-        {
-            AccessToken = "null",
-            IsSpotifyConnected = false,
-            RefreshToken = string.Empty,
-            SpotifyExpireTime = (int)DateTimeOffset.Now.ToUnixTimeMilliseconds(),
-            UserData = privateUser,
-            Statistics = statistics
-        };
-        
-        return new JsonDeserializer().Serialize(spotifyAccess);
+        return new JsonDeserializer().Serialize(structure);
     }
 }

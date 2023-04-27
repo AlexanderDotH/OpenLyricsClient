@@ -33,6 +33,9 @@ public class SettingsHandler
         
         this._sections.Add(new RomanizationSection(string.Format("{0}{1}", 
             workingDirectory, "Romanization.json")));
+        
+        this._sections.Add(new AccountSection(string.Format("{0}{1}", 
+            workingDirectory, "Account.json")));
 
         Task.Factory.StartNew(Initialize).GetAwaiter().GetResult();
     }

@@ -34,6 +34,7 @@ namespace OpenLyricsClient.Backend
 
         private Debugger<Core> _debugger;
 
+        private Sealing _sealing;
         private SettingsHandler _settingsHandler;
 
         private ServiceHandler _serviceHandler;
@@ -83,6 +84,8 @@ namespace OpenLyricsClient.Backend
             
             this._windowLogger = new WindowLogger();
 
+            this._sealing = new Sealing();
+            
             string workingDirectory =
                 System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) +
                 string.Format("{0}OpenLyricsClient{0}", System.IO.Path.DirectorySeparatorChar);
@@ -106,7 +109,7 @@ namespace OpenLyricsClient.Backend
 
             _loaded = true;
 
-            SettingsHandler.TriggerGlobal();
+            Task.Factory.StartNew(async () => await SettingsHandler.TriggerGlobal());
         }
 
         private async Task TickTask()
@@ -151,6 +154,11 @@ namespace OpenLyricsClient.Backend
         {
             SlowTickEventHandler slowTickEventHandler = SlowTickHandler;
             slowTickEventHandler?.Invoke(this);
+        }
+
+        public Sealing Sealing
+        {
+            get => _sealing;
         }
 
         public SettingsHandler SettingsHandler

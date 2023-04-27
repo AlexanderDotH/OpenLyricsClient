@@ -67,7 +67,7 @@ public class TokenSection : ISettingSection
     
     public async Task RemoveUsage(MusixMatchToken token)
     {
-        List<MusixMatchToken> tokens = GetValue<List<MusixMatchToken>>("Tokens");
+        /*List<MusixMatchToken> tokens = GetValue<List<MusixMatchToken>>("Tokens");
 
         for (int i = 0; i < tokens.Capacity; i++)
         {
@@ -84,7 +84,7 @@ public class TokenSection : ISettingSection
                 await RemoveToken(token);
                 await AddToken(newToken);
             }
-        }
+        }*/
     }
 
     public T GetValue<T>(string field)
