@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using DevBase.Generics;
 using Newtonsoft.Json.Linq;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Enum;
@@ -95,5 +96,15 @@ public class SpotifySection : ISettingSection
         };
         
         return new JsonDeserializer().Serialize(spotifyAccess);
+    }
+    
+    public string[] GetFields()
+    {
+        AList<string> fields = new AList<string>();
+
+        foreach (var pair in this._data)
+            fields.Add(pair.Key);
+
+        return fields.GetAsArray();
     }
 }

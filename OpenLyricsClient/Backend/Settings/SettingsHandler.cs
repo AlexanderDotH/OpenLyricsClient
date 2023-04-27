@@ -67,15 +67,14 @@ public class SettingsHandler
 
     public async Task TriggerGlobal()
     {
-        this._sections.ForEach(s =>
+        for (int i = 0; i < this._sections.Length; i++)
         {
-            using (var enumerator = s.Defaults().GetEnumerator())
-            {
-                while (enumerator.MoveNext())
-                {
-                    TriggerEvent(s, enumerator.Current.Key.ToString());
-                }
-            }
-        });
+            ISettingSection section = this._sections.Get(i);
+            
+            string[] fields = section.GetFields();
+            
+            for (int j = 0; j < fields.Length; j++)
+                await TriggerEvent(section, fields[j]);
+        }
     }
 }

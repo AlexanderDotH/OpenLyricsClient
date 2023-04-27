@@ -68,4 +68,14 @@ public class LyricsSection : ISettingSection
         
         return new JsonDeserializer().Serialize(structure);
     }
+    
+    public string[] GetFields()
+    {
+        AList<string> fields = new AList<string>();
+
+        foreach (var pair in this._data)
+            fields.Add(pair.Key);
+
+        return fields.GetAsArray();
+    }
 }

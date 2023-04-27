@@ -10,4 +10,5 @@ public interface ISettingSection
     T GetValue<T>(string field);
     Task SetValue<T>(string field, T value);
     JObject Defaults();
+    string[] GetFields();
 }

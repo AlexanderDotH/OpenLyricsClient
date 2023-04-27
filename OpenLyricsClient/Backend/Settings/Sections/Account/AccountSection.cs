@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using DevBase.Api.Apis.OpenLyricsClient.Structure.Json;
+using DevBase.Generics;
 using Newtonsoft.Json.Linq;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Settings;
@@ -75,5 +77,15 @@ public class AccountSection : ISettingSection
         };
         
         return new JsonDeserializer().Serialize(structure);
+    }
+
+    public string[] GetFields()
+    {
+        AList<string> fields = new AList<string>();
+
+        foreach (var pair in this._data)
+            fields.Add(pair.Key);
+
+        return fields.GetAsArray();
     }
 }
