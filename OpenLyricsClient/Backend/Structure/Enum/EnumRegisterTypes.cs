@@ -13,6 +13,7 @@
         APPLY_ARTWORK_TO_SONG,
         COLLECT_TOKENS,
         SYNC_SCROLLER,
-        GLOBAL_TICK
+        GLOBAL_TICK,
+        REFRESH_LICENSE
     }
 }

@@ -9,6 +9,7 @@ using OpenLyricsClient.Backend.Collector.Token;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Handler.Artwork;
+using OpenLyricsClient.Backend.Handler.License;
 using OpenLyricsClient.Backend.Handler.Lyrics;
 using OpenLyricsClient.Backend.Handler.Services;
 using OpenLyricsClient.Backend.Handler.Song;
@@ -37,6 +38,7 @@ namespace OpenLyricsClient.Backend
         private SongHandler _songHandler;
         private LyricHandler _lyricHandler;
         private ArtworkHandler _artworkHandler;
+        private LicenseHandler _licenseHandler;
         
         private CacheManager _cacheManager;
 
@@ -87,6 +89,8 @@ namespace OpenLyricsClient.Backend
                 string.Format("{0}OpenLyricsClient{0}", System.IO.Path.DirectorySeparatorChar);
             
             this._settingsHandler = new SettingsHandler(workingDirectory);
+            
+            this._licenseHandler = new LicenseHandler();
             
             this._cacheManager = new CacheManager(workingDirectory, 10, TimeSpan.FromMinutes(5).Milliseconds);
 
