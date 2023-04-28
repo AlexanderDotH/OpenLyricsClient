@@ -30,8 +30,9 @@ Simple and intuitive to use, OpenLyricsClient offers a user-friendly interface t
 Some previews:
 <p float="center">
   <img src="https://alexh.space/images/openlyricsclient/new/colorfull1-preview.png" width="49%" /> 
-  <img src="https://alexh.space/images/openlyricsclient/dark2-preview.png" width="49%" />
-  <img src="https://alexh.space/images/openlyricsclient/colorfull2-preview.png" width="49%" />
+  <img src="https://alexh.space/images/openlyricsclient/new/dark2-preview.png" width="49%" />
+  <img src="https://alexh.space/images/openlyricsclient/new/colorfull2-preview.png" width="49%" />
+  <img src="https://alexh.space/images/openlyricsclient/new/dark2-preview2.png" width="49%" />
 </p>
 
 ---
