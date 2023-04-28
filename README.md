@@ -53,7 +53,7 @@ Currently Supported languages:
 * Russian
 
 <p float="center">
-  <img src="https://alexh.space/images/openlyricsclient/romanization_preview.png" width="70%" />
+  <img src="https://alexh.space/images/openlyricsclient/new/romanization_preview.png" width="70%" />
 </p>
 
 ---
@@ -61,7 +61,7 @@ Currently Supported languages:
 Lets get started by linking you spotify account:
 
 <p float="center">
-  <img src="https://alexh.space/images/openlyricsclient/spotify_preview.png" width="70%" />
+  <img src="https://alexh.space/images/openlyricsclient/new/spotify_preview.png" width="70%" />
 </p>
 
 <br>
