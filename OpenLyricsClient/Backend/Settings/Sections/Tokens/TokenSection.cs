@@ -26,7 +26,11 @@ public class TokenSection : ISettingSection
     
     public async Task WriteToDisk()
     {
-        await File.WriteAllTextAsync(this._file.FullName, this._data.ToString());
+        try
+        {
+            await File.WriteAllTextAsync(this._file.FullName, this._data.ToString());
+        }
+        catch (Exception e) { }
     }
 
     public async Task ReadFromDisk()

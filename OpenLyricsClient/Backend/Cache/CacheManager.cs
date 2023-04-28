@@ -101,6 +101,9 @@ namespace OpenLyricsClient.Backend.Cache
         
         public void WriteToCache(SongRequestObject songRequestObject, LyricData lyricData)
         {
+            if (IsLyricsInCache(songRequestObject))
+                return;
+            
             CacheData data = GetDataByRequest(songRequestObject);
             
             if (!DataValidator.ValidateData(data))

@@ -48,13 +48,14 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
 
             for (int i = 0; i < this._lyricCollectors.Length; i++)
             {
-                if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject, true))
-                    return;
+                if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
+                    continue;
 
                 ILyricsCollector collector = this._lyricCollectors.Get(i);
                 LyricData lyricData = await collector.GetLyrics(songResponseObject);
 
-                if (!DataValidator.ValidateData(lyricData))
+                if (!(DataValidator.ValidateData(lyricData) && 
+                      DataValidator.ValidateData(lyricData.LyricParts, lyricData.LyricReturnCode)))
                     continue;
 
                 if (lyricData.LyricReturnCode != LyricReturnCode.SUCCESS)
