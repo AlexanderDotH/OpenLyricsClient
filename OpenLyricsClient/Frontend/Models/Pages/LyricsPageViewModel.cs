@@ -32,16 +32,6 @@ public class LyricsPageViewModel : INotifyPropertyChanged
 
     private TaskSuspensionToken _songInfoSuspensionToken;
 
-    private string _currentSongName;
-    private string _currentArtists;
-    private string _currentAlbumName;
-    private double _currentPercentage;
-    private long _time;
-    private string _currentTime;
-    private string _currentMaxTime;
-
-    private string _artwork;
-    
     public ReactiveCommand<Unit, Unit> UpdatePlaybackCommand { get; }
     public ReactiveCommand<Unit, Unit> PreviousSongCommand { get; }
     public ReactiveCommand<Unit, Unit> NextSongCommand { get; }
@@ -57,15 +47,6 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         Core.INSTANCE.ArtworkHandler.ArtworkAppliedHandler += ArtworkHandlerOnArtworkAppliedHandler;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
         Core.INSTANCE.SongHandler.SongUpdated += SongHandlerOnSongUpdated;
-        
-        this._currentSongName = string.Empty;
-        this._currentArtists = string.Empty;
-        this._currentAlbumName = string.Empty;
-        this._currentPercentage = 0;
-        this._currentTime = string.Empty;
-        this._currentMaxTime = string.Empty;
-
-        this._time = 0;
     }
 
     private void SongHandlerOnSongUpdated(object sender)
@@ -76,6 +57,7 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         OnPropertyChanged("IsSongPlaying");
         OnPropertyChanged("CurrentTime");
         OnPropertyChanged("Percentage");
+        OnPropertyChanged("CurrentTime");
         OnPropertyChanged("CurrentMaxTime");
         OnPropertyChanged("IsPlayerAvailable");
         OnPropertyChanged("IsSongAvailable");
@@ -140,8 +122,6 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         OnPropertyChanged("SongName");
         OnPropertyChanged("Artists");
         OnPropertyChanged("Album");
-
-        this._time = 0;
     }
 
     public string? SongName
@@ -212,12 +192,7 @@ public class LyricsPageViewModel : INotifyPropertyChanged
 
     public string CurrentTime
     {
-        get => this._currentTime;
-        set
-        {
-            this._currentTime = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentTime"));
-        }
+        get => Core.INSTANCE.SongHandler?.CurrentSong?.ProgressString!;
     }
     
     public string CurrentMaxTime
