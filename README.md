@@ -14,7 +14,7 @@ With OpenLyricsClient, you'll never miss a beat - it gets the lyrics for almost 
 <br>
 <br>
 <p align="center">
-  <a href="https://github.com/AlexanderDotH/OpenLyricsClient/releases/tag/v0.0.2">Download</a>
+  <a href="https://github.com/AlexanderDotH/OpenLyricsClient/releases/latest">Download</a>
   <a>&#8226;</a>
   <a href="https://discordapp.com/users/241640038780239873">Contact me</a>
   <a>&#8226;</a>
