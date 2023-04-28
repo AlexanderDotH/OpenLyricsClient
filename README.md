@@ -73,6 +73,4 @@ Lets get started by linking you spotify account:
 </p>
 
 <br>
-Imagine reading this readme until this point
-<br>
-<br>
+Feel free to share your feedback with me on Discord! You can find me under the tag Alex.#8988.
