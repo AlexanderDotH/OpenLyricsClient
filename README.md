@@ -58,6 +58,14 @@ Currently Supported languages:
 
 ---
 
+Did you know that the OpenLyricsClient is the first lyrics client with AI synchronization? I didn't know that either ;). However, the AI sync is only available for OpenLyricsClient Plus and Master members. But feel free to contact me on Discord! I'll give it out if you ask nicely. :D
+<p float="center">
+  <img src="https://alexh.space/images/openlyricsclient/new/ai_sync_preview1.png" width="49%" />
+  <img src="https://alexh.space/images/openlyricsclient/new/ai_sync_preview2.png" width="49%" />
+</p>
+
+---
+
 Lets get started by linking you spotify account:
 
 <p float="center">
@@ -68,6 +76,3 @@ Lets get started by linking you spotify account:
 Imagine reading this readme until this point
 <br>
 <br>
-
-**This tool is currently in the alpha stage and will be available as soon as possible.
-If you have questions go and ask me on discord: Alex.#8988**
