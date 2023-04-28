@@ -39,7 +39,8 @@ Some previews:
 
 You want to blur some things up? Just enable it! Its 2 clicks away!
 <p float="center">
-  <img src="https://alexh.space/images/openlyricsclient/settings_lyrics_preview.png" width="70%" />
+  <img src="https://alexh.space/images/openlyricsclient/new/settings_blur.png" width="70%" />
+  <img src="https://alexh.space/images/openlyricsclient/new/blur_preview.png" width="70%" />
 </p>
 
 ---
