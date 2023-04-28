@@ -62,6 +62,17 @@ namespace OpenLyricsClient.Backend.Handler.Services
             return null;
         }
 
+        public bool IsAnyConnected()
+        {
+            for (int i = 0; i < this._services.Length; i++)
+            {
+                if (this._services.Get(i).IsConnected())
+                    return true;
+            }
+
+            return false;
+        }
+        
         public void Dispose()
         {
             try

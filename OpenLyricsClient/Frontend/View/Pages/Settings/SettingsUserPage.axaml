@@ -43,7 +43,7 @@
                                        Text="Profile">
                             </TextBlock>
                             
-                            <TextBlock Text="Here you can get your user information and you current subscription"></TextBlock>
+                            <TextBlock Text="To have a profile is a nice thing ;)"></TextBlock>
                             
                             <Grid ColumnDefinitions="Auto, Auto, Auto" Height="200">
                                <Border Grid.Column="0" 
@@ -119,6 +119,25 @@
                                     </StackPanel>
                                 </StackPanel>
                             </Grid>
+                        </StackPanel>
+                    </elements:GroupBox>
+                    
+                    <elements:GroupBox Classes="clean" 
+                                       Background="{DynamicResource SecondaryBackgroundBrush}">
+                        
+                        <StackPanel Margin="15" 
+                                    Orientation="Vertical" 
+                                    Spacing="15">
+                           
+                            <TextBlock FontSize="16"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Bold"
+                                       Text="Interested?">
+                            </TextBlock>
+                            
+                            <TextBlock Text="Do you want to test Ai sync for free? Simply write me on Discord: Alex.#8988"></TextBlock>
+
                         </StackPanel>
                     </elements:GroupBox>
                 </StackPanel>

@@ -49,6 +49,8 @@ public class LicenseHandler : IHandler
 
             JsonOpenLyricsClientSubscriptionModel model = await this._openLyricsClientApi.CheckSubscription(subscription);
             this._license = model;
+
+            await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(AccountSection), "UserID");
             
             await Task.Delay((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
         }

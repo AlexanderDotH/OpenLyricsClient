@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DevBase.Api.Apis.OpenLyricsClient.Structure.Enum;
 using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Events.EventArgs;
 using ReactiveUI;
 using TextCopy;
 
@@ -21,6 +22,19 @@ public class SettingsUserPageViewModel : ViewModelBase, INotifyPropertyChanged
     {
         CopyIDCommand = ReactiveCommand.CreateFromTask(CopyID);
         CopySecretCommand = ReactiveCommand.CreateFromTask(CopySecret);
+        
+        Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
+
+    }
+
+    private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
+    {
+        if (settingschangedeventargs.Section != typeof(AccountSection))
+            return;
+        
+        OnPropertyChanged("IsStandardMember");
+        OnPropertyChanged("IsPlusMember");
+        OnPropertyChanged("IsMasterMember");
     }
 
     private async Task CopyID()

@@ -48,7 +48,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
 
             for (int i = 0; i < this._lyricCollectors.Length; i++)
             {
-                if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject))
+                if (Core.INSTANCE.CacheManager.IsLyricsInCache(songResponseObject.SongRequestObject, true))
                     return;
 
                 ILyricsCollector collector = this._lyricCollectors.Get(i);

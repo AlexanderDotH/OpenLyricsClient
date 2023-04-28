@@ -67,8 +67,57 @@
                 FontSize="18"></TextBlock>
         </Border>
         
+        <elements:GroupBox Classes="clean" 
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Width="400"
+                           IsVisible="{Binding !IsAnyServiceConnected}"
+                           Background="{DynamicResource SecondaryBackgroundBrush}">
+                        
+            <StackPanel Margin="15" 
+                        Orientation="Vertical" 
+                        Spacing="15">
+                           
+                <TextBlock FontSize="16"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Left"
+                           FontWeight="Bold"
+                           Text="It's pretty empty here">
+                </TextBlock>
+                            
+                <TextBlock Text="It looks like you didn't connect any service with the OpenLyricsClient. Simply take a look at the 'Services' section inside the settings"
+                           TextWrapping="Wrap"/>
+
+            </StackPanel>
+        </elements:GroupBox>
+        
+        <elements:GroupBox Classes="clean" 
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Width="400"
+                           IsVisible="{Binding IsEmpty}"
+                           Background="{DynamicResource SecondaryBackgroundBrush}">
+                        
+            <StackPanel Margin="15" 
+                        Orientation="Vertical" 
+                        Spacing="15">
+                           
+                <TextBlock FontSize="16"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Left"
+                           FontWeight="Bold"
+                           Text="It's pretty empty here">
+                </TextBlock>
+                            
+                <TextBlock Text="Simply listen to a song and have fun!"
+                           TextWrapping="Wrap"/>
+
+            </StackPanel>
+        </elements:GroupBox>
+        
         <Grid Name="GRD_Info"
               HorizontalAlignment="Left"
+              IsVisible="{Binding IsSongAvailable}"
               Width="500">
             
             <StackPanel Orientation="Vertical" 
@@ -91,6 +140,7 @@
                              HorizontalAlignment="Center"
                              Margin="0, 0,0,0"
                              CornerRadius="8"
+                             IsVisible="{Binding IsSongAvailable}"
                              Background="{DynamicResource SecondaryBackgroundBrush}">
 
                     <StackPanel Orientation="Vertical" Spacing="20">
@@ -189,6 +239,7 @@
             
             <custom1:LyricsScroller
                 Name="LRC_Display"
+                IsVisible="{Binding IsSongAvailable}"
                 FontSize="30"
                 LyricsFontWeight="Bold"
                 ItemMargin="0,0,0,70"/>
@@ -234,6 +285,7 @@
         
         
         <Grid VerticalAlignment="Bottom"
+              IsVisible="{Binding IsSongAvailable}"
               Height="50">
             
             <styles:Card Name="CRD_Bar" 

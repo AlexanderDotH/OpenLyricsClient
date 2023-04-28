@@ -278,11 +278,12 @@ namespace OpenLyricsClient.Backend.Cache
         {
             CacheData cacheData = GetDataByRequest(songRequestObject);
 
-            if (!DataValidator.ValidateData(cacheData, cacheData.LyricData))
+            if (!(DataValidator.ValidateData(cacheData) && 
+                  DataValidator.ValidateData(cacheData.LyricData, cacheData.LyricData.LyricParts)))
                 return false;
             
             return onlyCheckName ? 
-                cacheData.LyricData?.SongMetadata?.Name.SequenceEqual(songRequestObject.SongName) == true: 
+                cacheData.LyricData?.SongMetadata?.Name.SequenceEqual(songRequestObject.SongName) == true : 
                 cacheData.LyricData.LyricType == LyricType.TEXT;
         }
         

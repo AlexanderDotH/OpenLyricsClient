@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Threading;
 using DevBase.Generics;
 using OpenLyricsClient.Backend.Events.EventArgs;
@@ -20,6 +21,8 @@ public class SettingsHandler
     
     public SettingsHandler(string workingDirectory)
     {
+        SetupWorkingDirectory(workingDirectory);
+        
         this._sections = new AList<ISettingSection>();
 
         this._sections.Add(new LyricsSection(string.Format("{0}{1}", 
@@ -40,6 +43,12 @@ public class SettingsHandler
         Task.Factory.StartNew(Initialize).GetAwaiter().GetResult();
     }
 
+    private void SetupWorkingDirectory(string workingDirectory)
+    {
+        if (!Directory.Exists(workingDirectory))
+            Directory.CreateDirectory(workingDirectory);
+    }
+    
     public async Task Initialize()
     {
         this._sections.ForEach(async t=> await t.ReadFromDisk());

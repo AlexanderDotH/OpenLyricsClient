@@ -34,7 +34,7 @@ public partial class LyricsPage : UserControl
     private Border _artworkBorder;
     
     private Image _artworkImage;
-    private string _oldImagePath;
+    private string _oldImagePath = string.Empty;
     
     private LyricsPageViewModel _lyricsPageViewModel;
     
@@ -82,7 +82,6 @@ public partial class LyricsPage : UserControl
         this._artworkBorder = border;
         
         this._artworkImage = image;
-        this._oldImagePath = string.Empty;
         
         this._presenterGrid.Children.Add(image);
         this._presenterGrid.Children.Add(border);
@@ -101,30 +100,25 @@ public partial class LyricsPage : UserControl
         if (e.PropertyName.IsNullOrEmpty())
             return;
 
-        if (DataValidator.ValidateData(this._lyricsPageViewModel.Artwork))
+        if (e.PropertyName?.Equals("Artwork") == true &&
+            DataValidator.ValidateData(this._lyricsPageViewModel.Artwork))
         {
-            if (e.PropertyName?.Equals("Artwork") == true)
+            Dispatcher.UIThread.InvokeAsync(() =>
             {
-                if (!this._oldImagePath!.Equals(this._lyricsPageViewModel?.Artwork!))
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    Dispatcher.UIThread.InvokeAsync(() =>
-                    {
-                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                        {
-                            AsyncImageLoader.ImageLoader.SetSource(this._artworkImage, this._lyricsPageViewModel.Artwork);
-                        } 
-                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                        {
-                            this._artworkImage.Source = new Bitmap(this._lyricsPageViewModel.Artwork);
-                        }
-                
-                        this._oldImagePath = this._lyricsPageViewModel.Artwork;
-                    });
+                    AsyncImageLoader.ImageLoader.SetSource(this._artworkImage, this._lyricsPageViewModel.Artwork);
+                } 
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    this._artworkImage.Source = new Bitmap(this._lyricsPageViewModel.Artwork);
                 }
-            }
+                
+                this._oldImagePath = this._lyricsPageViewModel.Artwork;
+            });
         }
 
-        if (e.PropertyName.Equals("UiBackground"))
+        if (e.PropertyName?.Equals("UiBackground") == true)
         {
             SolidColorBrush primaryBackColor = App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;
 

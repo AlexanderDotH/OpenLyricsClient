@@ -16,6 +16,7 @@ using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Handler.Services.Services.Spotify;
 using OpenLyricsClient.Backend.Handler.Song.SongProvider;
+using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Structure.Artwork;
 using OpenLyricsClient.Backend.Structure.Enum;
@@ -77,6 +78,8 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         OnPropertyChanged("Percentage");
         OnPropertyChanged("CurrentMaxTime");
         OnPropertyChanged("IsPlayerAvailable");
+        OnPropertyChanged("IsSongAvailable");
+        OnPropertyChanged("IsEmpty");
     }
 
     public async Task UpdatePlayback()
@@ -126,6 +129,10 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         OnPropertyChanged("UiForeground");
         OnPropertyChanged("SelectedColor");
         OnPropertyChanged("UnSelectedColor");
+        
+        OnPropertyChanged("IsAnyServiceConnected");
+        OnPropertyChanged("IsSongNotPlayingAndAnyServiceConnected");
+        OnPropertyChanged("IsSongAvailable");
     }
 
     private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
@@ -147,16 +154,26 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         get => Core.INSTANCE.SongHandler?.CurrentSong?.Paused! == false;
     }
 
+    public bool IsSongAvailable
+    {
+        get => Core.INSTANCE.SongHandler?.CurrentSong! != null && IsAnyServiceConnected;
+    }
+    
+    public bool IsEmpty
+    {
+        get => Core.INSTANCE.SongHandler?.CurrentSong! == null && IsAnyServiceConnected;
+    }
+    
     public bool IsPlayerAvailable
     {
         get => Core.INSTANCE.SongHandler?.SongProvider! == EnumSongProvider.SPOTIFY;
     }
-    
-    public bool IsSongPaused
+
+    public bool IsAnyServiceConnected
     {
-        get => Core.INSTANCE.SongHandler?.CurrentSong?.Paused! == true;
+        get => Core.INSTANCE.ServiceHandler.IsAnyConnected();
     }
-    
+
     /*public string? SongName
     {
         get => "Never gonna give up";
@@ -169,7 +186,8 @@ public class LyricsPageViewModel : INotifyPropertyChanged
 
     public bool AiBadge
     {
-        get => Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricProvider?.SequenceEqual("OpenLyricsClient") == true;
+        get => Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricProvider?.SequenceEqual("OpenLyricsClient") == true && 
+               Core.INSTANCE.CacheManager.IsLyricsInCache(SongRequestObject.FromSong(Core.INSTANCE?.SongHandler?.CurrentSong!));
     }
     
     public string Artists
