@@ -74,3 +74,5 @@ Lets get started by linking you spotify account:
 
 <br>
 Feel free to share your feedback with me on Discord! You can find me under the tag Alex.#8988.
+
+A thanks to my girlfriend who provided me with the inspiration and energy for this project. She is the reason why I completed it, as it was literally a Valentine's present.
