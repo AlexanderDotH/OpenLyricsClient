@@ -1,5 +1,5 @@
 # OpenLyricsClient
-<img src="https://badgen.net/badge/testing/alpha/orange?icon=github" />
+<img src="https://badgen.net/badge/released/stable/green?icon=github" />
 
 <img align="left" src="https://alexh.space/images/openlyricsclient/logo.png" alt="drawing" width="200"/> 
 <br>
