@@ -142,6 +142,7 @@ namespace OpenLyricsClient.Backend
             this._songHandler.Dispose();
             this._lyricHandler.Dispose();
             this._serviceHandler.Dispose();
+            this._licenseHandler.Dispose();
         }
         
         protected virtual void TickEvent()
@@ -204,6 +205,11 @@ namespace OpenLyricsClient.Backend
         public LyricHandler LyricHandler
         {
             get => this._lyricHandler;
+        }
+
+        public LicenseHandler LicenseHandler
+        {
+            get => _licenseHandler;
         }
 
         public static bool IsDisposed()

@@ -34,7 +34,7 @@ public class LicenseHandler : IHandler
             EnumRegisterTypes.REFRESH_LICENSE);
     }
 
-    public async Task RefreshLicense()
+    private async Task RefreshLicense()
     {
         while (!this._disposed)
         {
@@ -62,6 +62,6 @@ public class LicenseHandler : IHandler
 
     public JsonOpenLyricsClientSubscriptionModel License
     {
-        get => _license;
+        get => this._license;
     }
 }

@@ -95,27 +95,32 @@ public partial class LyricsPage : UserControl
 
     private void DataContextOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (!DataValidator.ValidateData(e))
+            return;
+        
         if (e.PropertyName.IsNullOrEmpty())
             return;
 
         if (DataValidator.ValidateData(this._lyricsPageViewModel.Artwork))
         {
-            if (e.PropertyName?.Equals("Artwork") == true &&
-                !this._oldImagePath.Equals(this._lyricsPageViewModel.Artwork))
+            if (e.PropertyName?.Equals("Artwork") == true)
             {
-                Dispatcher.UIThread.InvokeAsync(() =>
+                if (!this._oldImagePath!.Equals(this._lyricsPageViewModel?.Artwork!))
                 {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    Dispatcher.UIThread.InvokeAsync(() =>
                     {
-                        AsyncImageLoader.ImageLoader.SetSource(this._artworkImage, this._lyricsPageViewModel.Artwork);
-                    } 
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    {
-                        this._artworkImage.Source = new Bitmap(this._lyricsPageViewModel.Artwork);
-                    }
+                        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                        {
+                            AsyncImageLoader.ImageLoader.SetSource(this._artworkImage, this._lyricsPageViewModel.Artwork);
+                        } 
+                        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                        {
+                            this._artworkImage.Source = new Bitmap(this._lyricsPageViewModel.Artwork);
+                        }
                 
-                    this._oldImagePath = this._lyricsPageViewModel.Artwork;
-                });
+                        this._oldImagePath = this._lyricsPageViewModel.Artwork;
+                    });
+                }
             }
         }
 

@@ -1,0 +1,27 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="OpenLyricsClient.Frontend.View.Custom.Badges.MasterBadge">
+    <Border CornerRadius="10" Background="{DynamicResource LightBackgroundBrush}">
+        <StackPanel Orientation="Horizontal" Spacing="0">
+            <TextBlock Text="OpenLyricsClient"
+                       FontWeight="Light"
+                       Margin="5,5,0,5"
+                       FontSize="14"/>
+                                                
+            <Border CornerRadius="10">
+                <TextBlock Text="Master"
+                           FontWeight="Bold"
+                           VerticalAlignment="Bottom"
+                           Margin="4,4,5,5"
+                           FontSize="14">
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush  StartPoint="0,0" >
+                            <GradientStop Color="#F42860" Offset="0.6"/>
+                            <GradientStop Color="#9E289E" Offset="0.8"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+            </Border>
+        </StackPanel>
+    </Border>
+</UserControl>

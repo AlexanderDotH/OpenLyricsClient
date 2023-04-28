@@ -28,11 +28,11 @@
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
     <PackageReference Include="Avalonia.X11" Version="0.10.18" />
     <PackageReference Include="AvaloniaColorPicker" Version="1.3.4" />
-    <PackageReference Include="DevBase" Version="1.0.9" />
-    <PackageReference Include="DevBase.Api" Version="1.1.3" />
+    <PackageReference Include="DevBase" Version="1.1.1" />
+    <PackageReference Include="DevBase.Api" Version="1.1.5" />
     <PackageReference Include="DevBase.Avalonia" Version="1.0.1" />
-    <PackageReference Include="DevBase.Cryptography" Version="1.0.1" />
-    <PackageReference Include="DevBase.Cryptography.BouncyCastle" Version="1.1.7" />
+    <PackageReference Include="DevBase.Cryptography" Version="1.0.2" />
+    <PackageReference Include="DevBase.Cryptography.BouncyCastle" Version="1.1.8" />
     <PackageReference Include="DevBase.Format" Version="1.2.1" />
     <PackageReference Include="Kawazu" Version="1.1.4" />
     <PackageReference Include="Material.Avalonia" Version="2.5.1" />
@@ -47,6 +47,7 @@
     <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="2.88.3" />
     <PackageReference Include="SpotifyAPI.Web" Version="7.0.0" />
     <PackageReference Include="Squalr.Engine.Scanning" Version="2.3.0.1" />
+    <PackageReference Include="TextCopy" Version="6.2.1" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
   </ItemGroup>
   <ItemGroup>

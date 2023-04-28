@@ -5,6 +5,7 @@
              xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
              xmlns:settings="clr-namespace:OpenLyricsClient.Frontend.Models.Pages.Settings"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:badges="clr-namespace:OpenLyricsClient.Frontend.View.Custom.Badges"
              mc:Ignorable="d" 
              d:DesignWidth="1000"
              d:DesignHeight="1000"
@@ -42,7 +43,7 @@
                                        Text="Profile">
                             </TextBlock>
                             
-                            <TextBlock Text="Here you can get your user information and you current plan"></TextBlock>
+                            <TextBlock Text="Here you can get your user information and you current subscription"></TextBlock>
                             
                             <Grid ColumnDefinitions="Auto, Auto, Auto" Height="200">
                                <Border Grid.Column="0" 
@@ -63,60 +64,58 @@
                                 
                                 <StackPanel Grid.Column="3"
                                             VerticalAlignment="Center"
-                                            Spacing="10">
+                                            Spacing="5">
                                 
                                     <StackPanel Orientation="Horizontal" Spacing="10">
-                                        <TextBlock Text="User Identification"
+                                        <TextBlock Text="User Identification" 
+                                                   VerticalAlignment="Center"
                                                    FontWeight="Light"
                                                    FontSize="14"/>
                                         
-                                        <TextBlock Text="0e65db204daf53b148eca6a0efb843b56716cf47"
+                                        <TextBlock Text="{Binding UserID}"
+                                                   VerticalAlignment="Center"
                                                    FontWeight="Bold"
                                                    FontSize="14"/>
+                                        
+                                        <Button Width="30" 
+                                                Height="30" 
+                                                VerticalAlignment="Center"
+                                                Command="{Binding CopyIDCommand}"
+                                                Background="{DynamicResource LightBackgroundBrush}">
+                                            <avalonia:MaterialIcon Kind="ContentCopy"/>
+                                        </Button>
                                     </StackPanel>
                                 
                                     <StackPanel Orientation="Horizontal" Spacing="10">
                                         <TextBlock Text="Secret"
+                                                   VerticalAlignment="Center"
                                                    FontWeight="Light"
                                                    FontSize="14"/>
                                         
-                                        <TextBlock Text="b/vExNSmPh1j+PBXPnf/LzYk2IY="
+                                        <TextBlock Text="{Binding UserSecretCensored}"
+                                                   VerticalAlignment="Center"
                                                    FontWeight="Bold"
                                                    FontSize="14"/>
+                                        
+                                        <Button Width="30" 
+                                                Height="30" 
+                                                VerticalAlignment="Center"
+                                                Command="{Binding CopySecretCommand}"
+                                                Background="{DynamicResource LightBackgroundBrush}">
+                                            <avalonia:MaterialIcon Kind="ContentCopy"/>
+                                        </Button>
                                     </StackPanel>
 
-                                    
                                     <StackPanel Orientation="Horizontal" Spacing="10">
                                         <TextBlock Text="Product"
                                                    FontWeight="Light"
                                                    Margin="0,5,0,0"
                                                    FontSize="14"/>
                                         
-                                        <Border CornerRadius="10" Background="{DynamicResource LightBackgroundBrush}">
-                                            <StackPanel Orientation="Horizontal" Spacing="0">
-                                                <TextBlock Text="OpenLyricsClient"
-                                                           FontWeight="Light"
-                                                           Margin="5,5,0,5"
-                                                           FontSize="14"/>
-                                                
-                                                <Border CornerRadius="10">
-                                                    <TextBlock Text="Plus"
-                                                               FontWeight="Bold"
-                                                               VerticalAlignment="Bottom"
-                                                               Margin="4,4,5,5"
-                                                               FontSize="14">
-                                                        <TextBlock.Foreground>
-                                                            <ConicGradientBrush Center="0.5,0.5" >
-                                                                <GradientStop Color="#d00000" Offset="0.0"/>
-                                                                <GradientStop Color="#f48c06" Offset="0.4"/>
-                                                                <GradientStop Color="#ffba08" Offset="1" />
-                                                            </ConicGradientBrush>
-                                                        </TextBlock.Foreground>
-                                                    </TextBlock>
-                                                </Border>
-                                                
-                                            </StackPanel>
-                                        </Border>
+                                        <badges:DefaultBadge IsVisible="{Binding IsStandardMember}"/>
+                                        <badges:PlusBadge IsVisible="{Binding IsPlusMember}"/>
+                                        <badges:MasterBadge IsVisible="{Binding IsMasterMember}"/>
+
                                     </StackPanel>
                                 </StackPanel>
                             </Grid>
