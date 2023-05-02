@@ -61,8 +61,7 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
             Core.INSTANCE.SettingsHandler.SettingsChanged += (sender, args) =>
             {
                 this.CurrentLyricParts = null;
-                
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UiBackground"));
+                OnPropertyChanged("UiBackground");
             };
         }
     }

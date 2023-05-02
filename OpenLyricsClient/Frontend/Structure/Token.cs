@@ -1,6 +1,6 @@
 using System;
 
-namespace OpenLyricsClient.External.CefNet.Structure;
+namespace OpenLyricsClient.Frontend.Structure;
 
 public class Token
 {

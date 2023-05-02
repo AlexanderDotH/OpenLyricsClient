@@ -1,21 +1,19 @@
 using System;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
-using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml;
-using OpenLyricsClient.Backend;
-using OpenLyricsClient.External.CefNet.Structure;
+using OpenLyricsClient.Frontend.Scaling;
+using OpenLyricsClient.Frontend.Structure;
 using Xilium.CefGlue.Avalonia;
 
-namespace OpenLyricsClient.External.CefNet.View;
+namespace OpenLyricsClient.Frontend.View.Windows.Auth;
 
-public partial class CefAuthWindow : Window
+public partial class CefAuthWindow : ScalableWindow
 {
     private string _authURL;
-    private string _authCompleteIDentifier;
+    private string _authCompleteIdentifier;
     
     private bool _isComplete;
     private string _accessToken;
@@ -25,63 +23,47 @@ public partial class CefAuthWindow : Window
 
     public CefAuthWindow()
     {
-        this._authURL = "https://google.de";
-        this._authCompleteIDentifier = "/callback";
-        
-        this._isComplete = false;
-        this._accessToken = string.Empty;
-        this._refreshToken = string.Empty;
-        
         InitializeComponent();
-
+        
         Decorator webViewContainer = this.Get<Decorator>(nameof(WebViewContainer));
         
         AvaloniaCefBrowser browser = new AvaloniaCefBrowser();
-        browser.Address = "https://google.de";
-        /*browser.AddressChanged += BrowserOnAddressChanged;*/
+        browser.Initialized += BrowserOnInitialized;
+        browser.AddressChanged += BrowserOnAddressChanged;
 
         webViewContainer.Child = browser;
 
         this._authWebView = browser;
-        
-#if DEBUG
-        this.AttachDevTools();
-#endif
     }
-
-    private void BrowserOnAddressChanged(object sender, string address)
-    {
-    }
-
-    public CefAuthWindow(string authUrl, string authCompleteIDentifier) : this()
+    
+    public CefAuthWindow(string authUrl, string authCompleteIdentifier) : this()
     {
         this._authURL = authUrl;
-        this._authCompleteIDentifier = authCompleteIDentifier;
+        this._authCompleteIdentifier = authCompleteIdentifier;
         
         this._isComplete = false;
         this._accessToken = string.Empty;
         this._refreshToken = string.Empty;
-        
     }
-
+    
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
     }
-
-    /*private void WebView_OnBrowserCreated(object? sender, EventArgs e)
+    
+    private void BrowserOnInitialized(object? sender, EventArgs e)
     {
-        this._authWebView.Navigate(this._authURL);
+        this._authWebView.Address = this._authURL;
     }
 
-    private void AuthWebView_OnAddressChange(object? sender, AddressChangeEventArgs e)
+    private void BrowserOnAddressChanged(object sender, string address)
     {
-        if (e.Url.Contains(this._authCompleteIDentifier))
+        if (address.Contains(this._authCompleteIdentifier))
         {
             Regex regex = new Regex(@"(refresh_token=([\w\W]+)((access_token=([\w\W]+))))");
-            if (regex.IsMatch(e.Url))
+            if (regex.IsMatch(address))
             {
-                Match match = regex.Match(e.Url);
+                Match match = regex.Match(address);
 
                 if (match.Groups.Count >= 5)
                 {
@@ -91,7 +73,7 @@ public partial class CefAuthWindow : Window
                 }
             }
         }
-    }*/
+    }
 
     public async Task<Token> GetAuthCode()
     {
@@ -109,4 +91,8 @@ public partial class CefAuthWindow : Window
 
         return null;
     }
+
+    public override event EventHandler<PointerPressedEventArgs> BeginResize;
+    public override event EventHandler<PointerEventArgs> Resize;
+    public override event EventHandler<PointerReleasedEventArgs> EndResize;
 }

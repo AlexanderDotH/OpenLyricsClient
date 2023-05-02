@@ -27,6 +27,10 @@ namespace OpenLyricsClient
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .LogToTrace()
+                .With(new Win32PlatformOptions
+                {
+                    UseWindowsUIComposition = false
+                })
                 .AfterSetup(t =>
                 {
                     CefRuntimeLoader.Initialize();

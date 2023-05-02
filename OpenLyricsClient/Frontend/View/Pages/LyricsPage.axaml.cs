@@ -13,7 +13,6 @@ using Avalonia.Threading;
 using DevBase.Async.Task;
 using Material.Styles;
 using OpenLyricsClient.Backend;
-using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.Frontend.Models.Pages;
@@ -150,7 +149,7 @@ public partial class LyricsPage : UserControl
 
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        //MainWindow.Instance.BeginMoveDrag(e);
+        MainWindow.Instance.BeginMoveDrag(e);
     }
 
     private void Button_OnClick(object? sender, RoutedEventArgs e)

@@ -13,9 +13,9 @@ using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Other;
 using OpenLyricsClient.Backend.Utils;
-using OpenLyricsClient.External.CefNet.Structure;
-using OpenLyricsClient.External.CefNet.View;
+using OpenLyricsClient.Frontend.Structure;
 using OpenLyricsClient.Frontend.View.Windows;
+using OpenLyricsClient.Frontend.View.Windows.Auth;
 using SpotifyAPI.Web;
 using SimpleArtist = OpenLyricsClient.Backend.Structure.Other.SimpleArtist;
 using SimpleTrack = OpenLyricsClient.Backend.Structure.Other.SimpleTrack;
@@ -189,20 +189,17 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                Dispatcher.UIThread.InvokeAsync(async() =>
-                {
-                    CefAuthWindow cefAuthWindow = new CefAuthWindow("https://openlyricsclient.com/api/auth/spotify/begin", "/welcome");
+                CefAuthWindow cefAuthWindow = new CefAuthWindow("https://openlyricsclient.com/api/auth/spotify/begin", "/welcome");
              
-                    cefAuthWindow.Width = 1100;
-                    cefAuthWindow.Height = 850;
-                    cefAuthWindow.Title = "Connect to spotify";
+                cefAuthWindow.Width = 1100;
+                cefAuthWindow.Height = 850;
+                cefAuthWindow.Title = "Connect to spotify";
              
-                    await cefAuthWindow.ShowDialog(MainWindow.Instance);
+                cefAuthWindow.ShowDialog(MainWindow.Instance);
              
-                    token = await cefAuthWindow.GetAuthCode();
+                token = await cefAuthWindow.GetAuthCode();
              
-                    cefAuthWindow.Close();
-                });
+                cefAuthWindow.Close();
             } 
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {

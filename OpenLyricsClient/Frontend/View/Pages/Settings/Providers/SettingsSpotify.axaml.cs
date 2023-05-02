@@ -19,7 +19,6 @@ using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Structure.Other;
-using OpenLyricsClient.External.CefNet.View;
 using OpenLyricsClient.Frontend.Models.Elements;
 using OpenLyricsClient.Frontend.Structure;
 using OpenLyricsClient.Frontend.View.Windows;

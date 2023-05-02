@@ -1,10 +1,8 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DevBase.Async.Task;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.External.CefNet.Structure;
+using OpenLyricsClient.Frontend.Structure;
 
 namespace OpenLyricsClient.Backend.Listener
 {
