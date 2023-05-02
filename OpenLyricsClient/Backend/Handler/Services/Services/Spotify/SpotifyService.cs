@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using DevBase.Api.Apis.OpenLyricsClient.Structure.Json;
 using DevBase.Async.Task;
 using DevBase.Generics;
@@ -188,17 +189,20 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                CefAuthWindow cefAuthWindow = new CefAuthWindow("https://openlyricsclient.com/api/auth/spotify/begin", "/welcome");
+                Dispatcher.UIThread.InvokeAsync(async() =>
+                {
+                    CefAuthWindow cefAuthWindow = new CefAuthWindow("https://openlyricsclient.com/api/auth/spotify/begin", "/welcome");
              
-                cefAuthWindow.Width = 1100;
-                cefAuthWindow.Height = 850;
-                cefAuthWindow.Title = "Connect to spotify";
+                    cefAuthWindow.Width = 1100;
+                    cefAuthWindow.Height = 850;
+                    cefAuthWindow.Title = "Connect to spotify";
              
-                cefAuthWindow.ShowDialog<string>(MainWindow.Instance);
+                    await cefAuthWindow.ShowDialog(MainWindow.Instance);
              
-                token = await cefAuthWindow.GetAuthCode();
+                    token = await cefAuthWindow.GetAuthCode();
              
-                cefAuthWindow.Close();
+                    cefAuthWindow.Close();
+                });
             } 
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {

@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using CefNet;
-using CefNet.Avalonia;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.External.CefNet.Structure;
+using Xilium.CefGlue.Avalonia;
 
 namespace OpenLyricsClient.External.CefNet.View;
 
@@ -22,7 +21,7 @@ public partial class CefAuthWindow : Window
     private string _accessToken;
     private string _refreshToken;
 
-    private WebView _authWebView;
+    private AvaloniaCefBrowser _authWebView;
 
     public CefAuthWindow()
     {
@@ -34,11 +33,26 @@ public partial class CefAuthWindow : Window
         this._refreshToken = string.Empty;
         
         InitializeComponent();
+
+        Decorator webViewContainer = this.Get<Decorator>(nameof(WebViewContainer));
+        
+        AvaloniaCefBrowser browser = new AvaloniaCefBrowser();
+        browser.Address = "https://google.de";
+        /*browser.AddressChanged += BrowserOnAddressChanged;*/
+
+        webViewContainer.Child = browser;
+
+        this._authWebView = browser;
+        
 #if DEBUG
         this.AttachDevTools();
 #endif
     }
-    
+
+    private void BrowserOnAddressChanged(object sender, string address)
+    {
+    }
+
     public CefAuthWindow(string authUrl, string authCompleteIDentifier) : this()
     {
         this._authURL = authUrl;
@@ -48,7 +62,6 @@ public partial class CefAuthWindow : Window
         this._accessToken = string.Empty;
         this._refreshToken = string.Empty;
         
-        this._authWebView = this.Get<WebView>(nameof(AuthWebView));
     }
 
     private void InitializeComponent()
@@ -56,7 +69,7 @@ public partial class CefAuthWindow : Window
         AvaloniaXamlLoader.Load(this);
     }
 
-    private void WebView_OnBrowserCreated(object? sender, EventArgs e)
+    /*private void WebView_OnBrowserCreated(object? sender, EventArgs e)
     {
         this._authWebView.Navigate(this._authURL);
     }
@@ -78,7 +91,7 @@ public partial class CefAuthWindow : Window
                 }
             }
         }
-    }
+    }*/
 
     public async Task<Token> GetAuthCode()
     {

@@ -5,7 +5,6 @@ using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
 using Avalonia.Skia;
-using CefNet;
 using OpenLyricsClient.Backend.Utils;
 using SkiaSharp;
 

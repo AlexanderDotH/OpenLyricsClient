@@ -2,20 +2,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:avalonia="clr-namespace:CefNet.Avalonia;assembly=CefNet.Avalonia"
         Background="White"
         mc:Ignorable="d" 
         d:DesignWidth="800" d:DesignHeight="450"
         WindowStartupLocation="CenterScreen"
         x:Class="OpenLyricsClient.External.CefNet.View.CefAuthWindow"
-        
         Title="CefAuthWindow">
         
-        <Grid >
-                <avalonia:WebView Name="AuthWebView"
-                                  BrowserCreated="WebView_OnBrowserCreated" 
-                                  AddressChange="AuthWebView_OnAddressChange"
-                                  VerticalAlignment="Stretch"
-                                  HorizontalAlignment="Stretch"/>
-        </Grid>
+    <Decorator Name="WebViewContainer"/>
 </Window>

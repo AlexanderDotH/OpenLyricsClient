@@ -33,7 +33,7 @@ public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
         Core.INSTANCE.SettingsHandler.SettingsChanged += SettingManagerOnSettingsChanged;
         
         DisconnectFromSpotify = ReactiveCommand.CreateFromTask(DisconnectSpotify);
-        ConnectToSpotify = ReactiveCommand.CreateFromTask(StartSpotifyAuthFlow);
+        ConnectToSpotify = ReactiveCommand.Create(StartSpotifyAuthFlow);
     }
     
     private async Task DisconnectSpotify()
@@ -42,7 +42,7 @@ public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
         await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(SpotifySection), "IsSpotifyConnected");
     }
     
-    private async Task StartSpotifyAuthFlow()
+    private void StartSpotifyAuthFlow()
     {
         /*if (Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected == false && 
             Core.INSTANCE.SettingManager.Settings.SpotifyAccess?.Statistics != null &&
