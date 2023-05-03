@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using DevBase.Generics;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Deezer;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch;
@@ -9,6 +10,7 @@ using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl;
 using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Handler.Song;
+using OpenLyricsClient.Backend.Plugins;
 using OpenLyricsClient.Backend.Structure;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
@@ -60,6 +62,9 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
 
                 if (lyricData.LyricReturnCode != LyricReturnCode.SUCCESS)
                     continue;
+
+                foreach (IPlugin plugin in Core.INSTANCE.PluginManager.GetPlugins().Where((plugin) => plugin.Scope.HasFlag(PluginScope.LyricsPostprocess)))
+                    lyricData = plugin.ProcessLyrics(songResponseObject, lyricData);
 
                 Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, lyricData);
                 return;

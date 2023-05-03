@@ -40,6 +40,9 @@ public class SettingsHandler
         this._sections.Add(new AccountSection(string.Format("{0}{1}", 
             workingDirectory, "Account.json")));
 
+        this._sections.Add(new PluginsSection(string.Format("{0}{1}",
+            workingDirectory, "Plugins.json"))); // Path.Join()
+
         Task.Factory.StartNew(Initialize).GetAwaiter().GetResult();
     }
 

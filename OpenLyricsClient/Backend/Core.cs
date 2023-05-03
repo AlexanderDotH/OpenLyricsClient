@@ -14,6 +14,7 @@ using OpenLyricsClient.Backend.Handler.Lyrics;
 using OpenLyricsClient.Backend.Handler.Services;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Helper;
+using OpenLyricsClient.Backend.Plugins;
 using OpenLyricsClient.Backend.Settings;
 using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
@@ -52,6 +53,8 @@ namespace OpenLyricsClient.Backend
         private WindowLogger _windowLogger;
 
         private TaskSuspensionToken _tickSuspensionToken;
+
+        private PluginManager _pluginManager;
 
         public event TickEventHandler TickHandler;
         public event SlowTickEventHandler SlowTickHandler;
@@ -97,6 +100,9 @@ namespace OpenLyricsClient.Backend
             this._tokenCollector = new TokenCollector();
 
             this._serviceHandler = new ServiceHandler();
+
+            this._pluginManager = new PluginManager(workingDirectory);
+            this._pluginManager.LoadPlugins(); // TODO: find where to put it
             
             SongHandler songHandler = new SongHandler();
             
@@ -165,6 +171,11 @@ namespace OpenLyricsClient.Backend
         public SettingsHandler SettingsHandler
         {
             get => this._settingsHandler;
+        }
+
+        public PluginManager PluginManager
+        {
+            get => this._pluginManager;
         }
 
         public ArtworkHandler ArtworkHandler
