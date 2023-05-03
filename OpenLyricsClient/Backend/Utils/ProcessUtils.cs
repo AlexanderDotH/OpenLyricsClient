@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using DevBase.Generics;
 
 namespace OpenLyricsClient.Backend.Utils
@@ -12,6 +13,23 @@ namespace OpenLyricsClient.Backend.Utils
             return processes.Length > 0;
         }
 
+        public static void OpenBrowser(string url)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                url = url.Replace("&", "^&");
+                Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Process.Start("xdg-open", url);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                Process.Start("open", url);
+            }
+        }
+        
         public static AList<string> GetRunningProcesses(params string[] processNames)
         {
             AList<string> processesToSearch = new AList<string>(processNames);

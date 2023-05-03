@@ -52,7 +52,7 @@
                                                   FontWeight="Normal"
                                                   TextWrapping="Wrap"
                                                   Foreground="{DynamicResource SecondaryFontColorBrush}"
-                                                  Text="Here you can clear the cache">
+                                                  Text="You can clear the cache here">
                                        </TextBlock>
                                
                                        <Button Grid.Column="0" 
