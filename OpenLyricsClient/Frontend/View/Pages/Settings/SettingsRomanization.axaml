@@ -274,7 +274,7 @@
                                                           VerticalAlignment="Top"
                                                           HorizontalAlignment="Left"
                                                           FontWeight="Normal"
-                                                          Text="Russia">
+                                                          Text="Russian">
                                                </TextBlock>
                                
                                                <TextBlock FontSize="13"

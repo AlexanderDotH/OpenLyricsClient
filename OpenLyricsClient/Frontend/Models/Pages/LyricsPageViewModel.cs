@@ -22,6 +22,7 @@ using OpenLyricsClient.Backend.Structure.Artwork;
 using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Frontend.View.Windows;
 using ReactiveUI;
 
 namespace OpenLyricsClient.Frontend.Models.Pages;
@@ -36,11 +37,15 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     public ReactiveCommand<Unit, Unit> PreviousSongCommand { get; }
     public ReactiveCommand<Unit, Unit> NextSongCommand { get; }
     
+    public ReactiveCommand<Unit, Unit> SwitchToSettingsCommand { get; }
+    
     public LyricsPageViewModel()
     {
         UpdatePlaybackCommand = ReactiveCommand.CreateFromTask(UpdatePlayback);
         PreviousSongCommand = ReactiveCommand.CreateFromTask(()=>SkipSong(EnumPlayback.PREVOUS_TRACK));
         NextSongCommand = ReactiveCommand.CreateFromTask(()=>SkipSong(EnumPlayback.NEXT_TRACK));
+
+        SwitchToSettingsCommand = ReactiveCommand.Create(SwitchToSettings);
 
         Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
         Core.INSTANCE.SettingsHandler.SettingsChanged += SettingManagerOnSettingsChanged;
@@ -64,6 +69,11 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         OnPropertyChanged("IsEmpty");
     }
 
+    public void SwitchToSettings()
+    {
+        MainWindow.Instance.SelectPage(2);
+    }
+    
     public async Task UpdatePlayback()
     {
         try

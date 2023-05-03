@@ -87,6 +87,23 @@
                             
                 <TextBlock Text="It looks like you didn't connect any service with the OpenLyricsClient. Simply take a look at the 'Services' section inside the settings"
                            TextWrapping="Wrap"/>
+                
+                <Button Background="{DynamicResource LightBackgroundBrush}" 
+                        Width="300" 
+                        Margin="5" 
+                        Command="{Binding SwitchToSettingsCommand}"
+                        VerticalAlignment="Bottom">
+                    
+                    <StackPanel Orientation="Horizontal" 
+                                Spacing="10">
+                        
+                        <TextBlock Text="Go to settings"/>
+                        
+                        <avalonia:MaterialIcon Kind="Link"
+                                               VerticalAlignment="Stretch"
+                                               HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </Button>
 
             </StackPanel>
         </elements:GroupBox>
