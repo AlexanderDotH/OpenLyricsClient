@@ -23,7 +23,7 @@
                       VerticalAlignment="Top"
                       Margin="10,0,10,0">
             
-            <StackPanel Margin="0,20,0,0"
+            <StackPanel Margin="0,20,0,20"
                         HorizontalAlignment="Center"
                         Width="800">
                
@@ -195,6 +195,96 @@
                                                            VerticalAlignment="Stretch"
                                                            HorizontalAlignment="Stretch"/>
                                 </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </elements:GroupBox>
+                    
+                     <elements:GroupBox Classes="clean" 
+                                       Background="{DynamicResource SecondaryBackgroundBrush}">
+                        <StackPanel Margin="15" 
+                                    Orientation="Vertical" 
+                                    Spacing="15">
+                           
+                            <TextBlock FontSize="14"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Bold"
+                                       Text="PKMNPlatin">
+                            </TextBlock>
+                            
+                            <TextBlock FontSize="14"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Normal"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                       Text="The logo designer for the OpenLyricsClient">
+                            </TextBlock>
+                            
+                            <Panel Background="{DynamicResource LightBackgroundBrush}" 
+                                   Height="1" 
+                                   HorizontalAlignment="Stretch"/>
+                            
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="15">
+                                
+                                <plattform:WindowsBadge/>
+                                
+                                <plattform:LinuxBadge/>
+                                
+                                <other:DesignerBadge/>
+                                
+                            </StackPanel>
+                            
+                            <StackPanel Orientation="Horizontal" 
+                                        Spacing="15">
+                                
+                                <Button Width="35" 
+                                        Height="35"
+                                        Command="{Binding OpenPKMNPlatinGithubCommand}"
+                                        Background="{DynamicResource LightBackgroundBrush}">
+                                    
+                                    <avalonia:MaterialIcon Kind="Github" 
+                                                           VerticalAlignment="Stretch"
+                                                           HorizontalAlignment="Stretch"/>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </elements:GroupBox>
+                    
+                    <elements:GroupBox Classes="clean" 
+                                       Background="{DynamicResource SecondaryBackgroundBrush}">
+                        <StackPanel Margin="15" 
+                                    Orientation="Vertical" 
+                                    Spacing="15">
+                           
+                            <TextBlock FontSize="14"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Bold"
+                                       Text="Jhannes">
+                            </TextBlock>
+                            
+                            <TextBlock FontSize="14"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Normal"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                       Text="One of the early tester of the OpenLyricsClient">
+                            </TextBlock>
+                            
+                            <Panel Background="{DynamicResource LightBackgroundBrush}" 
+                                   Height="1" 
+                                   HorizontalAlignment="Stretch"/>
+                            
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="15">
+                                
+                                <plattform:WindowsBadge/>
+                                
+                                <other:TesterBadge/>
+                                
                             </StackPanel>
                         </StackPanel>
                     </elements:GroupBox>
