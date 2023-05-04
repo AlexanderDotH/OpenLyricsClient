@@ -27,6 +27,15 @@ namespace OpenLyricsClient.Frontend.View.Windows
         {
             InitializeComponent();
 
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                this.WindowStartupLocation = WindowStartupLocation.Manual; // center doesn't work on osx
+                this.Position = new PixelPoint(0, 0); // initialize window in the top left corner
+                this.Padding = new Thickness(0, 28, 0, 0); // pad the buttons from top
+                this.CRD_WindowDecoration.IsVisible = false; // hide original buttons
+                this.CRD_WindowDecoration_FullScreen.IsVisible = false; // hide fullscreen button
+            }
+
             INSTANCE = this; 
             this._windowDragable = true;
 
