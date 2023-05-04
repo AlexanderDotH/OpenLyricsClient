@@ -1,6 +1,6 @@
 ﻿using System;
-using OpenLyricsClient.Backend.Structure.Artwork;
-using OpenLyricsClient.Backend.Structure.Song;
+using OpenLyricsClient.Shared.Structure.Artwork;
+using OpenLyricsClient.Shared.Structure.Song;
 
 namespace OpenLyricsClient.Backend.Events.EventArgs;
 

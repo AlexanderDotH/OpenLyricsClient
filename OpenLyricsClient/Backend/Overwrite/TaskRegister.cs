@@ -1,6 +1,6 @@
 ﻿using System;
 using DevBase.Async.Task;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Overwrite;
 

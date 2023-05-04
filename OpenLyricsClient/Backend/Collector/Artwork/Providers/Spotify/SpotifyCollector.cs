@@ -1,35 +1,35 @@
 using System.Net;
 using System.Threading.Tasks;
-using OpenLyricsClient.Backend.Structure.Artwork;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Artwork;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Song;
+using OpenLyricsClient.Shared.Utils;
 using SpotifyAPI.Web;
 
 namespace OpenLyricsClient.Backend.Collector.Artwork.Providers.Spotify;
 
 public class SpotifyCollector : IArtworkCollector
 {
-    public async Task<Structure.Artwork.Artwork> GetArtwork(SongResponseObject songResponseObject)
+    public async Task<Shared.Structure.Artwork.Artwork> GetArtwork(SongResponseObject songResponseObject)
     {
         if (!DataValidator.ValidateData(songResponseObject))
-            return new Structure.Artwork.Artwork();
+            return new Shared.Structure.Artwork.Artwork();
 
         if (!DataValidator.ValidateData(songResponseObject.SongRequestObject))
-            return new Structure.Artwork.Artwork();
+            return new Shared.Structure.Artwork.Artwork();
 
         if (!DataValidator.ValidateData(songResponseObject.SongRequestObject.Song))
-            return new Structure.Artwork.Artwork();
+            return new Shared.Structure.Artwork.Artwork();
 
         if (!DataValidator.ValidateData(songResponseObject.SongRequestObject.Song.TrackObject,
                 songResponseObject.SongRequestObject.Song.TrackObject))
-            return new Structure.Artwork.Artwork();
+            return new Shared.Structure.Artwork.Artwork();
 
         if (!songResponseObject.CollectorName.Equals(this.CollectorName()))
-            return new Structure.Artwork.Artwork();
+            return new Shared.Structure.Artwork.Artwork();
 
         if (!(songResponseObject.Track is FullTrack))
-            return new Structure.Artwork.Artwork();
+            return new Shared.Structure.Artwork.Artwork();
 
         FullTrack track = (FullTrack)songResponseObject.Track;
 
@@ -53,10 +53,10 @@ public class SpotifyCollector : IArtworkCollector
         return await GetArtwork(maxImage.Url);
     }
 
-    private async Task<Structure.Artwork.Artwork> GetArtwork(string url)
+    private async Task<Shared.Structure.Artwork.Artwork> GetArtwork(string url)
     {
         byte[] artwork = await new WebClient().DownloadDataTaskAsync(url);
-        return new Structure.Artwork.Artwork(artwork, string.Empty, ArtworkReturnCode.SUCCESS);
+        return new Shared.Structure.Artwork.Artwork(artwork, string.Empty, ArtworkReturnCode.SUCCESS);
     }
     
     public string CollectorName()

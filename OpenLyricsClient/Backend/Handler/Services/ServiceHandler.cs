@@ -4,7 +4,7 @@ using DevBase.Generics;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Services.Services;
 using OpenLyricsClient.Backend.Handler.Services.Services.Spotify;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Handler.Services
 {

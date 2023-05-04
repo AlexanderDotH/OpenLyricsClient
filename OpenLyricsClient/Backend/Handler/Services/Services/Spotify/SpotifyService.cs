@@ -10,15 +10,15 @@ using DevBase.Generics;
 using Microsoft.Extensions.Configuration;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Structure.Other;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Other;
+using OpenLyricsClient.Shared.Utils;
 using OpenLyricsClient.Frontend.Structure;
 using OpenLyricsClient.Frontend.View.Windows;
 using OpenLyricsClient.Frontend.View.Windows.Auth;
 using SpotifyAPI.Web;
-using SimpleArtist = OpenLyricsClient.Backend.Structure.Other.SimpleArtist;
-using SimpleTrack = OpenLyricsClient.Backend.Structure.Other.SimpleTrack;
+using SimpleArtist = OpenLyricsClient.Shared.Structure.Other.SimpleArtist;
+using SimpleTrack = OpenLyricsClient.Shared.Structure.Other.SimpleTrack;
 
 namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 {
@@ -115,7 +115,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
         public async Task UpdatePlayback(EnumPlayback playback)
         {
             SpotifyClient spotifyClient = new SpotifyClient(GetAccessToken());
-            Structure.Song.Song song = Core.INSTANCE.SongHandler?.CurrentSong!;
+            Shared.Structure.Song.Song song = Core.INSTANCE.SongHandler?.CurrentSong!;
             
             switch (playback)
             {

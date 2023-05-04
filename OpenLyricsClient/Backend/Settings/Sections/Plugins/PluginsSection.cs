@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Settings;
 using OpenLyricsClient.Backend.Settings.Sections.Plugins;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Utils;
 
 public class PluginsSection : ISettingSection
 {

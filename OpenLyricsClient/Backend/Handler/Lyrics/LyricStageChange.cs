@@ -1,6 +1,6 @@
-﻿using OpenLyricsClient.Backend.Structure;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Utils;
+﻿using OpenLyricsClient.Shared.Structure;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Handler.Lyrics
 {

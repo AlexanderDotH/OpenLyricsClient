@@ -6,8 +6,8 @@ using DevBase.Generics;
 using DevBase.Typography;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Services.Services;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
 {

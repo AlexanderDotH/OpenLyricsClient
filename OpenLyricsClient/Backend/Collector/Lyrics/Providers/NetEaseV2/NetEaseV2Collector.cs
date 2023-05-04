@@ -10,11 +10,11 @@ using DevBase.Typography;
 using DevBase.Web;
 using DevBase.Web.ResponseData;
 using OpenLyricsClient.Backend.Debugger;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Structure.Json.NetEaseV2.Json;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Json.NetEaseV2.Json;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Song;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2
 {

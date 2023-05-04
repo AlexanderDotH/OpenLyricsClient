@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Song;
+using OpenLyricsClient.Shared.Utils;
 using SpotifyAPI.Web;
 
 namespace OpenLyricsClient.Backend.Collector.Song.Providers.Spotify;

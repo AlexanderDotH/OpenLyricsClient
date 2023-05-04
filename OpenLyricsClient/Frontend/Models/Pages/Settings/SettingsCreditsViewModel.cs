@@ -1,5 +1,5 @@
 ﻿using System.Reactive;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Utils;
 using ReactiveUI;
 
 namespace OpenLyricsClient.Frontend.Models.Pages.Settings;

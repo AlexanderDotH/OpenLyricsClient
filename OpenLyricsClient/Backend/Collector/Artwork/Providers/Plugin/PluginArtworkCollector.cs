@@ -1,5 +1,5 @@
-﻿using OpenLyricsClient.Backend.Plugins;
-using OpenLyricsClient.Backend.Structure.Song;
+﻿using OpenLyricsClient.Shared.Plugin;
+using OpenLyricsClient.Shared.Structure.Song;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,12 +12,12 @@ namespace OpenLyricsClient.Backend.Collector.Artwork.Providers.Plugin
             return "Plugin";
         }
 
-        async public Task<Structure.Artwork.Artwork> GetArtwork(SongResponseObject songResponseObject)
+        async public Task<Shared.Structure.Artwork.Artwork> GetArtwork(SongResponseObject songResponseObject)
         {
-            Structure.Artwork.Artwork collectedData = new Structure.Artwork.Artwork();
+            Shared.Structure.Artwork.Artwork collectedData = new Shared.Structure.Artwork.Artwork();
             foreach (IPlugin plugin in Core.INSTANCE.PluginManager.GetPluginsByScope(PluginScope.ArtworkCollector).OrderByDescending((IPlugin plugin) => plugin.GetCollectedArtworkQuality()))
             {
-                Structure.Artwork.Artwork? data = await plugin.CollectArtwork(songResponseObject);
+                Shared.Structure.Artwork.Artwork? data = await plugin.CollectArtwork(songResponseObject);
                 if (data != null && data != collectedData)
                 {
                     collectedData = data;

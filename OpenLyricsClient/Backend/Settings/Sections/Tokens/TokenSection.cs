@@ -8,9 +8,9 @@ using DevBase.Api.Serializer;
 using DevBase.Generics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using OpenLyricsClient.Backend.Structure;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Settings.Sections.Tokens;
 

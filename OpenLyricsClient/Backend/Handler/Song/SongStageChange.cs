@@ -1,10 +1,10 @@
-﻿using OpenLyricsClient.Backend.Utils;
+﻿using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Handler.Song
 {
     class SongStageChange
     {
-        private Structure.Song.Song _lastSong;
+        private Shared.Structure.Song.Song _lastSong;
         private bool _timeCheck = false;
 
         public SongStageChange()
@@ -12,7 +12,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
         }
 
 
-        public bool HasSongChanged(Structure.Song.Song currentSong)
+        public bool HasSongChanged(Shared.Structure.Song.Song currentSong)
         {
             if (DataValidator.ValidateData(currentSong))
             {
@@ -90,7 +90,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
             this._timeCheck = true;
         }
 
-        public void Update(Structure.Song.Song song)
+        public void Update(Shared.Structure.Song.Song song)
         {
             this._lastSong = song;
         }

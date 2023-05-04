@@ -1,7 +1,7 @@
 ﻿using System;
 using OpenLyricsClient.Backend.Handler.Song;
-using OpenLyricsClient.Backend.Structure;
-using OpenLyricsClient.Backend.Structure.Song;
+using OpenLyricsClient.Shared.Structure;
+using OpenLyricsClient.Shared.Structure.Song;
 
 namespace OpenLyricsClient.Backend.Events.EventArgs
 {

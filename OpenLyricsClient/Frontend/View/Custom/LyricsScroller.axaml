@@ -5,7 +5,7 @@
              xmlns:custom="clr-namespace:OpenLyricsClient.Frontend.View.Custom"
              xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
              xmlns:romanization="clr-namespace:OpenLyricsClient.Backend.Romanization"
-             xmlns:converter="clr-namespace:OpenLyricsClient.Backend.Utils.Converter"
+             xmlns:converter="clr-namespace:OpenLyricsClient.Shared.Utils.Converter"
              xmlns:custom1="clr-namespace:OpenLyricsClient.Frontend.Models.Custom"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              LyricPart="{Binding CurrentLyricPart, Mode=TwoWay}"

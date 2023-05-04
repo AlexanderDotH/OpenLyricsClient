@@ -14,7 +14,7 @@ using DevBase.Async.Task;
 using Material.Styles;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Utils;
 using OpenLyricsClient.Frontend.Models.Pages;
 using OpenLyricsClient.Frontend.View.Custom;
 using OpenLyricsClient.Frontend.View.Windows;

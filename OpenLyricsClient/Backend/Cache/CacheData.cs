@@ -1,7 +1,7 @@
 using System;
-using OpenLyricsClient.Backend.Structure.Artwork;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Structure.Song;
+using OpenLyricsClient.Shared.Structure.Artwork;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Song;
 
 namespace OpenLyricsClient.Backend.Cache;
 

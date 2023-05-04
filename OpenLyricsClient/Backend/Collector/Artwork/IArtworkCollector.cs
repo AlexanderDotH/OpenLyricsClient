@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenLyricsClient.Backend.Handler.Song;
-using OpenLyricsClient.Backend.Structure;
-using OpenLyricsClient.Backend.Structure.Song;
+using OpenLyricsClient.Shared.Structure;
+using OpenLyricsClient.Shared.Structure.Song;
 
 namespace OpenLyricsClient.Backend.Collector.Artwork
 {
     interface IArtworkCollector
     {
-        Task<Structure.Artwork.Artwork> GetArtwork(SongResponseObject songResponseObject);
+        Task<Shared.Structure.Artwork.Artwork> GetArtwork(SongResponseObject songResponseObject);
         string CollectorName();
         int Quality();
 

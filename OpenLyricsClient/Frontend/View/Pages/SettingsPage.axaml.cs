@@ -12,7 +12,7 @@ using DevBase.Generics;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Romanization;
-using OpenLyricsClient.Backend.Structure.Song;
+using OpenLyricsClient.Shared.Structure.Song;
 using OpenLyricsClient.Frontend.View.Windows;
 
 namespace OpenLyricsClient.Frontend.View.Pages;

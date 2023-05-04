@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using DevBase.Async.Task;
 using DevBase.Generics;
 using OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch;
-using OpenLyricsClient.Backend.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Enum;
 
 namespace OpenLyricsClient.Backend.Collector.Token
 {

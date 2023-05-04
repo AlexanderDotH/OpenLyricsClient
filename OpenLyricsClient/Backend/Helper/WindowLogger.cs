@@ -2,8 +2,8 @@
 using System.Runtime.InteropServices;
 using Avalonia;
 using DevBase.Generics;
-using OpenLyricsClient.Backend.Structure;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Helper
 {
@@ -52,7 +52,7 @@ namespace OpenLyricsClient.Backend.Helper
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                w = Utils.X11.GetFocusedWindow();
+                w = Shared.Utils.X11.GetFocusedWindow();
             }
             
             if (!DataValidator.ValidateData(w))

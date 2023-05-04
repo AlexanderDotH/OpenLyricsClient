@@ -11,11 +11,11 @@ using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl;
 using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Handler.Song;
-using OpenLyricsClient.Backend.Plugins;
-using OpenLyricsClient.Backend.Structure;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Plugin;
+using OpenLyricsClient.Shared.Structure;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Song;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics
 {

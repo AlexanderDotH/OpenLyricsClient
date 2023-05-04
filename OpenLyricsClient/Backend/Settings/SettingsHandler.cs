@@ -9,7 +9,7 @@ using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Settings.Sections.Romanization;
 using OpenLyricsClient.Backend.Settings.Sections.Tokens;
-using OpenLyricsClient.Backend.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Enum;
 
 namespace OpenLyricsClient.Backend.Settings;
 

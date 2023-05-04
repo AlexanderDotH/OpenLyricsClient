@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using DevBase.Api.Apis.OpenLyricsClient.Structure.Json;
 using DevBase.Format.Structure;
 using DevBase.Generics;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Song;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.OpenLyricsClient;
 

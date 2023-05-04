@@ -2,8 +2,8 @@ using System;
 using System.Threading.Tasks;
 using DevBase.Api.Apis.Deezer.Structure.Json;
 using OpenLyricsClient.Backend.Debugger;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Song;
+using OpenLyricsClient.Shared.Utils;
 using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Backend.Collector.Song.Providers.Deezer;

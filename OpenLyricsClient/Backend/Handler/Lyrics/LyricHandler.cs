@@ -11,11 +11,11 @@ using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Helper;
-using OpenLyricsClient.Backend.Structure;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Song;
+using OpenLyricsClient.Shared.Utils;
 using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Backend.Handler.Lyrics
@@ -68,7 +68,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
         private void OnLyricChanged(object sender, LyricChangedEventArgs lyricChangedEventArgs)
         {
-            Structure.Song.Song currentSong = this._songHandler.CurrentSong;
+            Shared.Structure.Song.Song currentSong = this._songHandler.CurrentSong;
 
             if (currentSong.Lyrics.LyricParts.IsNullOrEmpty())
                 return;
@@ -111,7 +111,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                 await this._applyLyricSuspensionToken.WaitForRelease();
                 await Task.Delay(100);
 
-                Structure.Song.Song song = _songHandler.CurrentSong;
+                Shared.Structure.Song.Song song = _songHandler.CurrentSong;
 
                 if (DataValidator.ValidateData(song) &&
                     DataValidator.ValidateData(song.SongMetadata.Name) &&
@@ -165,7 +165,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
                 if (DataValidator.ValidateData(this._songHandler))
                 {
-                    Structure.Song.Song currentSong = this._songHandler.CurrentSong;
+                    Shared.Structure.Song.Song currentSong = this._songHandler.CurrentSong;
 
                     if (DataValidator.ValidateData(currentSong) &&
                         DataValidator.ValidateData(currentSong.Time) &&

@@ -1,6 +1,6 @@
-﻿using OpenLyricsClient.Backend.Plugins;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Structure.Song;
+﻿using OpenLyricsClient.Shared.Plugin;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Song;
 using System.Linq;
 using System.Threading.Tasks;
 

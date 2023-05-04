@@ -6,8 +6,8 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Utils;
 using OpenLyricsClient.Frontend.View.Custom;
 
 namespace OpenLyricsClient.Frontend.Models.Elements.Blur;
