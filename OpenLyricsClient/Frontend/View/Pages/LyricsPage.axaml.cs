@@ -16,6 +16,7 @@ using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Utils;
 using OpenLyricsClient.Frontend.Models.Pages;
+using OpenLyricsClient.Frontend.View.Custom;
 using OpenLyricsClient.Frontend.View.Windows;
 using Squalr.Engine.Utils.Extensions;
 using LyricsScroller = OpenLyricsClient.Frontend.View.Custom.LyricsScroller;
@@ -26,7 +27,7 @@ public partial class LyricsPage : UserControl
 {
     private TextBlock _txtTimeFrom;
     private TextBlock _txtTimeTo;
-    private LyricsScroller _cstmLyricsDisplay;
+    private NewLyricsScroller _cstmLyricsDisplay;
     private Grid _presenterGrid;
     private Card _cardBar;
 
@@ -46,7 +47,7 @@ public partial class LyricsPage : UserControl
 
         this._txtTimeFrom = this.Get<TextBlock>(nameof(TXT_TimeFrom));
         this._txtTimeTo = this.Get<TextBlock>(nameof(TXT_TimeTo));
-        this._cstmLyricsDisplay = this.Get<LyricsScroller>(nameof(LRC_Display));
+        this._cstmLyricsDisplay = this.Get<NewLyricsScroller>(nameof(LRC_Display));
         this._presenterGrid = this.Get<Grid>(nameof(GRD_Content));
         this._cardBar = this.Get<Card>(nameof(CRD_Bar));
         
@@ -154,9 +155,9 @@ public partial class LyricsPage : UserControl
 
     private void Button_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (this._cstmLyricsDisplay != null)
+        /*if (this._cstmLyricsDisplay != null)
         {
             this._cstmLyricsDisplay.ResyncOffset();
-        }
+        }*/
     }
 }

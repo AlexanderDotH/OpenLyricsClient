@@ -27,7 +27,7 @@
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/RadioButton.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/NoteAnimation.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/MaterialCheckBox.axaml"/>
-        <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Custom/CustomScrollViewers.axaml"/>
+        <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Custom/CustomScrollViewer.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/Expander.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/ContentExpandControl.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient/Frontend/View/Elements/RadioButton.axaml"/>

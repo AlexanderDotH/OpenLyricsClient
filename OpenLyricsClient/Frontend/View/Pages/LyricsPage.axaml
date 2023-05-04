@@ -248,18 +248,21 @@
         </Grid>
         
         <Grid Name="GRD_Presenter"
-              VerticalAlignment="Top"
               Background="{DynamicResource PrimaryBackgroundBrush}"
               
               Margin="500,50,5,50">
             
             
-            <custom1:LyricsScroller
+            <custom1:NewLyricsScroller Name="LRC_Display"
+                                       HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Stretch"/>
+            
+            <!--<custom1:LyricsScroller
                 Name="LRC_Display"
                 IsVisible="{Binding IsSongAvailable}"
                 FontSize="30"
                 LyricsFontWeight="Bold"
-                ItemMargin="0,0,0,70"/>
+                ItemMargin="0,0,0,70"/>-->
             
             <!--<Panel HorizontalAlignment="Left" 
                    VerticalAlignment="Center"

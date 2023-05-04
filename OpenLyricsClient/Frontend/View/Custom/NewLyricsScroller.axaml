@@ -1,0 +1,57 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:custom="clr-namespace:OpenLyricsClient.Frontend.Models.Custom"
+             xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OpenLyricsClient.Frontend.View.Custom.NewLyricsScroller">
+    
+    <UserControl.DataContext>
+        <custom:NewLyricsScrollerViewModel/>
+    </UserControl.DataContext>
+    
+    <Grid>
+        <custom:CustomScrollViewer Name="CTRL_Viewer">
+            <Panel>
+                <ItemsRepeater Name="HIDDEN_CTRL_Repeater"
+                               Items="{Binding Lyrics}"
+                               IsVisible="False">
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate>
+                            <elements:LyricsCard Text="{Binding Part}"
+                                                 LyricPart="{Binding}"
+                                                 IgnoreEvents="False"
+                                                 HorizontalAlignment="Left"
+                                                 FontWeight="Bold"
+                                                 FontSize="30"
+                                                 Margin="0,0,0,70"/>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
+                
+                <ItemsRepeater Name="CTRL_Repeater"
+                               Items="{Binding Lyrics}">
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate>
+                            <elements:LyricsCard Text="{Binding Part}"
+                                                 LyricPart="{Binding}"
+                                                 IgnoreEvents="False"
+                                                 HorizontalAlignment="Left"
+                                                 FontWeight="Bold"
+                                                 FontSize="30"
+                                                 Margin="0,0,0,70"/>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                    <ItemsRepeater.Transitions>
+                        <Transitions>
+                            <ThicknessTransition Property="Margin" Duration="0:0:0.5" Easing="CubicEaseOut" />
+                            <DoubleTransition Property="Opacity" Duration="0:0:5.0" Easing="CubicEaseOut"></DoubleTransition>
+                        </Transitions>
+                    </ItemsRepeater.Transitions>
+                </ItemsRepeater>
+            </Panel>
+        </custom:CustomScrollViewer>
+    </Grid>
+    
+</UserControl>
