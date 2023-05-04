@@ -201,7 +201,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
              
                 cefAuthWindow.Close();
             } 
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 ProcessStartInfo processStartInfo = new ProcessStartInfo("https://openlyricsclient.com/api/auth/spotify/begin/listener");
                 processStartInfo.UseShellExecute = true;
