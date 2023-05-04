@@ -282,7 +282,7 @@
                                                           VerticalAlignment="Top"
                                                           HorizontalAlignment="Left"
                                                           FontWeight="Normal"
-                                                          Text="Converts russia characters to roman letters">
+                                                          Text="Converts russian characters to roman letters">
                                                </TextBlock>
                                            </StackPanel>
                                        </Grid>

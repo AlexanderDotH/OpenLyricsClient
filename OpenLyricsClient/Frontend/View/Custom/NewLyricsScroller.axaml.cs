@@ -47,7 +47,7 @@ public partial class NewLyricsScroller : UserControl
     
     public NewLyricsScroller()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
 
         this._previousScrollOffset = 0;
         this._currentScrollOffset = 0;
@@ -70,7 +70,15 @@ public partial class NewLyricsScroller : UserControl
     {
         Dispatcher.UIThread.InvokeAsync(() =>
         {
-            this._repeater.Margin = new Thickness(0, 1000, 0, 0);
+            if (!DataValidator.ValidateData(this._viewModel.Lyrics, this._viewModel.Lyric))
+                return;
+
+            this._repeater.Margin = 
+                new Thickness(0, 
+                    this.GetIndexOfLyric(this._viewModel.Lyric, this._viewModel.Lyrics) == 
+                    this._viewModel.Lyrics.Length ?
+                        -1000 : 1000, 0, 0);
+            
             this._repeater.Opacity = 0.0d;
             this._customScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
         });
@@ -88,11 +96,6 @@ public partial class NewLyricsScroller : UserControl
         this._speed = CalcSpeed() * 0.5f;
     }
 
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
-    
     private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
         Core.INSTANCE.TaskRegister.Register(
@@ -237,7 +240,7 @@ public partial class NewLyricsScroller : UserControl
     
     public float CalcSpeed()
     {
-        if (this._viewModel.Lyrics.IsNullOrEmpty())
+        if (!DataValidator.ValidateData(this._viewModel.Lyrics))
             return 15;
 
         LyricPart lastPart = null;
