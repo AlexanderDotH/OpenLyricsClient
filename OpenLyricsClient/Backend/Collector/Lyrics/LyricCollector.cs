@@ -6,6 +6,7 @@ using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEase;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.NetEaseV2;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.OpenLyricsClient;
+using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Plugin;
 using OpenLyricsClient.Backend.Collector.Lyrics.Providers.Textyl;
 using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
@@ -35,6 +36,7 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
             this._lyricCollectors.Add(new NetEaseV2Collector());
             this._lyricCollectors.Add(new TextylCollector());
             this._lyricCollectors.Add(new OpenLyricsClientCollector());
+            this._lyricCollectors.Add(new PluginLyricsCollector());
         }
 
         public async Task CollectLyrics(SongResponseObject songResponseObject)
@@ -63,8 +65,8 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
                 if (lyricData.LyricReturnCode != LyricReturnCode.SUCCESS)
                     continue;
 
-                foreach (IPlugin plugin in Core.INSTANCE.PluginManager.GetPlugins().Where((plugin) => plugin.Scope.HasFlag(PluginScope.LyricsPostprocess)))
-                    lyricData = plugin.ProcessLyrics(songResponseObject, lyricData);
+                foreach (IPlugin plugin in Core.INSTANCE.PluginManager.GetPluginsByScope(PluginScope.LyricsPostprocess))
+                    lyricData = await plugin.ProcessLyrics(songResponseObject, lyricData);
 
                 Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, lyricData);
                 return;

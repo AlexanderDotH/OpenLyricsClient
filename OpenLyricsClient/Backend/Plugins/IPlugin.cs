@@ -11,6 +11,12 @@ namespace OpenLyricsClient.Backend.Plugins
     public interface IPlugin
     {
         PluginScope Scope { get; }
-        LyricData ProcessLyrics(SongResponseObject songResponse, LyricData lyrics);
+        Task<LyricData> ProcessLyrics(SongResponseObject songResponse, LyricData lyrics);
+        Task<LyricData?> CollectLyrics(SongResponseObject songResponseObject);
+        int GetCollectedLyricsQuality();
+        Task<SongResponseObject?> CollectSong(SongRequestObject songRequestObject);
+        int GetCollectedSongQuality();
+        Task<Structure.Artwork.Artwork?> CollectArtwork(SongResponseObject songResponseObject);
+        int GetCollectedArtworkQuality();
     }
 }

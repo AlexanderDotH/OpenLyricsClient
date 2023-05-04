@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenLyricsClient.Backend.Plugins
 {
@@ -11,6 +7,9 @@ namespace OpenLyricsClient.Backend.Plugins
     {
         Dummy = 1,
         LyricsPostprocess = 2,
-        LyricsViewRendering = 4
+        LyricsViewRendering = 4,
+        LyricsCollector = 8,
+        SongCollector = 16,
+        ArtworkCollector = 32
     }
 }

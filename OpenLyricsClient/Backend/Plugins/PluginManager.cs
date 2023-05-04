@@ -44,6 +44,8 @@ namespace OpenLyricsClient.Backend.Plugins
             }
         }
 
-        public List<IPlugin> GetPlugins() => _plugins;
+        public IEnumerable<IPlugin> GetPlugins() => _plugins;
+
+        public IEnumerable<IPlugin> GetPluginsByScope(PluginScope scope) => GetPlugins().Where((plugin) => plugin.Scope.HasFlag(scope));
     }
 }
