@@ -61,7 +61,7 @@ namespace OpenLyricsClient.Frontend.View.Windows
             SelectPage(2);
         }
 
-        private void SelectPage(int pageID)
+        public void SelectPage(int pageID)
         {
             if (this._pageSelector.ItemCount == 0)
                 return;

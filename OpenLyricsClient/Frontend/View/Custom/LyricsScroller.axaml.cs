@@ -187,7 +187,7 @@ public partial class LyricsScroller : UserControl
             float start = this._scrollTo;
             float end = this._oldScrollY;
 
-            float y = SmoothAnimator.CalculateStep(
+            float y = (float)SmoothAnimator.CalculateStep(
                 start, 
                 end, 
                 this._currentScrollOffset, 

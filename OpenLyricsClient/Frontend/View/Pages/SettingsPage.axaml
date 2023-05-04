@@ -214,7 +214,43 @@
                 </StackPanel>
                 
                 
+                <TextBlock Text="Credits"
+                           FontSize="14"
+                           Foreground="{DynamicResource SecondaryFontColorBrush}"
+                           FontWeight="Normal"
+                           Margin="0,0,0,0"/>
                 
+                <StackPanel Orientation="Vertical"
+                            Spacing="10">
+                
+                    <Button Name="BTN_Credits" 
+                            assists:ButtonAssist.CornerRadius="10"
+                            Width="260" 
+                            Height="45"
+                            Background="{DynamicResource SecondaryBackgroundBrush}"
+                            Click="BTN_Credits_OnClick">
+                        
+                        <StackPanel Orientation="Horizontal" 
+                                    Spacing="10" 
+                                    Margin="0,0,260,0"
+                                    HorizontalAlignment="Left">
+                            
+                            <avalonia:MaterialIcon 
+                                Width="20"
+                                Height="20"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left"
+                                Margin="0,0,0,0"
+                                Kind="Heart"/>
+                            
+                            <TextBlock Text="Credits"
+                                       FontSize="13"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </Button>
+                    
+                </StackPanel>
             </StackPanel>
             
         </ScrollViewer>
@@ -245,6 +281,8 @@
             <settings:SettingsCache/>
             
             <settings:SettingsUserPage/>
+            
+            <settings:SettingsCredits/>
 
         </Carousel>
         

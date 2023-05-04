@@ -24,6 +24,7 @@ public partial class SettingsPage : UserControl
     private Button _btnSpotify;
     private Button _btnCache;
     private Button _btnProfile;
+    private Button _btnCredits;
 
     private Carousel _pageSelector;
 
@@ -47,14 +48,15 @@ public partial class SettingsPage : UserControl
         this._btnSpotify = this.Get<Button>(nameof(BTN_Spotify));
         this._btnCache = this.Get<Button>(nameof(BTN_Cache));
         this._btnProfile = this.Get<Button>(nameof(BTN_Profile));
-
+        this._btnCredits = this.Get<Button>(nameof(BTN_Credits));
         
         this._buttonList.AddRange(
             new Tuple<Button, int>(this._btnRomanization, 0), 
             new Tuple<Button, int>(this._btnLyrics, 1), 
             new Tuple<Button, int>(this._btnSpotify, 2), 
             new Tuple<Button, int>(this._btnCache, 3),
-            new Tuple<Button, int>(this._btnProfile, 4));
+            new Tuple<Button, int>(this._btnProfile, 4),
+            new Tuple<Button, int>(this._btnCredits, 5));
         
         this._pageSelector = this.Get<Carousel>(nameof(PageSelection));
         
@@ -129,5 +131,10 @@ public partial class SettingsPage : UserControl
     private void BTN_Profile_OnClick(object? sender, RoutedEventArgs e)
     {
         SelectPage(4);
+    }
+
+    private void BTN_Credits_OnClick(object? sender, RoutedEventArgs e)
+    {
+        SelectPage(5);
     }
 }

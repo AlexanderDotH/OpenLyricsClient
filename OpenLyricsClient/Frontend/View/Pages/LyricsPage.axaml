@@ -87,6 +87,23 @@
                             
                 <TextBlock Text="It looks like you didn't connect any service with the OpenLyricsClient. Simply take a look at the 'Services' section inside the settings"
                            TextWrapping="Wrap"/>
+                
+                <Button Background="{DynamicResource LightBackgroundBrush}" 
+                        Width="300" 
+                        Margin="5" 
+                        Command="{Binding SwitchToSettingsCommand}"
+                        VerticalAlignment="Bottom">
+                    
+                    <StackPanel Orientation="Horizontal" 
+                                Spacing="10">
+                        
+                        <TextBlock Text="Go to settings"/>
+                        
+                        <avalonia:MaterialIcon Kind="Link"
+                                               VerticalAlignment="Stretch"
+                                               HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </Button>
 
             </StackPanel>
         </elements:GroupBox>
@@ -231,18 +248,21 @@
         </Grid>
         
         <Grid Name="GRD_Presenter"
-              VerticalAlignment="Top"
               Background="{DynamicResource PrimaryBackgroundBrush}"
               
               Margin="500,50,5,50">
             
             
-            <custom1:LyricsScroller
+            <custom1:NewLyricsScroller Name="LRC_Display"
+                                       HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Stretch"/>
+            
+            <!--<custom1:LyricsScroller
                 Name="LRC_Display"
                 IsVisible="{Binding IsSongAvailable}"
                 FontSize="30"
                 LyricsFontWeight="Bold"
-                ItemMargin="0,0,0,70"/>
+                ItemMargin="0,0,0,70"/>-->
             
             <!--<Panel HorizontalAlignment="Left" 
                    VerticalAlignment="Center"

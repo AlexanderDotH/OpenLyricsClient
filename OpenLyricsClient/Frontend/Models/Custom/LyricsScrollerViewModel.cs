@@ -21,6 +21,7 @@ using OpenLyricsClient.Backend.Structure.Enum;
 using OpenLyricsClient.Backend.Structure.Lyrics;
 using OpenLyricsClient.Backend.Structure.Song;
 using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Frontend.Models.Pages.Settings;
 using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Frontend.Models.Custom;
@@ -60,6 +61,9 @@ public class LyricsScrollerViewModel : INotifyPropertyChanged
 
             Core.INSTANCE.SettingsHandler.SettingsChanged += (sender, args) =>
             {
+                if (!args.Section.Equals(typeof(SettingsLyricsViewModel)))
+                    return;
+                
                 this.CurrentLyricParts = null;
                 OnPropertyChanged("UiBackground");
             };

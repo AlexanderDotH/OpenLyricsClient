@@ -180,4 +180,7 @@
       <HintPath>..\Libraries\XWindowManager.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Frontend\View\Custom\Functional\" />
+  </ItemGroup>
 </Project>

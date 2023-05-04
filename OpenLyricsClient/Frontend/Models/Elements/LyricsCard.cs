@@ -62,7 +62,7 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
     private NoteAnimation _noteAnimation;
     private BlurArea _blurArea;
     
-    private LyricPart _lyricPart;
+    private LyricPart? _lyricPart;
     private bool _current;
     private double _oldValue;
 
@@ -94,6 +94,11 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
             this._alreadySet = false;
         };
 
+        Core.INSTANCE.SongHandler.SongUpdated += sender =>
+        {
+           
+        };
+
         /*LyricsScroller.INSTANCE.BlurChanged += (sender, @event) =>
         {
             if (@event.LyricPart.Equals(this.LyricPart))
@@ -112,6 +117,11 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
             
             Dispatcher.UIThread.InvokeAsync(() =>
             {
+                if (!DataValidator.ValidateData(this._lyricPart))
+                    return;
+            
+                Percentage = this._lyricPart.Percentage;
+                
                 /*if (DataValidator.ValidateData(this._blurArea))
                 {
                     this._blurArea.Sigma = this.BlurSigma;
@@ -215,7 +225,9 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
                 if (this._oldValue == value)
                     return;
 
-                this._noteAnimation.Percentage = value;
+                if (DataValidator.ValidateData(this._noteAnimation))
+                    this._noteAnimation.Percentage = value;
+                
                 this._oldValue = value;
 
                 SetValue(PercentageProperty, value);
