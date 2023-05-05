@@ -187,13 +187,13 @@ public partial class LyricsScroller : UserControl
             float start = this._scrollTo;
             float end = this._oldScrollY;
 
-            float y = (float)SmoothAnimator.CalculateStep(
+            /*float y = (float)SmoothAnimator.CalculateStep(
                 start, 
                 end, 
                 this._currentScrollOffset, 
-                this._scrollSpeed);
+                this._scrollSpeed);*/
             
-            this._currentScrollOffset = y;
+            this._currentScrollOffset = 1;
         }
         
         if (!double.IsNaN(this._currentScrollOffset))

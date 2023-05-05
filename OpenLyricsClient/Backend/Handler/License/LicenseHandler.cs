@@ -38,19 +38,23 @@ public class LicenseHandler : IHandler
     {
         while (!this._disposed)
         {
-            string userID = Core.INSTANCE.SettingsHandler.Settings<AccountSection>()!.GetValue<string>("UserID");
-            string userSecret = Core.INSTANCE.SettingsHandler.Settings<AccountSection>()!.GetValue<string>("UserSecret");
-
-            JsonOpenLyricsClientSubscription subscription = new JsonOpenLyricsClientSubscription
+            try
             {
-                UserID = userID,
-                UserSecret = userSecret
-            };
+                string userID = Core.INSTANCE.SettingsHandler.Settings<AccountSection>()!.GetValue<string>("UserID");
+                string userSecret = Core.INSTANCE.SettingsHandler.Settings<AccountSection>()!.GetValue<string>("UserSecret");
 
-            JsonOpenLyricsClientSubscriptionModel model = await this._openLyricsClientApi.CheckSubscription(subscription);
-            this._license = model;
+                JsonOpenLyricsClientSubscription subscription = new JsonOpenLyricsClientSubscription
+                {
+                    UserID = userID,
+                    UserSecret = userSecret
+                };
 
-            await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(AccountSection), "UserID");
+                JsonOpenLyricsClientSubscriptionModel model = await this._openLyricsClientApi.CheckSubscription(subscription);
+                this._license = model;
+
+                await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(AccountSection), "UserID");
+            }
+            catch (Exception e) { }
             
             await Task.Delay((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
         }

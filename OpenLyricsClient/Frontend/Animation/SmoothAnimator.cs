@@ -1,35 +1,60 @@
 using System;
+using OpenLyricsClient.Frontend.Structure.Enum;
 
 namespace OpenLyricsClient.Frontend.Animation
 {
     public class SmoothAnimator
     {
-        public static double CalculateStep(double start, double end, double current, double speed)
+        public static double Lerp(double a, double b, int tMilliseconds, double speed, EnumAnimationStyle animationStyle)
         {
-            double divisor = (end - start);
+            double min = Math.Min(a, b);
+            double max = Math.Max(a, b);
+            
+            double range = max - min;
+            
+            double elapsedTime = (tMilliseconds / 1000.0) * speed;
+            double t = elapsedTime % range;
 
-            if (divisor == 0)
-                return end;
+            t = Math.Clamp(t, 0, 1);
 
-            divisor = Math.Abs(divisor) < 0.0001 ? 0.1 : divisor;
-
-            if (current == 0)
-                current = 1;
-
-            double t = (current - start) / divisor;
-
-            double speedC = (1.0 / 100.0) * speed;
-            double sMul = 1 + speedC;
-
-            t = SmoothStep(start, end, t) / sMul;
-
-            return (start + (end - start) * t);
+            double progress = 0;
+            
+            switch (animationStyle)
+            {
+                case EnumAnimationStyle.SIGMOID:
+                {
+                    progress = Sigmoid(t, range);
+                    break;
+                }
+                case EnumAnimationStyle.CIRCULAREASEOUT:
+                {
+                    progress = CircularEaseOut(t, range);
+                    break;
+                }
+                default:
+                {
+                    progress = Linear(t);
+                    break;
+                }
+            }
+            
+            return min + progress * (max - min);
         }
 
-        private static double SmoothStep(double start, double end, double t)
+        private static double Linear(double t)
         {
-            t = Math.Clamp(((t - start) / ((end - start))), 0, 1);
-            return t * t * (3 - 2 * t);
+            return Math.Pow(t, 3);
+        }
+        
+        private static double Sigmoid(double t, double range)
+        {
+            double x = (t * 6.0) / range - 3.0;
+            return 1.0 / (1.0 + Math.Exp(-x));
+        }
+        
+        private static double CircularEaseOut(double t, double range) {
+            double x = t / range;
+            return Math.Sqrt(1.0 - Math.Pow(x - 1.0, 2.0));
         }
     }
 }
