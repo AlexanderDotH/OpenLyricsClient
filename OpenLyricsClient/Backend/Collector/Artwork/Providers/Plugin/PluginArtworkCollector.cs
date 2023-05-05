@@ -32,8 +32,7 @@ namespace OpenLyricsClient.Backend.Collector.Artwork.Providers.Plugin
             IPlugin? plugin = Core.INSTANCE.PluginManager.GetPluginsByScope(PluginScope.ArtworkCollector).MaxBy((IPlugin plugin) => plugin.GetCollectedArtworkQuality());
             if (plugin == null)
                 return -1;
-            else
-                return plugin.GetCollectedArtworkQuality();
+            return plugin.GetCollectedArtworkQuality();
         }
     }
 }

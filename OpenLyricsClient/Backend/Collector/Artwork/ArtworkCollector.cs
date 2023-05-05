@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DevBase.Generics;
 using OpenLyricsClient.Backend.Collector.Artwork.Providers.Deezer;
 using OpenLyricsClient.Backend.Collector.Artwork.Providers.Musixmatch;
+using OpenLyricsClient.Backend.Collector.Artwork.Providers.Plugin;
 using OpenLyricsClient.Backend.Collector.Artwork.Providers.Spotify;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Events.EventArgs;
@@ -29,6 +30,7 @@ namespace OpenLyricsClient.Backend.Collector.Artwork
             this._artworkCollectors.Add(new SpotifyCollector());
             this._artworkCollectors.Add(new DeezerCollector());
             //this._artworkCollectors.Add(new MusixMatchCollector());
+            this._artworkCollectors.Add(new PluginArtworkCollector());
         }
 
         public async Task CollectArtwork(SongResponseObject songResponseObject)

@@ -29,14 +29,14 @@ namespace OpenLyricsClient.Backend.Collector.Lyrics
         public LyricCollector()
         {
             this._lyricCollectors = new AList<ILyricsCollector>();
-            
+
             this._lyricCollectors.Add(new MusixmatchCollector());
             this._lyricCollectors.Add(new DeezerCollector());
             this._lyricCollectors.Add(new NetEaseCollector());
             this._lyricCollectors.Add(new NetEaseV2Collector());
             this._lyricCollectors.Add(new TextylCollector());
+            this._lyricCollectors.Add(new PluginLyricsCollector()); // i think OLC is always a fallback option that always works, so put it here
             this._lyricCollectors.Add(new OpenLyricsClientCollector());
-            this._lyricCollectors.Add(new PluginLyricsCollector());
         }
 
         public async Task CollectLyrics(SongResponseObject songResponseObject)

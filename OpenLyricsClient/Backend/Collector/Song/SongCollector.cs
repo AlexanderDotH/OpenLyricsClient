@@ -6,6 +6,7 @@ using OpenLyricsClient.Backend.Collector.Song.Providers.Deezer;
 using OpenLyricsClient.Backend.Collector.Song.Providers.Musixmatch;
 using OpenLyricsClient.Backend.Collector.Song.Providers.NetEase;
 using OpenLyricsClient.Backend.Collector.Song.Providers.NetEaseV2;
+using OpenLyricsClient.Backend.Collector.Song.Providers.Plugin;
 using OpenLyricsClient.Backend.Collector.Song.Providers.Spotify;
 using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
@@ -35,6 +36,7 @@ public class SongCollector
         this._songCollectors.Add(new NetEaseV2Collector());*/
         this._songCollectors.Add(new DeezerSongCollector());
         this._songCollectors.Add(new SpotifyCollector());
+        this._songCollectors.Add(new PluginSongCollector());
 
         this._songResponses = new ATupleList<SongRequestObject, SongResponseObject>();
 
