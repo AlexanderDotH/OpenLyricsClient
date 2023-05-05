@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
-using OpenLyricsClient.Backend.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Lyrics;
 
 namespace OpenLyricsClient.Frontend.Models.Custom;
 

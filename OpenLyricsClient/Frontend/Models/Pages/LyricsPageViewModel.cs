@@ -18,10 +18,10 @@ using OpenLyricsClient.Backend.Handler.Services.Services.Spotify;
 using OpenLyricsClient.Backend.Handler.Song.SongProvider;
 using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
-using OpenLyricsClient.Backend.Structure.Artwork;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Artwork;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Song;
+using OpenLyricsClient.Shared.Utils;
 using OpenLyricsClient.Frontend.View.Windows;
 using ReactiveUI;
 

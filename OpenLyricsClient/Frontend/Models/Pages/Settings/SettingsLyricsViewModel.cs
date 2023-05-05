@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Romanization;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
-using OpenLyricsClient.Backend.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Enum;
 using ReactiveUI;
 
 namespace OpenLyricsClient.Frontend.Models.Pages.Settings;

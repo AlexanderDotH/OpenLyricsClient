@@ -1,5 +1,5 @@
 using System;
-using OpenLyricsClient.Backend.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Lyrics;
 
 namespace OpenLyricsClient.Backend.Events.EventArgs;
 

@@ -12,9 +12,9 @@ using OpenLyricsClient.Backend.Handler.Artwork;
 using OpenLyricsClient.Backend.Handler.Lyrics;
 using OpenLyricsClient.Backend.Handler.Song.SongProvider;
 using OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Song;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Handler.Song
 {
@@ -92,7 +92,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
                 if (DataValidator.ValidateData(this._songStageChange) && 
                     DataValidator.ValidateData(this._songProviderChooser))
                 {
-                    Structure.Song.Song currentSong = GetCurrentSong();
+                    Shared.Structure.Song.Song currentSong = GetCurrentSong();
                     
                     //POST WIRD NICHT IMMER AUSGEFÜHRT
                     if (this._songStageChange.HasSongChanged(currentSong))
@@ -104,7 +104,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
                         if (!DataValidator.ValidateData(songProvider))
                             continue;
 
-                        Structure.Song.Song song = await songProvider.UpdateCurrentPlaybackTrack();
+                        Shared.Structure.Song.Song song = await songProvider.UpdateCurrentPlaybackTrack();
                         Core.INSTANCE.CacheManager.WriteToCache(SongRequestObject.FromSong(song));
                         //
 
@@ -125,7 +125,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
             }
         }
 
-        private void PrintSongState(Structure.Song.Song song)
+        private void PrintSongState(Shared.Structure.Song.Song song)
         {
             if (DataValidator.ValidateData(song) &&
                 DataValidator.ValidateData(song.SongMetadata.Name, song.Time, song.TimeThreshold))
@@ -162,7 +162,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
             get => this._songProviderChooser.GetSongProvider();
         }
 
-        private Structure.Song.Song GetCurrentSong()
+        private Shared.Structure.Song.Song GetCurrentSong()
         {
             if (DataValidator.ValidateData(this._songProviderChooser))
             {
@@ -197,7 +197,7 @@ namespace OpenLyricsClient.Backend.Handler.Song
             });
         }
         
-        public Structure.Song.Song CurrentSong
+        public Shared.Structure.Song.Song CurrentSong
         {
             get => GetCurrentSong();
         }

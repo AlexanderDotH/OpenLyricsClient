@@ -14,7 +14,7 @@ using DevBase.Async.Task;
 using Material.Styles;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Utils;
 using OpenLyricsClient.Frontend.Models.Pages;
 using OpenLyricsClient.Frontend.View.Custom;
 using OpenLyricsClient.Frontend.View.Windows;
@@ -109,7 +109,7 @@ public partial class LyricsPage : UserControl
                 {
                     AsyncImageLoader.ImageLoader.SetSource(this._artworkImage, this._lyricsPageViewModel.Artwork);
                 } 
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                 {
                     this._artworkImage.Source = new Bitmap(this._lyricsPageViewModel.Artwork);
                 }

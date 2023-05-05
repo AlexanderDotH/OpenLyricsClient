@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Debugger
 {

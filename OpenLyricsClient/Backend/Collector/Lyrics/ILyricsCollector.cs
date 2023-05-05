@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using OpenLyricsClient.Backend.Handler.Song;
-using OpenLyricsClient.Backend.Structure;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Structure.Song;
+using OpenLyricsClient.Shared.Structure;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Song;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics
 {

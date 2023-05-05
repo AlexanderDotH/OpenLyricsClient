@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Shared.Structure;
 
 namespace OpenLyricsClient.Backend.Settings.Sections.Tokens;
 

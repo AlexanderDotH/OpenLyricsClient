@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using DevBase.Api.Apis.Deezer.Structure.Json;
 using OpenLyricsClient.Backend.Debugger;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Structure.Media;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Media;
+using OpenLyricsClient.Shared.Structure.Song;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Collector.Media.Providers.Deezer;
 

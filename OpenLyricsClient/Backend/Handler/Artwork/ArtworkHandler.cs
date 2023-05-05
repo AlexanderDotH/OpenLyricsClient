@@ -15,9 +15,9 @@ using OpenLyricsClient.Backend.Events;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Handler.Song;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Song;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Handler.Artwork
 {
@@ -32,7 +32,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
 
         private bool _disposed;
 
-        private Structure.Artwork.Artwork _oldArtwork;
+        private Shared.Structure.Artwork.Artwork _oldArtwork;
         
         public event ArtworkFoundEventHandler ArtworkFoundHandler;
         public event ArtworkAppliedEventHandler ArtworkAppliedHandler;
@@ -57,7 +57,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
 
         private void OnArtworkFoundHandler(object sender, ArtworkFoundEventArgs args)
         {
-            Structure.Song.Song song = this._songHandler.CurrentSong;
+            Shared.Structure.Song.Song song = this._songHandler.CurrentSong;
             song.Artwork = args.Artwork;
             
             ArtworkAppliedEvent(args.Artwork);
@@ -165,7 +165,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
             {
                 await Task.Delay(500);
 
-                Structure.Song.Song song = this._songHandler.CurrentSong;
+                Shared.Structure.Song.Song song = this._songHandler.CurrentSong;
                 
                 if (!DataValidator.ValidateData(song))
                     continue;
@@ -178,7 +178,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                 if (!DataValidator.ValidateData(songRequestObject))
                     continue;
 
-                Structure.Artwork.Artwork artworkCache = Core.INSTANCE.CacheManager.GetArtworkByRequest(songRequestObject);
+                Shared.Structure.Artwork.Artwork artworkCache = Core.INSTANCE.CacheManager.GetArtworkByRequest(songRequestObject);
 
                 if (!DataValidator.ValidateData(artworkCache))
                     continue;
@@ -205,13 +205,13 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
             }
         }
 
-        protected virtual void ArtworkFoundEvent(SongRequestObject songResponseObject, Structure.Artwork.Artwork artwork)
+        protected virtual void ArtworkFoundEvent(SongRequestObject songResponseObject, Shared.Structure.Artwork.Artwork artwork)
         {
             ArtworkFoundEventHandler artworkFound = ArtworkFoundHandler;
             artworkFound?.Invoke(this, new ArtworkFoundEventArgs(artwork, songResponseObject));
         }
         
-        protected virtual void ArtworkAppliedEvent(Structure.Artwork.Artwork artwork)
+        protected virtual void ArtworkAppliedEvent(Shared.Structure.Artwork.Artwork artwork)
         {
             ArtworkAppliedEventHandler artworkApplied = ArtworkAppliedHandler;
             artworkApplied?.Invoke(this, new ArtworkAppliedEventArgs(artwork));

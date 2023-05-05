@@ -18,15 +18,15 @@ using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
-using OpenLyricsClient.Backend.Structure.Other;
+using OpenLyricsClient.Shared.Structure.Other;
 using OpenLyricsClient.Frontend.Models.Elements;
 using OpenLyricsClient.Frontend.Structure;
 using OpenLyricsClient.Frontend.View.Windows;
 using SpotifyAPI.Web;
 using Image = Avalonia.Controls.Image;
 using ResponseData = DevBase.Web.ResponseData.ResponseData;
-using SimpleArtist = OpenLyricsClient.Backend.Structure.Other.SimpleArtist;
-using SimpleTrack = OpenLyricsClient.Backend.Structure.Other.SimpleTrack;
+using SimpleArtist = OpenLyricsClient.Shared.Structure.Other.SimpleArtist;
+using SimpleTrack = OpenLyricsClient.Shared.Structure.Other.SimpleTrack;
 
 namespace OpenLyricsClient.Frontend.View.Pages.Settings.Providers;
 

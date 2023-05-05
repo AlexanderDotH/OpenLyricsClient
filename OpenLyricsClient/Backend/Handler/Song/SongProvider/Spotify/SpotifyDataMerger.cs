@@ -1,15 +1,15 @@
 ﻿using System;
-using OpenLyricsClient.Backend.Structure;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Song;
+using OpenLyricsClient.Shared.Utils;
 using SpotifyAPI.Web;
 
 namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
 {
     class SpotifyDataMerger
     {
-        public static Structure.Song.Song ValidateUpdatePlayBack(Structure.Song.Song song, CurrentlyPlayingContext playbackContext)
+        public static Shared.Structure.Song.Song ValidateUpdatePlayBack(Shared.Structure.Song.Song song, CurrentlyPlayingContext playbackContext)
         {
             if (DataValidator.ValidateData(song) &&
                 DataValidator.ValidateData(playbackContext) &&
@@ -22,7 +22,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             return song;
         }
 
-        public static Structure.Song.Song UpdatePlayBack(Structure.Song.Song song, CurrentlyPlayingContext playbackContext)
+        public static Shared.Structure.Song.Song UpdatePlayBack(Shared.Structure.Song.Song song, CurrentlyPlayingContext playbackContext)
         {
             song.Paused = !playbackContext.IsPlaying;
             song.TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -30,7 +30,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             return song;
         }
 
-        public static Structure.Song.Song ValidateUpdateAndMerge(Structure.Song.Song song, CurrentlyPlayingContext currentTrack)
+        public static Shared.Structure.Song.Song ValidateUpdateAndMerge(Shared.Structure.Song.Song song, CurrentlyPlayingContext currentTrack)
         {
             if (DataValidator.ValidateData(song) &&
                 DataValidator.ValidateData(
@@ -54,7 +54,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             return song;
         }
 
-        public static Structure.Song.Song UpdateAndMerge(Structure.Song.Song song, CurrentlyPlayingContext currentTrack)
+        public static Shared.Structure.Song.Song UpdateAndMerge(Shared.Structure.Song.Song song, CurrentlyPlayingContext currentTrack)
         {
             if (currentTrack.Item.Type.Equals(ItemType.Track))
             {
@@ -72,7 +72,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             return song;
         }
 
-        public static Structure.Song.Song ValidateConvertAndMerge(CurrentlyPlayingContext currentTrack)
+        public static Shared.Structure.Song.Song ValidateConvertAndMerge(CurrentlyPlayingContext currentTrack)
         {
             if (DataValidator.ValidateData(currentTrack) &&
                 DataValidator.ValidateData(currentTrack.Timestamp) &&
@@ -86,14 +86,14 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
             return null;
         }
 
-        public static Structure.Song.Song ConvertAndMerge(CurrentlyPlayingContext currentTrack)
+        public static Shared.Structure.Song.Song ConvertAndMerge(CurrentlyPlayingContext currentTrack)
         {
             if (currentTrack.Item.Type.Equals(ItemType.Track))
             {
                 if (currentTrack.Item is FullTrack)
                 {
                     FullTrack track = (FullTrack)currentTrack.Item;
-                    Structure.Song.Song song = new Structure.Song.Song(
+                    Shared.Structure.Song.Song song = new Shared.Structure.Song.Song(
                         DataOrigin.SPOTIFY,
                         track,
                         track.Name,

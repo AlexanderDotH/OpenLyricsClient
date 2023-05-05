@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DevBase.Api.Apis.OpenLyricsClient.Structure.Enum;
 using DevBase.Api.Apis.OpenLyricsClient.Structure.Json;
 using DevBase.Async.Task;
-using OpenLyricsClient.Backend.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Enum;
 
 namespace OpenLyricsClient.Backend.Handler.License;
 

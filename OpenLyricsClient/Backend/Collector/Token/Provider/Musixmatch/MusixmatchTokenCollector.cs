@@ -2,8 +2,8 @@
 using MusixmatchClientLib.API.Model.Types;
 using MusixmatchClientLib;
 using OpenLyricsClient.Backend.Debugger;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MusixmatchClientLib.Auth;
 using OpenLyricsClient.Backend.Settings.Sections.Tokens;
-using OpenLyricsClient.Backend.Structure;
+using OpenLyricsClient.Shared.Structure;
 
 namespace OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch
 {

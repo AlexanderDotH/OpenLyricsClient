@@ -8,6 +8,8 @@
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         xmlns:windows="clr-namespace:OpenLyricsClient.Frontend.Models.Windows"
         mc:Ignorable="d"
+        MinWidth="1200"
+        MinHeight="600"
         Width="1500"
         Height="800"
         ExtendClientAreaToDecorationsHint="True"
@@ -33,6 +35,7 @@
         <DockPanel HorizontalAlignment="Left"
                    Width="55">
             <StackPanel
+                Name="PNL_Sidebar"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Stretch"
                 Width="55"

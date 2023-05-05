@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using DynamicData;
-using OpenLyricsClient.Backend.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Lyrics;
 
 namespace OpenLyricsClient.Frontend.Models.Pages.SubPages;
 

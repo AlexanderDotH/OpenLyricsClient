@@ -11,9 +11,9 @@ using Avalonia.Threading;
 using DynamicData;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Utils;
 using OpenLyricsClient.Frontend.Models.Elements;
 
 namespace OpenLyricsClient.Frontend.View.Pages.SubPages;

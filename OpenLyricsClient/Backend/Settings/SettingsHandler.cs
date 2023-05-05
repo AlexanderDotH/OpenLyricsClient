@@ -9,7 +9,7 @@ using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Backend.Settings.Sections.Romanization;
 using OpenLyricsClient.Backend.Settings.Sections.Tokens;
-using OpenLyricsClient.Backend.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Enum;
 
 namespace OpenLyricsClient.Backend.Settings;
 
@@ -39,6 +39,9 @@ public class SettingsHandler
         
         this._sections.Add(new AccountSection(string.Format("{0}{1}", 
             workingDirectory, "Account.json")));
+
+        this._sections.Add(new PluginsSection(string.Format("{0}{1}",
+            workingDirectory, "Plugins.json"))); // Path.Join()
 
         Task.Factory.StartNew(Initialize).GetAwaiter().GetResult();
     }

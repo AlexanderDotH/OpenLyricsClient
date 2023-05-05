@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using OpenLyricsClient.Backend.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Enum;
 
 namespace OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 

@@ -1,10 +1,10 @@
 using System;
 using DevBase.Utilities;
 using OpenLyricsClient.Backend.Handler.Song;
-using OpenLyricsClient.Backend.Structure;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Song;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Cache
 {

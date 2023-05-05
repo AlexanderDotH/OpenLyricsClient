@@ -183,4 +183,7 @@
   <ItemGroup>
     <Folder Include="Frontend\View\Custom\Functional\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenLyricsClient.Shared\OpenLyricsClient.Shared.csproj" />
+  </ItemGroup>
 </Project>

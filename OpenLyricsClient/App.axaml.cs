@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Utils;
 using OpenLyricsClient.Frontend.Models.Windows;
 using OpenLyricsClient.Frontend.View.Windows;
 using ScalingManager = OpenLyricsClient.Frontend.Scaling.ScalingManager;

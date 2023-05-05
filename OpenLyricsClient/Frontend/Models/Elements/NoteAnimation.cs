@@ -11,8 +11,8 @@ using DevBase.Generics;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Frontend.Models.Elements;
 

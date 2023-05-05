@@ -9,8 +9,8 @@ using Newtonsoft.Json.Linq;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Settings;
 using OpenLyricsClient.Backend.Settings.Sections.Account;
-using OpenLyricsClient.Backend.Structure;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure;
+using OpenLyricsClient.Shared.Utils;
 using OpenLyricsClient = DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient;
 
 public class AccountSection : ISettingSection

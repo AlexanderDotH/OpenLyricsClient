@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using HangeulRomanizer;
 using Kawazu;
 using OpenLyricsClient.Backend.Settings.Sections.Romanization;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Utils;
 using Romanization;
 
 //using KoreanRomanisation;

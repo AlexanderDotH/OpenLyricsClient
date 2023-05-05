@@ -15,11 +15,11 @@ using MusixmatchClientLib.Types;
 using OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Handler.Song;
-using OpenLyricsClient.Backend.Structure;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Song;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Collector.Lyrics.Providers.Musixmatch
 {

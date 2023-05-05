@@ -11,11 +11,11 @@ using MusixmatchClientLib.Web.ResponseData;
 using OpenLyricsClient.Backend.Collector.Lyrics;
 using OpenLyricsClient.Backend.Collector.Token.Provider.Musixmatch;
 using OpenLyricsClient.Backend.Debugger;
-using OpenLyricsClient.Backend.Structure.Artwork;
-using OpenLyricsClient.Backend.Structure.Enum;
-using OpenLyricsClient.Backend.Structure.Lyrics;
-using OpenLyricsClient.Backend.Structure.Song;
-using OpenLyricsClient.Backend.Utils;
+using OpenLyricsClient.Shared.Structure.Artwork;
+using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Song;
+using OpenLyricsClient.Shared.Utils;
 using Squalr.Engine.Utils.Extensions;
 using ResponseData = DevBase.Web.ResponseData.ResponseData;
 
@@ -30,39 +30,39 @@ namespace OpenLyricsClient.Backend.Collector.Artwork.Providers.Musixmatch
             this._debugger = new Debugger<MusixMatchCollector>(this);
         }
 
-        public async Task<Structure.Artwork.Artwork> GetArtwork(SongResponseObject songResponseObject)
+        public async Task<Shared.Structure.Artwork.Artwork> GetArtwork(SongResponseObject songResponseObject)
         {
             if (!DataValidator.ValidateData(songResponseObject))
-                return new Structure.Artwork.Artwork();
+                return new Shared.Structure.Artwork.Artwork();
 
             if (!songResponseObject.CollectorName.Equals(this.CollectorName()))
-                return new Structure.Artwork.Artwork();
+                return new Shared.Structure.Artwork.Artwork();
                 
             if (!DataValidator.ValidateData(songResponseObject.SongRequestObject))
-                return new Structure.Artwork.Artwork();
+                return new Shared.Structure.Artwork.Artwork();
 
             if (!(songResponseObject.Track is Track))
-                return new Structure.Artwork.Artwork();
+                return new Shared.Structure.Artwork.Artwork();
 
             Track track = (Track)songResponseObject.Track;
 
             string artworkUrl = GetArtworkUrl(track);
 
             if (artworkUrl.IsNullOrEmpty())
-                return new Structure.Artwork.Artwork();
+                return new Shared.Structure.Artwork.Artwork();
             
-            Structure.Artwork.Artwork artwork = await GetArtwork(artworkUrl);
+            Shared.Structure.Artwork.Artwork artwork = await GetArtwork(artworkUrl);
 
             if (DataValidator.ValidateData(artwork))
                 return artwork;
             
-            return new Structure.Artwork.Artwork();
+            return new Shared.Structure.Artwork.Artwork();
         }
 
-        private async Task<Structure.Artwork.Artwork> GetArtwork(string url)
+        private async Task<Shared.Structure.Artwork.Artwork> GetArtwork(string url)
         {
             ResponseData artwork = await new Request(url).GetResponseAsync();
-            return new Structure.Artwork.Artwork(artwork.Content, string.Empty, ArtworkReturnCode.SUCCESS);
+            return new Shared.Structure.Artwork.Artwork(artwork.Content, string.Empty, ArtworkReturnCode.SUCCESS);
         }
 
         private string GetArtworkUrl(Track track)
