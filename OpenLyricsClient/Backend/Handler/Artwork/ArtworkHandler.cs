@@ -87,7 +87,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                 }
 
                 color.Color = args.Artwork.ArtworkColor;
-                secondaryColor!.Color = args.Artwork.DarkArtworkColor;
+                secondaryColor.Color = args.Artwork.DarkArtworkColor;
 
                 byte light = 120;
                 byte primary = 22;

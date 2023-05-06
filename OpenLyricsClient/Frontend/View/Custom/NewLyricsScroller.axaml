@@ -5,8 +5,6 @@
              xmlns:custom="clr-namespace:OpenLyricsClient.Frontend.Models.Custom"
              xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             Height="700"
-             Bounds="0,0,0,700"
              x:Class="OpenLyricsClient.Frontend.View.Custom.NewLyricsScroller">
     
     <UserControl.DataContext>
@@ -15,7 +13,7 @@
     
     <Grid Background="{DynamicResource PrimaryThemeColorBrush}">
         <custom:CustomScrollViewer Name="CTRL_Viewer">
-            <Panel>
+            <Panel Name="CTRL_Container">
                 <ItemsRepeater Name="HIDDEN_CTRL_Repeater"
                                Items="{Binding Lyrics}"
                                IsVisible="False">
@@ -48,8 +46,7 @@
                     </ItemsRepeater.ItemTemplate>
                     <ItemsRepeater.Transitions>
                         <Transitions>
-                            <ThicknessTransition Property="Margin" Duration="0:0:1.0" Easing="CubicEaseOut" />
-                            <DoubleTransition Property="Opacity" Duration="0:0:5.0" Easing="CubicEaseOut"></DoubleTransition>
+                            <ThicknessTransition Property="Margin" Duration="0:0:3.0" Easing="LinearEasing"/>
                         </Transitions>
                     </ItemsRepeater.Transitions>
                 </ItemsRepeater>

@@ -31,6 +31,7 @@ public partial class NewLyricsScroller : UserControl
     private CustomScrollViewer _customScrollViewer;
     private ItemsRepeater _repeater;
     private ItemsRepeater _hiddenRepeater;
+    private Panel _container;
 
     // ViewModel
     private NewLyricsScrollerViewModel _viewModel;
@@ -64,8 +65,8 @@ public partial class NewLyricsScroller : UserControl
         
         this._hiddenRepeater = this.Get<ItemsRepeater>(nameof(HIDDEN_CTRL_Repeater));
         this._repeater = this.Get<ItemsRepeater>(nameof(CTRL_Repeater));
-
         this._customScrollViewer = this.Get<CustomScrollViewer>(nameof(CTRL_Viewer));
+        this._container = this.Get<Panel>(nameof(CTRL_Container));
 
         this._uiThreadRenderTimer = new UiThreadRenderTimer(144);
         this._uiThreadRenderTimer.Tick += UiThreadRenderTimerOnTick;
@@ -76,7 +77,7 @@ public partial class NewLyricsScroller : UserControl
     private void UiThreadRenderTimerOnTick(TimeSpan obj)
     {
         this._repeater.Margin = GetMargin();
-        
+
         if (this._isSynced)
         {
             double y = SmoothAnimator.Lerp(
@@ -99,10 +100,7 @@ public partial class NewLyricsScroller : UserControl
     
         Dispatcher.UIThread.InvokeAsync(() =>
         {
-            if (!DataValidator.ValidateData(this._viewModel.Lyrics, this._viewModel.Lyric))
-                return;
-
-            //this._repeater.Margin = new Thickness(0,2000,0,1000);
+            this._repeater.Margin = GetMargin() * 4;
             
             /*this._repeater.Margin = 
                 new Thickness(0, 
@@ -111,17 +109,15 @@ public partial class NewLyricsScroller : UserControl
                         -3000 : 3000, 0, 0);*/
             this._isSynced = false;
             this._customScrollViewer.Offset = new Vector(0, 0);
-            this._repeater.Opacity = 0.0d;
             this._customScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
         });
     }
 
     private void LyricHandlerOnLyricsFound(object sender)
     {
-        Dispatcher.UIThread.InvokeAsync(() =>
+        Dispatcher.UIThread.InvokeAsync(async () =>
         {
             this._isSynced = true;
-            this._repeater.Opacity = 1.0d;
             this._customScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
         });
 
@@ -174,12 +170,9 @@ public partial class NewLyricsScroller : UserControl
         for (int i = 0; i < index; i++)
             position += GetRenderedSize(i).Height;
 
-        double halfHeight = this._customScrollViewer.Bounds.Height / 2;
-        double halfCurrentLineHeight = GetRenderedSize(index).Height / 2;
+        double halfHeight = this._customScrollViewer.Viewport.Height / 2.5d;
 
-        double item = (halfHeight - halfCurrentLineHeight);
-        
-        position -= item;
+        position -= halfHeight;
         position += margin.Top;
 
         return position;
@@ -221,20 +214,13 @@ public partial class NewLyricsScroller : UserControl
 
     public Thickness GetMargin()
     {
-        if (!DataValidator.ValidateData(this._viewModel.Lyrics, this._viewModel.Lyric))
-            return new Thickness();
-        
-        double m = this._customScrollViewer.DesiredSize.Height / 2;
-        
-        /*double up = GetRenderedSize(0).Height / 2;
-        double down = GetRenderedSize(this._viewModel.Lyrics.Length - 1).Height / 2;*/
-
+        double m = this._customScrollViewer.Viewport.Height / 2.5d;
         return new Thickness(0, m, 0, m);
     }
     
     public float CalcSpeed()
     {
-        if (!DataValidator.ValidateData(this._viewModel.Lyrics))
+        if (!(DataValidator.ValidateData(this._viewModel) && DataValidator.ValidateData(this._viewModel.Lyrics)))
             return 15;
 
         LyricPart lastPart = null;

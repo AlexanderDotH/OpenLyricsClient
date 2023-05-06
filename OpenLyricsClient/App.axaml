@@ -3,7 +3,8 @@
              xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
              xmlns:local="using:OpenLyricsClient"
              xmlns:converter="clr-namespace:OpenLyricsClient.Backend.Utils.Converter"
-            
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+
              x:Class="OpenLyricsClient.App">
     <Application.DataTemplates>
         <local:ViewLocator/>
@@ -39,11 +40,44 @@
         <Style>
             
             <Style.Resources>
-                <SolidColorBrush x:Key="PrimaryThemeColorBrush" Color="#dc143c"></SolidColorBrush>
-                <SolidColorBrush x:Key="SecondaryThemeColorBrush" Color="#dc143c"></SolidColorBrush>
-                <SolidColorBrush x:Key="PrimaryThemeFontColorBrush" Color="#FFFFFF"></SolidColorBrush>
-                <SolidColorBrush x:Key="SecondaryThemeFontColorBrush" Color="#FFFFFF"></SolidColorBrush>
-                <SolidColorBrush x:Key="LightThemeFontColorBrush" Color="#FFFFFF"></SolidColorBrush>
+                
+                <SolidColorBrush x:Key="PrimaryThemeColorBrush" Color="#dc143c">
+                    <SolidColorBrush.Transitions>
+                        <Transitions>
+                            <ColorTransition Property="Color" Duration="0:0:0.5" Easing="LinearEasing"/>
+                        </Transitions>
+                    </SolidColorBrush.Transitions>
+                </SolidColorBrush>
+                
+                <SolidColorBrush x:Key="SecondaryThemeColorBrush" Color="#dc143c">
+                    <SolidColorBrush.Transitions>
+                        <Transitions>
+                            <ColorTransition Property="Color" Duration="0:0:0.5" Easing="CircularEaseOut"/>
+                        </Transitions>
+                    </SolidColorBrush.Transitions>
+                </SolidColorBrush>
+                
+                <SolidColorBrush x:Key="PrimaryThemeFontColorBrush" Color="#FFFFFF">
+                    <SolidColorBrush.Transitions>
+                        <Transitions>
+                            <ColorTransition Property="Color" Duration="0:0:0.5" Easing="CircularEaseOut"/>
+                        </Transitions>
+                    </SolidColorBrush.Transitions>
+                </SolidColorBrush>
+                <SolidColorBrush x:Key="SecondaryThemeFontColorBrush" Color="#FFFFFF">
+                    <SolidColorBrush.Transitions>
+                        <Transitions>
+                            <ColorTransition Property="Color" Duration="0:0:0.5" Easing="CircularEaseOut"/>
+                        </Transitions>
+                    </SolidColorBrush.Transitions>
+                </SolidColorBrush>
+                <SolidColorBrush x:Key="LightThemeFontColorBrush" Color="#FFFFFF">
+                    <SolidColorBrush.Transitions>
+                        <Transitions>
+                            <ColorTransition Property="Color" Duration="0:0:0.5" Easing="CircularEaseOut"/>
+                        </Transitions>
+                    </SolidColorBrush.Transitions>
+                </SolidColorBrush>
                 
                 <SolidColorBrush x:Key="SelectedLineFontColorBrush" Color="#FFFFFF"></SolidColorBrush>
                 <SolidColorBrush x:Key="UnSelectedLineFontColorBrush" Color="#FFFFFF"></SolidColorBrush>
