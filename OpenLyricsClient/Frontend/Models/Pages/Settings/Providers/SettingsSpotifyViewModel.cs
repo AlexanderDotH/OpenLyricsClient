@@ -63,10 +63,10 @@ public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
         if (settingschangedeventargs.Section != typeof(SpotifySection))
             return;
         
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UserGreeting"));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UserFollower"));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("UserPlan"));
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsConnected"));
+        OnPropertyChanged("UserGreeting");
+        OnPropertyChanged("UserFollower");
+        OnPropertyChanged("UserPlan");
+        OnPropertyChanged("IsConnected");
     }
 
     public string UserGreeting

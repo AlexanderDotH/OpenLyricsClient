@@ -276,7 +276,7 @@
         <Button Name="BTN_SyncMode"
                 IsEnabled="{Binding ElementName=LRC_Display, Path=!IsSynced, Mode=OneWay}"
                 assists:ButtonAssist.CornerRadius="10"
-                assists:ShadowAssist.ShadowDepth="Depth5"
+                assists:ShadowAssist.ShadowDepth="Depth3"
                 UseLayoutRounding="True"
                 Width="45"
                 Height="45" 

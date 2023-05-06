@@ -29,7 +29,7 @@ namespace OpenLyricsClient.Backend.Cache
                 append += songRequestObject.Artists;
                 append += songRequestObject.SongDuration;
 
-                this._id = CryptoUtils.ToMD5(append);
+                this._id = DevBase.Cryptography.MD5.MD5.ToMD5String(append);
             }
         }
 

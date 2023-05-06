@@ -11,7 +11,7 @@
         <custom:NewLyricsScrollerViewModel/>
     </UserControl.DataContext>
     
-    <Grid Background="{DynamicResource PrimaryThemeColorBrush}">
+    <Grid Background="{Binding UiBackground}">
         <custom:CustomScrollViewer Name="CTRL_Viewer">
             <Panel Name="CTRL_Container">
                 <ItemsRepeater Name="HIDDEN_CTRL_Repeater"
@@ -46,7 +46,8 @@
                     </ItemsRepeater.ItemTemplate>
                     <ItemsRepeater.Transitions>
                         <Transitions>
-                            <ThicknessTransition Property="Margin" Duration="0:0:3.0" Easing="LinearEasing"/>
+                            <DoubleTransition Property="Opacity" Duration="0:0:3.0" Easing="CircularEaseOut"/>
+                            <ThicknessTransition Property="Margin" Duration="0:0:1.0" Easing="CircularEaseOut"/>
                         </Transitions>
                     </ItemsRepeater.Transitions>
                 </ItemsRepeater>

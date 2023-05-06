@@ -48,7 +48,6 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
             
             ArtworkFoundHandler += OnArtworkFoundHandler;
             
-            
             Core.INSTANCE.TaskRegister.Register(
                 out _applyArtworkSuspensionToken, 
                 new Task(async () => await ApplyArtworkTask(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
@@ -61,82 +60,6 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
             song.Artwork = args.Artwork;
             
             ArtworkAppliedEvent(args.Artwork);
-                
-            if (!DataValidator.ValidateData(args.Artwork.ArtworkColor))
-                return;
-
-            SolidColorBrush primaryColor = App.Current.FindResource("PrimaryColorBrush") as SolidColorBrush;
-            SolidColorBrush color = App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
-            SolidColorBrush secondaryColor = App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush;
-            SolidColorBrush textColor = App.Current.FindResource("PrimaryThemeFontColorBrush") as SolidColorBrush;
-            SolidColorBrush secondaryTextColor = App.Current.FindResource("SecondaryThemeFontColorBrush") as SolidColorBrush;
-            SolidColorBrush lightTextColor = App.Current.FindResource("LightThemeFontColorBrush") as SolidColorBrush;
-
-            SolidColorBrush selectedLineTextColor = App.Current.FindResource("SelectedLineFontColorBrush") as SolidColorBrush;
-            SolidColorBrush unSelectedLineTextColor = App.Current.FindResource("UnSelectedLineFontColorBrush") as SolidColorBrush;
-
-            Dispatcher.UIThread.InvokeAsync(() =>
-            { 
-                if (color.Color == Color.FromRgb(22, 22, 22))
-                { 
-                    color.Color = primaryColor!.Color;
-                }
-                else
-                { 
-                    color.Color = args.Artwork.ArtworkColor;
-                }
-
-                color.Color = args.Artwork.ArtworkColor;
-                secondaryColor.Color = args.Artwork.DarkArtworkColor;
-
-                byte light = 120;
-                byte primary = 22;
-                byte secondary = 40;
-
-                byte selected = 38;
-                byte unselected = 70;
-
-                byte darkSelected = 70;
-                byte darkUnselected = 38;
-
-                byte minR = (byte)Math.Round((double)(color.Color.R / 100.0));
-                byte minG = (byte)Math.Round((double)(color.Color.G / 100.0));
-                byte minB = (byte)Math.Round((double)(color.Color.B / 100.0));
-
-                if (args.Artwork.GetBrightness() < 30)
-                {
-                    selectedLineTextColor!.Color = new Color(255, (byte)(minR * darkSelected),
-                            (byte)(minG * darkSelected), (byte)(minB * darkSelected));
-                    
-                    unSelectedLineTextColor!.Color = new Color(255, (byte)(minR * darkUnselected),
-                            (byte)(minG * darkUnselected), (byte)(minB * darkUnselected));
-
-                    lightTextColor!.Color = new Color(255, (byte)(color.Color.R - light),
-                        (byte)(color.Color.G - light), (byte)(color.Color.B - light));
-
-                    textColor!.Color = new Color(255, (byte)(255 - primary), 
-                        (byte)(255 - primary), (byte)(255 - primary));
-                    
-                    secondaryTextColor!.Color = new Color(255, (byte)(255 - secondary), 
-                        (byte)(255 - secondary), (byte)(255 - secondary));
-                }
-                else
-                {
-                    selectedLineTextColor!.Color = new Color(255, (byte)(minR * selected), (byte)(minG * selected), 
-                        (byte)(minB * selected)); 
-                    
-                    unSelectedLineTextColor!.Color = new Color(255, (byte)(minR * unselected),
-                            (byte)(minG * unselected), (byte)(minB * unselected));
-                    
-                    lightTextColor!.Color = new Color(255, light, light, light);
-                    
-                    textColor!.Color = new Color(255, primary, primary, primary);
-                    
-                    secondaryTextColor!.Color = new Color(255, secondary, secondary, secondary);
-                    
-                }
-                
-            });
         }
 
         public async Task FireArtworkSearch(SongResponseObject songResponseObject, SongChangedEventArgs songChangedEventArgs)
@@ -183,6 +106,8 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                 if (!DataValidator.ValidateData(artworkCache))
                     continue;
 
+                CalcAndApplyColors(artworkCache);
+                
                 if (artworkCache.Equals(song.Artwork))
                     continue;
 
@@ -198,13 +123,89 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                 if (!DataValidator.ValidateData(artworkCache))
                     continue;
                 
-                if (this._oldArtwork == null || this._oldArtwork != artworkCache)
-                    ArtworkFoundEvent(songRequestObject, artworkCache);
+                ArtworkFoundEvent(songRequestObject, artworkCache);
 
                 this._oldArtwork = artworkCache;
             }
         }
 
+        private void CalcAndApplyColors(Shared.Structure.Artwork.Artwork artwork)
+        {
+            if (!DataValidator.ValidateData(artwork.ArtworkColor))
+                return;
+
+            SolidColorBrush primaryColor = App.Current.FindResource("PrimaryColorBrush") as SolidColorBrush;
+            SolidColorBrush color = App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
+            SolidColorBrush secondaryColor = App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush;
+            SolidColorBrush textColor = App.Current.FindResource("PrimaryThemeFontColorBrush") as SolidColorBrush;
+            SolidColorBrush secondaryTextColor = App.Current.FindResource("SecondaryThemeFontColorBrush") as SolidColorBrush;
+            SolidColorBrush lightTextColor = App.Current.FindResource("LightThemeFontColorBrush") as SolidColorBrush;
+
+            SolidColorBrush selectedLineTextColor = App.Current.FindResource("SelectedLineFontColorBrush") as SolidColorBrush;
+            SolidColorBrush unSelectedLineTextColor = App.Current.FindResource("UnSelectedLineFontColorBrush") as SolidColorBrush;
+
+            Dispatcher.UIThread.InvokeAsync(() =>
+            { 
+                if (color.Color == Color.FromRgb(22, 22, 22))
+                { 
+                    color.Color = primaryColor!.Color;
+                }
+                else
+                { 
+                    color.Color = artwork.ArtworkColor;
+                }
+
+                color.Color = artwork.ArtworkColor;
+                secondaryColor.Color = artwork.DarkArtworkColor;
+
+                byte light = 120;
+                byte primary = 22;
+                byte secondary = 40;
+
+                byte selected = 38;
+                byte unselected = 70;
+
+                byte darkSelected = 70;
+                byte darkUnselected = 38;
+
+                byte minR = (byte)Math.Round((double)(color.Color.R / 100.0));
+                byte minG = (byte)Math.Round((double)(color.Color.G / 100.0));
+                byte minB = (byte)Math.Round((double)(color.Color.B / 100.0));
+
+                if (artwork.GetBrightness() < 30)
+                {
+                    selectedLineTextColor!.Color = new Color(255, (byte)(minR * darkSelected),
+                            (byte)(minG * darkSelected), (byte)(minB * darkSelected));
+                    
+                    unSelectedLineTextColor!.Color = new Color(255, (byte)(minR * darkUnselected),
+                            (byte)(minG * darkUnselected), (byte)(minB * darkUnselected));
+
+                    lightTextColor!.Color = new Color(255, (byte)(color.Color.R - light),
+                        (byte)(color.Color.G - light), (byte)(color.Color.B - light));
+
+                    textColor!.Color = new Color(255, (byte)(255 - primary), 
+                        (byte)(255 - primary), (byte)(255 - primary));
+                    
+                    secondaryTextColor!.Color = new Color(255, (byte)(255 - secondary), 
+                        (byte)(255 - secondary), (byte)(255 - secondary));
+                }
+                else
+                {
+                    selectedLineTextColor!.Color = new Color(255, (byte)(minR * selected), (byte)(minG * selected), 
+                        (byte)(minB * selected)); 
+                    
+                    unSelectedLineTextColor!.Color = new Color(255, (byte)(minR * unselected),
+                            (byte)(minG * unselected), (byte)(minB * unselected));
+                    
+                    lightTextColor!.Color = new Color(255, light, light, light);
+                    
+                    textColor!.Color = new Color(255, primary, primary, primary);
+                    
+                    secondaryTextColor!.Color = new Color(255, secondary, secondary, secondary);
+                }
+            });
+        }
+        
         protected virtual void ArtworkFoundEvent(SongRequestObject songResponseObject, Shared.Structure.Artwork.Artwork artwork)
         {
             ArtworkFoundEventHandler artworkFound = ArtworkFoundHandler;

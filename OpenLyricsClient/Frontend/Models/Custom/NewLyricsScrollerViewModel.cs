@@ -1,8 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Avalonia.Controls;
+using Avalonia.Media;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
+using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
+using OpenLyricsClient.Frontend.Models.Pages.Settings;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 
 namespace OpenLyricsClient.Frontend.Models.Custom;
@@ -18,6 +22,15 @@ public class NewLyricsScrollerViewModel : ViewModelBase, INotifyPropertyChanged
         Core.INSTANCE.LyricHandler.LyricChanged += LyricHandlerOnLyricChanged;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
         Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
+        Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
+    }
+
+    private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
+    {
+        if (!settingschangedeventargs.Field.Equals("Artwork Background"))
+            return;
+        
+        OnPropertyChanged("UiBackground");
     }
 
     private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
@@ -46,6 +59,18 @@ public class NewLyricsScrollerViewModel : ViewModelBase, INotifyPropertyChanged
         get => this._lyric;
         set => SetField(ref this._lyric, value);
     }
+    
+    public SolidColorBrush UiBackground
+    {
+        get
+        {
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()?.GetValue<bool>("Artwork Background") == true)
+                return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
+            
+            return App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;
+        }
+    }
+
     
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {

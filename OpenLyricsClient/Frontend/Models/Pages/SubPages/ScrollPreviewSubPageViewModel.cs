@@ -27,11 +27,11 @@ public class ScrollPreviewSubPageViewModel
     
     public ObservableCollection<LyricPart> CurrentLyricParts
     {
-        get => _lyricParts;
+        get => this._lyricParts;
         set
         {
-            _lyricParts = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentLyricParts"));
+            this._lyricParts = value;
+            OnPropertyChanged("CurrentLyricParts");
         }
     }
     
@@ -41,7 +41,7 @@ public class ScrollPreviewSubPageViewModel
         set
         {
             _lyricPart = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentLyricPart"));
+            OnPropertyChanged("CurrentLyricPart");
         }
     }
     

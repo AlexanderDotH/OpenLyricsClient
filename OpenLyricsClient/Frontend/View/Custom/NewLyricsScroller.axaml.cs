@@ -27,6 +27,10 @@ namespace OpenLyricsClient.Frontend.View.Custom;
 
 public partial class NewLyricsScroller : UserControl
 {
+    // Styled Properties
+    public static readonly StyledProperty<bool> IsSyncedProperty =
+        AvaloniaProperty.Register<LyricsScroller, bool>(nameof(IsSynced));
+    
     // Controls
     private CustomScrollViewer _customScrollViewer;
     private ItemsRepeater _repeater;
@@ -47,7 +51,6 @@ public partial class NewLyricsScroller : UserControl
     private double _nextScrollOffset;
     private double _frameRate;
     private double _speed;
-    private bool _isSynced;
     
     public NewLyricsScroller()
     {
@@ -59,8 +62,6 @@ public partial class NewLyricsScroller : UserControl
 
         this._frameRate = 144;
 
-        this._isSynced = true;
-        
         this._viewModel = this.DataContext as NewLyricsScrollerViewModel;
         
         this._hiddenRepeater = this.Get<ItemsRepeater>(nameof(HIDDEN_CTRL_Repeater));
@@ -78,7 +79,10 @@ public partial class NewLyricsScroller : UserControl
     {
         this._repeater.Margin = GetMargin();
 
-        if (this._isSynced)
+        if (DataValidator.ValidateData(this._viewModel.Lyrics))
+            this._repeater.Opacity = 1.0d;
+        
+        if (this.IsSynced)
         {
             double y = SmoothAnimator.Lerp(
                 this._currentScrollOffset,
@@ -100,14 +104,13 @@ public partial class NewLyricsScroller : UserControl
     
         Dispatcher.UIThread.InvokeAsync(() =>
         {
-            this._repeater.Margin = GetMargin() * 4;
-            
             /*this._repeater.Margin = 
                 new Thickness(0, 
                     this.GetIndexOfLyric(this._viewModel.Lyric, this._viewModel.Lyrics) == 
                     this._viewModel.Lyrics.Length ?
                         -3000 : 3000, 0, 0);*/
-            this._isSynced = false;
+            this.IsSynced = true;
+            this._repeater.Opacity = 0;
             this._customScrollViewer.Offset = new Vector(0, 0);
             this._customScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
         });
@@ -117,7 +120,6 @@ public partial class NewLyricsScroller : UserControl
     {
         Dispatcher.UIThread.InvokeAsync(async () =>
         {
-            this._isSynced = true;
             this._customScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
         });
 
@@ -229,9 +231,9 @@ public partial class NewLyricsScroller : UserControl
         float highest = 0;
         int hSum = 0;
         
-        for (int i = 0; i < this._viewModel.Lyrics.Length; i++)
+        for (int i = 0; i < this._viewModel!.Lyrics.Length; i++)
         {
-            LyricPart currentPart = this._viewModel.Lyrics[i];
+            LyricPart currentPart = this._viewModel!.Lyrics[i];
             
             if (lastPart == null)
             {
@@ -271,7 +273,7 @@ public partial class NewLyricsScroller : UserControl
     {
         if (e.Delta.Y != 0)
         {
-            this._isSynced = false;
+            this.IsSynced = false;
         }
 
         if (e.Delta.Y > 0)
@@ -296,6 +298,12 @@ public partial class NewLyricsScroller : UserControl
     public void Resync()
     {
         this._currentScrollOffset = this._customScrollViewer.Offset.Y;
-        this._isSynced = true;
+        this.IsSynced = true;
+    }
+
+    public bool IsSynced
+    {
+        get => GetValue(IsSyncedProperty);
+        set => SetValue(IsSyncedProperty, value);
     }
 }

@@ -40,11 +40,11 @@
         <Style>
             
             <Style.Resources>
-                
+ 
                 <SolidColorBrush x:Key="PrimaryThemeColorBrush" Color="#dc143c">
                     <SolidColorBrush.Transitions>
                         <Transitions>
-                            <ColorTransition Property="Color" Duration="0:0:0.5" Easing="LinearEasing"/>
+                            <ColorTransition Property="Color" Duration="0:0:0.5" Easing="CircularEaseOut"/>
                         </Transitions>
                     </SolidColorBrush.Transitions>
                 </SolidColorBrush>
@@ -64,6 +64,7 @@
                         </Transitions>
                     </SolidColorBrush.Transitions>
                 </SolidColorBrush>
+                
                 <SolidColorBrush x:Key="SecondaryThemeFontColorBrush" Color="#FFFFFF">
                     <SolidColorBrush.Transitions>
                         <Transitions>
@@ -71,6 +72,7 @@
                         </Transitions>
                     </SolidColorBrush.Transitions>
                 </SolidColorBrush>
+                
                 <SolidColorBrush x:Key="LightThemeFontColorBrush" Color="#FFFFFF">
                     <SolidColorBrush.Transitions>
                         <Transitions>

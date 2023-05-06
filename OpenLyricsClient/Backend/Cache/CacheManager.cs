@@ -333,7 +333,7 @@ namespace OpenLyricsClient.Backend.Cache
             append += songRequestObject.Artists;
             append += songRequestObject.SongDuration;
 
-            return CryptoUtils.ToMD5(append);
+            return DevBase.Cryptography.MD5.MD5.ToMD5String(append);
         }
 
         private long CalculateExpirationDate()
