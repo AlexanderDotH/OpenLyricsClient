@@ -51,6 +51,7 @@ public partial class NewLyricsScroller : UserControl
     private double _nextScrollOffset;
     private double _frameRate;
     private double _speed;
+    private bool _isSyncing;
     
     public NewLyricsScroller()
     {
@@ -60,6 +61,8 @@ public partial class NewLyricsScroller : UserControl
         this._nextScrollOffset = 0;
         this._speed = 2.0;
 
+        this._isSyncing = false;
+
         this._frameRate = 144;
 
         this._viewModel = this.DataContext as NewLyricsScrollerViewModel;
@@ -68,7 +71,7 @@ public partial class NewLyricsScroller : UserControl
         this._repeater = this.Get<ItemsRepeater>(nameof(CTRL_Repeater));
         this._customScrollViewer = this.Get<CustomScrollViewer>(nameof(CTRL_Viewer));
         this._container = this.Get<Panel>(nameof(CTRL_Container));
-
+        
         this._uiThreadRenderTimer = new UiThreadRenderTimer(144);
         this._uiThreadRenderTimer.Tick += UiThreadRenderTimerOnTick;
         
@@ -81,22 +84,45 @@ public partial class NewLyricsScroller : UserControl
 
         if (DataValidator.ValidateData(this._viewModel.Lyrics))
             this._repeater.Opacity = 1.0d;
+
+        double y = this._customScrollViewer.Offset.Y;
         
-        if (this.IsSynced)
+        if (this.IsSynced && !this._isSyncing)
         {
-            double y = SmoothAnimator.Lerp(
+            y = SmoothAnimator.Lerp(
                 this._currentScrollOffset,
                 this._nextScrollOffset,
-                (int)obj.Milliseconds, this._speed, EnumAnimationStyle.CIRCULAREASEOUT);
-
-            if (!double.IsNaN(y))
-            {
-                this._customScrollViewer.Offset = new Vector(0, y);
-                this._currentScrollOffset = y;
-            }
+                (int)obj.Milliseconds, this._speed, EnumAnimationStyle.SIGMOID);
+        }
+        else if (!this.IsSynced && this._isSyncing)
+        {
+            y = CalcResyncStep(this._currentScrollOffset, this._nextScrollOffset, this._speed);
+        }
+        
+        if (!double.IsNaN(y))
+        {
+            this._customScrollViewer.Offset = new Vector(0, y);
+            this._currentScrollOffset = y;
         }
     }
 
+    private double CalcResyncStep(double currentOffset, double nextOffset, double speed)
+    {
+        double step = Math.Abs(nextOffset - currentOffset) / (speed);
+        
+        currentOffset += (currentOffset < nextOffset) ? step : -step;
+        
+        double diff = Math.Abs(nextOffset - currentOffset);
+
+        if (diff < 1 && this._isSyncing)
+        {
+            this.IsSynced = true;
+            this._isSyncing = false;
+        }
+
+        return currentOffset;
+    }
+    
     private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
     {
         if (songchangedevent.EventType != EventType.PRE)
@@ -104,11 +130,6 @@ public partial class NewLyricsScroller : UserControl
     
         Dispatcher.UIThread.InvokeAsync(() =>
         {
-            /*this._repeater.Margin = 
-                new Thickness(0, 
-                    this.GetIndexOfLyric(this._viewModel.Lyric, this._viewModel.Lyrics) == 
-                    this._viewModel.Lyrics.Length ?
-                        -3000 : 3000, 0, 0);*/
             this.IsSynced = true;
             this._repeater.Opacity = 0;
             this._customScrollViewer.Offset = new Vector(0, 0);
@@ -274,6 +295,7 @@ public partial class NewLyricsScroller : UserControl
         if (e.Delta.Y != 0)
         {
             this.IsSynced = false;
+            this.IsSynced = false;
         }
 
         if (e.Delta.Y > 0)
@@ -298,7 +320,7 @@ public partial class NewLyricsScroller : UserControl
     public void Resync()
     {
         this._currentScrollOffset = this._customScrollViewer.Offset.Y;
-        this.IsSynced = true;
+        this._isSyncing = true;
     }
 
     public bool IsSynced
