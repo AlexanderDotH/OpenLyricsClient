@@ -2,6 +2,9 @@
 using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Layout;
+using Avalonia.Media;
 using DevBase.Api.Serializer;
 using DevBase.Generics;
 using Newtonsoft.Json;
@@ -63,7 +66,11 @@ public class LyricsSection : ISettingSection
         {
             Selection = EnumLyricsDisplayMode.KARAOKE,
             ArtworkBackground = false,
-            LyricsBlur = false
+            LyricsBlur = false,
+            LyricsAlignment = HorizontalAlignment.Left,
+            LyricsMargin = new Thickness(0,0,0,70),
+            LyricsWeight = FontWeight.Bold,
+            LyricsSize = 30
         };
         
         return new JsonDeserializer().Serialize(structure);

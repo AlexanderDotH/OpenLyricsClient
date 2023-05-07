@@ -31,19 +31,9 @@ namespace OpenLyricsClient.Frontend.Animation
                     progress = CircularEaseOut(t, range);
                     break;
                 }
-                default:
-                {
-                    progress = Linear(t);
-                    break;
-                }
             }
             
             return min + progress * (max - min);
-        }
-
-        private static double Linear(double t)
-        {
-            return Math.Pow(t, 3);
         }
         
         private static double Sigmoid(double t, double range)

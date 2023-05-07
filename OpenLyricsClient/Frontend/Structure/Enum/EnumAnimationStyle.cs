@@ -2,5 +2,5 @@
 
 public enum EnumAnimationStyle
 {
-    LINEAR, CIRCULAREASEOUT, SIGMOID
+    CIRCULAREASEOUT, SIGMOID
 }

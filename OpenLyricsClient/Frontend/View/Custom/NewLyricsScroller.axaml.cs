@@ -92,7 +92,7 @@ public partial class NewLyricsScroller : UserControl
             y = SmoothAnimator.Lerp(
                 this._currentScrollOffset,
                 this._nextScrollOffset,
-                (int)obj.Milliseconds, this._speed, EnumAnimationStyle.SIGMOID);
+                (int)obj.Milliseconds, this._speed, EnumAnimationStyle.CIRCULAREASEOUT);
         }
         else if (!this.IsSynced && this._isSyncing)
         {
@@ -294,7 +294,6 @@ public partial class NewLyricsScroller : UserControl
     {
         if (e.Delta.Y != 0)
         {
-            this.IsSynced = false;
             this.IsSynced = false;
         }
 

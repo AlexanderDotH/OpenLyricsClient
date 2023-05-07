@@ -40,6 +40,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
         public event LyricChangedEventHandler LyricChanged;
         public event LyricsFoundEventHandler LyricsFound;
+        public event LyricsPercentageUpdatedEventHandler LyricsPercentageUpdated;
 
         public LyricHandler(SongHandler songHandler)
         {
@@ -88,6 +89,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                         double change = Math.Round((double)(100 * currentTime) / time);
 
                         lyricChangedEventArgs.LyricPart.Percentage = change;
+                        PercentageUpdatedEvent(lyricChangedEventArgs.LyricPart, change);
                     }
                 }
                 else
@@ -99,6 +101,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                         double change = Math.Round((double)(100 * currentTime) / time);
                                     
                         lyricChangedEventArgs.LyricPart.Percentage = change;
+                        PercentageUpdatedEvent(lyricChangedEventArgs.LyricPart, change);
                     }
                 }
             }
@@ -245,6 +248,13 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
             foundEventHandler?.Invoke(this);
         }
 
+        protected virtual void PercentageUpdatedEvent(LyricPart lyricPart, double percentage)
+        {
+            LyricsPercentageUpdatedEventArgs args = new LyricsPercentageUpdatedEventArgs(lyricPart, percentage);
+            LyricsPercentageUpdatedEventHandler handler = LyricsPercentageUpdated;
+            handler?.Invoke(this, args);
+        }
+        
         public void Dispose()
         {
             this._disposed = true;
