@@ -18,7 +18,7 @@ public class Structure
     public FontWeight LyricsWeight { get; set; }
     
     [JsonProperty("Lyrics Alignment")] 
-    public HorizontalAlignment LyricsAlignment { get; set; }
+    public TextAlignment LyricsAlignment { get; set; }
     
     [JsonProperty("Lyrics Margin")] 
     public Thickness LyricsMargin { get; set; }

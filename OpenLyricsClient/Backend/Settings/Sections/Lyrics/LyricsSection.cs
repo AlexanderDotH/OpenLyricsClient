@@ -67,7 +67,7 @@ public class LyricsSection : ISettingSection
             Selection = EnumLyricsDisplayMode.KARAOKE,
             ArtworkBackground = false,
             LyricsBlur = false,
-            LyricsAlignment = HorizontalAlignment.Left,
+            LyricsAlignment = TextAlignment.Left,
             LyricsMargin = new Thickness(0,0,0,70),
             LyricsWeight = FontWeight.Bold,
             LyricsSize = 30
