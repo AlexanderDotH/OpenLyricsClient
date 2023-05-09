@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:custom="clr-namespace:OpenLyricsClient.Frontend.Models.Custom"
              xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
+             xmlns:tile="clr-namespace:OpenLyricsClient.Frontend.View.Custom.Tile"
+             xmlns:lyrics="clr-namespace:OpenLyricsClient.Shared.Structure.Lyrics;assembly=OpenLyricsClient.Shared"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OpenLyricsClient.Frontend.View.Custom.NewLyricsScroller">
     
@@ -18,14 +20,8 @@
                                Items="{Binding Lyrics}"
                                IsVisible="False">
                     <ItemsRepeater.ItemTemplate>
-                        <DataTemplate>
-                            <elements:LyricsCard Text="{Binding Part}"
-                                                 LyricPart="{Binding}"
-                                                 IgnoreEvents="False"
-                                                 HorizontalAlignment="Left"
-                                                 FontWeight="Bold"
-                                                 FontSize="30"
-                                                 Margin="0,0,0,70"/>
+                        <DataTemplate DataType="lyrics:LyricPart">
+                            <tile:LyricsTile LyricPart="{Binding}"/>
                         </DataTemplate>
                     </ItemsRepeater.ItemTemplate>
                 </ItemsRepeater>
@@ -34,14 +30,8 @@
                                Items="{Binding Lyrics}"
                                Margin="0,0,0,0">
                     <ItemsRepeater.ItemTemplate>
-                        <DataTemplate>
-                            <elements:LyricsCard Text="{Binding Part}"
-                                                 LyricPart="{Binding}"
-                                                 IgnoreEvents="False"
-                                                 HorizontalAlignment="Left"
-                                                 FontWeight="Bold"
-                                                 FontSize="30"
-                                                 Margin="0,0,0,70"/>
+                        <DataTemplate DataType="lyrics:LyricPart">
+                            <tile:LyricsTile LyricPart="{Binding}"/>
                         </DataTemplate>
                     </ItemsRepeater.ItemTemplate>
                     <ItemsRepeater.Transitions>

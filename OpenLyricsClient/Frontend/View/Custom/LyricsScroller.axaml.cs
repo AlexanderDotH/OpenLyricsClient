@@ -469,6 +469,7 @@ public partial class LyricsScroller : UserControl
         
         foreach (FormattedTextLine line in text.GetLines())
         {
+        
             lineSize += line.Height;
         }
 

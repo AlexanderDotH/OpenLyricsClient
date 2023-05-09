@@ -3,15 +3,32 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:overlays="clr-namespace:OpenLyricsClient.Frontend.Models.Custom.Tile.Overlays"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ei="using:Avalonia.Xaml.Interactions.Core"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OpenLyricsClient.Frontend.View.Custom.Tile.Overlays.TextOverlay">
-    <TextBlock.DataContext>
+    <UserControl.DataContext>
         <overlays:TextOverlayViewModel/>        
-    </TextBlock.DataContext>
+    </UserControl.DataContext>
     
     <ItemsControl Name="PART_Items"
-                  Items="{Binding LyricsLines}" EffectiveViewportChanged="">
+                  Items="{Binding LyricsLines}">
+        <i:Interaction.Behaviors>
+            <ei:EventTriggerBehavior EventName="EffectiveViewportChanged">
+                <ei:InvokeCommandAction Command="{Binding EffectiveViewportChangedCommand}"
+                                        PassEventArgsToCommand="True" />
+            </ei:EventTriggerBehavior>
+        </i:Interaction.Behaviors>
         
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <TextBlock Name="PART_Block1"
+                           Text="dawdawdawdawdaw"
+                           FontSize="{Binding DataContext.LyricsSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                           FontWeight="{Binding DataContext.LyricsWeight, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                           TextAlignment="{Binding DataContext.LyricsAlignment, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
     </ItemsControl>
 </UserControl>

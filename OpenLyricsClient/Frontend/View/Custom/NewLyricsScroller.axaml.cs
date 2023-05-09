@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ using OpenLyricsClient.Frontend.Animation;
 using OpenLyricsClient.Frontend.Models.Custom;
 using OpenLyricsClient.Frontend.Structure.Enum;
 using OpenLyricsClient.Frontend.Utils;
+using OpenLyricsClient.Frontend.View.Custom.Tile;
 using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Frontend.View.Custom;
@@ -65,6 +67,7 @@ public partial class NewLyricsScroller : UserControl
 
         this._frameRate = 144;
 
+        this.DataContext = new NewLyricsScrollerViewModel();
         this._viewModel = this.DataContext as NewLyricsScrollerViewModel;
         
         this._hiddenRepeater = this.Get<ItemsRepeater>(nameof(HIDDEN_CTRL_Repeater));
@@ -74,7 +77,7 @@ public partial class NewLyricsScroller : UserControl
         
         this._uiThreadRenderTimer = new UiThreadRenderTimer(144);
         this._uiThreadRenderTimer.Tick += UiThreadRenderTimerOnTick;
-        
+
         AttachedToVisualTree += OnAttachedToVisualTree;
     }
 
@@ -160,7 +163,7 @@ public partial class NewLyricsScroller : UserControl
 
     private async Task CalculateOffset()
     {
-        var debounced = Debouncer.Debounce<LyricPart[], double>(
+        var debounced = Debouncer.Debounce<ObservableCollection<LyricPart>, double>(
             async lyrics => 
                 await Dispatcher.UIThread.InvokeAsync(() =>
                 {
@@ -179,7 +182,7 @@ public partial class NewLyricsScroller : UserControl
         }
     }
 
-    private double GetRenderedOffset(LyricPart lyricPart, LyricPart[] lyricParts)
+    private double GetRenderedOffset(LyricPart lyricPart, ObservableCollection<LyricPart> lyricParts)
     {
         if (!DataValidator.ValidateData(lyricPart, lyricParts))
             return 0;
@@ -201,14 +204,14 @@ public partial class NewLyricsScroller : UserControl
         return position;
     }
 
-    private int GetIndexOfLyric(LyricPart lyricPart, LyricPart[] lyricParts) => lyricParts.IndexOf(lyricPart);
+    private int GetIndexOfLyric(LyricPart lyricPart, ObservableCollection<LyricPart> lyricParts) => lyricParts.IndexOf(lyricPart);
 
     private Size GetRenderedSize(int index)
     {
         if (!DataValidator.ValidateData(this._viewModel.Lyrics))
             return new Size();
 
-        if (index > this._viewModel.Lyrics.Length || index < 0)
+        if (index > this._viewModel.Lyrics.Count || index < 0)
             return new Size();
 
         try
@@ -220,6 +223,8 @@ public partial class NewLyricsScroller : UserControl
             if (itemContainer == null)
                 itemContainer = this._hiddenRepeater.GetOrCreateElement(index);
 
+            ((LyricsTile)itemContainer).UpdateViewPort(this.Bounds.Width, this.Bounds.Height);
+            
             Size constraint = new Size(this.Bounds.Width, this.Bounds.Height);
             itemContainer.Measure(constraint);
 
@@ -252,7 +257,7 @@ public partial class NewLyricsScroller : UserControl
         float highest = 0;
         int hSum = 0;
         
-        for (int i = 0; i < this._viewModel!.Lyrics.Length; i++)
+        for (int i = 0; i < this._viewModel!.Lyrics.Count; i++)
         {
             LyricPart currentPart = this._viewModel!.Lyrics[i];
             
@@ -278,7 +283,7 @@ public partial class NewLyricsScroller : UserControl
             }
         }
 
-        float speed = (sum / this._viewModel.Lyrics.Length);
+        float speed = (sum / this._viewModel.Lyrics.Count);
 
         float hSA = highest / hSum;
 

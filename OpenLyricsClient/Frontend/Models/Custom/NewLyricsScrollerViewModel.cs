@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
@@ -8,6 +9,7 @@ using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Frontend.Models.Pages.Settings;
 using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Frontend.Models.Custom;
 
@@ -49,9 +51,15 @@ public class NewLyricsScrollerViewModel : ViewModelBase, INotifyPropertyChanged
         Lyric = lyricchangedeventargs.LyricPart;
     }
 
-    public LyricPart[]? Lyrics
+    public ObservableCollection<LyricPart> Lyrics
     {
-        get => Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricParts!;
+        get
+        {
+            if (!DataValidator.ValidateData(Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricParts))
+                return new ObservableCollection<LyricPart>();
+
+            return new ObservableCollection<LyricPart>(Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricParts);
+        }
     }
 
     public LyricPart? Lyric

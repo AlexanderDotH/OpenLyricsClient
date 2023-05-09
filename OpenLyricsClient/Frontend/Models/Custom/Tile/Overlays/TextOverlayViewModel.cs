@@ -1,15 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Reactive;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Layout;
 using Avalonia.Media;
+using DevBase.Extensions;
 using DevBase.Generics;
+using Microsoft.CodeAnalysis;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Frontend.Utils;
+using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Utils;
+using Org.BouncyCastle.Crypto.Parameters;
+using ReactiveUI;
+using SharpDX;
+using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Frontend.Models.Custom.Tile.Overlays;
 
@@ -17,28 +29,97 @@ public class TextOverlayViewModel : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    private AList<string> _lines;
+    private ObservableCollection<(Rect, double, string)> _lines;
+    private LyricPart _lyricPart;
+    private Typeface _typeface;
 
+    public ICommand EffectiveViewportChangedCommand { get; }
+    
     public TextOverlayViewModel()
     {
-        this._lines = new AList<string>();
+        this._lines = new ObservableCollection<(Rect, double, string)>();
+        
+        this._typeface = new Typeface(FontFamily.Parse(
+                "avares://Material.Styles/Fonts/Roboto#Roboto"),
+            FontStyle.Normal, this.LyricsWeight);
+        
+        this._lyricPart = new LyricPart(0,"");
+        
+        EffectiveViewportChangedCommand = ReactiveCommand.Create<EffectiveViewportChangedEventArgs>(OnEffectiveViewportChanged);
         
         Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
+        Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
     }
 
-    public void UpdateTextWrappingLines(string text, double width, double height)
+    private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)
+    {
+        if (!args.LyricPart.Equals(this.LyricPart))
+            return;
+        
+        UpdatePercentage(this.LyricPart.Part);
+        OnPropertyChanged("LyricsLines");
+    }
+
+    private void OnEffectiveViewportChanged(EffectiveViewportChangedEventArgs e)
+    {
+        UpdateLyricsWrapping(e.EffectiveViewport.Width, e.EffectiveViewport.Height);   
+    }
+
+    public void UpdateLyricsWrapping(double width, double height)
+    {
+        if (!DataValidator.ValidateData(this.LyricPart))
+            return;
+        
+        UpdateTextWrappingLines(this.LyricPart.Part, width, height);
+    }
+    
+    private void UpdateTextWrappingLines(string text, double width, double height)
     {
         AList<string> lines = StringUtils.SplitTextToLines(
             text,
             width,
             height,
-            new Typeface(FontFamily.Parse(
-                    "avares://Material.Styles/Fonts/Roboto#Roboto"), 
-                FontStyle.Normal, this.LyricsWeight),
+            this._typeface,
             this.LyricsAlignment,
             this.LyricsSize);
 
-        SetField(ref this._lines, lines);
+        ObservableCollection<(Rect, double, string)> sizedLines = new ObservableCollection<(Rect, double, string)>();
+        
+        lines.ForEach(l =>
+        {
+            sizedLines.Add((MeasureSingleString(l), CalculatePercentage(l, text), l));
+        });
+
+        SetField(ref this._lines, sizedLines);
+    }
+
+    private void UpdatePercentage(string text)
+    {
+        this._lines.ForEach(l =>
+        {
+            l.Item2 = CalculatePercentage(l.Item3, text);
+        });
+    }
+
+    private double CalculatePercentage(string single, string full)
+    {
+        double singleWidth = MeasureSingleString(single).Width;
+        double fullWidth = MeasureSingleString(full).Width;
+
+        return (fullWidth * 0.01) * singleWidth;
+    }
+
+    private Rect MeasureSingleString(string line)
+    {
+        FormattedText formattedCandidateLine = new FormattedText(
+            line, 
+            this._typeface, 
+            this.LyricsSize, 
+            this.LyricsAlignment, 
+            TextWrapping.NoWrap, 
+            new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+        return formattedCandidateLine.Bounds;
     }
     
     private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
@@ -69,7 +150,17 @@ public class TextOverlayViewModel : INotifyPropertyChanged
         get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<Thickness>("Lyrics Margin");
     }
 
-    public AList<string> LyricsLines
+    public LyricPart LyricPart
+    {
+        get => this._lyricPart;
+        set
+        {
+            SetField(ref this._lyricPart, value);
+            UpdateLyricsWrapping(400, 400);
+        }
+    }
+
+    public ObservableCollection<(Rect, double, string)> LyricsLines
     {
         get => this._lines;
     }

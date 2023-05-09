@@ -30,12 +30,14 @@ public class StringUtils
             candidateLine.Append(word);
 
             FormattedText formattedCandidateLine = new FormattedText(candidateLine.ToString(), typeface, fontSize, alignment, textWrapping, constraint);
+
             if (formattedCandidateLine.Bounds.Width <= width)
             {
                 currentLine = candidateLine;
             }
             else
             {
+                
                 lines.Add(currentLine.ToString());
                 currentLine.Clear();
                 currentLine.Append(word);
