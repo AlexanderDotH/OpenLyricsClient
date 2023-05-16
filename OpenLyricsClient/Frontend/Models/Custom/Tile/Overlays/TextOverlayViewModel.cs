@@ -47,7 +47,7 @@ public class TextOverlayViewModel : INotifyPropertyChanged
         EffectiveViewportChangedCommand = ReactiveCommand.Create<EffectiveViewportChangedEventArgs>(OnEffectiveViewportChanged);
         
         Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
-        Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
+        //Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
     }
 
     private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)
@@ -55,15 +55,14 @@ public class TextOverlayViewModel : INotifyPropertyChanged
         if (!args.LyricPart.Equals(this.LyricPart))
             return;
         
-        UpdatePercentage(this.LyricPart.Part);
         OnPropertyChanged("LyricsLines");
     }
 
     private void OnEffectiveViewportChanged(EffectiveViewportChangedEventArgs e)
     {
-        //UpdateLyricsWrapping(e.EffectiveViewport.Width, e.EffectiveViewport.Height);   
+        UpdateLyricsWrapping(e.EffectiveViewport.Width, e.EffectiveViewport.Height);   
     }
-
+    
     public void UpdateLyricsWrapping(double width, double height)
     {
         if (!DataValidator.ValidateData(this.LyricPart))
@@ -89,22 +88,13 @@ public class TextOverlayViewModel : INotifyPropertyChanged
             LyricOverlayElement element = new LyricOverlayElement
             {
                 Rect = MeasureSingleString(l),
-                Percentage = CalculatePercentage(l, text),
+                //Percentage = CalculatePercentage(l, text),
                 Line = l
             };
             sizedLines.Add(element);
         });
 
         SetField(ref this._lines, sizedLines);
-    }
-
-    private void UpdatePercentage(string text)
-    {
-        this._lines.ForEach(l =>
-        {
-            l.Percentage = CalculatePercentage(l.Line, text);
-            l.Line = l.Line + " " + l.Percentage.ToString();
-        });
     }
 
     private double CalculatePercentage(string single, string full)
@@ -163,6 +153,11 @@ public class TextOverlayViewModel : INotifyPropertyChanged
         {
             SetField(ref this._lyricPart, value);
         }
+    }
+
+    public string Part
+    {
+        get => "wadweadfersger";
     }
 
     public ObservableCollection<LyricOverlayElement> LyricsLines

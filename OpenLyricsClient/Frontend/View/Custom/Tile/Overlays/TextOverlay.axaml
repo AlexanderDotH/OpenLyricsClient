@@ -2,32 +2,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:overlays="clr-namespace:OpenLyricsClient.Frontend.Models.Custom.Tile.Overlays"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ei="using:Avalonia.Xaml.Interactions.Core"
-             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:overlays = "clr-namespace:OpenLyricsClient.Frontend.View.Custom.Tile.Overlays"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OpenLyricsClient.Frontend.View.Custom.Tile.Overlays.TextOverlay">
-    <UserControl.DataContext>
-        <overlays:TextOverlayViewModel/>        
-    </UserControl.DataContext>
     
     <ItemsControl Name="PART_Items"
-                  Items="{Binding LyricsLines}">
-        <i:Interaction.Behaviors>
-            <ei:EventTriggerBehavior EventName="EffectiveViewportChanged">
-                <ei:InvokeCommandAction Command="{Binding EffectiveViewportChangedCommand}"
-                                        PassEventArgsToCommand="True"/>
-            </ei:EventTriggerBehavior>
-        </i:Interaction.Behaviors>
-        
+                  Items="{Binding LyricLines, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <TextBlock Name="PART_Block1"
                            Text="{Binding Line}"
-                           FontSize="{Binding DataContext.LyricsSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                           FontWeight="{Binding DataContext.LyricsWeight, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                           TextAlignment="{Binding DataContext.LyricsAlignment, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                           FontSize = "{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
+                           FontWeight = "{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
+                           TextAlignment = "{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
+                           Margin = "{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"/>
             </DataTemplate>
         </ItemsControl.ItemTemplate>
     </ItemsControl>

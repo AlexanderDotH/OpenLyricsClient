@@ -223,8 +223,6 @@ public partial class NewLyricsScroller : UserControl
             if (itemContainer == null)
                 itemContainer = this._hiddenRepeater.GetOrCreateElement(index);
 
-            ((LyricsTile)itemContainer).UpdateViewPort(this.Bounds.Width, this.Bounds.Height);
-            
             Size constraint = new Size(this.Bounds.Width, this.Bounds.Height);
             itemContainer.Measure(constraint);
 
