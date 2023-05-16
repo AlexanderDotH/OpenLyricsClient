@@ -17,14 +17,14 @@
         <i:Interaction.Behaviors>
             <ei:EventTriggerBehavior EventName="EffectiveViewportChanged">
                 <ei:InvokeCommandAction Command="{Binding EffectiveViewportChangedCommand}"
-                                        PassEventArgsToCommand="True" />
+                                        PassEventArgsToCommand="True"/>
             </ei:EventTriggerBehavior>
         </i:Interaction.Behaviors>
         
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <TextBlock Name="PART_Block1"
-                           Text="dawdawdawdawdaw"
+                           Text="{Binding Line}"
                            FontSize="{Binding DataContext.LyricsSize, RelativeSource={RelativeSource AncestorType=UserControl}}"
                            FontWeight="{Binding DataContext.LyricsWeight, RelativeSource={RelativeSource AncestorType=UserControl}}"
                            TextAlignment="{Binding DataContext.LyricsAlignment, RelativeSource={RelativeSource AncestorType=UserControl}}"/>

@@ -1,8 +1,12 @@
-﻿using Avalonia;
+﻿using System.Diagnostics;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using OpenLyricsClient.Frontend.Models.Custom.Tile.Overlays;
 using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Frontend.View.Custom.Tile.Overlays;
 
@@ -29,6 +33,12 @@ public partial class TextOverlay : UserControl
     {
         AvaloniaXamlLoader.Load(this);
     }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        //this._viewModel.UpdateLyricsWrapping(this.Bounds.Width, this.Bounds.Height);
+        base.OnAttachedToVisualTree(e);
+    }
     
     public void UpdateViewPort(double width, double height)
     {
@@ -44,4 +54,5 @@ public partial class TextOverlay : UserControl
             this._viewModel.LyricPart = value;
         }
     }
+    
 }

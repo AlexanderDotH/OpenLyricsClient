@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Frontend.View.Custom.Tile.Overlays;
@@ -33,18 +34,17 @@ public partial class LyricsTile : UserControl
 
     public void UpdateViewPort(double width, double height)
     {
-        this._overlay.UpdateViewPort(width, height);
+        //this._overlay.UpdateViewPort(width, height);
     }
     
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-
     }
 
     private void LyricHandlerOnLyricsFound(object sender)
     {
-        
+        //Dispatcher.UIThread.InvokeAsync(() => this._overlay.UpdateViewPort(this.Width, this.Height));
     }
 
     private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)

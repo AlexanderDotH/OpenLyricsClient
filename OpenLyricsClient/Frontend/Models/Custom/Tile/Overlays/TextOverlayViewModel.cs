@@ -15,6 +15,7 @@ using Microsoft.CodeAnalysis;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
+using OpenLyricsClient.Frontend.Structure;
 using OpenLyricsClient.Frontend.Utils;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 using OpenLyricsClient.Shared.Utils;
@@ -29,7 +30,7 @@ public class TextOverlayViewModel : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    private ObservableCollection<(Rect, double, string)> _lines;
+    private ObservableCollection<LyricOverlayElement> _lines;
     private LyricPart _lyricPart;
     private Typeface _typeface;
 
@@ -37,13 +38,11 @@ public class TextOverlayViewModel : INotifyPropertyChanged
     
     public TextOverlayViewModel()
     {
-        this._lines = new ObservableCollection<(Rect, double, string)>();
+        this._lines = new ObservableCollection<LyricOverlayElement>();
         
         this._typeface = new Typeface(FontFamily.Parse(
                 "avares://Material.Styles/Fonts/Roboto#Roboto"),
             FontStyle.Normal, this.LyricsWeight);
-        
-        this._lyricPart = new LyricPart(0,"");
         
         EffectiveViewportChangedCommand = ReactiveCommand.Create<EffectiveViewportChangedEventArgs>(OnEffectiveViewportChanged);
         
@@ -62,7 +61,7 @@ public class TextOverlayViewModel : INotifyPropertyChanged
 
     private void OnEffectiveViewportChanged(EffectiveViewportChangedEventArgs e)
     {
-        UpdateLyricsWrapping(e.EffectiveViewport.Width, e.EffectiveViewport.Height);   
+        //UpdateLyricsWrapping(e.EffectiveViewport.Width, e.EffectiveViewport.Height);   
     }
 
     public void UpdateLyricsWrapping(double width, double height)
@@ -72,7 +71,7 @@ public class TextOverlayViewModel : INotifyPropertyChanged
         
         UpdateTextWrappingLines(this.LyricPart.Part, width, height);
     }
-    
+
     private void UpdateTextWrappingLines(string text, double width, double height)
     {
         AList<string> lines = StringUtils.SplitTextToLines(
@@ -83,11 +82,17 @@ public class TextOverlayViewModel : INotifyPropertyChanged
             this.LyricsAlignment,
             this.LyricsSize);
 
-        ObservableCollection<(Rect, double, string)> sizedLines = new ObservableCollection<(Rect, double, string)>();
+        ObservableCollection<LyricOverlayElement> sizedLines = new ObservableCollection<LyricOverlayElement>();
         
         lines.ForEach(l =>
         {
-            sizedLines.Add((MeasureSingleString(l), CalculatePercentage(l, text), l));
+            LyricOverlayElement element = new LyricOverlayElement
+            {
+                Rect = MeasureSingleString(l),
+                Percentage = CalculatePercentage(l, text),
+                Line = l
+            };
+            sizedLines.Add(element);
         });
 
         SetField(ref this._lines, sizedLines);
@@ -97,7 +102,8 @@ public class TextOverlayViewModel : INotifyPropertyChanged
     {
         this._lines.ForEach(l =>
         {
-            l.Item2 = CalculatePercentage(l.Item3, text);
+            l.Percentage = CalculatePercentage(l.Line, text);
+            l.Line = l.Line + " " + l.Percentage.ToString();
         });
     }
 
@@ -109,14 +115,14 @@ public class TextOverlayViewModel : INotifyPropertyChanged
         return (fullWidth * 0.01) * singleWidth;
     }
 
-    private Rect MeasureSingleString(string line)
+    private Rect MeasureSingleString(string line, TextWrapping wrapping = TextWrapping.NoWrap)
     {
         FormattedText formattedCandidateLine = new FormattedText(
             line, 
             this._typeface, 
             this.LyricsSize, 
             this.LyricsAlignment, 
-            TextWrapping.NoWrap, 
+            wrapping, 
             new Size(double.PositiveInfinity, double.PositiveInfinity));
 
         return formattedCandidateLine.Bounds;
@@ -156,11 +162,10 @@ public class TextOverlayViewModel : INotifyPropertyChanged
         set
         {
             SetField(ref this._lyricPart, value);
-            UpdateLyricsWrapping(400, 400);
         }
     }
 
-    public ObservableCollection<(Rect, double, string)> LyricsLines
+    public ObservableCollection<LyricOverlayElement> LyricsLines
     {
         get => this._lines;
     }
