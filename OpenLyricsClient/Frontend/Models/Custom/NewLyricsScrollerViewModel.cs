@@ -58,7 +58,7 @@ public class NewLyricsScrollerViewModel : ViewModelBase, INotifyPropertyChanged
             if (!DataValidator.ValidateData(Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricParts))
                 return new ObservableCollection<LyricPart>();
 
-            return new ObservableCollection<LyricPart>(Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricParts);
+            return new ObservableCollection<LyricPart>(Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricParts!);
         }
     }
 

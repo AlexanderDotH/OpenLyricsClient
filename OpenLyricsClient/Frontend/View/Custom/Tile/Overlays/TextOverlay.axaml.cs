@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
@@ -14,6 +15,7 @@ using OpenLyricsClient.Frontend.Structure;
 using OpenLyricsClient.Frontend.Utils;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 using OpenLyricsClient.Shared.Utils;
+using Org.BouncyCastle.Asn1.X509.Qualified;
 
 namespace OpenLyricsClient.Frontend.View.Custom.Tile.Overlays;
 
@@ -32,16 +34,28 @@ public partial class TextOverlay : UserControl
     
     private ObservableCollection<LyricOverlayElement> _lines;
     private Typeface _typeface;
+
+    private bool _initialized;
     
     public TextOverlay()
     {
         InitializeComponent();
+
+        this._initialized = false;
         
         this._lines = new ObservableCollection<LyricOverlayElement>();
         
         this._typeface = new Typeface(FontFamily.Parse(
                 "avares://Material.Styles/Fonts/Roboto#Roboto"),
             FontStyle.Normal, this.LyricsWeight);
+
+        this._lyricPart = new LyricPart(-9999, "Hello there ;)");
+    }
+
+    private void OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
+    {
+        if (this._initialized)
+            UpdateTextWrappingLines(this._lyricPart.Part, e.EffectiveViewport.Width, e.EffectiveViewport.Height);
     }
 
     private void InitializeComponent()
@@ -106,12 +120,15 @@ public partial class TextOverlay : UserControl
         get { return this._lyricPart; }
         set
         {
-            SetAndRaise(LyricPartProperty, ref _lyricPart, value);
-            
             if (value == null)
                 return;
 
-            UpdateTextWrappingLines(value.Part, 800, double.PositiveInfinity);
+            if (this._lyricPart.Part.Equals(value.Part))
+                return;
+
+            SetAndRaise(LyricPartProperty, ref _lyricPart, value);
+            UpdateTextWrappingLines(value.Part, this.Bounds.Width, double.PositiveInfinity);
+            this._initialized = true;
         }
     }
     

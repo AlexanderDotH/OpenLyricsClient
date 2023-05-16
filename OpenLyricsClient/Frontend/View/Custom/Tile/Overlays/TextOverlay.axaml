@@ -7,15 +7,15 @@
              x:Class="OpenLyricsClient.Frontend.View.Custom.Tile.Overlays.TextOverlay">
     
     <ItemsControl Name="PART_Items"
+                  Margin="{Binding LyricsMargin, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                   Items="{Binding LyricLines, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <TextBlock Name="PART_Block1"
                            Text="{Binding Line}"
-                           FontSize = "{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
-                           FontWeight = "{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
-                           TextAlignment = "{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
-                           Margin = "{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"/>
+                           FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
+                           FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
+                           TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"/>
             </DataTemplate>
         </ItemsControl.ItemTemplate>
     </ItemsControl>

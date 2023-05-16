@@ -21,7 +21,7 @@
                                IsVisible="False">
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate DataType="lyrics:LyricPart">
-                            <tile:LyricsTile LyricPart="{Binding}" Bounds="{}"/>
+                            <tile:LyricsTile LyricPart="{Binding}"/>
                         </DataTemplate>
                     </ItemsRepeater.ItemTemplate>
                 </ItemsRepeater>

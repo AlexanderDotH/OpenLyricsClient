@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
+using DevBase.Api.Apis.OpenLyricsClient.Structure.Json;
 using DevBase.Async.Task;
 using OpenLyricsClient.Backend.Collector.Lyrics;
 using OpenLyricsClient.Backend.Debugger;
@@ -37,7 +38,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
         private bool _disposed;
 
         private const int LYRIC_OFFSET = 0;
-
+        
         public event LyricChangedEventHandler LyricChanged;
         public event LyricsFoundEventHandler LyricsFound;
         public event LyricsPercentageUpdatedEventHandler LyricsPercentageUpdated;
@@ -228,7 +229,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-
+            
             songChangedEventArgs.Song.State = SongState.SEARCHING_LYRICS;
             await this._lyricCollector.CollectLyrics(songResponseObject);
             songChangedEventArgs.Song.State = SongState.SEARCHING_FINISHED;

@@ -196,7 +196,7 @@ public partial class NewLyricsScroller : UserControl
         for (int i = 0; i < index; i++)
             position += GetRenderedSize(i).Height;
 
-        double halfHeight = this._customScrollViewer.Viewport.Height / 2.5d;
+        double halfHeight = this._customScrollViewer.Viewport.Height / 2.2d;
 
         position -= halfHeight;
         position += margin.Top;
@@ -240,13 +240,14 @@ public partial class NewLyricsScroller : UserControl
 
     public Thickness GetMargin()
     {
-        double m = this._customScrollViewer.Viewport.Height / 2.5d;
+        double m = this._customScrollViewer.Viewport.Height / 2.2d;
         return new Thickness(0, m, 0, m);
     }
     
     public float CalcSpeed()
     {
-        if (!(DataValidator.ValidateData(this._viewModel) && DataValidator.ValidateData(this._viewModel.Lyrics)))
+        if (!(DataValidator.ValidateData(this._viewModel) &&
+              DataValidator.ValidateData(this._viewModel.Lyrics)))
             return 15;
 
         LyricPart lastPart = null;

@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
+using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Frontend.View.Custom.Tile.Overlays;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 
@@ -46,10 +47,15 @@ public partial class LyricsTile : UserControl
     {
         //Dispatcher.UIThread.InvokeAsync(() => this._overlay.UpdateViewPort(this.Width, this.Height));
     }
-
+    
     private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)
     {
         
+    }
+    
+    public Thickness LyricsMargin 
+    {
+        get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<Thickness>("Lyrics Margin");
     }
 
     public LyricPart LyricPart
