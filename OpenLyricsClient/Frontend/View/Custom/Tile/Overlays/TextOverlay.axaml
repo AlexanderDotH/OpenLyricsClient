@@ -11,11 +11,20 @@
                   Items="{Binding LyricLines, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <TextBlock Name="PART_Block1"
-                           Text="{Binding Line}"
-                           FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
-                           FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
-                           TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"/>
+                <Panel>
+                    <Panel Opacity="0.5" 
+                           Background="Red" 
+                           Width="{Binding Width}" 
+                           HorizontalAlignment="Left"/>
+                    
+                    <TextBlock Name="PART_Block1"
+                               Text="{Binding Line}"
+                               FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
+                               FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
+                               TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"/>
+                
+                    
+                </Panel>
             </DataTemplate>
         </ItemsControl.ItemTemplate>
     </ItemsControl>

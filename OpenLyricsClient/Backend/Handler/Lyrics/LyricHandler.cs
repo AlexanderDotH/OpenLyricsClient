@@ -83,16 +83,32 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
             {
                 LyricPart currentPart = currentSong.Lyrics.LyricParts[i];
 
-                long time = currentPart.Equals(lyricChangedEventArgs.LyricPart) ? 
-                    ((i + 1 < currentSong.Lyrics.LyricParts.Length) ? 
-                        currentSong.Lyrics.LyricParts[i + 1].Time - currentSong.CurrentLyricPart.Time : 
-                        currentSong.SongMetadata.MaxTime - currentSong.CurrentLyricPart.Time) : 0;
-                
-                long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
-                double change = Math.Round((double)(100 * currentTime) / time);
+                if (i + 1 < currentSong.Lyrics.LyricParts.Length)
+                {
+                    LyricPart nextPart = currentSong.Lyrics.LyricParts[i + 1];
 
-                lyricChangedEventArgs.LyricPart.Percentage = change;
-                PercentageUpdatedEvent(lyricChangedEventArgs.LyricPart, change);
+                    if (currentPart.Equals(lyricChangedEventArgs.LyricPart))
+                    {
+                        long time = nextPart.Time - currentSong.CurrentLyricPart.Time;
+                        long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
+                        double change = Math.Round((double)(100 * currentTime) / time);
+
+                        lyricChangedEventArgs.LyricPart.Percentage = change;
+                        PercentageUpdatedEvent(lyricChangedEventArgs.LyricPart, change);
+                    }
+                }
+                else
+                {
+                    if (currentPart.Equals(lyricChangedEventArgs.LyricPart))
+                    {
+                        long time = currentSong.SongMetadata.MaxTime - currentSong.CurrentLyricPart.Time;
+                        long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
+                        double change = Math.Round((double)(100 * currentTime) / time);
+                                    
+                        lyricChangedEventArgs.LyricPart.Percentage = change;
+                        PercentageUpdatedEvent(lyricChangedEventArgs.LyricPart, change);
+                    }
+                }
             }
         }
 

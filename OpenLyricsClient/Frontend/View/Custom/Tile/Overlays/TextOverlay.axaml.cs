@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -58,8 +59,21 @@ public partial class TextOverlay : UserControl
 
         NewLyricsScroller.Instance.EffectiveViewportChanged += InstanceOnEffectiveViewportChanged;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
-        
+        Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
+
         this._lyricPart = new LyricPart(-9999, "Hello there ;)");
+    }
+
+    private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)
+    {
+        if (args.LyricPart.Equals(this._lyricPart))
+        {
+            CalculatePercentage(args.Percentage);
+        }
+        else
+        {
+            ResetWidths();
+        }
     }
 
     private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
@@ -68,7 +82,7 @@ public partial class TextOverlay : UserControl
 
     private void InstanceOnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
     {
-        measuredLinesCache.Clear();
+       // measuredLinesCache.Clear();
         UpdateView(e.EffectiveViewport.Width, e.EffectiveViewport.Height);
     }
 
@@ -88,52 +102,79 @@ public partial class TextOverlay : UserControl
         UpdateTextWrappingLines(this._lyricPart.Part, width, height);
     }
     
-    private ConcurrentDictionary<string, Rect> measuredLinesCache = new ConcurrentDictionary<string, Rect>();
-
     private void UpdateTextWrappingLines(string text, double width, double height)
     {
-        AList<string> aListLines = StringUtils.SplitTextToLines(
+        AList<string> lines = StringUtils.SplitTextToLines(
             text,
-            width,
+            width - 100,
             height,
             this._typeface,
             this.LyricsAlignment,
             this.LyricsSize);
-    
-        string[] lines = aListLines.GetAsArray();
 
-        ConcurrentBag<LyricOverlayElement> sizedLines = new ConcurrentBag<LyricOverlayElement>();
-
-        Parallel.ForEach(lines, (line) =>
+        if (lines.Length > 2)
         {
-            Rect rect;
-            if (!measuredLinesCache.TryGetValue(line, out rect))
-            {
-                rect = MeasureSingleString(line);
-                measuredLinesCache.TryAdd(line, rect);
-            }
+            lines.ForEach(t=> Debug.WriteLine(t));
+        }
+        
+        ObservableCollection<LyricOverlayElement> sizedLines = new ObservableCollection<LyricOverlayElement>();
 
+        for (int i = 0; i < lines.Length; i++)
+        {
+            string l = lines.Get(i);
+            
             LyricOverlayElement element = new LyricOverlayElement
             {
-                Rect = rect,
-                Line = line
+                Rect = MeasureSingleString(l),
+                Line = l
             };
             sizedLines.Add(element);
-        });
-
-        // Convert ConcurrentBag back to ObservableCollection
-        var newLines = new ObservableCollection<LyricOverlayElement>(sizedLines);
-    
-        SetAndRaise(LyricLinesProperty, ref _lines, newLines);
+        }
+        
+        SetAndRaise(LyricLinesProperty, ref _lines, sizedLines);
     }
 
-
-    private double CalculatePercentage(string single, string full)
+    private void CalculatePercentage(double percentage)
     {
-        double singleWidth = MeasureSingleString(single).Width;
-        double fullWidth = MeasureSingleString(full).Width;
+        double full = 0;
 
-        return (fullWidth * 0.01) * singleWidth;
+        for (var i = 0; i < this._lines.Count; i++)
+        {
+            LyricOverlayElement element = this._lines[i];
+            full += element.Rect.Width;
+        }
+
+        double remainder = (full * 0.01) * percentage;
+
+        for (var i = 0; i < this._lines.Count; i++)
+        {
+            LyricOverlayElement element = this._lines[i];
+
+            /*if (remainder <= 0)
+            {
+                element.Width = element.Rect.Width;
+                continue;
+            }*/
+
+            if (element.Rect.Width >= remainder)
+            {
+                element.Width = remainder;
+                remainder = 0;
+            }
+            else
+            {
+                element.Width = element.Rect.Width;
+                remainder -= element.Rect.Width;
+            }
+        }
+    }
+
+    private void ResetWidths()
+    {
+        for (var i = 0; i < this._lines.Count; i++)
+        {
+            this._lines[i].Width = 0;
+        }
     }
 
     private Rect MeasureSingleString(string line, TextWrapping wrapping = TextWrapping.NoWrap)
@@ -196,5 +237,22 @@ public partial class TextOverlay : UserControl
     public Thickness LyricsMargin 
     {
         get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<Thickness>("Lyrics Margin");
+    }
+
+    public Size Size
+    {
+        get
+        {
+            double width = 0;
+            double height = 0;
+            
+            for (var i = 0; i < this._lines.Count; i++)
+            {
+                width += Math.Max(width, this._lines[i].Rect.Width);
+                height += this._lines[i].Rect.Height;
+            }
+
+            return new Size(width, height);
+        }
     }
 }

@@ -16,6 +16,7 @@
     <Grid Background="{Binding UiBackground}">
         <custom:CustomScrollViewer Name="CTRL_Viewer">
             <Panel Name="CTRL_Container">
+                
                 <ItemsRepeater Name="HIDDEN_CTRL_Repeater"
                                Items="{Binding Lyrics}"
                                IsVisible="False">

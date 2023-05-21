@@ -11,27 +11,32 @@ public class StringUtils
 {
     public static AList<string> SplitTextToLines(string text, double width, double height, Typeface typeface, TextAlignment alignment, double fontSize)
     {
-        var words = text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-        var lines = new AList<string>();
-        var currentLine = new StringBuilder();
-        var textWrapping = TextWrapping.NoWrap;
-        var constraint = new Size(width, height);
+        string[] words = text.Split(' ');
 
-        foreach (var word in words)
+        AList<string> lines = new AList<string>();
+
+        StringBuilder currentLine = new StringBuilder();
+
+        TextWrapping textWrapping = TextWrapping.NoWrap;
+        Size constraint = new Size(width, height);
+
+        for (int i = 0; i < words.Length; i++)
         {
-            if (currentLine.Length > 0)
-                currentLine.Append(' ');
+            string word = words[i];
 
-            currentLine.Append(word);
-            var formattedCandidateLine = new FormattedText(currentLine.ToString(), typeface, fontSize, alignment, textWrapping, constraint);
+            StringBuilder candidateLine = new StringBuilder(currentLine.ToString());
 
-            if (formattedCandidateLine.Bounds.Width > width)
+            if (candidateLine.Length > 0)
+                candidateLine.Append(' ');
+            candidateLine.Append(word);
+
+            FormattedText formattedCandidateLine = new FormattedText(candidateLine.ToString(), typeface, fontSize, alignment, textWrapping, constraint);
+            if (formattedCandidateLine.Bounds.Width <= width)
             {
-                // Remove the word that just got appended.
-                currentLine.Length -= word.Length;
-                if (currentLine.Length > 0 && char.IsWhiteSpace(currentLine[currentLine.Length - 1]))
-                    currentLine.Length--; // Remove trailing space.
-
+                currentLine = candidateLine;
+            }
+            else
+            {
                 lines.Add(currentLine.ToString());
                 currentLine.Clear();
                 currentLine.Append(word);

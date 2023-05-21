@@ -80,7 +80,7 @@ public partial class NewLyricsScroller : UserControl
         this._customScrollViewer = this.Get<CustomScrollViewer>(nameof(CTRL_Viewer));
         this._container = this.Get<Panel>(nameof(CTRL_Container));
         
-        this._uiThreadRenderTimer = new UiThreadRenderTimer(144);
+        this._uiThreadRenderTimer = new UiThreadRenderTimer(60);
         this._uiThreadRenderTimer.Tick += UiThreadRenderTimerOnTick;
 
         AttachedToVisualTree += OnAttachedToVisualTree;
@@ -109,6 +109,7 @@ public partial class NewLyricsScroller : UserControl
         
         if (!double.IsNaN(y))
         {
+            this._customScrollViewer.ScrollDirection = ScrollDirection.DOWN;
             this._customScrollViewer.Offset = new Vector(0, y);
             this._currentScrollOffset = y;
         }
@@ -168,13 +169,6 @@ public partial class NewLyricsScroller : UserControl
 
     private async Task CalculateOffset()
     {
-        var debounced = Debouncer.Debounce<ObservableCollection<LyricPart>, double>(
-            async lyrics => 
-                await Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    return GetRenderedOffset(this._viewModel?.Lyric!, lyrics);
-                }), 100);
-        
         while (!Core.IsDisposed())
         {
             await Task.Delay(100);
@@ -182,8 +176,11 @@ public partial class NewLyricsScroller : UserControl
             if (!DataValidator.ValidateData(this._viewModel?.Lyric, this._viewModel.Lyrics))
                 continue;
 
-            double offset = await debounced(this._viewModel?.Lyrics!);
-            this._nextScrollOffset = offset;
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                double offset = GetRenderedOffset(this._viewModel?.Lyric!, this._viewModel.Lyrics);
+                this._nextScrollOffset = offset;
+            });
         }
     }
 
@@ -221,21 +218,12 @@ public partial class NewLyricsScroller : UserControl
 
         try
         {
-            IControl realItem = this._repeater.TryGetElement(index);
-
-            IControl itemContainer = this._hiddenRepeater.TryGetElement(index);
+            LyricsTile itemContainer = this._hiddenRepeater.TryGetElement(index) as LyricsTile;
 
             if (itemContainer == null)
-                itemContainer = this._hiddenRepeater.GetOrCreateElement(index);
+                itemContainer = this._hiddenRepeater.GetOrCreateElement(index) as LyricsTile;
 
-            Size constraint = new Size(this.Bounds.Width, this.Bounds.Height);
-            itemContainer.Measure(constraint);
-
-            Size s = itemContainer.DesiredSize;
-
-            realItem?.InvalidateVisual();
-
-            return s;
+            return itemContainer.Size;
         }
         catch (Exception e)
         {

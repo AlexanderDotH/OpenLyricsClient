@@ -81,6 +81,19 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         OnPropertyChanged(propertyName);
         return true;
     }
+
+    public Size Size
+    {
+        get
+        {
+            Size s = this._overlay.Size;
+            Thickness t = new Thickness(0,70,0,0);
+
+            return new Size(
+                s.Width + t.Right + t.Left,
+                s.Height + t.Top + t.Bottom);
+        }
+    }
     
     public Thickness LyricsMargin 
     {
