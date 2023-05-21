@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using OpenLyricsClient.Backend;
@@ -11,10 +15,15 @@ using OpenLyricsClient.Shared.Structure.Lyrics;
 
 namespace OpenLyricsClient.Frontend.View.Custom.Tile;
 
-public partial class LyricsTile : UserControl
+public partial class LyricsTile : UserControl, INotifyPropertyChanged
 {
     public static readonly DirectProperty<LyricsTile, LyricPart> LyricPartProperty = 
         AvaloniaProperty.RegisterDirect<LyricsTile, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
+    
+    public static StyledProperty<Thickness> LyricsMarginProperty =
+        AvaloniaProperty.Register<LyricsTile, Thickness>(nameof(LyricsMargin));
+    
+    public event PropertyChangedEventHandler? PropertyChanged;
     
     private LyricPart _lyricPart;
     private Decorator _decorator;
@@ -31,6 +40,13 @@ public partial class LyricsTile : UserControl
         
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
+        
+        Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
+    }
+
+    private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
+    {
+        OnPropertyChanged("LyricsMargin");
     }
 
     public void UpdateViewPort(double width, double height)
@@ -43,7 +59,7 @@ public partial class LyricsTile : UserControl
         base.OnAttachedToVisualTree(e);
     }
 
-    private void LyricHandlerOnLyricsFound(object sender)
+    private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
     {
         //Dispatcher.UIThread.InvokeAsync(() => this._overlay.UpdateViewPort(this.Width, this.Height));
     }
@@ -51,6 +67,19 @@ public partial class LyricsTile : UserControl
     private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)
     {
         
+    }
+    
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
     }
     
     public Thickness LyricsMargin 

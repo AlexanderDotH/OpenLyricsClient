@@ -1,5 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Concurrent;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Layout;
@@ -9,6 +11,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using DevBase.Generics;
 using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Frontend.Models.Custom.Tile.Overlays;
 using OpenLyricsClient.Frontend.Structure;
@@ -36,12 +39,16 @@ public partial class TextOverlay : UserControl
     private Typeface _typeface;
 
     private bool _initialized;
+
+    private Rect _size;
     
     public TextOverlay()
     {
         InitializeComponent();
 
         this._initialized = false;
+
+        this._size = new Rect();
         
         this._lines = new ObservableCollection<LyricOverlayElement>();
         
@@ -49,13 +56,20 @@ public partial class TextOverlay : UserControl
                 "avares://Material.Styles/Fonts/Roboto#Roboto"),
             FontStyle.Normal, this.LyricsWeight);
 
+        NewLyricsScroller.Instance.EffectiveViewportChanged += InstanceOnEffectiveViewportChanged;
+        Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
+        
         this._lyricPart = new LyricPart(-9999, "Hello there ;)");
     }
 
-    private void OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
+    private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
     {
-        if (this._initialized)
-            UpdateTextWrappingLines(this._lyricPart.Part, e.EffectiveViewport.Width, e.EffectiveViewport.Height);
+    }
+
+    private void InstanceOnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
+    {
+        measuredLinesCache.Clear();
+        UpdateView(e.EffectiveViewport.Width, e.EffectiveViewport.Height);
     }
 
     private void InitializeComponent()
@@ -66,33 +80,53 @@ public partial class TextOverlay : UserControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+
+    }
+
+    public void UpdateView(double width, double height)
+    {
+        UpdateTextWrappingLines(this._lyricPart.Part, width, height);
     }
     
+    private ConcurrentDictionary<string, Rect> measuredLinesCache = new ConcurrentDictionary<string, Rect>();
+
     private void UpdateTextWrappingLines(string text, double width, double height)
     {
-        AList<string> lines = StringUtils.SplitTextToLines(
+        AList<string> aListLines = StringUtils.SplitTextToLines(
             text,
             width,
             height,
             this._typeface,
             this.LyricsAlignment,
             this.LyricsSize);
+    
+        string[] lines = aListLines.GetAsArray();
 
-        ObservableCollection<LyricOverlayElement> sizedLines = new ObservableCollection<LyricOverlayElement>();
-        
-        lines.ForEach(l =>
+        ConcurrentBag<LyricOverlayElement> sizedLines = new ConcurrentBag<LyricOverlayElement>();
+
+        Parallel.ForEach(lines, (line) =>
         {
+            Rect rect;
+            if (!measuredLinesCache.TryGetValue(line, out rect))
+            {
+                rect = MeasureSingleString(line);
+                measuredLinesCache.TryAdd(line, rect);
+            }
+
             LyricOverlayElement element = new LyricOverlayElement
             {
-                Rect = MeasureSingleString(l),
-                //Percentage = CalculatePercentage(l, text),
-                Line = l
+                Rect = rect,
+                Line = line
             };
             sizedLines.Add(element);
         });
 
-        SetAndRaise(LyricLinesProperty, ref _lines, sizedLines);
+        // Convert ConcurrentBag back to ObservableCollection
+        var newLines = new ObservableCollection<LyricOverlayElement>(sizedLines);
+    
+        SetAndRaise(LyricLinesProperty, ref _lines, newLines);
     }
+
 
     private double CalculatePercentage(string single, string full)
     {
@@ -123,11 +157,14 @@ public partial class TextOverlay : UserControl
             if (value == null)
                 return;
 
-            if (this._lyricPart.Part.Equals(value.Part))
+            if (value.Equals(_lyricPart))
                 return;
-
+            
             SetAndRaise(LyricPartProperty, ref _lyricPart, value);
-            UpdateTextWrappingLines(value.Part, this.Bounds.Width, double.PositiveInfinity);
+            
+            UpdateTextWrappingLines(this._lyricPart.Part, NewLyricsScroller.Instance.Bounds.Width,
+                double.PositiveInfinity);
+            
             this._initialized = true;
         }
     }

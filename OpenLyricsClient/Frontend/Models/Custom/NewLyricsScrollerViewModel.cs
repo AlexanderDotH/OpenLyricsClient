@@ -17,6 +17,8 @@ public class NewLyricsScrollerViewModel : ViewModelBase, INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 
+    private LyricData _lyricData;
+    
     private LyricPart? _lyric;
     
     public NewLyricsScrollerViewModel()
@@ -41,8 +43,9 @@ public class NewLyricsScrollerViewModel : ViewModelBase, INotifyPropertyChanged
         OnPropertyChanged("Lyrics");
     }
 
-    private void LyricHandlerOnLyricsFound(object sender)
+    private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
     {
+        this._lyricData = args.LyricData;
         OnPropertyChanged("Lyrics");
     }
 
@@ -55,10 +58,11 @@ public class NewLyricsScrollerViewModel : ViewModelBase, INotifyPropertyChanged
     {
         get
         {
-            if (!DataValidator.ValidateData(Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricParts))
-                return new ObservableCollection<LyricPart>();
 
-            return new ObservableCollection<LyricPart>(Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricParts!);
+            if (!DataValidator.ValidateData(this._lyricData))
+                return new ObservableCollection<LyricPart>();
+            
+            return new ObservableCollection<LyricPart>(this._lyricData.LyricParts);
         }
     }
 

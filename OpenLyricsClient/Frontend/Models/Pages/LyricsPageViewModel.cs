@@ -105,7 +105,7 @@ public class LyricsPageViewModel : INotifyPropertyChanged
         catch (Exception e) { }
     }
 
-    private void LyricHandlerOnLyricsFound(object sender)
+    private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
     {
         OnPropertyChanged("AiBadge");
     }

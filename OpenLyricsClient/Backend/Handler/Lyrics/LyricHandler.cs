@@ -28,6 +28,8 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
         private LyricCollector _lyricCollector;
 
         private SongHandler _songHandler;
+        
+        private LyricData _oldLyrics;
 
         private TaskSuspensionToken _manageLyricSuspensionToken;
         private TaskSuspensionToken _manageLyricsRollSuspensionToken;
@@ -48,6 +50,8 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
             this._debugger = new Debugger<LyricHandler>(this);
 
             this._lyricCollector = new LyricCollector();
+
+            this._oldLyrics = new LyricData();
 
             this._songHandler = songHandler;
 
@@ -79,32 +83,16 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
             {
                 LyricPart currentPart = currentSong.Lyrics.LyricParts[i];
 
-                if (i + 1 < currentSong.Lyrics.LyricParts.Length)
-                {
-                    LyricPart nextPart = currentSong.Lyrics.LyricParts[i + 1];
+                long time = currentPart.Equals(lyricChangedEventArgs.LyricPart) ? 
+                    ((i + 1 < currentSong.Lyrics.LyricParts.Length) ? 
+                        currentSong.Lyrics.LyricParts[i + 1].Time - currentSong.CurrentLyricPart.Time : 
+                        currentSong.SongMetadata.MaxTime - currentSong.CurrentLyricPart.Time) : 0;
+                
+                long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
+                double change = Math.Round((double)(100 * currentTime) / time);
 
-                    if (currentPart.Equals(lyricChangedEventArgs.LyricPart))
-                    {
-                        long time = nextPart.Time - currentSong.CurrentLyricPart.Time;
-                        long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
-                        double change = Math.Round((double)(100 * currentTime) / time);
-
-                        lyricChangedEventArgs.LyricPart.Percentage = change;
-                        PercentageUpdatedEvent(lyricChangedEventArgs.LyricPart, change);
-                    }
-                }
-                else
-                {
-                    if (currentPart.Equals(lyricChangedEventArgs.LyricPart))
-                    {
-                        long time = currentSong.SongMetadata.MaxTime - currentSong.CurrentLyricPart.Time;
-                        long currentTime = currentSong.Time - currentSong.CurrentLyricPart.Time;
-                        double change = Math.Round((double)(100 * currentTime) / time);
-                                    
-                        lyricChangedEventArgs.LyricPart.Percentage = change;
-                        PercentageUpdatedEvent(lyricChangedEventArgs.LyricPart, change);
-                    }
-                }
+                lyricChangedEventArgs.LyricPart.Percentage = change;
+                PercentageUpdatedEvent(lyricChangedEventArgs.LyricPart, change);
             }
         }
 
@@ -149,7 +137,13 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                     {
                         song.Lyrics = lyricData;
                         song.State = SongState.HAS_LYRICS_AVAILABLE;
-                        LyricsFoundEvent();
+                        
+                        if (this._oldLyrics.Equals(lyricData))
+                            continue;
+
+                        this._oldLyrics = lyricData;
+                        
+                        LyricsFoundEvent(lyricData);
                     }
                     else if (lyricData.LyricReturnCode == LyricReturnCode.FAILED)
                     {
@@ -159,7 +153,7 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
                 }
             }
         }
-
+        
         private async Task ManageLyrics()
         {
             while (!this._disposed)
@@ -243,10 +237,10 @@ namespace OpenLyricsClient.Backend.Handler.Lyrics
             lyricChangedEventHandler?.Invoke(this, lyricChangedEventArgs);
         }
         
-        protected virtual void LyricsFoundEvent()
+        protected virtual void LyricsFoundEvent(LyricData data)
         {
             LyricsFoundEventHandler foundEventHandler = LyricsFound;
-            foundEventHandler?.Invoke(this);
+            foundEventHandler?.Invoke(this, new LyricsFoundEventArgs(data));
         }
 
         protected virtual void PercentageUpdatedEvent(LyricPart lyricPart, double percentage)

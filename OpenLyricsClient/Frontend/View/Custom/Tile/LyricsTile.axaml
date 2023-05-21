@@ -6,5 +6,6 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OpenLyricsClient.Frontend.View.Custom.Tile.LyricsTile">
     <Decorator Name="PART_Decorator"
-               Margin="{Binding LyricsMargin, RelativeSource={RelativeSource AncestorType=tile:LyricsTile}}"/>
+               Margin="0,0,0,70"/>
+               <!--Margin="{Binding LyricsMargin, RelativeSource={RelativeSource AncestorType=tile:LyricsTile}}"-->
 </UserControl>

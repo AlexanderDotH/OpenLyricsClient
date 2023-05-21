@@ -41,6 +41,9 @@ public partial class NewLyricsScroller : UserControl
 
     // ViewModel
     private NewLyricsScrollerViewModel _viewModel;
+    
+    // Instance
+    private static NewLyricsScroller _instance;
 
     // Multithreadding
     private TaskSuspensionToken _suspensionToken;
@@ -59,6 +62,8 @@ public partial class NewLyricsScroller : UserControl
     {
         AvaloniaXamlLoader.Load(this);
 
+        _instance = this;
+        
         this._currentScrollOffset = 0;
         this._nextScrollOffset = 0;
         this._speed = 2.0;
@@ -140,7 +145,7 @@ public partial class NewLyricsScroller : UserControl
         });
     }
 
-    private void LyricHandlerOnLyricsFound(object sender)
+    private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
     {
         Dispatcher.UIThread.InvokeAsync(async () =>
         {
@@ -320,6 +325,11 @@ public partial class NewLyricsScroller : UserControl
         base.OnPointerWheelChanged(e);
     }
 
+    public static NewLyricsScroller Instance
+    {
+        get => _instance;
+    }
+    
     public void Resync()
     {
         this._currentScrollOffset = this._customScrollViewer.Offset.Y;

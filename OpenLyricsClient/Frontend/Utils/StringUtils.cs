@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Avalonia;
 using Avalonia.Media;
@@ -10,34 +11,27 @@ public class StringUtils
 {
     public static AList<string> SplitTextToLines(string text, double width, double height, Typeface typeface, TextAlignment alignment, double fontSize)
     {
-        string[] words = text.Split(' ');
-        
-        AList<string> lines = new AList<string>();
-        
-        StringBuilder currentLine = new StringBuilder();
-        
-        TextWrapping textWrapping = TextWrapping.NoWrap;
-        Size constraint = new Size(width, height);
+        var words = text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        var lines = new AList<string>();
+        var currentLine = new StringBuilder();
+        var textWrapping = TextWrapping.NoWrap;
+        var constraint = new Size(width, height);
 
-        for (int i = 0; i < words.Length; i++)
+        foreach (var word in words)
         {
-            string word = words[i];
-            
-            StringBuilder candidateLine = new StringBuilder(currentLine.ToString());
-            
-            if (candidateLine.Length > 0)
-                candidateLine.Append(' ');
-            candidateLine.Append(word);
+            if (currentLine.Length > 0)
+                currentLine.Append(' ');
 
-            FormattedText formattedCandidateLine = new FormattedText(candidateLine.ToString(), typeface, fontSize, alignment, textWrapping, constraint);
+            currentLine.Append(word);
+            var formattedCandidateLine = new FormattedText(currentLine.ToString(), typeface, fontSize, alignment, textWrapping, constraint);
 
-            if (formattedCandidateLine.Bounds.Width <= width)
+            if (formattedCandidateLine.Bounds.Width > width)
             {
-                currentLine = candidateLine;
-            }
-            else
-            {
-                
+                // Remove the word that just got appended.
+                currentLine.Length -= word.Length;
+                if (currentLine.Length > 0 && char.IsWhiteSpace(currentLine[currentLine.Length - 1]))
+                    currentLine.Length--; // Remove trailing space.
+
                 lines.Add(currentLine.ToString());
                 currentLine.Clear();
                 currentLine.Append(word);
@@ -51,4 +45,5 @@ public class StringUtils
 
         return lines;
     }
+
 }
