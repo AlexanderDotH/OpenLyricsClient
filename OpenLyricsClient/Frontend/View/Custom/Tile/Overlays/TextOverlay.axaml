@@ -12,16 +12,32 @@
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <Panel>
-                    <Panel Opacity="0.5" 
-                           Background="Red" 
-                           Width="{Binding Width}" 
-                           HorizontalAlignment="Left"/>
-                    
-                    <TextBlock Name="PART_Block1"
-                               Text="{Binding Line}"
+                    <TextBlock Text="{Binding Line}"
                                FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                                FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
+                               Foreground="Red"
                                TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"/>
+                    
+                    <Viewbox Name="PART_Viewbox" 
+                             HorizontalAlignment="Left" 
+                             VerticalAlignment="Top"
+                             Stretch="None" 
+                             Width="{Binding Width}">
+                        
+                        <Viewbox.Transitions>
+                            <Transitions>
+                                <DoubleTransition Property="Width" Easing="CircularEaseOut" Duration="0:0:0.4"/>
+                            </Transitions>
+                        </Viewbox.Transitions>
+                        
+                        <TextBlock Text="{Binding Line}"
+                                   FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
+                                   FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
+                                   Foreground="White"
+                                   TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"/>
+                    </Viewbox>
+                    
+                    
                 
                     
                 </Panel>
