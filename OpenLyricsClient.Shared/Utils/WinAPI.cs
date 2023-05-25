@@ -9,6 +9,6 @@ namespace OpenLyricsClient.Shared.Utils
         public static extern IntPtr GetForegroundWindow();
         
         [DllImport("User32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        public static extern uint GetDpiForSystem ();
+        public static extern uint GetDpiForSystem();
     }
 }

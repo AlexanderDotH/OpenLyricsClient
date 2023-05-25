@@ -14,6 +14,7 @@ using Avalonia.Threading;
 using DevBase.Generics;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
+using OpenLyricsClient.Backend.Romanization;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Frontend.Models.Custom.Tile.Overlays;
 using OpenLyricsClient.Frontend.Structure;
@@ -21,6 +22,7 @@ using OpenLyricsClient.Frontend.Utils;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 using OpenLyricsClient.Shared.Utils;
 using Org.BouncyCastle.Asn1.X509.Qualified;
+using Romanization = OpenLyricsClient.Backend.Romanization.Romanization;
 
 namespace OpenLyricsClient.Frontend.View.Custom.Tile.Overlays;
 
@@ -36,6 +38,8 @@ public partial class TextOverlay : UserControl
         AvaloniaProperty.RegisterDirect<TextOverlay,  ObservableCollection<LyricOverlayElement>>(nameof(LyricLines), 
             o => o.LyricLines, 
             (o, v) => o.LyricLines = v);
+
+    private Backend.Romanization.Romanization _romanization;
     
     private LyricPart _lyricPart;
     private ItemsControl _itemsControl;
@@ -61,6 +65,8 @@ public partial class TextOverlay : UserControl
             FontStyle.Normal, this.LyricsWeight);
 
         this.LyricMargin = new Thickness(0, 0, 0, 5);
+
+        this._romanization = new Backend.Romanization.Romanization();
         
         NewLyricsScroller.Instance.EffectiveViewportChanged += InstanceOnEffectiveViewportChanged;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
@@ -109,32 +115,30 @@ public partial class TextOverlay : UserControl
     
     private void UpdateTextWrappingLines(string text, double width, double height)
     {
-        AList<string> lines = StringUtils.SplitTextToLines(
-            text,
-            width - 100,
-            height,
-            this._typeface,
-            this.LyricsAlignment,
-            this.LyricsSize);
-
-        if (lines.Length > 2)
-        {
-            lines.ForEach(t=> Debug.WriteLine(t));
-        }
-        
         ObservableCollection<LyricOverlayElement> sizedLines = new ObservableCollection<LyricOverlayElement>();
 
-        for (int i = 0; i < lines.Length; i++)
+        Task.Factory.StartNew(async () =>
         {
-            string l = lines.Get(i);
-            
-            LyricOverlayElement element = new LyricOverlayElement
+            AList<string> lines = StringUtils.SplitTextToLines(
+                await this._romanization.Romanize(text),
+                width - 100,
+                height,
+                this._typeface,
+                this.LyricsAlignment,
+                this.LyricsSize);
+
+            for (int i = 0; i < lines.Length; i++)
             {
-                Rect = MeasureSingleString(l),
-                Line = l
-            };
-            sizedLines.Add(element);
-        }
+                string l = lines.Get(i);
+
+                LyricOverlayElement element = new LyricOverlayElement
+                {
+                    Rect = MeasureSingleString(l),
+                    Line = l
+                };
+                sizedLines.Add(element);
+            }
+        }).GetAwaiter().GetResult();
         
         SetAndRaise(LyricLinesProperty, ref _lines, sizedLines);
     }
@@ -199,7 +203,7 @@ public partial class TextOverlay : UserControl
 
             if (value.Equals(_lyricPart))
                 return;
-            
+
             SetAndRaise(LyricPartProperty, ref _lyricPart, value);
             
             UpdateTextWrappingLines(this._lyricPart.Part, NewLyricsScroller.Instance.Bounds.Width,
@@ -252,7 +256,7 @@ public partial class TextOverlay : UserControl
             for (var i = 0; i < this._lines.Count; i++)
             {
                 width += Math.Max(width, this._lines[i].Rect.Width);
-                height += this._lines[i].Rect.Height;
+                height += this._lines[i].Rect.Height + 5;
             }
 
             return new Size(width, height);

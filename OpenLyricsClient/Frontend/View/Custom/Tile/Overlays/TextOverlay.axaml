@@ -3,8 +3,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:overlays = "clr-namespace:OpenLyricsClient.Frontend.View.Custom.Tile.Overlays"
+             xmlns:romanization="clr-namespace:OpenLyricsClient.Backend.Romanization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OpenLyricsClient.Frontend.View.Custom.Tile.Overlays.TextOverlay">
+    
+    <UserControl.Resources>
+        <romanization:RomanizationConverter x:Key="RomanizationConverter" />
+    </UserControl.Resources>
+
     
     <ItemsControl Name="PART_Items"
                   Items="{Binding LyricLines, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}">
@@ -25,7 +31,7 @@
                         </Border.Transitions>
                     </Border>
                     
-                    <TextBlock Text="{Binding Line}"
+                    <TextBlock Text="{Binding Line, Converter={StaticResource RomanizationConverter}}"
                                FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                                FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                                Margin="5,0,5,0"
@@ -44,7 +50,7 @@
                             </Transitions>
                         </Viewbox.Transitions>
                         
-                        <TextBlock Text="{Binding Line}"
+                        <TextBlock Text="{Binding Line, Converter={StaticResource RomanizationConverter}}"
                                    FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                                    FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                                    Margin="5,0,5,0"
