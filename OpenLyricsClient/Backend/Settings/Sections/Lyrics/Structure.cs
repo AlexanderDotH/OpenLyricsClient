@@ -3,6 +3,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Newtonsoft.Json;
 using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Visual;
 
 namespace OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 
@@ -21,7 +22,7 @@ public class Structure
     public TextAlignment LyricsAlignment { get; set; }
     
     [JsonProperty("Lyrics Margin")] 
-    public Thickness LyricsMargin { get; set; }
+    public Margin LyricsMargin { get; set; }
     
     [JsonProperty("Artwork Background")] 
     public bool ArtworkBackground { get; set; }

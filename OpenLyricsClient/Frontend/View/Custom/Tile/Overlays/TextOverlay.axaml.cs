@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -27,7 +28,10 @@ public partial class TextOverlay : UserControl
 {
     public static readonly DirectProperty<TextOverlay, LyricPart> LyricPartProperty = 
         AvaloniaProperty.RegisterDirect<TextOverlay, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
-
+    
+    public static StyledProperty<Thickness> LyricMarginProperty =
+        AvaloniaProperty.Register<LyricsTile, Thickness>(nameof(LyricMargin));
+    
     public static readonly DirectProperty<TextOverlay,  ObservableCollection<LyricOverlayElement>> LyricLinesProperty = 
         AvaloniaProperty.RegisterDirect<TextOverlay,  ObservableCollection<LyricOverlayElement>>(nameof(LyricLines), 
             o => o.LyricLines, 
@@ -35,21 +39,20 @@ public partial class TextOverlay : UserControl
     
     private LyricPart _lyricPart;
     private ItemsControl _itemsControl;
+
+    private Thickness _lyricMargin;
+    private Thickness _lyricsMargin;
     
     private ObservableCollection<LyricOverlayElement> _lines;
     private Typeface _typeface;
 
     private bool _initialized;
 
-    private Rect _size;
-    
     public TextOverlay()
     {
         InitializeComponent();
 
         this._initialized = false;
-
-        this._size = new Rect();
         
         this._lines = new ObservableCollection<LyricOverlayElement>();
         
@@ -57,11 +60,20 @@ public partial class TextOverlay : UserControl
                 "avares://Material.Styles/Fonts/Roboto#Roboto"),
             FontStyle.Normal, this.LyricsWeight);
 
+        this.LyricMargin = new Thickness(0, 0, 0, 5);
+        
         NewLyricsScroller.Instance.EffectiveViewportChanged += InstanceOnEffectiveViewportChanged;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
 
+        Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
+        
         this._lyricPart = new LyricPart(-9999, "Hello there ;)");
+    }
+
+    private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
+    {
+        
     }
 
     private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)
@@ -82,19 +94,12 @@ public partial class TextOverlay : UserControl
 
     private void InstanceOnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
     {
-       // measuredLinesCache.Clear();
         UpdateView(e.EffectiveViewport.Width, e.EffectiveViewport.Height);
     }
 
     private void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
-    }
-
-    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnAttachedToVisualTree(e);
-
     }
 
     public void UpdateView(double width, double height)
@@ -150,12 +155,6 @@ public partial class TextOverlay : UserControl
         {
             LyricOverlayElement element = this._lines[i];
 
-            /*if (remainder <= 0)
-            {
-                element.Width = element.Rect.Width;
-                continue;
-            }*/
-
             if (element.Rect.Width >= remainder)
             {
                 element.Width = remainder;
@@ -210,6 +209,15 @@ public partial class TextOverlay : UserControl
         }
     }
     
+    public Thickness LyricMargin
+    {
+        get { return this._lyricMargin; }
+        set
+        {
+            SetAndRaise(LyricMarginProperty, ref _lyricMargin, value);
+        }
+    }
+    
     public ObservableCollection<LyricOverlayElement> LyricLines
     {
         get { return this._lines; }
@@ -234,11 +242,6 @@ public partial class TextOverlay : UserControl
         get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<TextAlignment>("Lyrics Alignment");
     }
     
-    public Thickness LyricsMargin 
-    {
-        get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<Thickness>("Lyrics Margin");
-    }
-
     public Size Size
     {
         get

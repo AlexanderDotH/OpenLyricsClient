@@ -10,6 +10,7 @@ using DevBase.Generics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Visual;
 using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Backend.Settings.Sections.Lyrics;
@@ -68,7 +69,7 @@ public class LyricsSection : ISettingSection
             ArtworkBackground = false,
             LyricsBlur = false,
             LyricsAlignment = TextAlignment.Left,
-            LyricsMargin = new Thickness(0,0,0,70),
+            LyricsMargin = new Margin(0,0,0,70),
             LyricsWeight = FontWeight.Bold,
             LyricsSize = 30
         };

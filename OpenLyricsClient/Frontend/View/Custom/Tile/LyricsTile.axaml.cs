@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -10,8 +12,10 @@ using Avalonia.Threading;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
+using OpenLyricsClient.Frontend.Models.Pages.Settings;
 using OpenLyricsClient.Frontend.View.Custom.Tile.Overlays;
 using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Visual;
 
 namespace OpenLyricsClient.Frontend.View.Custom.Tile;
 
@@ -20,13 +24,12 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     public static readonly DirectProperty<LyricsTile, LyricPart> LyricPartProperty = 
         AvaloniaProperty.RegisterDirect<LyricsTile, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
     
-    public static StyledProperty<Thickness> LyricsMarginProperty =
-        AvaloniaProperty.Register<LyricsTile, Thickness>(nameof(LyricsMargin));
-    
     public event PropertyChangedEventHandler? PropertyChanged;
     
     private LyricPart _lyricPart;
     private Decorator _decorator;
+
+    private Thickness _lyricsMargin;
 
     private TextOverlay _overlay;
 
@@ -46,7 +49,8 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
     private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
     {
-        OnPropertyChanged("LyricsMargin");
+        Margin t = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<Margin>("Lyrics Margin");
+        this._decorator.Margin = t.ToThickness();
     }
 
     public void UpdateViewPort(double width, double height)
@@ -87,7 +91,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         get
         {
             Size s = this._overlay.Size;
-            Thickness t = new Thickness(0,70,0,0);
+            Thickness t = this._decorator.Margin;
 
             return new Size(
                 s.Width + t.Right + t.Left,
@@ -95,11 +99,6 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         }
     }
     
-    public Thickness LyricsMargin 
-    {
-        get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<Thickness>("Lyrics Margin");
-    }
-
     public LyricPart LyricPart
     {
         get { return this._lyricPart; }

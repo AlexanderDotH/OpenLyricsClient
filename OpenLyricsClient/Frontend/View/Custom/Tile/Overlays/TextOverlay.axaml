@@ -7,14 +7,28 @@
              x:Class="OpenLyricsClient.Frontend.View.Custom.Tile.Overlays.TextOverlay">
     
     <ItemsControl Name="PART_Items"
-                  Margin="{Binding LyricsMargin, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                   Items="{Binding LyricLines, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <Panel>
+            
+                <Panel Margin="{Binding LyricMargin, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}">
+                    
+                    <Border Width="{Binding Width}" 
+                            HorizontalAlignment="Left"
+                            Background="Green" 
+                            Opacity="0.4" 
+                            CornerRadius="5">
+                        <Border.Transitions>
+                            <Transitions>
+                                <DoubleTransition Property="Width" Easing="CircularEaseOut" Duration="0:0:0.4"/>
+                            </Transitions>
+                        </Border.Transitions>
+                    </Border>
+                    
                     <TextBlock Text="{Binding Line}"
                                FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                                FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
+                               Margin="5,0,5,0"
                                Foreground="Red"
                                TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"/>
                     
@@ -33,13 +47,10 @@
                         <TextBlock Text="{Binding Line}"
                                    FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                                    FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
+                                   Margin="5,0,5,0"
                                    Foreground="White"
                                    TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"/>
                     </Viewbox>
-                    
-                    
-                
-                    
                 </Panel>
             </DataTemplate>
         </ItemsControl.ItemTemplate>

@@ -17,7 +17,10 @@ public class LyricOverlayElement : INotifyPropertyChanged
     public double Width
     {
         get => this._width;
-        set => SetField(ref this._width, value);
+        set
+        {
+            SetField(ref this._width, value);
+        }
     }
     public event PropertyChangedEventHandler? PropertyChanged;
 
