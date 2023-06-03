@@ -12,14 +12,15 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Threading;
 using DevBase.Generics;
+using DynamicData;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Romanization;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
-using OpenLyricsClient.Frontend.Models.Custom.Tile.Overlays;
 using OpenLyricsClient.Frontend.Structure;
 using OpenLyricsClient.Frontend.Utils;
 using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Visual;
 using OpenLyricsClient.Shared.Utils;
 using Org.BouncyCastle.Asn1.X509.Qualified;
 using Romanization = OpenLyricsClient.Backend.Romanization.Romanization;
@@ -100,7 +101,7 @@ public partial class TextOverlay : UserControl
 
     private void InstanceOnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
     {
-        UpdateView(e.EffectiveViewport.Width, e.EffectiveViewport.Height);
+        UpdateView(NewLyricsScroller.Instance.Bounds.Width, e.EffectiveViewport.Height);
     }
 
     private void InitializeComponent()
@@ -119,7 +120,7 @@ public partial class TextOverlay : UserControl
 
         Task.Factory.StartNew(async () =>
         {
-            AList<string> lines = StringUtils.SplitTextToLines(
+            AList<LyricOverlayElement> lines = StringUtils.SplitTextToLines(
                 await this._romanization.Romanize(text),
                 width - 100,
                 height,
@@ -127,17 +128,7 @@ public partial class TextOverlay : UserControl
                 this.LyricsAlignment,
                 this.LyricsSize);
 
-            for (int i = 0; i < lines.Length; i++)
-            {
-                string l = lines.Get(i);
-
-                LyricOverlayElement element = new LyricOverlayElement
-                {
-                    Rect = MeasureSingleString(l),
-                    Line = l
-                };
-                sizedLines.Add(element);
-            }
+            sizedLines.AddRange(lines.GetAsList());
         }).GetAwaiter().GetResult();
         
         SetAndRaise(LyricLinesProperty, ref _lines, sizedLines);
@@ -146,32 +137,31 @@ public partial class TextOverlay : UserControl
     private void CalculatePercentage(double percentage)
     {
         double full = 0;
+        double mod = 10;
+        double remainder = 0;
 
         for (var i = 0; i < this._lines.Count; i++)
         {
             LyricOverlayElement element = this._lines[i];
-            full += element.Rect.Width;
-        }
+            double width = element.Rect.Width + mod;
+            full += width;
 
-        double remainder = (full * 0.01) * percentage;
+            if (i == this._lines.Count - 1)
+                remainder = (full * 0.01) * percentage;
 
-        for (var i = 0; i < this._lines.Count; i++)
-        {
-            LyricOverlayElement element = this._lines[i];
-
-            if (element.Rect.Width >= remainder)
+            if (width >= remainder && remainder > 0)
             {
                 element.Width = remainder;
                 remainder = 0;
             }
-            else
+            else if (remainder > 0)
             {
-                element.Width = element.Rect.Width;
-                remainder -= element.Rect.Width;
+                element.Width = width;
+                remainder -= width;
             }
         }
     }
-
+    
     private void ResetWidths()
     {
         for (var i = 0; i < this._lines.Count; i++)
@@ -228,6 +218,28 @@ public partial class TextOverlay : UserControl
         set
         {
             SetAndRaise(LyricLinesProperty, ref _lines, value);
+        }
+    }
+    
+    public SolidColorBrush SelectedLineBrush
+    {
+        get
+        {
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
+                return App.Current.FindResource("SelectedLineFontColorBrush") as SolidColorBrush;
+            
+            return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
+        }
+    }
+    
+    public SolidColorBrush UnSelectedLineBrush
+    {
+        get
+        {
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
+                return App.Current.FindResource("UnSelectedLineFontColorBrush") as SolidColorBrush;
+            
+            return SolidColorBrush.Parse("#646464");
         }
     }
 

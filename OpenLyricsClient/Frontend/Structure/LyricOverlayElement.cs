@@ -14,6 +14,14 @@ public class LyricOverlayElement : INotifyPropertyChanged
     
     public string Line { get; set; }
 
+    public LyricOverlayElement() { }
+
+    public LyricOverlayElement(string line, Rect rect)
+    {
+        this.Line = line;
+        this.Rect = rect;
+    }
+
     public double Width
     {
         get => this._width;

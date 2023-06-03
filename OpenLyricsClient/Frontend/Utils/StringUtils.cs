@@ -4,21 +4,19 @@ using System.Text;
 using Avalonia;
 using Avalonia.Media;
 using DevBase.Generics;
+using OpenLyricsClient.Frontend.Structure;
+using OpenLyricsClient.Shared.Structure.Visual;
 
 namespace OpenLyricsClient.Frontend.Utils;
 
 public class StringUtils
 {
-    public static AList<string> SplitTextToLines(string text, double width, double height, Typeface typeface, TextAlignment alignment, double fontSize)
+    public static AList<LyricOverlayElement> SplitTextToLines(string text, double width, double height, Typeface typeface, TextAlignment alignment, double fontSize)
     {
-        string[] words = text.Split(' ');
-
-        AList<string> lines = new AList<string>();
-
+        AList<LyricOverlayElement> lines = new AList<LyricOverlayElement>();
+        
         StringBuilder currentLine = new StringBuilder();
-
-        TextWrapping textWrapping = TextWrapping.NoWrap;
-        Size constraint = new Size(width, height);
+        string[] words = text.Split(' ');
 
         for (int i = 0; i < words.Length; i++)
         {
@@ -28,16 +26,19 @@ public class StringUtils
 
             if (candidateLine.Length > 0)
                 candidateLine.Append(' ');
+            
             candidateLine.Append(word);
 
-            FormattedText formattedCandidateLine = new FormattedText(candidateLine.ToString(), typeface, fontSize, alignment, textWrapping, constraint);
-            if (formattedCandidateLine.Bounds.Width <= width)
+            Rect size = MeasureSingleString(candidateLine.ToString(), width, height, typeface, alignment, fontSize);
+            
+            if (size.Width < width)
             {
                 currentLine = candidateLine;
             }
             else
             {
-                lines.Add(currentLine.ToString());
+                lines.Add(new LyricOverlayElement(currentLine.ToString(), size));
+                
                 currentLine.Clear();
                 currentLine.Append(word);
             }
@@ -45,10 +46,24 @@ public class StringUtils
 
         if (currentLine.Length > 0)
         {
-            lines.Add(currentLine.ToString());
+            lines.Add(new LyricOverlayElement(
+                currentLine.ToString(),
+                MeasureSingleString(currentLine.ToString(), width, height, typeface, alignment, fontSize)));
         }
 
         return lines;
     }
+    
+    private static Rect MeasureSingleString(string line, double width, double height, Typeface typeface, TextAlignment alignment, double fontSize)
+    {
+        FormattedText formattedCandidateLine = new FormattedText(
+            line, 
+            typeface, 
+            fontSize, 
+            alignment, 
+            TextWrapping.NoWrap, 
+            new Size(width, height));
 
+        return formattedCandidateLine.Bounds;
+    }
 }

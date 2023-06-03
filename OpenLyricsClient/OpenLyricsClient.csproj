@@ -182,6 +182,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Frontend\Models\Custom\Tile\Overlays\" />
     <Folder Include="Frontend\View\Custom\Functional\" />
   </ItemGroup>
   <ItemGroup>

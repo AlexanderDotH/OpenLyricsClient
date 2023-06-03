@@ -21,8 +21,8 @@
                     
                     <Border Width="{Binding Width}" 
                             HorizontalAlignment="Left"
-                            Background="Green" 
-                            Opacity="0.4" 
+                            Background="{Binding SelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}" 
+                            Opacity="0.2" 
                             CornerRadius="5">
                         <Border.Transitions>
                             <Transitions>
@@ -35,7 +35,7 @@
                                FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                                FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                                Margin="5,0,5,0"
-                               Foreground="Red"
+                               Foreground="{Binding UnSelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                                TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"/>
                     
                     <Viewbox Name="PART_Viewbox" 
@@ -54,7 +54,7 @@
                                    FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                                    FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                                    Margin="5,0,5,0"
-                                   Foreground="White"
+                                   Foreground="{Binding SelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                                    TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"/>
                     </Viewbox>
                 </Panel>
