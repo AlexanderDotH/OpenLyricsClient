@@ -31,7 +31,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
     private Thickness _lyricsMargin;
 
-    private TextOverlay _overlay;
+    private NoteOverlay _overlay;
 
     public LyricsTile()
     {
@@ -39,7 +39,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
         this._decorator = this.Get<Decorator>(nameof(PART_Decorator));
 
-        this._overlay = new TextOverlay();
+        this._overlay = new NoteOverlay();
         
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
