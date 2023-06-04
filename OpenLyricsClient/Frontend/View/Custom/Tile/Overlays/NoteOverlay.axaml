@@ -12,7 +12,7 @@
             <Setter Property="FontWeight" Value="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}"/>
             <Setter Property="TextAlignment" Value="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}"/>
         </Style>
-        
+
         <Style Selector="TextBlock.note1">
             <Style.Animations>
                 <Animation Duration="0:0:3"
@@ -98,11 +98,11 @@
                     Margin="5,0,5,0"
                     Background="Transparent">
         
-            <TextBlock Classes="note1" Text="♪" 
+            <TextBlock Name="PART_TextBlock_Visible_Note1" Classes="note1" Text="♪" 
                        Foreground="{Binding UnSelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}" VerticalAlignment="Bottom"/>
-            <TextBlock Classes="note2" Text="♪" 
+            <TextBlock Name="PART_TextBlock_Visible_Note2" Classes="note2" Text="♪" 
                        Foreground="{Binding UnSelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}" VerticalAlignment="Bottom"/>
-            <TextBlock Classes="note3" Text="♪" 
+            <TextBlock Name="PART_TextBlock_Visible_Note3" Classes="note3" Text="♪" 
                        Foreground="{Binding UnSelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}" VerticalAlignment="Bottom"/>
         </StackPanel>
         
@@ -124,11 +124,11 @@
                         Margin="5,0,5,0"
                         Background="Transparent">
         
-                <TextBlock Classes="note1" Text="♪" 
+                <TextBlock Name="PART_TextBlock_InVisible_Note1" Classes="note1" Text="♪" 
                            Foreground="{Binding SelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}" VerticalAlignment="Bottom"/>
-                <TextBlock Classes="note2" Text="♪" 
+                <TextBlock Name="PART_TextBlock_InVisible_Note2" Classes="note2" Text="♪" 
                            Foreground="{Binding SelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}" VerticalAlignment="Bottom"/>
-                <TextBlock Classes="note3" Text="♪" 
+                <TextBlock Name="PART_TextBlock_InVisible_Note3" Classes="note3" Text="♪" 
                            Foreground="{Binding SelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}" VerticalAlignment="Bottom"/>
             </StackPanel>
         </Viewbox>

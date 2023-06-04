@@ -113,6 +113,12 @@ public class LyricsPageViewModel : INotifyPropertyChanged
     private void ArtworkHandlerOnArtworkAppliedHandler(object sender, ArtworkAppliedEventArgs args)
     {
         OnPropertyChanged("Artwork");
+
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            OnPropertyChanged("UiBackground");
+            OnPropertyChanged("UiForeground");
+        });
     }
 
     private void SettingManagerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)

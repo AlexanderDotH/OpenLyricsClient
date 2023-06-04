@@ -137,17 +137,13 @@ public partial class NewLyricsScroller : UserControl
         if (songchangedevent.EventType != EventType.PRE)
             return;
     
-        Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            this.IsSynced = true;
-            this._repeater.Opacity = 0;
-            this._customScrollViewer.Offset = new Vector(0, 0);
-            this._customScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
-        });
+        Reset();
     }
 
     private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
     {
+        Reset();
+
         Dispatcher.UIThread.InvokeAsync(async () =>
         {
             this._customScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
@@ -287,6 +283,19 @@ public partial class NewLyricsScroller : UserControl
         return 100.0F - percentage;
     }
 
+    private void Reset()
+    {
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            this.IsSynced = true;
+            this._repeater.Opacity = 0;
+            this._customScrollViewer.ScrollDirection = ScrollDirection.UP;
+            this._currentScrollOffset = 0;
+            this._customScrollViewer.Offset = new Vector(0, 0);
+            this._customScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+        });
+    }
+    
     protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
     {
         if (e.Delta.Y != 0)
