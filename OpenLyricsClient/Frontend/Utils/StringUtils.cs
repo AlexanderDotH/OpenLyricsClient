@@ -54,7 +54,7 @@ public class StringUtils
         return lines;
     }
     
-    private static Rect MeasureSingleString(string line, double width, double height, Typeface typeface, TextAlignment alignment, double fontSize)
+    public static Rect MeasureSingleString(string line, double width, double height, Typeface typeface, TextAlignment alignment, double fontSize)
     {
         FormattedText formattedCandidateLine = new FormattedText(
             line, 

@@ -16,6 +16,7 @@ using OpenLyricsClient.Frontend.Models.Pages.Settings;
 using OpenLyricsClient.Frontend.View.Custom.Tile.Overlays;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 using OpenLyricsClient.Shared.Structure.Visual;
+using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.Frontend.View.Custom.Tile;
 
@@ -31,7 +32,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
     private Thickness _lyricsMargin;
 
-    private NoteOverlay _overlay;
+    private UserControl _overlay;
 
     public LyricsTile()
     {
@@ -39,8 +40,6 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
         this._decorator = this.Get<Decorator>(nameof(PART_Decorator));
 
-        this._overlay = new NoteOverlay();
-        
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
         
@@ -90,7 +89,14 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     {
         get
         {
-            Size s = this._overlay.Size;
+            Size s = new Size();
+            
+            if (this._overlay is NoteOverlay)
+                s = (this._overlay as NoteOverlay).Size;
+            
+            if (this._overlay is TextOverlay)
+                s = (this._overlay as TextOverlay).Size;    
+            
             Thickness t = this._decorator.Margin;
 
             return new Size(
@@ -104,10 +110,28 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         get { return this._lyricPart; }
         set
         {
-            this._overlay.LyricPart = value;
+            if (!DataValidator.ValidateData(value))
+                return;
+            
+            ApplyDataToOverlay(value);
             this._decorator.Child = this._overlay;
             
             SetAndRaise(LyricPartProperty, ref _lyricPart, value);
         }
+    }
+
+    private void ApplyDataToOverlay(LyricPart lyricPart)
+    {
+        if (lyricPart.Part.Contains("♪"))
+        {
+            this._overlay = new NoteOverlay();
+            (this._overlay as NoteOverlay).LyricPart = lyricPart;
+        } 
+        else if (!lyricPart.Part.Contains("♪"))
+        {
+            this._overlay = new TextOverlay();
+            (this._overlay as TextOverlay).LyricPart = lyricPart;
+        }
+
     }
 }

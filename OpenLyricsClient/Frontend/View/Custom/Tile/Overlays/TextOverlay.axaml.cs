@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
@@ -99,9 +100,10 @@ public partial class TextOverlay : UserControl
     {
     }
 
+
     private void InstanceOnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
     {
-        UpdateView(NewLyricsScroller.Instance.Bounds.Width, e.EffectiveViewport.Height);
+        UpdateView(e.EffectiveViewport.Width, e.EffectiveViewport.Height);
     }
 
     private void InitializeComponent()
@@ -122,7 +124,7 @@ public partial class TextOverlay : UserControl
         {
             AList<LyricOverlayElement> lines = StringUtils.SplitTextToLines(
                 await this._romanization.Romanize(text),
-                width - 100,
+                width,
                 height,
                 this._typeface,
                 this.LyricsAlignment,
@@ -138,30 +140,34 @@ public partial class TextOverlay : UserControl
     {
         double full = 0;
         double mod = 10;
-        double remainder = 0;
 
         for (var i = 0; i < this._lines.Count; i++)
         {
             LyricOverlayElement element = this._lines[i];
+            full += element.Rect.Width + mod;
+        }
+
+        double remainder = (full * 0.01) * percentage;
+
+        for (var i = 0; i < this._lines.Count; i++)
+        {
+            LyricOverlayElement element = this._lines[i];
+
             double width = element.Rect.Width + mod;
-            full += width;
-
-            if (i == this._lines.Count - 1)
-                remainder = (full * 0.01) * percentage;
-
-            if (width >= remainder && remainder > 0)
+            
+            if (width >= remainder)
             {
                 element.Width = remainder;
                 remainder = 0;
             }
-            else if (remainder > 0)
+            else
             {
                 element.Width = width;
                 remainder -= width;
             }
         }
     }
-    
+
     private void ResetWidths()
     {
         for (var i = 0; i < this._lines.Count; i++)

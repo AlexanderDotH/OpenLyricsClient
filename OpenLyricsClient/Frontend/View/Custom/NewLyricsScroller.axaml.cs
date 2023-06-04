@@ -80,7 +80,7 @@ public partial class NewLyricsScroller : UserControl
         this._customScrollViewer = this.Get<CustomScrollViewer>(nameof(CTRL_Viewer));
         this._container = this.Get<Panel>(nameof(CTRL_Container));
         
-        this._uiThreadRenderTimer = new UiThreadRenderTimer(60);
+        this._uiThreadRenderTimer = new UiThreadRenderTimer(150);
         this._uiThreadRenderTimer.Tick += UiThreadRenderTimerOnTick;
 
         AttachedToVisualTree += OnAttachedToVisualTree;

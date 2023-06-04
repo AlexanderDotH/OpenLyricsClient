@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Security;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -6,20 +10,19 @@ using Avalonia.Media;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
+using OpenLyricsClient.Frontend.Models.Pages.Settings;
+using OpenLyricsClient.Frontend.Utils;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 
 namespace OpenLyricsClient.Frontend.View.Custom.Tile.Overlays;
 
-public partial class NoteOverlay : UserControl
+public partial class NoteOverlay : UserControl, INotifyPropertyChanged
 {
     public static readonly DirectProperty<NoteOverlay, LyricPart> LyricPartProperty = 
         AvaloniaProperty.RegisterDirect<NoteOverlay, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
     
     public static StyledProperty<Thickness> LyricMarginProperty =
         AvaloniaProperty.Register<NoteOverlay, Thickness>(nameof(LyricMargin));
-    
-    public static readonly StyledProperty<double> PercentageProperty =
-        AvaloniaProperty.Register<NoteOverlay, double>(nameof(Percentage));
     
     public static readonly DirectProperty<NoteOverlay, TimeSpan> AnimationTimeSpanProperty =
         AvaloniaProperty.RegisterDirect<NoteOverlay, TimeSpan>(
@@ -30,8 +33,15 @@ public partial class NoteOverlay : UserControl
     private LyricPart _lyricPart;
     private Thickness _lyricMargin;
     private TimeSpan _animationTimeSpan;
+    private double _percentage;
+
+    private Typeface _typeface;
 
     private StackPanel _stackPanel;
+
+    private Size _size;
+    
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public NoteOverlay()
     {
@@ -40,23 +50,74 @@ public partial class NoteOverlay : UserControl
         AvaloniaXamlLoader.Load(this);
 
         this._stackPanel = this.Get<StackPanel>(nameof(PART_StackPanel));
+
+        this._percentage = 0;
+        
+        this._typeface = new Typeface(FontFamily.Parse(
+                "avares://Material.Styles/Fonts/Roboto#Roboto"),
+            FontStyle.Normal, this.LyricsWeight);
+
+        this._size = CalculateSize();
         
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
+        Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
+    }
+
+    private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs args)
+    {
+        if (!args.Section.Equals(typeof(SettingsLyricsViewModel)))
+            return;
+
+        this._size = CalculateSize();
+    }
+
+    private Size CalculateSize()
+    {
+        Rect r = StringUtils.MeasureSingleString(
+            "♪", 
+            double.PositiveInfinity, 
+            double.PositiveInfinity, 
+            this._typeface,
+            this.LyricsAlignment, this.LyricsSize);
+
+        int amount = 3;
+        double spacing = 10 * amount;
+        double margin = 10;
+        double elements = (r.Width * amount) + margin + spacing;
+
+        return new Size(elements, r.Height);
     }
 
     private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)
     {
-        if (!this._lyricPart.Equals(args.LyricPart))
-            return;
-
-        this.Percentage = CalculateWidthPercentage(args.Percentage);
+        if (this._lyricPart.Equals(args.LyricPart))
+        {
+            this.Percentage = CalculateWidthPercentage(args.Percentage);
+        }
+        else
+        {
+            this.Percentage = 0;
+        }
     }
 
     public double CalculateWidthPercentage(double percentage)
     {
-        double w = this._stackPanel.Bounds.Width;
+        double w = this._size.Width;
         double p = (w * 0.01) * percentage;
         return p;
+    }
+    
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+    
+    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
     }
     
     public LyricPart LyricPart
@@ -131,15 +192,18 @@ public partial class NoteOverlay : UserControl
     
     public double Percentage
     {
-        get => GetValue(PercentageProperty);
-        set => SetValue(PercentageProperty, value);
+        get { return _percentage; }
+        set
+        {
+            SetField(ref _percentage, value);
+        }
     }
     
     public Size Size
     {
         get
         {
-            return this._stackPanel.Bounds.Size;
+            return this._size;
         }
     }
 }
