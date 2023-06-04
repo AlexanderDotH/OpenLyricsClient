@@ -76,7 +76,6 @@
         
         <Border Width="{Binding Percentage, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}"
                 HorizontalAlignment="Left"
-                Background="{Binding SelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}" 
                 Opacity="0.2" 
                 CornerRadius="5">
             <Border.Transitions>
@@ -84,6 +83,13 @@
                     <DoubleTransition Property="Width" Easing="CircularEaseOut" Duration="0:0:0.4"/>
                 </Transitions>
             </Border.Transitions>
+            
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,40">
+                    <GradientStop Color="Transparent" Offset="0.0" />
+                    <GradientStop Color="{Binding SelectedLineBrush.Color, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
         </Border>
         
         <StackPanel Name="PART_StackPanel" 
