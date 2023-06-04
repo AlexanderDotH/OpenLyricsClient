@@ -72,7 +72,7 @@
         
     </UserControl.Styles>
     
-    <Panel Height="50">
+    <Panel Height="{Binding AnimationHeight, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}">
         
         <Border Width="{Binding Percentage, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}"
                 HorizontalAlignment="Left"

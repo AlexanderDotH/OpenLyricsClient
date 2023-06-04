@@ -34,6 +34,7 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     private Thickness _lyricMargin;
     private TimeSpan _animationTimeSpan;
     private double _percentage;
+    private double _height;
 
     private Typeface _typeface;
 
@@ -57,7 +58,8 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
                 "avares://Material.Styles/Fonts/Roboto#Roboto"),
             FontStyle.Normal, this.LyricsWeight);
 
-        this._size = CalculateSize();
+        this._size = CalculateSize();        
+        this._height = this._size.Height + 15;
         
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
         Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
@@ -69,6 +71,7 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
             return;
 
         this._size = CalculateSize();
+        this._height = this._size.Height + 15;
     }
 
     private Size CalculateSize()
@@ -196,6 +199,15 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         set
         {
             SetField(ref _percentage, value);
+        }
+    }
+    
+    public double AnimationHeight
+    {
+        get { return _height; }
+        set
+        {
+            SetField(ref _height, value);
         }
     }
     
