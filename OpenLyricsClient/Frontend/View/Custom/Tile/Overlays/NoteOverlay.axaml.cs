@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security;
 using Avalonia;
+using Avalonia.Animation;
+using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Styling;
 using Avalonia.VisualTree;
 using DevBase.Generics;
 using OpenLyricsClient.Backend;
@@ -29,31 +33,16 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     public static StyledProperty<Thickness> LyricMarginProperty =
         AvaloniaProperty.Register<NoteOverlay, Thickness>(nameof(LyricMargin));
     
-    public static readonly DirectProperty<NoteOverlay, TimeSpan> AnimationTimeSpanProperty =
-        AvaloniaProperty.RegisterDirect<NoteOverlay, TimeSpan>(
-            nameof(TimeSpan), 
-            o => o.AnimationTimeSpan, 
-            (o, v) => o.AnimationTimeSpan = v);
-    
     private LyricPart _lyricPart;
     private Thickness _lyricMargin;
-    private TimeSpan _animationTimeSpan;
     private double _percentage;
     private double _height;
-    private bool _animate;
     
+    private bool _animate;
+    private double _speed;
+    private AList<(string, Avalonia.Animation.Animation)> _animatale;
+
     private Typeface _typeface;
-
-    private StackPanel _stackPanel;
-
-    private TextBlock _textBlockVisible1;
-    private TextBlock _textBlockVisible2;
-    private TextBlock _textBlockVisible3;
-    private TextBlock _textBlockInVisible1;
-    private TextBlock _textBlockInVisible2;
-    private TextBlock _textBlockInVisible3;
-
-    private AList<TextBlock> _textBlocks;
 
     private Size _size;
     
@@ -61,38 +50,25 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
 
     public NoteOverlay()
     {
-        AnimationTimeSpan = TimeSpan.FromSeconds(3);
-
-        AvaloniaXamlLoader.Load(this);
-
-        this._stackPanel = this.Get<StackPanel>(nameof(PART_StackPanel));
+        this._speed = 0;
 
         this._percentage = 0;
+
+        this._animatale = new AList<(string, Avalonia.Animation.Animation)>();
         
         this._typeface = new Typeface(FontFamily.Parse(
                 "avares://Material.Styles/Fonts/Roboto#Roboto"),
             FontStyle.Normal, this.LyricsWeight);
-
-        this._textBlockVisible1 = this.Get<TextBlock>(nameof(PART_TextBlock_Visible_Note1));
-        this._textBlockVisible2 = this.Get<TextBlock>(nameof(PART_TextBlock_Visible_Note2));
-        this._textBlockVisible3 = this.Get<TextBlock>(nameof(PART_TextBlock_Visible_Note3));
-        this._textBlockInVisible1 = this.Get<TextBlock>(nameof(PART_TextBlock_InVisible_Note1));
-        this._textBlockInVisible2 = this.Get<TextBlock>(nameof(PART_TextBlock_InVisible_Note2));
-        this._textBlockInVisible3 = this.Get<TextBlock>(nameof(PART_TextBlock_InVisible_Note3));
-
-        this._textBlocks = new AList<TextBlock>(
-            this._textBlockVisible1,
-            this._textBlockVisible2,
-            this._textBlockVisible3,
-            this._textBlockInVisible1,
-            this._textBlockInVisible2,
-            this._textBlockInVisible3);
         
         this._size = CalculateSize();
         this._height = this._size.Height + 15;
         
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
         Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
+        
+        AvaloniaXamlLoader.Load(this);
+        
+        ApplyAnimationToClasses();
     }
 
     private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs args)
@@ -103,6 +79,150 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         this._size = CalculateSize();
         this._height = this._size.Height + 15;
     }
+
+    private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)
+    {
+        if (this._lyricPart.Equals(args.LyricPart))
+        {
+            this.Percentage = CalculateWidthPercentage(args.Percentage);
+            Animate = true;
+        }
+        else
+        {
+            this.Percentage = 0;
+            Animate = false;
+        }
+    }
+
+    #region Animations
+
+    private void ApplyAnimationToClasses()
+    {
+        Styles styles = new Styles();
+
+        double modifier = 0.8d;
+        
+        for (int i = 1; i <= 3; i++)
+        {
+            styles.Add(IdleAnimationStyle($"idle{i}", TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(modifier * (i - 1))));
+        }
+        
+        for (int i = 1; i <= 3; i++)
+        {
+            styles.Add(ActiveAnimationStyle($"note{i}", TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(modifier *(i - 1))));
+        }
+        
+        this.Styles.Add(styles);
+    }
+    
+    private Style IdleAnimationStyle(string className, TimeSpan duration, TimeSpan delay)
+    {
+        var animation = new Avalonia.Animation.Animation
+        {
+            Duration = duration,
+            Delay = delay,
+            IterationCount = IterationCount.Infinite,
+            Easing = new CircularEaseInOut(),
+            FillMode = FillMode.Both,
+            PlaybackDirection = PlaybackDirection.Alternate
+        };
+
+        var keyFrame1 = new KeyFrame
+        {
+            Cue = new Cue(0),
+            Setters = { new Setter(TextBlock.OpacityProperty, 0.2) }
+        };
+
+        var keyFrame2 = new KeyFrame
+        {
+            Cue = new Cue(1),
+            Setters = { new Setter(TextBlock.OpacityProperty, 1) }
+        };
+
+        animation.Children.Add(keyFrame1);
+        animation.Children.Add(keyFrame2);
+
+        var style = new Style(x => x.OfType<TextBlock>().Class(className));
+        style.Animations.Add(animation);
+
+        this._animatale.Add((className, animation));
+        
+        return style;
+    }
+    
+    private Style ActiveAnimationStyle(string className, TimeSpan duration, TimeSpan delay)
+    {
+        var animation = new Avalonia.Animation.Animation
+        {
+            Duration = duration,
+            Delay = delay,
+            IterationCount = IterationCount.Infinite,
+            Easing = new ElasticEaseIn(),
+            FillMode = FillMode.Both,
+            PlaybackDirection = PlaybackDirection.Alternate
+        };
+
+        var keyFrame1 = new KeyFrame
+        {
+            Cue = new Cue(0),
+            Setters = {
+                new Setter(TextBlock.MarginProperty, new Thickness(0,0,0,0)),
+                new Setter(TextBlock.OpacityProperty, 0.7)
+            }
+        };
+
+        var keyFrame2 = new KeyFrame
+        {
+            Cue = new Cue(1),
+            Setters = {
+                new Setter(TextBlock.MarginProperty, new Thickness(0,0,0,10)),
+                new Setter(TextBlock.OpacityProperty, 1)
+            }
+        };
+
+        animation.Children.Add(keyFrame1);
+        animation.Children.Add(keyFrame2);
+
+        var style = new Style(x => x.OfType<TextBlock>().Class(className));
+        style.Animations.Add(animation);
+        
+        this._animatale.Add((className, animation));
+        
+        return style;
+    }
+    
+    
+    private void ApplyDelay(string classes, double percentage)
+    {
+        double modifier = percentage * 0.1;
+
+        modifier = Math.Clamp(modifier, 0, 0.8);
+
+        int position = 1;
+        for (int i = 0; i < this._animatale.Length; i++)
+        {
+            (string, Avalonia.Animation.Animation) element = this._animatale.Get(i);
+        
+            if (element.Item1.SequenceEqual($"{classes}{position}"))
+            {
+                element.Item2.Delay = TimeSpan.FromSeconds(position * modifier);
+                position++;
+            }
+        }
+    }
+    
+    private void ApplyDuration(string classes, TimeSpan span)
+    {
+        this._animatale.ForEach(a =>
+        {
+            if (a.Item1.Contains(classes))
+                a.Item2.Duration = span;
+        });
+    }
+
+    #endregion
+    
+    #region Calculatios
 
     private Size CalculateSize()
     {
@@ -120,42 +240,34 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
 
         return new Size(elements, r.Height);
     }
-
-    private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)
-    {
-        if (this._lyricPart.Equals(args.LyricPart))
-        {
-            this.Percentage = CalculateWidthPercentage(args.Percentage);
-            
-            EditAllAnimations(EnumAnimationState.START);
-        }
-        else
-        {
-            this.Percentage = 0;
-            
-            EditAllAnimations(EnumAnimationState.STOP);
-        }
-    }
-
-    private void EditAllAnimations(EnumAnimationState state)
-    {
-        for (int i = 0; i < this._textBlocks.Length; i++)
-        {
-            if (state.Equals(EnumAnimationState.START))
-                this._textBlocks[i].Classes.Remove("stopAnimation");
-            
-            if (state.Equals(EnumAnimationState.STOP))
-                this._textBlocks[i].Classes.Add("stopAnimation");
-        }
-    }
     
-    public double CalculateWidthPercentage(double percentage)
+    private double CalculateWidthPercentage(double percentage)
     {
         double w = this._size.Width;
         double p = (w * 0.01) * percentage;
         return p;
     }
-    
+
+    private TimeSpan CalculateSpeedToTimeSpan(double percentage)
+    {
+        double multiplier = 1.0d;
+        
+        double max = 180000;
+        double x = percentage * (max * 0.01);
+        double y = max - x;
+
+        y = Math.Clamp(y, 0, max);
+        y = Math.Abs(y);
+
+        double result = y * multiplier;
+        
+        return TimeSpan.FromMilliseconds(result);
+    }
+
+    #endregion
+
+    #region MVVM Stuff
+
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -168,7 +280,11 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         OnPropertyChanged(propertyName);
         return true;
     }
-    
+
+    #endregion
+
+    #region Getter and setter
+
     public LyricPart LyricPart
     {
         get { return this._lyricPart; }
@@ -230,15 +346,6 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<TextAlignment>("Lyrics Alignment");
     }
     
-    public TimeSpan AnimationTimeSpan
-    {
-        get { return _animationTimeSpan; }
-        set
-        {
-            SetAndRaise(AnimationTimeSpanProperty, ref _animationTimeSpan, value);
-        }
-    }
-    
     public double Percentage
     {
         get { return _percentage; }
@@ -248,6 +355,22 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         }
     }
     
+    public double Speed
+    {
+        get { return _speed; }
+        set
+        {
+            SetField(ref _speed, value);
+
+            if (double.IsInfinity(value) || double.IsNegative(value) || double.IsNaN(value))
+                return;
+
+            TimeSpan span = CalculateSpeedToTimeSpan(value);
+            ApplyDuration("note", span);
+            ApplyDelay("note", value);
+        }
+    }
+
     public double AnimationHeight
     {
         get { return _height; }
@@ -267,7 +390,9 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     
     public bool Animate
     {
-        get => _animate;
-        set => this.SetField(ref _animate, value);
+        get => this._animate;
+        set => this.SetField(ref this._animate, value);
     }
+
+    #endregion
 }

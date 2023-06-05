@@ -6,6 +6,7 @@
              xmlns:elements="clr-namespace:OpenLyricsClient.Frontend.Models.Elements"
              xmlns:tile="clr-namespace:OpenLyricsClient.Frontend.View.Custom.Tile"
              xmlns:lyrics="clr-namespace:OpenLyricsClient.Shared.Structure.Lyrics;assembly=OpenLyricsClient.Shared"
+             xmlns:custom1="clr-namespace:OpenLyricsClient.Frontend.View.Custom"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OpenLyricsClient.Frontend.View.Custom.NewLyricsScroller">
     
@@ -32,7 +33,8 @@
                                Margin="0,0,0,0">
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate DataType="lyrics:LyricPart">
-                            <tile:LyricsTile LyricPart="{Binding}"/>
+                            <tile:LyricsTile LyricPart="{Binding}"
+                                             Speed="{Binding Speed, RelativeSource={RelativeSource AncestorType=custom1:NewLyricsScroller}}"/>
                         </DataTemplate>
                     </ItemsRepeater.ItemTemplate>
                     <ItemsRepeater.Transitions>

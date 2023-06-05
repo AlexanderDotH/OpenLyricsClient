@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia;
@@ -25,6 +26,9 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     public static readonly DirectProperty<LyricsTile, LyricPart> LyricPartProperty = 
         AvaloniaProperty.RegisterDirect<LyricsTile, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
     
+    public static readonly DirectProperty<LyricsTile, double> SpeedProperty = 
+        AvaloniaProperty.RegisterDirect<LyricsTile, double>(nameof(Speed), o => o.Speed, (o, v) => o.Speed = v);
+    
     public event PropertyChangedEventHandler? PropertyChanged;
     
     private LyricPart _lyricPart;
@@ -34,6 +38,8 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
     private UserControl _overlay;
 
+    private double _speed;
+    
     public LyricsTile()
     {
         AvaloniaXamlLoader.Load(this);
@@ -91,11 +97,11 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         {
             Size s = new Size();
             
-            if (this._overlay is NoteOverlay)
-                s = (this._overlay as NoteOverlay).Size;
+            if (this._overlay is NoteOverlay overlay)
+                s = overlay.Size;
             
-            if (this._overlay is TextOverlay)
-                s = (this._overlay as TextOverlay).Size;    
+            if (this._overlay is TextOverlay text)
+                s = text.Size;    
             
             Thickness t = this._decorator.Margin;
 
@@ -120,6 +126,22 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         }
     }
 
+    public double Speed
+    {
+        get { return this._speed; }
+        set
+        {
+            if (!DataValidator.ValidateData(value))
+                return;
+            
+            SetAndRaise(SpeedProperty, ref _speed, value);
+
+            if (this._overlay is NoteOverlay overlay)
+                overlay.Speed = value;
+        }
+    }
+
+    
     private void ApplyDataToOverlay(LyricPart lyricPart)
     {
         if (lyricPart.Part.Contains("♪"))

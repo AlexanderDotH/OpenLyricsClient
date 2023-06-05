@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
@@ -27,12 +30,12 @@ using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Frontend.View.Custom;
 
-public partial class NewLyricsScroller : UserControl
+public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
 {
     // Styled Properties
     public static readonly StyledProperty<bool> IsSyncedProperty =
         AvaloniaProperty.Register<LyricsScroller, bool>(nameof(IsSynced));
-    
+
     // Controls
     private CustomScrollViewer _customScrollViewer;
     private ItemsRepeater _repeater;
@@ -58,6 +61,8 @@ public partial class NewLyricsScroller : UserControl
     private double _speed;
     private bool _isSyncing;
     
+    public event PropertyChangedEventHandler? PropertyChanged;
+    
     public NewLyricsScroller()
     {
         AvaloniaXamlLoader.Load(this);
@@ -66,7 +71,7 @@ public partial class NewLyricsScroller : UserControl
         
         this._currentScrollOffset = 0;
         this._nextScrollOffset = 0;
-        this._speed = 2.0;
+        this.Speed = 2.0;
 
         this._isSyncing = false;
 
@@ -100,11 +105,11 @@ public partial class NewLyricsScroller : UserControl
             y = SmoothAnimator.Lerp(
                 this._currentScrollOffset,
                 this._nextScrollOffset,
-                (int)obj.Milliseconds, this._speed, EnumAnimationStyle.CIRCULAREASEOUT);
+                (int)obj.Milliseconds, this.Speed, EnumAnimationStyle.CIRCULAREASEOUT);
         }
         else if (!this.IsSynced && this._isSyncing)
         {
-            y = CalcResyncStep(this._currentScrollOffset, this._nextScrollOffset, this._speed);
+            y = CalcResyncStep(this._currentScrollOffset, this._nextScrollOffset, this.Speed);
         }
         
         if (!double.IsNaN(y))
@@ -142,14 +147,14 @@ public partial class NewLyricsScroller : UserControl
 
     private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
     {
-        Reset();
+        //Reset();
 
         Dispatcher.UIThread.InvokeAsync(async () =>
         {
             this._customScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
         });
 
-        this._speed = CalcSpeed() * 0.1f;
+        this.Speed = CalcSpeed() * 0.1f;
     }
 
     private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
@@ -287,12 +292,14 @@ public partial class NewLyricsScroller : UserControl
     {
         Dispatcher.UIThread.InvokeAsync(() =>
         {
-            this.IsSynced = true;
             this._repeater.Opacity = 0;
             this._customScrollViewer.ScrollDirection = ScrollDirection.UP;
             this._currentScrollOffset = 0;
             this._customScrollViewer.Offset = new Vector(0, 0);
             this._customScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+            
+            Resync();
+            this.IsSynced = true;
         });
     }
     
@@ -321,6 +328,20 @@ public partial class NewLyricsScroller : UserControl
         
         base.OnPointerWheelChanged(e);
     }
+    
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+    
+    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
+    }
+
 
     public static NewLyricsScroller Instance
     {
@@ -336,6 +357,16 @@ public partial class NewLyricsScroller : UserControl
     public bool IsSynced
     {
         get => GetValue(IsSyncedProperty);
-        set => SetValue(IsSyncedProperty, value);
+        set
+        {
+            SetValue(IsSyncedProperty, value);
+            OnPropertyChanged("IsSynced");
+        }
+    }
+
+    public double Speed
+    {
+        get => this._speed;
+        set => SetField(ref this._speed, value);
     }
 }
