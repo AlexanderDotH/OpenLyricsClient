@@ -77,6 +77,8 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
 
         this._frameRate = 144;
 
+        Reset();
+        
         this.DataContext = new NewLyricsScrollerViewModel();
         this._viewModel = this.DataContext as NewLyricsScrollerViewModel;
         
@@ -293,12 +295,12 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
         Dispatcher.UIThread.InvokeAsync(() =>
         {
             this._repeater.Opacity = 0;
-            this._customScrollViewer.ScrollDirection = ScrollDirection.UP;
+            this._customScrollViewer.ScrollDirection = ScrollDirection.DOWN;
             this._currentScrollOffset = 0;
             this._customScrollViewer.Offset = new Vector(0, 0);
             this._customScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
             
-            Resync();
+            //Resync();
             this.IsSynced = true;
         });
     }
