@@ -5,10 +5,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Animation.Easings;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -17,11 +19,14 @@ using Avalonia.VisualTree;
 using DevBase.Generics;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
+using OpenLyricsClient.Backend.Handler.Services.Services;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
+using OpenLyricsClient.Frontend.Extensions;
 using OpenLyricsClient.Frontend.Models.Pages.Settings;
 using OpenLyricsClient.Frontend.Structure.Enum;
 using OpenLyricsClient.Frontend.Utils;
 using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Utils;
 using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Frontend.View.Custom.Tile.Overlays;
@@ -49,6 +54,9 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     private Typeface _typeface;
 
     private Size _size;
+
+    private bool _headlessMode;
+    private bool _isPointerOver;
     
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -58,8 +66,11 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
 
         this._percentage = 0;
 
-        this._animatale = new AList<(string, Avalonia.Animation.Animation)>();
+        this.Headless = false;
 
+        this._isPointerOver = false;
+        
+        this._animatale = new AList<(string, Avalonia.Animation.Animation)>();
         this._idleTimeSpan = TimeSpan.FromSeconds(2);
         this._noteTimeSpan = TimeSpan.FromSeconds(3);
         
@@ -79,13 +90,24 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         ApplyAnimationToClasses(this._idleTimeSpan, this._noteTimeSpan);
     }
 
+    #region Events
+
     private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs lyricsfoundeventargs)
     {
-        Speed = lyricsfoundeventargs.LyricData.LyricSpeed;
+        if (this._headlessMode)
+            return;
+
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            Speed = lyricsfoundeventargs.LyricData.LyricSpeed;
+        });
     }
 
     private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs args)
     {
+        if (this._headlessMode)
+            return;
+        
         if (!args.Section.Equals(typeof(SettingsLyricsViewModel)))
             return;
 
@@ -95,6 +117,9 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
 
     private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)
     {
+        if (this._headlessMode)
+            return;
+        
         if (this._lyricPart.Equals(args.LyricPart))
         {
             this.Percentage = CalculateWidthPercentage(args.Percentage);
@@ -106,11 +131,55 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
             Animate = false;
         }
     }
+    
+    private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        IService service = Core.INSTANCE.ServiceHandler.GetActiveService();
+
+        if (!DataValidator.ValidateData(service))
+            return;
+        
+        if (service.CanSeek())
+            Task.Factory.StartNew(async () => await service.Seek(this._lyricPart.Time));
+    }    
+    
+    private void InputElement_OnPointerEnter(object? sender, PointerEventArgs e)
+    {
+        IService service = Core.INSTANCE.ServiceHandler.GetActiveService();
+        
+        if (!DataValidator.ValidateData(service))
+            return;
+        
+        if (!service.CanSeek())
+            return;
+        
+        this._isPointerOver = true;
+        OnPropertyChanged("UnSelectedLineBrush");
+    }
+    
+    private void InputElement_OnPointerLeave(object? sender, PointerEventArgs e)
+    {
+        IService service = Core.INSTANCE.ServiceHandler.GetActiveService();
+        
+        if (!DataValidator.ValidateData(service))
+            return;
+        
+        if (!service.CanSeek())
+            return;
+        
+        this._isPointerOver = false;
+        OnPropertyChanged("UnSelectedLineBrush");
+    }
+
+    #endregion
 
     #region Animations
 
     private void ApplyAnimationToClasses(TimeSpan idleTimeSpan, TimeSpan noteTimeSpan)
     {
+        if (this._headlessMode)
+            return;
+        
         Styles styles = new Styles();
 
         double modifier = 0.8d;
@@ -207,16 +276,16 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     private void ApplyDelay(string classes, TimeSpan span)
     {
         double h = span.TotalMilliseconds / 3;
-        double factor = (h / (3 * 4));
+        double factor = (h / (3 * 4)) * 0.01d;
         
         int position = 0;
         for (int i = 0; i < this._animatale.Length; i++)
         {
             (string, Avalonia.Animation.Animation) element = this._animatale.Get(i);
         
-            if (element.Item1.SequenceEqual($"{classes}{position}"))
+            if (element.Item1.SequenceEqual($"{classes}{position + 1}"))
             {
-                element.Item2.Delay = TimeSpan.FromMilliseconds(position * 0.8d);
+                element.Item2.Delay = TimeSpan.FromMilliseconds(position * factor);
                 Debug.WriteLine($"{element.Item2.Delay} : {factor} : {i}");
                 position++;
             }
@@ -340,7 +409,17 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         get
         {
             if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
-                return App.Current.FindResource("UnSelectedLineFontColorBrush") as SolidColorBrush;
+            {
+                SolidColorBrush colorBrush = App.Current.FindResource("UnSelectedLineFontColorBrush") as SolidColorBrush;
+
+                if (this._isPointerOver)
+                    return colorBrush.AdjustBrightness(120);
+                
+                return colorBrush;
+            }
+            
+            if (this._isPointerOver)
+                return SelectedLineBrush.AdjustBrightness(90);
             
             return SolidColorBrush.Parse("#646464");
         }
@@ -411,6 +490,12 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     {
         get => this._animate;
         set => this.SetField(ref this._animate, value);
+    }
+    
+    public bool Headless
+    {
+        get => this._headlessMode;
+        set => this.SetField(ref this._headlessMode, value);
     }
 
     #endregion

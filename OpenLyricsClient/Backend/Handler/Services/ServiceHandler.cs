@@ -25,7 +25,7 @@ namespace OpenLyricsClient.Backend.Handler.Services
 
         public bool IsConnected(string serviceName)
         {
-            return GetServiceByName(serviceName).IsConnected();
+            return GetServiceByName(serviceName).Connected;
         }
 
         public string GetAccessToken(IService service)
@@ -35,9 +35,35 @@ namespace OpenLyricsClient.Backend.Handler.Services
             if (!DataValidator.ValidateData(s))
                 return null;
 
-            return s.GetAccessToken();
+            return s.AccessToken;
         }
 
+        public void MarkServiceAsActive(IService service)
+        {
+            for (int i = 0; i < this._services.Length; i++)
+            {
+                IService s = this._services.Get(i);
+
+                s.Active = false;
+                
+                if (s.Equals(service))
+                    s.Active = true;
+            }
+        }
+
+        public IService GetActiveService()
+        {
+            for (int i = 0; i < this._services.Length; i++)
+            {
+                IService s = this._services.Get(i);
+
+                if (s.Active)
+                    return s;
+            }
+
+            return null;
+        }
+        
         public string GetAccessToken(string serviceName)
         {
             return GetAccessToken(GetServiceByName(serviceName));
@@ -53,7 +79,7 @@ namespace OpenLyricsClient.Backend.Handler.Services
             for (int i = 0; i < this._services.Length; i++)
             {
                 IService s = this._services.Get(i);
-                if (s.ServiceName().Equals(serviceName))
+                if (s.Name.Equals(serviceName))
                 {
                     return s;
                 }
@@ -66,7 +92,7 @@ namespace OpenLyricsClient.Backend.Handler.Services
         {
             for (int i = 0; i < this._services.Length; i++)
             {
-                if (this._services.Get(i).IsConnected())
+                if (this._services.Get(i).Connected)
                     return true;
             }
 

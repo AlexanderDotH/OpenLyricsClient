@@ -10,14 +10,16 @@
     <UserControl.Resources>
         <romanization:RomanizationConverter x:Key="RomanizationConverter" />
     </UserControl.Resources>
-
     
     <ItemsControl Name="PART_Items"
                   Items="{Binding LyricLines, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
             
-                <Panel Margin="{Binding LyricMargin, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}">
+                <Panel Margin="{Binding LyricMargin, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
+                       PointerEnter="InputElement_OnPointerEnter"
+                       PointerPressed="InputElement_OnPointerPressed"
+                       PointerLeave="InputElement_OnPointerLeave">
                     
                     <Border Width="{Binding Width}" 
                             HorizontalAlignment="Left"
@@ -36,7 +38,15 @@
                                FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
                                Margin="5,0,5,0"
                                Foreground="{Binding UnSelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"
-                               TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}"/>
+                               TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:TextOverlay}}">
+                        <TextBlock.Transitions>
+                            <Transitions>
+                                <BrushTransition Property="Foreground"
+                                                 Easing="CircularEaseOut"
+                                                 Duration="0:0:0.500"/>
+                            </Transitions>
+                        </TextBlock.Transitions>
+                    </TextBlock>
                     
                     <Viewbox Name="PART_Viewbox" 
                              HorizontalAlignment="Left" 

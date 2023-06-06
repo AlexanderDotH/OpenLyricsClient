@@ -281,7 +281,7 @@ namespace OpenLyricsClient.Frontend.Models.Custom
                 {
                     Vector diff = vector - this._oldOffsetValue;
 
-                    if (diff.Y < 0 && ScrollDirection == ScrollDirection.DOWN)
+                    if (diff.Y < 0 && ScrollDirection == ScrollDirection.DOWN && !this.BypassScrollDirectionCheck)
                     {
                         this.Offset = this._oldOffsetValue;
                     }
@@ -305,6 +305,8 @@ namespace OpenLyricsClient.Frontend.Models.Custom
                 SetAndRaise(ScrollDirectionProperty, ref _scrollDirection, value);
             }
         }
+
+        public bool BypassScrollDirectionCheck { get; set; } = false;
 
         /// <summary>
         /// Gets the size of the viewport on the scrollable content.

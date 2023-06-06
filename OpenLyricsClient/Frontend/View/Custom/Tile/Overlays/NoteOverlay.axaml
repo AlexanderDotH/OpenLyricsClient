@@ -11,122 +11,21 @@
             <Setter Property="FontSize" Value="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}"/>
             <Setter Property="FontWeight" Value="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}"/>
             <Setter Property="TextAlignment" Value="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}"/>
+            
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Foreground"
+                                     Easing="CircularEaseOut"
+                                     Duration="0:0:0.500"/>
+                </Transitions>
+            </Setter>
         </Style>
-
-        <!--<Style Selector="TextBlock.idle1">
-            <Style.Animations>
-                <Animation Duration="0:0:2"
-                           Delay="0:0:0.0" 
-                           IterationCount="Infinite" 
-                           Easing="CircularEaseOut" 
-                           PlaybackDirection="Alternate">
-                    <KeyFrame Cue="0%">
-                        <Setter Property="Opacity" Value="0.2"/>
-                    </KeyFrame>
-                    <KeyFrame Cue="100%">
-                        <Setter Property="Opacity" Value="1"/>
-                    </KeyFrame>
-                </Animation>
-            </Style.Animations>
-        </Style>
-        
-        <Style Selector="TextBlock.idle2">
-            <Style.Animations>
-                <Animation Duration="0:0:2"
-                           Delay="0:0:0.8" 
-                           IterationCount="Infinite" 
-                           Easing="CircularEaseOut" 
-                           PlaybackDirection="Alternate">
-                    <KeyFrame Cue="0%">
-                        <Setter Property="Opacity" Value="0.2"/>
-                    </KeyFrame>
-                    <KeyFrame Cue="100%">
-                        <Setter Property="Opacity" Value="1"/>
-                    </KeyFrame>
-                </Animation>
-            </Style.Animations>
-        </Style>
-
-        <Style Selector="TextBlock.idle3">
-            <Style.Animations>
-                <Animation Duration="0:0:2"
-                           Delay="0:0:1.6" 
-                           IterationCount="Infinite" 
-                           Easing="CircularEaseOut" 
-                           PlaybackDirection="Alternate">
-                    <KeyFrame Cue="0%">
-                        <Setter Property="Opacity" Value="0.2"/>
-                    </KeyFrame>
-                    <KeyFrame Cue="100%">
-                        <Setter Property="Opacity" Value="1"/>
-                    </KeyFrame>
-                </Animation>
-            </Style.Animations>
-        </Style>
-        
-        <Style Selector="TextBlock.note1">
-            <Style.Animations>
-                <Animation 
-                    Duration="{Binding AnimationTimeSpan, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}"
-                    Delay="0:0:0.0" 
-                    IterationCount="Infinite" 
-                    Easing="ElasticEaseIn" 
-                    PlaybackDirection="Alternate">
-                    <KeyFrame Cue="0%">
-                        <Setter Property="Margin" Value="0,0,0,0"/>
-                        <Setter Property="Opacity" Value="0.7"/>
-                    </KeyFrame>
-                    <KeyFrame Cue="100%">
-                        <Setter Property="Margin" Value="0,0,0,10"/>
-                        <Setter Property="Opacity" Value="1"/>
-                    </KeyFrame>
-                </Animation>
-            </Style.Animations>
-        </Style>
-        
-        <Style Selector="TextBlock.note2">
-            <Style.Animations>
-                <Animation 
-                    Duration="{Binding AnimationTimeSpan, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}"
-                    Delay="0:0:0.8" 
-                    IterationCount="Infinite" 
-                    Easing="ElasticEaseIn" 
-                    PlaybackDirection="Alternate">
-                    <KeyFrame Cue="0%">
-                        <Setter Property="Margin" Value="0,0,0,0"/>
-                        <Setter Property="Opacity" Value="0.7"/>
-                    </KeyFrame>
-                    <KeyFrame Cue="100%">
-                        <Setter Property="Margin" Value="0,0,0,10"/>
-                        <Setter Property="Opacity" Value="1"/>
-                    </KeyFrame>
-                </Animation>
-            </Style.Animations>
-        </Style>
-        
-        <Style Selector="TextBlock.note3">
-            <Style.Animations>
-                <Animation 
-                    Duration="{Binding AnimationTimeSpan, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}"
-                    Delay="0:0:1.6" 
-                    IterationCount="Infinite" 
-                    Easing="ElasticEaseIn" 
-                    PlaybackDirection="Alternate">
-                    <KeyFrame Cue="0%">
-                        <Setter Property="Margin" Value="0,0,0,0"/>
-                        <Setter Property="Opacity" Value="0.7"/>
-                    </KeyFrame>
-                    <KeyFrame Cue="100%">
-                        <Setter Property="Margin" Value="0,0,0,10"/>
-                        <Setter Property="Opacity" Value="1"/>
-                    </KeyFrame>
-                </Animation>
-            </Style.Animations>
-        </Style>-->
-        
     </UserControl.Styles>
     
-    <Panel Height="{Binding AnimationHeight, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}">
+    <Panel Height="{Binding AnimationHeight, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}"
+           PointerEnter="InputElement_OnPointerEnter"
+           PointerLeave="InputElement_OnPointerLeave"
+           PointerPressed="InputElement_OnPointerPressed">
         
         <Border Width="{Binding Percentage, RelativeSource={RelativeSource AncestorType=overlays:NoteOverlay}}"
                 HorizontalAlignment="Left"

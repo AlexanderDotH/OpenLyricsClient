@@ -102,14 +102,14 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
 
         double y = this._customScrollViewer.Offset.Y;
         
-        if (this.IsSynced && !this._isSyncing)
+        if (this.IsSynced && !this._isSyncing && this._nextScrollOffset > y)
         {
             y = SmoothAnimator.Lerp(
                 this._currentScrollOffset,
                 this._nextScrollOffset,
                 (int)obj.Milliseconds, this.Speed, EnumAnimationStyle.CIRCULAREASEOUT);
         }
-        else if (!this.IsSynced && this._isSyncing)
+        else if (!this.IsSynced && this._isSyncing || this.IsSynced && !this._isSyncing && this._nextScrollOffset < y)
         {
             y = CalcResyncStep(this._currentScrollOffset, this._nextScrollOffset, this.Speed);
         }
@@ -124,7 +124,7 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
 
     private double CalcResyncStep(double currentOffset, double nextOffset, double speed)
     {
-        double step = Math.Abs(nextOffset - currentOffset) / (speed);
+        double step = Math.Abs(nextOffset - currentOffset) / (speed * 0.4);
         
         currentOffset += (currentOffset < nextOffset) ? step : -step;
         
@@ -134,6 +134,7 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
         {
             this.IsSynced = true;
             this._isSyncing = false;
+            this._customScrollViewer.BypassScrollDirectionCheck = false;
         }
 
         return currentOffset;
@@ -149,8 +150,6 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
 
     private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
     {
-        //Reset();
-
         Dispatcher.UIThread.InvokeAsync(async () =>
         {
             this._customScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
@@ -260,6 +259,7 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
         if (e.Delta.Y != 0)
         {
             this.IsSynced = false;
+            this._customScrollViewer.BypassScrollDirectionCheck = true;
         }
 
         if (e.Delta.Y > 0)

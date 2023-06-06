@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
@@ -14,10 +18,13 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using DevBase.Generics;
 using DynamicData;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
+using OpenLyricsClient.Backend.Handler.Services.Services;
 using OpenLyricsClient.Backend.Romanization;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
+using OpenLyricsClient.Frontend.Extensions;
 using OpenLyricsClient.Frontend.Structure;
 using OpenLyricsClient.Frontend.Utils;
 using OpenLyricsClient.Shared.Structure.Lyrics;
@@ -28,7 +35,7 @@ using Romanization = OpenLyricsClient.Backend.Romanization.Romanization;
 
 namespace OpenLyricsClient.Frontend.View.Custom.Tile.Overlays;
 
-public partial class TextOverlay : UserControl
+public partial class TextOverlay : UserControl, INotifyPropertyChanged
 {
     public static readonly DirectProperty<TextOverlay, LyricPart> LyricPartProperty = 
         AvaloniaProperty.RegisterDirect<TextOverlay, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
@@ -41,6 +48,8 @@ public partial class TextOverlay : UserControl
             o => o.LyricLines, 
             (o, v) => o.LyricLines = v);
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+    
     private Backend.Romanization.Romanization _romanization;
     
     private LyricPart _lyricPart;
@@ -54,11 +63,18 @@ public partial class TextOverlay : UserControl
 
     private bool _initialized;
 
+    private bool _isPointerOver;
+    
+    private bool _headlessMode;
+    
     public TextOverlay()
     {
-        InitializeComponent();
+        AvaloniaXamlLoader.Load(this);
 
         this._initialized = false;
+        this.Headless = false;
+
+        this._isPointerOver = false;
         
         this._lines = new ObservableCollection<LyricOverlayElement>();
         
@@ -71,47 +87,12 @@ public partial class TextOverlay : UserControl
         this._romanization = new Backend.Romanization.Romanization();
         
         NewLyricsScroller.Instance.EffectiveViewportChanged += InstanceOnEffectiveViewportChanged;
-        Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
 
-        Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
-        
         this._lyricPart = new LyricPart(-9999, "Hello there ;)");
     }
 
-    private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
-    {
-        
-    }
-
-    private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)
-    {
-        if (args.LyricPart.Equals(this._lyricPart))
-        {
-            CalculatePercentage(args.Percentage);
-        }
-        else
-        {
-            ResetWidths();
-        }
-    }
-
-    private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
-    {
-    }
-
-
-    private void InstanceOnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
-    {
-        UpdateView(e.EffectiveViewport.Width, e.EffectiveViewport.Height);
-    }
-
-    private void InitializeComponent()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
-
-    public void UpdateView(double width, double height)
+    private void UpdateView(double width, double height)
     {
         UpdateTextWrappingLines(this._lyricPart.Part, width, height);
     }
@@ -176,19 +157,91 @@ public partial class TextOverlay : UserControl
         }
     }
 
-    private Rect MeasureSingleString(string line, TextWrapping wrapping = TextWrapping.NoWrap)
-    {
-        FormattedText formattedCandidateLine = new FormattedText(
-            line, 
-            this._typeface, 
-            this.LyricsSize, 
-            this.LyricsAlignment, 
-            wrapping, 
-            new Size(double.PositiveInfinity, double.PositiveInfinity));
+    #region Events
 
-        return formattedCandidateLine.Bounds;
+    private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)
+    {
+        if (this._headlessMode)
+            return;
+
+        if (args.LyricPart.Equals(this._lyricPart))
+        {
+            CalculatePercentage(args.Percentage);
+        }
+        else
+        {
+            ResetWidths();
+        }
+    }
+
+    private void InstanceOnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
+    {
+        if (this._headlessMode)
+            return;
+        
+        UpdateView(e.EffectiveViewport.Width, e.EffectiveViewport.Height);
     }
     
+    private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        IService service = Core.INSTANCE.ServiceHandler.GetActiveService();
+
+        if (!DataValidator.ValidateData(service))
+            return;
+        
+        if (service.CanSeek())
+            Task.Factory.StartNew(async () => await service.Seek(this._lyricPart.Time));
+    }
+
+    private void InputElement_OnPointerEnter(object? sender, PointerEventArgs e)
+    {
+        IService service = Core.INSTANCE.ServiceHandler.GetActiveService();
+        
+        if (!DataValidator.ValidateData(service))
+            return;
+        
+        if (!service.CanSeek())
+            return;
+        
+        this._isPointerOver = true;
+        OnPropertyChanged("UnSelectedLineBrush");
+    }
+
+    private void InputElement_OnPointerLeave(object? sender, PointerEventArgs e)
+    {
+        IService service = Core.INSTANCE.ServiceHandler.GetActiveService();
+        
+        if (!DataValidator.ValidateData(service))
+            return;
+        
+        if (!service.CanSeek())
+            return;
+        
+        this._isPointerOver = false;
+        OnPropertyChanged("UnSelectedLineBrush");
+    }    
+
+    #endregion
+
+    #region MVVM Stuff
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+    
+    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
+    }
+
+    #endregion
+    
+    #region Getter and Setter
+
     public LyricPart LyricPart
     {
         get { return this._lyricPart; }
@@ -243,7 +296,17 @@ public partial class TextOverlay : UserControl
         get
         {
             if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
-                return App.Current.FindResource("UnSelectedLineFontColorBrush") as SolidColorBrush;
+            {
+                SolidColorBrush colorBrush = App.Current.FindResource("UnSelectedLineFontColorBrush") as SolidColorBrush;
+
+                if (this._isPointerOver)
+                    return colorBrush.AdjustBrightness(120);
+                
+                return colorBrush;
+            }
+
+            if (this._isPointerOver)
+                return SelectedLineBrush.AdjustBrightness(90);
             
             return SolidColorBrush.Parse("#646464");
         }
@@ -264,6 +327,12 @@ public partial class TextOverlay : UserControl
         get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<TextAlignment>("Lyrics Alignment");
     }
     
+    public bool Headless
+    {
+        get => this._headlessMode;
+        set => this._headlessMode = value;
+    }
+    
     public Size Size
     {
         get
@@ -279,5 +348,7 @@ public partial class TextOverlay : UserControl
 
             return new Size(width, height);
         }
-    }
+    }    
+
+    #endregion
 }

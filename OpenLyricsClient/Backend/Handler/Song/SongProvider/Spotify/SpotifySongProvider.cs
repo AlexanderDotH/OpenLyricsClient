@@ -53,7 +53,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
                 await Task.Delay(20);
                 await this._timeSyncSuspensionToken.WaitForRelease();
 
-                if (!this._service.IsConnected())
+                if (!this._service.Connected)
                     continue;
 
                 if (DataValidator.ValidateData(this._currentSong) &&
@@ -109,7 +109,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
                 await Task.Delay(750);
                 await this._updateSongDataSuspensionToken.WaitForRelease();
 
-                if (!this._service.IsConnected())
+                if (!this._service.Connected)
                     continue;
 
                 if (!DataValidator.ValidateData(this._currentSong))
@@ -145,7 +145,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
         //Song changed -> get new song
         public async Task<Shared.Structure.Song.Song> UpdateCurrentPlaybackTrack()
         {
-            if (!this._service.IsConnected())
+            if (!this._service.Connected)
                 return null;
 
             if (DataValidator.ValidateData(this._spotifyClient))
@@ -174,7 +174,7 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider.Spotify
 
         private SpotifyClient GetPlayerApi()
         {
-            return new SpotifyClient(this._service.GetAccessToken());
+            return new SpotifyClient(this._service.AccessToken);
         }
 
         public void Dispose()

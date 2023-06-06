@@ -26,6 +26,9 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     public static readonly DirectProperty<LyricsTile, LyricPart> LyricPartProperty = 
         AvaloniaProperty.RegisterDirect<LyricsTile, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
     
+    public static readonly DirectProperty<LyricsTile, bool> HeadlessProperty = 
+        AvaloniaProperty.RegisterDirect<LyricsTile, bool>(nameof(Headless), o => o.Headless, (o, v) => o.Headless = v);
+    
     public event PropertyChangedEventHandler? PropertyChanged;
     
     private LyricPart _lyricPart;
@@ -36,6 +39,8 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     private UserControl _overlay;
 
     private double _speed;
+
+    private bool _headless;
     
     public LyricsTile()
     {
@@ -122,7 +127,22 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
             SetAndRaise(LyricPartProperty, ref _lyricPart, value);
         }
     }
-    
+
+    public bool Headless
+    {
+        get { return this._headless; }
+        set
+        {
+            SetAndRaise(HeadlessProperty, ref _headless, value);
+
+            if (this._overlay is NoteOverlay overlay)
+                overlay.Headless = value;
+            
+            if (this._overlay is TextOverlay text)
+                text.Headless = value;
+        }
+    }
+
     private void ApplyDataToOverlay(LyricPart lyricPart)
     {
         if (lyricPart.Part.Contains("♪"))

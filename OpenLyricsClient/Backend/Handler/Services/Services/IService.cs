@@ -4,15 +4,15 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services
 {
     interface IService
     {
-        string ServiceName();
         Task StartAuthorization();
-
-        string GetAccessToken();
-        bool IsConnected();
         Task<bool> TestConnection();
-
+        bool CanSeek();
+        Task<bool> Seek(long position);
         void Dispose();
-
-        string ProcessName();
+        string Name { get; }
+        string ProcessName { get; }
+        string AccessToken { get; }
+        bool Connected { get; }
+        bool Active { get; set; }
     }
 }

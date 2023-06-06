@@ -49,7 +49,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
                 await this._refreshTokenSuspensionToken.WaitForRelease();
                 await Task.Delay(1000);
 
-                if (!IsConnected())
+                if (!Connected)
                     continue;
                 
                 long now = DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -64,22 +64,19 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             }
         }
 
-        public bool IsConnected()
-        {
-            return Core.INSTANCE.SettingsHandler.Settings<SpotifySection>().GetValue<bool>("IsSpotifyConnected") == true;
-        }
+        public bool Connected => Core.INSTANCE.SettingsHandler.Settings<SpotifySection>().GetValue<bool>("IsSpotifyConnected");
 
         public async Task<bool> TestConnection()
         {
-            if (!IsConnected())
+            if (!Connected)
                 return false;
 
-            if (!DataValidator.ValidateData(GetAccessToken()))
+            if (!DataValidator.ValidateData(this.AccessToken))
                 return false;
 
             try
             {
-                CurrentlyPlayingContext currentlyPlayingContext = await new SpotifyClient(GetAccessToken()).Player.GetCurrentPlayback();
+                CurrentlyPlayingContext currentlyPlayingContext = await new SpotifyClient(this.AccessToken).Player.GetCurrentPlayback();
                 return DataValidator.ValidateData(currentlyPlayingContext);
             }
             catch (Exception e)
@@ -88,9 +85,35 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             }
         }
 
+        public bool CanSeek()
+        {
+            return true;
+        }
+
+        public async Task<bool> Seek(long position)
+        {
+            if (!CanSeek())
+                return false;
+            
+            if (!Connected)
+                return false;
+
+            if (!DataValidator.ValidateData(this.AccessToken))
+                return false;
+
+            try
+            {
+                return await new SpotifyClient(this.AccessToken).Player.SeekTo(new PlayerSeekToRequest(position));
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+        
         public async Task<SpotifyStatistics> GetStatistics(string accessToken = "")
         {
-            SpotifyClient client = new SpotifyClient(accessToken.Equals(String.Empty) ? GetAccessToken() : accessToken);
+            SpotifyClient client = new SpotifyClient(accessToken.Equals(String.Empty) ? this.AccessToken : accessToken);
 
             PersonalizationTopRequest topRequest = new PersonalizationTopRequest
             {
@@ -114,9 +137,8 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
 
         public async Task UpdatePlayback(EnumPlayback playback)
         {
-            SpotifyClient spotifyClient = new SpotifyClient(GetAccessToken());
-            Shared.Structure.Song.Song song = Core.INSTANCE.SongHandler?.CurrentSong!;
-            
+            SpotifyClient spotifyClient = new SpotifyClient(this.AccessToken);
+ 
             switch (playback)
             {
                 case EnumPlayback.PREVOUS_TRACK:
@@ -141,16 +163,8 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
                 }
             }
         }
-        
-        public string GetAccessToken()
-        {
-            // Task.Factory.StartNew(async() =>
-            // {
-            //     await RefreshTokenRequest();
-            //
-            // }).Wait(Core.INSTANCE.CancellationTokenSource.Token);
-            return Core.INSTANCE.SettingsHandler.Settings<SpotifySection>().GetValue<string>("AccessToken");
-        }
+
+        public string AccessToken => Core.INSTANCE.SettingsHandler.Settings<SpotifySection>().GetValue<string>("AccessToken");
 
         private async Task RefreshTokenRequest()
         {
@@ -247,16 +261,12 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
             await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(SpotifySection), "SpotifyExpireTime");
             await Core.INSTANCE.SettingsHandler.TriggerEvent(typeof(SpotifySection), "IsSpotifyConnected");
         }
+        
+        public bool Active { get; set; }
 
-        string IService.ServiceName()
-        {
-            return "Spotify";
-        }
+        public string Name => "Spotify";
 
-        public string ProcessName()
-        {
-            return "Spotify";
-        }
+        string IService.ProcessName => "Spotify";
 
         public void Dispose()
         {

@@ -55,10 +55,16 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
             IService tidalService = Core.INSTANCE.ServiceHandler.GetServiceByName("Tidal");
 
             if (IsInUse(tidalService))
+            {
                 songProvider = EnumSongProvider.TIDAL;
+                Core.INSTANCE.ServiceHandler.MarkServiceAsActive(tidalService);
+            }
 
             if (IsInUse(spotifyService))
+            {
                 songProvider = EnumSongProvider.SPOTIFY;
+                Core.INSTANCE.ServiceHandler.MarkServiceAsActive(spotifyService);
+            }
 
             if (songProvider == EnumSongProvider.NONE)
                 return;
@@ -81,67 +87,23 @@ namespace OpenLyricsClient.Backend.Handler.Song.SongProvider
             }
         }
 
-        // private async Task SongProviderChooserTask()
-        // {
-        //     while (!this._disposed)
-        //     {
-        //         await this._taskSuspensionToken.WaitForRelease();
-        //
-        //         if (!DataValidator.ValidateData(Core.INSTANCE.WindowLogger))
-        //             continue;
-        //
-        //         EnumSongProvider songProvider = EnumSongProvider.NONE;
-        //
-        //         IService spotifyService = Core.INSTANCE.ServiceHandler.GetServiceByName("Spotify");
-        //         IService tidalService = Core.INSTANCE.ServiceHandler.GetServiceByName("Tidal");
-        //
-        //         if (await IsInUse(tidalService))
-        //             songProvider = EnumSongProvider.TIDAL;
-        //
-        //         if (await IsInUse(spotifyService))
-        //             songProvider = EnumSongProvider.SPOTIFY;
-        //
-        //         if (songProvider == EnumSongProvider.NONE)
-        //             continue;
-        //
-        //         if (!songProvider.Equals(this._currentSongProvider))
-        //         {
-        //             this._debugger.Write("SongProvider has been changed to: " + new AString(songProvider.ToString()).CapitalizeFirst(), DebugType.INFO);
-        //             this._currentSongProvider = songProvider;
-        //
-        //             if (songProvider == EnumSongProvider.SPOTIFY)
-        //             {
-        //                 ResumeProvider(EnumSongProvider.SPOTIFY);
-        //                 SuspendProvider(EnumSongProvider.TIDAL);
-        //             }
-        //             else if (songProvider == EnumSongProvider.TIDAL)
-        //             {
-        //                 ResumeProvider(EnumSongProvider.TIDAL);
-        //                 SuspendProvider(EnumSongProvider.SPOTIFY);
-        //             }
-        //         }
-        //
-        //         await Task.Delay(3000);
-        //     }
-        // }
-
         private bool IsInUse(IService service)
         {
             if (!DataValidator.ValidateData(service))
                 return false;
             
-            if (!service.IsConnected())
+            if (!service.Connected)
                 return false;
 
-            AList<string> lastWindows = Core.INSTANCE.WindowLogger.LastWindows(service.ProcessName());
-            AList<string> foundProcesses = ProcessUtils.GetRunningProcesses(service.ProcessName());
+            AList<string> lastWindows = Core.INSTANCE.WindowLogger.LastWindows(service.ProcessName);
+            AList<string> foundProcesses = ProcessUtils.GetRunningProcesses(service.ProcessName);
 
             if (!lastWindows.IsEmpty())
-                if (lastWindows.Get(0).Equals(service.ProcessName()))
+                if (lastWindows.Get(0).Equals(service.ProcessName))
                     return true;
 
             if (!foundProcesses.IsEmpty())
-                if (foundProcesses.Get(0).Equals(service.ProcessName()))
+                if (foundProcesses.Get(0).Equals(service.ProcessName))
                     return true;
 
             if (service.TestConnection().GetAwaiter().GetResult())
