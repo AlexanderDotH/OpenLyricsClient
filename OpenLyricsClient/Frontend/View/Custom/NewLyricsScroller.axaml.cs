@@ -71,7 +71,7 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
         
         this._currentScrollOffset = 0;
         this._nextScrollOffset = 0;
-        this.Speed = 2.0;
+        this.Speed = 15 * 0.1;
 
         this._isSyncing = false;
 
@@ -156,7 +156,7 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
             this._customScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
         });
 
-        this.Speed = CalcSpeed() * 0.1f;
+        this.Speed = args.LyricData.LyricSpeed * 0.1f;
     }
 
     private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
@@ -240,56 +240,6 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
         return new Thickness(0, m, 0, m);
     }
     
-    public float CalcSpeed()
-    {
-        if (!(DataValidator.ValidateData(this._viewModel) &&
-              DataValidator.ValidateData(this._viewModel.Lyrics)))
-            return 15;
-
-        LyricPart lastPart = null;
-        float sum = 0;
-        
-        float highest = 0;
-        int hSum = 0;
-        
-        for (int i = 0; i < this._viewModel!.Lyrics.Count; i++)
-        {
-            LyricPart currentPart = this._viewModel!.Lyrics[i];
-            
-            if (lastPart == null)
-            {
-                lastPart = currentPart;
-                continue;
-            }
-            else
-            {
-                float value = (currentPart.Time - lastPart.Time);
-                
-                sum += value;
-
-                if (value > highest)
-                {
-                    highest += value;
-                    hSum++;
-                }
-
-                lastPart = currentPart;
-                continue;
-            }
-        }
-
-        float speed = (sum / this._viewModel.Lyrics.Count);
-
-        float hSA = highest / hSum;
-
-        hSA *= 1.1f;
-        hSA *= 1.1f;
-        
-        float percentage = 100 / hSA * speed;
-        
-        return 100.0F - percentage;
-    }
-
     private void Reset()
     {
         Dispatcher.UIThread.InvokeAsync(() =>

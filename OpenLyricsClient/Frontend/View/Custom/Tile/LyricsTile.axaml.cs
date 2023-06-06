@@ -26,9 +26,6 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     public static readonly DirectProperty<LyricsTile, LyricPart> LyricPartProperty = 
         AvaloniaProperty.RegisterDirect<LyricsTile, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
     
-    public static readonly DirectProperty<LyricsTile, double> SpeedProperty = 
-        AvaloniaProperty.RegisterDirect<LyricsTile, double>(nameof(Speed), o => o.Speed, (o, v) => o.Speed = v);
-    
     public event PropertyChangedEventHandler? PropertyChanged;
     
     private LyricPart _lyricPart;
@@ -125,22 +122,6 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
             SetAndRaise(LyricPartProperty, ref _lyricPart, value);
         }
     }
-
-    public double Speed
-    {
-        get { return this._speed; }
-        set
-        {
-            if (!DataValidator.ValidateData(value))
-                return;
-            
-            SetAndRaise(SpeedProperty, ref _speed, value);
-
-            if (this._overlay is NoteOverlay overlay)
-                overlay.Speed = value;
-        }
-    }
-
     
     private void ApplyDataToOverlay(LyricPart lyricPart)
     {

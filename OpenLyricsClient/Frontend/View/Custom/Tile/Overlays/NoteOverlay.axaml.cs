@@ -12,6 +12,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 using DevBase.Generics;
 using OpenLyricsClient.Backend;
@@ -42,6 +43,9 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     private double _speed;
     private AList<(string, Avalonia.Animation.Animation)> _animatale;
 
+    private TimeSpan _idleTimeSpan;
+    private TimeSpan _noteTimeSpan;
+
     private Typeface _typeface;
 
     private Size _size;
@@ -55,6 +59,9 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         this._percentage = 0;
 
         this._animatale = new AList<(string, Avalonia.Animation.Animation)>();
+
+        this._idleTimeSpan = TimeSpan.FromSeconds(2);
+        this._noteTimeSpan = TimeSpan.FromSeconds(3);
         
         this._typeface = new Typeface(FontFamily.Parse(
                 "avares://Material.Styles/Fonts/Roboto#Roboto"),
@@ -64,11 +71,17 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         this._height = this._size.Height + 15;
         
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
+        Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
         Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
         
         AvaloniaXamlLoader.Load(this);
         
-        ApplyAnimationToClasses();
+        ApplyAnimationToClasses(this._idleTimeSpan, this._noteTimeSpan);
+    }
+
+    private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs lyricsfoundeventargs)
+    {
+        Speed = lyricsfoundeventargs.LyricData.LyricSpeed;
     }
 
     private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs args)
@@ -96,7 +109,7 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
 
     #region Animations
 
-    private void ApplyAnimationToClasses()
+    private void ApplyAnimationToClasses(TimeSpan idleTimeSpan, TimeSpan noteTimeSpan)
     {
         Styles styles = new Styles();
 
@@ -104,12 +117,12 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         
         for (int i = 1; i <= 3; i++)
         {
-            styles.Add(IdleAnimationStyle($"idle{i}", TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(modifier * (i - 1))));
+            styles.Add(IdleAnimationStyle($"idle{i}", idleTimeSpan, TimeSpan.FromSeconds(modifier * (i - 1))));
         }
         
         for (int i = 1; i <= 3; i++)
         {
-            styles.Add(ActiveAnimationStyle($"note{i}", TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(modifier *(i - 1))));
+            styles.Add(ActiveAnimationStyle($"note{i}", noteTimeSpan, TimeSpan.FromSeconds(modifier *(i - 1))));
         }
         
         this.Styles.Add(styles);
@@ -191,32 +204,34 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         return style;
     }
     
-    
-    private void ApplyDelay(string classes, double percentage)
+    private void ApplyDelay(string classes, TimeSpan span)
     {
-        double modifier = percentage * 0.1;
-
-        modifier = Math.Clamp(modifier, 0, 0.8);
-
-        int position = 1;
+        double h = span.TotalMilliseconds / 3;
+        double factor = (h / (3 * 4));
+        
+        int position = 0;
         for (int i = 0; i < this._animatale.Length; i++)
         {
             (string, Avalonia.Animation.Animation) element = this._animatale.Get(i);
         
             if (element.Item1.SequenceEqual($"{classes}{position}"))
             {
-                element.Item2.Delay = TimeSpan.FromSeconds(position * modifier);
+                element.Item2.Delay = TimeSpan.FromMilliseconds(position * 0.8d);
+                Debug.WriteLine($"{element.Item2.Delay} : {factor} : {i}");
                 position++;
             }
         }
     }
-    
+
     private void ApplyDuration(string classes, TimeSpan span)
     {
-        this._animatale.ForEach(a =>
+        Dispatcher.UIThread.InvokeAsync(() =>
         {
-            if (a.Item1.Contains(classes))
-                a.Item2.Duration = span;
+            this._animatale.ForEach(a =>
+            {
+                if (a.Item1.Contains(classes))
+                    a.Item2.Duration = span;
+            });
         });
     }
 
@@ -248,11 +263,11 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         return p;
     }
 
-    private TimeSpan CalculateSpeedToTimeSpan(double percentage)
+    private TimeSpan CalculateSpeedToTimeSpan(double percentage, TimeSpan maxTimeSpan)
     {
         double multiplier = 1.0d;
-        
-        double max = 180000;
+
+        double max = maxTimeSpan.TotalMilliseconds;
         double x = percentage * (max * 0.01);
         double y = max - x;
 
@@ -365,9 +380,13 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
             if (double.IsInfinity(value) || double.IsNegative(value) || double.IsNaN(value))
                 return;
 
-            TimeSpan span = CalculateSpeedToTimeSpan(value);
-            ApplyDuration("note", span);
-            ApplyDelay("note", value);
+            TimeSpan idleSpan = CalculateSpeedToTimeSpan(value, this._idleTimeSpan);
+            ApplyDuration("idle", idleSpan);
+            ApplyDelay("idle", idleSpan);
+            
+            TimeSpan noteSpan = CalculateSpeedToTimeSpan(value, this._noteTimeSpan);
+            ApplyDuration("note", noteSpan);
+            ApplyDelay("note", noteSpan);
         }
     }
 

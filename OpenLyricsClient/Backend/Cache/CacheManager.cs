@@ -349,7 +349,7 @@ namespace OpenLyricsClient.Backend.Cache
 
             JsonLyricData lyricData = cacheData.LyricData;
             LyricData lyrics = new LyricData(lyricData.ReturnCode, metadata, lyricData.LyricParts,
-                lyricData.LyricProvider, lyricData.LyricType);
+                lyricData.LyricProvider, lyricData.LyricType, lyricData.LyricSpeed);
 
             JsonArtwork artworkData = cacheData.Artwork;
             Artwork artwork = new Artwork();
@@ -406,6 +406,7 @@ namespace OpenLyricsClient.Backend.Cache
             jsonLyricData.ReturnCode = lyricData.LyricReturnCode;
             jsonLyricData.LyricProvider = lyricData.LyricProvider;
             jsonLyricData.LyricParts = lyricData.LyricParts;
+            jsonLyricData.LyricSpeed = lyricData.LyricSpeed;
 
             Artwork artwork = cacheData.Artwork;
             JsonArtwork jsonArtwork = new JsonArtwork();

@@ -21,5 +21,8 @@ namespace OpenLyricsClient.Shared.Structure.Json
 
         [JsonProperty("Parts")]
         public LyricPart[] LyricParts { get; set; }
+        
+        [JsonProperty("Speed")]
+        public double LyricSpeed { get; set; }
     }
 }
