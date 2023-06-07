@@ -107,9 +107,10 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
             y = SmoothAnimator.Lerp(
                 this._currentScrollOffset,
                 this._nextScrollOffset,
-                (int)obj.Milliseconds, this.Speed, EnumAnimationStyle.CIRCULAREASEOUT);
+                (int)obj.Milliseconds, this.Speed, EnumAnimationStyle.SIGMOID);
         }
-        else if (!this.IsSynced && this._isSyncing || this.IsSynced && !this._isSyncing && this._nextScrollOffset < y)
+        else if (!this.IsSynced && this._isSyncing || 
+                 this.IsSynced && !this._isSyncing && this._nextScrollOffset < y)
         {
             y = CalcResyncStep(this._currentScrollOffset, this._nextScrollOffset, this.Speed);
         }

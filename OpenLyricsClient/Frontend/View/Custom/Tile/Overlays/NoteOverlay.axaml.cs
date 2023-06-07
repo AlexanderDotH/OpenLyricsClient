@@ -212,13 +212,19 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         var keyFrame1 = new KeyFrame
         {
             Cue = new Cue(0),
-            Setters = { new Setter(TextBlock.OpacityProperty, 0.2) }
+            Setters =
+            {
+                new Setter(TextBlock.OpacityProperty, 0.2)
+            }
         };
 
         var keyFrame2 = new KeyFrame
         {
             Cue = new Cue(1),
-            Setters = { new Setter(TextBlock.OpacityProperty, 1) }
+            Setters =
+            {
+                new Setter(TextBlock.OpacityProperty, 1)
+            }
         };
 
         animation.Children.Add(keyFrame1);
@@ -482,7 +488,7 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     {
         get
         {
-            return new Size(this._size.Width, this._height + 5);
+            return new Size(this._size.Width, this._height);
         }
     }
     
