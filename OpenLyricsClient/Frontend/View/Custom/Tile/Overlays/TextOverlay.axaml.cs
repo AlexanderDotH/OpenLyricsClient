@@ -104,24 +104,6 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
         MainWindow.Instance.PageSelectionChangedFinished += InstanceOnPageSelectionChangedFinished;
     }
 
-    private void InstanceOnPageSelectionChanged(object sender, PageSelectionChangedEventArgs pageselectionchanged)
-    {
-        if (pageselectionchanged.ToPage.GetType() == typeof(SettingsPage))
-        {
-            this.Headless = true;
-            this.SuppressActivity = true;
-        }
-    }
-    
-    private void InstanceOnPageSelectionChangedFinished(object sender, PageSelectionChangedEventArgs pageselectionchanged)
-    {
-        if (pageselectionchanged.ToPage.GetType() == typeof(LyricsPage))
-        {
-            this.Headless = false;
-            this.SuppressActivity = false;
-        }
-    }
-
     private void UpdateView(double width, double height)
     {
         if (this.SuppressActivity)
@@ -219,6 +201,9 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
         if (!DataValidator.ValidateData(service))
             return;
         
+        //NewLyricsScroller.Instance.UnSync();
+        NewLyricsScroller.Instance.Resync(this.LyricPart);
+        
         if (service.CanSeek())
             Task.Factory.StartNew(async () => await service.Seek(this._lyricPart.Time));
     }
@@ -255,6 +240,24 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
         OnPropertyChanged("UnSelectedLineBrush");
     }    
 
+    private void InstanceOnPageSelectionChanged(object sender, PageSelectionChangedEventArgs pageselectionchanged)
+    {
+        if (pageselectionchanged.ToPage.GetType() == typeof(SettingsPage))
+        {
+            this.Headless = true;
+            this.SuppressActivity = true;
+        }
+    }
+    
+    private void InstanceOnPageSelectionChangedFinished(object sender, PageSelectionChangedEventArgs pageselectionchanged)
+    {
+        if (pageselectionchanged.ToPage.GetType() == typeof(LyricsPage))
+        {
+            this.Headless = false;
+            this.SuppressActivity = false;
+        }
+    }
+    
     #endregion
 
     #region MVVM Stuff

@@ -60,6 +60,7 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
     private double _frameRate;
     private double _speed;
     private bool _isSyncing;
+    private bool _isResyncing;
     
     public event PropertyChangedEventHandler? PropertyChanged;
     
@@ -68,6 +69,8 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
         AvaloniaXamlLoader.Load(this);
 
         _instance = this;
+
+        this._isResyncing = false;
         
         this._currentScrollOffset = 0;
         this._nextScrollOffset = 0;
@@ -102,14 +105,14 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
 
         double y = this._customScrollViewer.Offset.Y;
         
-        if (this.IsSynced && !this._isSyncing && this._nextScrollOffset > y)
+        if (this.IsSynced && !this._isSyncing && this._nextScrollOffset > y && !_isResyncing)
         {
             y = SmoothAnimator.Lerp(
                 this._currentScrollOffset,
                 this._nextScrollOffset,
                 (int)obj.Milliseconds, this.Speed, EnumAnimationStyle.SIGMOID);
         }
-        else if (!this.IsSynced && this._isSyncing || 
+        else if (this._isSyncing || 
                  this.IsSynced && !this._isSyncing && this._nextScrollOffset < y)
         {
             y = CalcResyncStep(this._currentScrollOffset, this._nextScrollOffset, this.Speed);
@@ -133,6 +136,7 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
 
         if (diff < 1 && this._isSyncing)
         {
+            this._isResyncing = false;
             this.IsSynced = true;
             this._isSyncing = false;
             this._customScrollViewer.BypassScrollDirectionCheck = false;
@@ -305,6 +309,24 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
     {
         this._currentScrollOffset = this._customScrollViewer.Offset.Y;
         this._isSyncing = true;
+    }
+    
+    public void Resync(LyricPart part)
+    {
+        this._isSyncing = true;
+        
+        double offset = GetRenderedOffset(part, this._viewModel.Lyrics);
+        
+        this._currentScrollOffset = this._customScrollViewer.Offset.Y;
+        this._nextScrollOffset = offset;
+        
+        IsSynced = false;
+    }
+
+    public void UnSync()
+    {
+        this.IsSynced = false;
+        this._customScrollViewer.BypassScrollDirectionCheck = true;
     }
 
     public bool IsSynced

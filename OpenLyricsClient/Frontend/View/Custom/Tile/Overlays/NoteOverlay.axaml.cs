@@ -96,22 +96,6 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         MainWindow.Instance.PageSelectionChangedFinished += InstanceOnPageSelectionChangedFinished;
     }
 
-    private void InstanceOnPageSelectionChanged(object sender, PageSelectionChangedEventArgs pageselectionchanged)
-    {
-        if (pageselectionchanged.ToPage.GetType() == typeof(SettingsPage))
-        {
-            this.Headless = true;
-        }
-    }
-    
-    private void InstanceOnPageSelectionChangedFinished(object sender, PageSelectionChangedEventArgs pageselectionchanged)
-    {
-        if (pageselectionchanged.ToPage.GetType() == typeof(LyricsPage))
-        {
-            this.Headless = false;
-        }
-    }
-
     #region Events
 
     private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs lyricsfoundeventargs)
@@ -165,6 +149,8 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         
         if (service.CanSeek())
             Task.Factory.StartNew(async () => await service.Seek(this._lyricPart.Time));
+        
+        NewLyricsScroller.Instance.Resync(this.LyricPart);
     }    
     
     private void InputElement_OnPointerEnter(object? sender, PointerEventArgs e)
@@ -195,6 +181,22 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         
         this._isPointerOver = false;
         OnPropertyChanged("UnSelectedLineBrush");
+    }
+    
+    private void InstanceOnPageSelectionChanged(object sender, PageSelectionChangedEventArgs pageselectionchanged)
+    {
+        if (pageselectionchanged.ToPage.GetType() == typeof(SettingsPage))
+        {
+            this.Headless = true;
+        }
+    }
+    
+    private void InstanceOnPageSelectionChangedFinished(object sender, PageSelectionChangedEventArgs pageselectionchanged)
+    {
+        if (pageselectionchanged.ToPage.GetType() == typeof(LyricsPage))
+        {
+            this.Headless = false;
+        }
     }
 
     #endregion
