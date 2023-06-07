@@ -105,15 +105,15 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
 
         double y = this._customScrollViewer.Offset.Y;
         
-        if (this.IsSynced && !this._isSyncing && this._nextScrollOffset > y && !_isResyncing)
+        if (this.IsSynced && !this._isSyncing)
         {
             y = SmoothAnimator.Lerp(
                 this._currentScrollOffset,
                 this._nextScrollOffset,
-                (int)obj.Milliseconds, this.Speed, EnumAnimationStyle.SIGMOID);
+                (int)obj.Milliseconds, this.Speed * 0.05, EnumAnimationStyle.CIRCULAREASEOUT);
         }
-        else if (this._isSyncing || 
-                 this.IsSynced && !this._isSyncing && this._nextScrollOffset < y)
+        else if (this._isResyncing || 
+                 !this.IsSynced && this._isSyncing)
         {
             y = CalcResyncStep(this._currentScrollOffset, this._nextScrollOffset, this.Speed);
         }
@@ -313,13 +313,14 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
     
     public void Resync(LyricPart part)
     {
-        this._isSyncing = true;
         
         double offset = GetRenderedOffset(part, this._viewModel.Lyrics);
         
         this._currentScrollOffset = this._customScrollViewer.Offset.Y;
         this._nextScrollOffset = offset;
-        
+
+        this._isResyncing = true;
+        this._isSyncing = true;
         IsSynced = false;
     }
 
