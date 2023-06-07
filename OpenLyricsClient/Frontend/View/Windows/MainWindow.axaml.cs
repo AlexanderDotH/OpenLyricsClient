@@ -113,16 +113,28 @@ namespace OpenLyricsClient.Frontend.View.Windows
         {
             get => INSTANCE;
         }
-        
+
         private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
         {
-            if (this._windowDragable)
-                this.BeginMoveDrag(e);
+            DragWindow(e);
+        }
+
+        public void DragWindow(PointerPressedEventArgs e)
+        {
+            if (!this._windowDragable)
+                return;
+            
+            this.BeginMoveDrag(e);
         }
 
         public override event EventHandler<PointerPressedEventArgs> BeginResize;
         public override event EventHandler<PointerEventArgs> Resize;
         public override event EventHandler<PointerReleasedEventArgs> EndResize;
-      
+        
+        public bool WindowDragable
+        {
+            get => _windowDragable;
+            set => _windowDragable = value;
+        }
     }
 }

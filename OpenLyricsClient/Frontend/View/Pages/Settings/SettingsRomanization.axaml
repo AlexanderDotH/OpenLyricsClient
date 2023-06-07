@@ -57,8 +57,12 @@
                    
                    <!--Japanese to Roman-->
                    <elements:GroupBox Classes="clean" 
+                                      VerticalAlignment="Stretch"
+                                      HorizontalAlignment="Stretch"
+                                      PointerPressed="ExpandJapaneseSection"
+                                      PointerEnter="ExpandJapaneseSectionEnter"
+                                      PointerLeave="ExpandJapaneseSectionLeave"
                                       Background="{DynamicResource SecondaryBackgroundBrush}">
-                       
                        <Grid>
                            <StackPanel Orientation="Horizontal" 
                                        Spacing="5"
@@ -69,9 +73,11 @@
                                    Height="25" 
                                    Kind="IdeogramChineseJapaneseKorean"/>
                            
-                               <elements:Expander HorizontalAlignment="Center">
+                               <elements:Expander HorizontalAlignment="Center"
+                                                  Name="PART_ExpanderJapanese">
                                    <elements:Expander.Header>
-                                       <Grid>
+                                       <Grid VerticalAlignment="Stretch"
+                                             HorizontalAlignment="Stretch">
                                            <StackPanel Orientation="Vertical" 
                                                        HorizontalAlignment="Left" 
                                                        VerticalAlignment="Stretch"
@@ -133,8 +139,6 @@
                                        </elements:GroupBox>
                                    </elements:Expander.Content>
                                </elements:Expander>
-                               
-                               
                            </StackPanel>
                            
                            <ToggleSwitch VerticalAlignment="Center"
@@ -152,6 +156,9 @@
                    
                    <!--Korean to Roman-->
                    <elements:GroupBox Classes="clean" 
+                                      PointerPressed="ExpandKoreanSection"
+                                      PointerEnter="ExpandKoreanSectionEnter"
+                                      PointerLeave="ExpandKoreanSectionLeave"
                                       Background="{DynamicResource SecondaryBackgroundBrush}">
                        
                        <Grid>
@@ -165,7 +172,8 @@
                                    Kind="IdeogramChineseJapaneseKoreanVariant"/>
                            
                                <elements:Expander HorizontalContentAlignment="Stretch"
-                                                  HorizontalAlignment="Center">
+                                                  HorizontalAlignment="Center"
+                                                  Name="PART_ExpanderKorean">
                                    <elements:Expander.Header>
                                        <Grid>
                                            <StackPanel Orientation="Vertical" 
@@ -248,6 +256,9 @@
                    
                    <!--Russia to Roman-->
                    <elements:GroupBox Classes="clean" 
+                                      PointerPressed="ExpandRussianSection"
+                                      PointerEnter="ExpandRussianSectionEnter"
+                                      PointerLeave="ExpandRussianSectionLeave"
                                       Background="{DynamicResource SecondaryBackgroundBrush}">
                        
                        <Grid>
@@ -261,7 +272,8 @@
                                    Kind="Language"/>
                            
                                <elements:Expander HorizontalContentAlignment="Stretch"
-                                                  HorizontalAlignment="Center">
+                                                  HorizontalAlignment="Center"
+                                                  Name="PART_ExpanderRussian">
                                    <elements:Expander.Header>
                                        <Grid>
                                            <StackPanel Orientation="Vertical" 

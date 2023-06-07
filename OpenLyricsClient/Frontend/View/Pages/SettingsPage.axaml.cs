@@ -87,7 +87,7 @@ public partial class SettingsPage : UserControl
 
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        MainWindow.Instance.BeginMoveDrag(e);
+        MainWindow.Instance.DragWindow(e);
     }
 
     private void UnselectAll()
