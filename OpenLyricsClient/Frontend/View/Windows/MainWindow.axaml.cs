@@ -1,10 +1,15 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using DevBase.Generics;
+using OpenLyricsClient.Frontend.Events.EventArgs;
+using OpenLyricsClient.Frontend.Events.EventHandler;
 using ScalableWindow = OpenLyricsClient.Frontend.Scaling.ScalableWindow;
 
 namespace OpenLyricsClient.Frontend.View.Windows
@@ -23,10 +28,23 @@ namespace OpenLyricsClient.Frontend.View.Windows
         private Button _fulltextButton;
         private Button _settingsButton;
 
+        private ATupleList<int, UserControl> _pageList;
+
+        private TimeSpan _animationSpan;
+
+        public event PageSelectionChangedEventHandler PageSelectionChanged;
+        public event PageSelectionChangedFinishedEventHandler PageSelectionChangedFinished;
+        
         public MainWindow()
         {
+            INSTANCE = this;
             InitializeComponent();
 
+            this._pageList = new ATupleList<int, UserControl>();
+            this._pageList.Add(0, this.Get<UserControl>(nameof(LyricsPage)));
+            this._pageList.Add(1, this.Get<UserControl>(nameof(FullLyricsPage)));
+            this._pageList.Add(2, this.Get<UserControl>(nameof(SettingsPage)));
+            
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 this.WindowStartupLocation = WindowStartupLocation.Manual; // center doesn't work on osx
@@ -36,10 +54,10 @@ namespace OpenLyricsClient.Frontend.View.Windows
                 this.CRD_WindowDecoration_FullScreen.IsVisible = false; // hide fullscreen button
             }
 
-            INSTANCE = this; 
             this._windowDragable = true;
 
             this._pageSelector = this.Get<Carousel>(nameof(PageSelection));
+            this._pageSelector.SelectedIndex = 0;
             
             this._lyricsButton = this.Get<Button>(nameof(BTN_LyricsButton));
             //this._fulltextButton = this.Get<Button>(nameof(BTN_FullTextButton));
@@ -65,6 +83,9 @@ namespace OpenLyricsClient.Frontend.View.Windows
         {
             if (this._pageSelector.ItemCount == 0)
                 return;
+
+            UserControl from = this._pageList.FindEntry(this._pageSelector.SelectedIndex);
+            UserControl to = this._pageList.FindEntry(pageID);
             
             if (pageID > this._pageSelector.ItemCount)
                 this._pageSelector.SelectedIndex = 0;
@@ -76,6 +97,7 @@ namespace OpenLyricsClient.Frontend.View.Windows
                     UnselectAll();
                     SelectButton(this.BTN_LyricsButton);
                     this._windowDragable = true;
+                    PageChanged(from, to);
                     break;
                 }
                 /*case 1:
@@ -90,6 +112,7 @@ namespace OpenLyricsClient.Frontend.View.Windows
                     UnselectAll();
                     SelectButton(this.BTN_SettingsButton);
                     this._windowDragable = false;
+                    PageChanged(from, to);
                     break;
                 }
             }
@@ -125,6 +148,30 @@ namespace OpenLyricsClient.Frontend.View.Windows
                 return;
             
             this.BeginMoveDrag(e);
+        }
+        
+        protected virtual void PageChanged(UserControl from, UserControl to)
+        {
+            PageSelectionChangedEventHandler handler = PageSelectionChanged;
+            handler.Invoke(this, new PageSelectionChangedEventArgs(from, to));
+            
+            this._animationSpan = ((PageSlide)PageSelection.PageTransition).Duration;
+
+            DateTimeOffset until = DateTimeOffset.FromUnixTimeMilliseconds(DateTimeOffset.Now.ToUnixTimeMilliseconds() + (long)this._animationSpan.TotalMilliseconds);
+
+            Task.Factory.StartNew(async () =>
+            {
+                while (until > DateTimeOffset.Now) { await Task.Delay(100); }
+
+                PageChangedFinished(from, to);
+            });
+
+        }
+
+        protected virtual void PageChangedFinished(UserControl from, UserControl to)
+        {
+            PageSelectionChangedFinishedEventHandler handler = PageSelectionChangedFinished;
+            handler.Invoke(this, new PageSelectionChangedEventArgs(from, to));
         }
 
         public override event EventHandler<PointerPressedEventArgs> BeginResize;

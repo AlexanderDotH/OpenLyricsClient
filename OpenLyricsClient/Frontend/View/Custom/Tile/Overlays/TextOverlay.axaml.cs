@@ -24,9 +24,12 @@ using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Handler.Services.Services;
 using OpenLyricsClient.Backend.Romanization;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
+using OpenLyricsClient.Frontend.Events.EventArgs;
 using OpenLyricsClient.Frontend.Extensions;
 using OpenLyricsClient.Frontend.Structure;
 using OpenLyricsClient.Frontend.Utils;
+using OpenLyricsClient.Frontend.View.Pages;
+using OpenLyricsClient.Frontend.View.Windows;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 using OpenLyricsClient.Shared.Structure.Visual;
 using OpenLyricsClient.Shared.Utils;
@@ -66,13 +69,19 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
     private bool _isPointerOver;
     
     private bool _headlessMode;
+    private bool _suppressActivity;
+
+    private readonly int LEFT_SPACE;
     
     public TextOverlay()
     {
         AvaloniaXamlLoader.Load(this);
 
+        LEFT_SPACE = 50;
+        
         this._initialized = false;
         this.Headless = false;
+        this.SuppressActivity = false;
 
         this._isPointerOver = false;
         
@@ -90,11 +99,35 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
 
         this._lyricPart = new LyricPart(-9999, "Hello there ;)");
+        
+        MainWindow.Instance.PageSelectionChanged += InstanceOnPageSelectionChanged;
+        MainWindow.Instance.PageSelectionChangedFinished += InstanceOnPageSelectionChangedFinished;
+    }
+
+    private void InstanceOnPageSelectionChanged(object sender, PageSelectionChangedEventArgs pageselectionchanged)
+    {
+        if (pageselectionchanged.ToPage.GetType() == typeof(SettingsPage))
+        {
+            this.Headless = true;
+            this.SuppressActivity = true;
+        }
+    }
+    
+    private void InstanceOnPageSelectionChangedFinished(object sender, PageSelectionChangedEventArgs pageselectionchanged)
+    {
+        if (pageselectionchanged.ToPage.GetType() == typeof(LyricsPage))
+        {
+            this.Headless = false;
+            this.SuppressActivity = false;
+        }
     }
 
     private void UpdateView(double width, double height)
     {
-        UpdateTextWrappingLines(this._lyricPart.Part, width, height);
+        if (this.SuppressActivity)
+            return;
+        
+        UpdateTextWrappingLines(this._lyricPart.Part, NewLyricsScroller.Instance.Bounds.Width - LEFT_SPACE, height);
     }
     
     private void UpdateTextWrappingLines(string text, double width, double height)
@@ -176,9 +209,6 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
     private void InstanceOnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
     {
-        if (this._headlessMode)
-            return;
-        
         UpdateView(e.EffectiveViewport.Width, e.EffectiveViewport.Height);
     }
     
@@ -195,6 +225,8 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
     private void InputElement_OnPointerEnter(object? sender, PointerEventArgs e)
     {
+        MainWindow.Instance.WindowDragable = false;
+        
         IService service = Core.INSTANCE.ServiceHandler.GetActiveService();
         
         if (!DataValidator.ValidateData(service))
@@ -209,6 +241,8 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
     private void InputElement_OnPointerLeave(object? sender, PointerEventArgs e)
     {
+        MainWindow.Instance.WindowDragable = true;
+        
         IService service = Core.INSTANCE.ServiceHandler.GetActiveService();
         
         if (!DataValidator.ValidateData(service))
@@ -255,7 +289,10 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
             SetAndRaise(LyricPartProperty, ref _lyricPart, value);
             
-            UpdateTextWrappingLines(this._lyricPart.Part, NewLyricsScroller.Instance.Bounds.Width,
+            if (this.SuppressActivity)
+                return;
+            
+            UpdateTextWrappingLines(this._lyricPart.Part, NewLyricsScroller.Instance.Bounds.Width - LEFT_SPACE,
                 double.PositiveInfinity);
             
             this._initialized = true;
@@ -332,7 +369,13 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
         get => this._headlessMode;
         set => this._headlessMode = value;
     }
-    
+
+    public bool SuppressActivity
+    {
+        get => _suppressActivity;
+        set => _suppressActivity = value;
+    }
+
     public Size Size
     {
         get

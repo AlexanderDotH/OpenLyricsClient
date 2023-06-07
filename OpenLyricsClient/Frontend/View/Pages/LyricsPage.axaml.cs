@@ -14,6 +14,7 @@ using DevBase.Async.Task;
 using Material.Styles;
 using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
+using OpenLyricsClient.Frontend.Events.EventArgs;
 using OpenLyricsClient.Shared.Utils;
 using OpenLyricsClient.Frontend.Models.Pages;
 using OpenLyricsClient.Frontend.View.Custom;
@@ -89,7 +90,22 @@ public partial class LyricsPage : UserControl
         if (!DataValidator.ValidateData(this._lyricsPageViewModel))
             return;
 
+        MainWindow.Instance.PageSelectionChanged += InstanceOnPageSelectionChanged;
+        
         this._lyricsPageViewModel.PropertyChanged += DataContextOnPropertyChanged;
+    }
+
+    private void InstanceOnPageSelectionChanged(object sender, PageSelectionChangedEventArgs pageselectionchanged)
+    {
+        /*if (pageselectionchanged.FromPage.GetType() == typeof(LyricsPage))
+        {
+            this._cstmLyricsDisplay.IsVisible = false;
+        }
+        else
+        {
+            this._cstmLyricsDisplay.IsVisible = true;
+            
+        }*/
     }
 
     private void DataContextOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -150,7 +166,7 @@ public partial class LyricsPage : UserControl
 
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        MainWindow.Instance.BeginMoveDrag(e);
+        MainWindow.Instance.DragWindow(e);
     }
 
     private void Button_OnClick(object? sender, RoutedEventArgs e)

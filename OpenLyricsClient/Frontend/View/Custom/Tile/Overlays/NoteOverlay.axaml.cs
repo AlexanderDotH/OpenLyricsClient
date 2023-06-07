@@ -21,10 +21,13 @@ using OpenLyricsClient.Backend;
 using OpenLyricsClient.Backend.Events.EventArgs;
 using OpenLyricsClient.Backend.Handler.Services.Services;
 using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
+using OpenLyricsClient.Frontend.Events.EventArgs;
 using OpenLyricsClient.Frontend.Extensions;
 using OpenLyricsClient.Frontend.Models.Pages.Settings;
 using OpenLyricsClient.Frontend.Structure.Enum;
 using OpenLyricsClient.Frontend.Utils;
+using OpenLyricsClient.Frontend.View.Pages;
+using OpenLyricsClient.Frontend.View.Windows;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 using OpenLyricsClient.Shared.Utils;
 using Squalr.Engine.Utils.Extensions;
@@ -88,13 +91,32 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         AvaloniaXamlLoader.Load(this);
         
         ApplyAnimationToClasses(this._idleTimeSpan, this._noteTimeSpan);
+        
+        MainWindow.Instance.PageSelectionChanged += InstanceOnPageSelectionChanged;
+        MainWindow.Instance.PageSelectionChangedFinished += InstanceOnPageSelectionChangedFinished;
+    }
+
+    private void InstanceOnPageSelectionChanged(object sender, PageSelectionChangedEventArgs pageselectionchanged)
+    {
+        if (pageselectionchanged.ToPage.GetType() == typeof(SettingsPage))
+        {
+            this.Headless = true;
+        }
+    }
+    
+    private void InstanceOnPageSelectionChangedFinished(object sender, PageSelectionChangedEventArgs pageselectionchanged)
+    {
+        if (pageselectionchanged.ToPage.GetType() == typeof(LyricsPage))
+        {
+            this.Headless = false;
+        }
     }
 
     #region Events
 
     private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs lyricsfoundeventargs)
     {
-        if (this._headlessMode)
+        if (this.Headless)
             return;
 
         Dispatcher.UIThread.InvokeAsync(() =>
@@ -105,7 +127,7 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
 
     private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs args)
     {
-        if (this._headlessMode)
+        if (this.Headless)
             return;
         
         if (!args.Section.Equals(typeof(SettingsLyricsViewModel)))
@@ -117,7 +139,7 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
 
     private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)
     {
-        if (this._headlessMode)
+        if (this.Headless)
             return;
         
         if (this._lyricPart.Equals(args.LyricPart))
@@ -134,6 +156,8 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
+        MainWindow.Instance.WindowDragable = false;
+        
         IService service = Core.INSTANCE.ServiceHandler.GetActiveService();
 
         if (!DataValidator.ValidateData(service))
@@ -145,6 +169,8 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     
     private void InputElement_OnPointerEnter(object? sender, PointerEventArgs e)
     {
+        MainWindow.Instance.WindowDragable = true;
+        
         IService service = Core.INSTANCE.ServiceHandler.GetActiveService();
         
         if (!DataValidator.ValidateData(service))
@@ -177,7 +203,7 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
 
     private void ApplyAnimationToClasses(TimeSpan idleTimeSpan, TimeSpan noteTimeSpan)
     {
-        if (this._headlessMode)
+        if (this.Headless)
             return;
         
         Styles styles = new Styles();
@@ -282,7 +308,7 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     private void ApplyDelay(string classes, TimeSpan span)
     {
         double h = span.TotalMilliseconds / 3;
-        double factor = (h / (3 * 4)) * 0.01d;
+        double factor = (h / (3 * 6)) * 0.01d;
         
         int position = 0;
         for (int i = 0; i < this._animatale.Length; i++)
@@ -292,7 +318,6 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
             if (element.Item1.SequenceEqual($"{classes}{position + 1}"))
             {
                 element.Item2.Delay = TimeSpan.FromMilliseconds(position * factor);
-                Debug.WriteLine($"{element.Item2.Delay} : {factor} : {i}");
                 position++;
             }
         }

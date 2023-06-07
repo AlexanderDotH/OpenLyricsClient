@@ -171,11 +171,11 @@
                     </Style>
                 </Carousel.Styles>
                     
-                <pages:LyricsPage/>
+                <pages:LyricsPage Name="LyricsPage"/>
                     
-                <pages:FullLyricsPage/>
+                <pages:FullLyricsPage Name="FullLyricsPage"/>
                 
-                <pages:SettingsPage/>
+                <pages:SettingsPage Name="SettingsPage"/>
 
             </Carousel>
         </DockPanel>
