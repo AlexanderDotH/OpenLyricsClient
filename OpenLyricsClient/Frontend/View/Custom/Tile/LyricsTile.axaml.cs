@@ -109,7 +109,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
             return new Size(
                 s.Width + t.Right + t.Left,
-                s.Height + t.Top + t.Bottom);
+                s.Height + t.Top + t.Bottom + 5);
         }
     }
     

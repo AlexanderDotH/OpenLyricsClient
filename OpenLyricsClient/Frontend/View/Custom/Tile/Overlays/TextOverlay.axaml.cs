@@ -389,7 +389,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
             for (var i = 0; i < this._lines.Count; i++)
             {
                 width += Math.Max(width, this._lines[i].Rect.Width);
-                height += this._lines[i].Rect.Height + 5;
+                height += this._lines[i].Rect.Height;
             }
 
             return new Size(width, height);
