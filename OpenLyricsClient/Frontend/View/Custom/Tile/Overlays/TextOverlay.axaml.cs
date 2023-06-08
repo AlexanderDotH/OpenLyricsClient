@@ -143,7 +143,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
             full += element.Rect.Width + mod;
         }
 
-        double remainder = (full * 0.01) * percentage;
+        double remainder = (full / 100) * percentage;
 
         for (var i = 0; i < this._lines.Count; i++)
         {

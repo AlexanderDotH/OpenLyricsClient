@@ -348,7 +348,9 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
             double.PositiveInfinity, 
             double.PositiveInfinity, 
             this._typeface,
-            this.LyricsAlignment, this.LyricsSize);
+            this.LyricsAlignment, 
+            TextWrapping.NoWrap,
+            this.LyricsSize);
 
         int amount = 3;
         double spacing = 10 * amount;

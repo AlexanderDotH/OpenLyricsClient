@@ -13,32 +13,30 @@ public class StringUtils
 {
     public static AList<LyricOverlayElement> SplitTextToLines(string text, double width, double height, Typeface typeface, TextAlignment alignment, double fontSize)
     {
-        AList<LyricOverlayElement> lines = new AList<LyricOverlayElement>();
+        string[] words = text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         
+        AList<LyricOverlayElement> lines = new AList<LyricOverlayElement>();
         StringBuilder currentLine = new StringBuilder();
-        string[] words = text.Split(' ');
 
         for (int i = 0; i < words.Length; i++)
         {
             string word = words[i];
-
-            StringBuilder candidateLine = new StringBuilder(currentLine.ToString());
-
-            if (candidateLine.Length > 0)
-                candidateLine.Append(' ');
             
-            candidateLine.Append(word);
+            if (currentLine.Length > 0)
+                currentLine.Append(' ');
 
-            Rect size = MeasureSingleString(candidateLine.ToString(), width, height, typeface, alignment, fontSize);
+            currentLine.Append(word);
             
-            if (size.Width < width)
+            FormattedText formattedCandidateLine = new FormattedText(currentLine.ToString(), typeface, fontSize, alignment, TextWrapping.NoWrap, new Size(width, height));
+
+            if (formattedCandidateLine.Bounds.Width > width)
             {
-                currentLine = candidateLine;
-            }
-            else
-            {
-                lines.Add(new LyricOverlayElement(currentLine.ToString(), size));
-                
+                currentLine.Length -= word.Length;
+                if (currentLine.Length > 0 && char.IsWhiteSpace(currentLine[currentLine.Length - 1]))
+                    currentLine.Length--;
+
+                lines.Add(new LyricOverlayElement(currentLine.ToString(), 
+                    MeasureSingleString(currentLine.ToString(), width, height, typeface, alignment, TextWrapping.NoWrap, fontSize)));
                 currentLine.Clear();
                 currentLine.Append(word);
             }
@@ -46,22 +44,21 @@ public class StringUtils
 
         if (currentLine.Length > 0)
         {
-            lines.Add(new LyricOverlayElement(
-                currentLine.ToString(),
-                MeasureSingleString(currentLine.ToString(), width, height, typeface, alignment, fontSize)));
+            lines.Add(new LyricOverlayElement(currentLine.ToString(), 
+                MeasureSingleString(currentLine.ToString(), width, height, typeface, alignment, TextWrapping.NoWrap, fontSize)));
         }
 
         return lines;
     }
     
-    public static Rect MeasureSingleString(string line, double width, double height, Typeface typeface, TextAlignment alignment, double fontSize)
+    public static Rect MeasureSingleString(string line, double width, double height, Typeface typeface, TextAlignment alignment, TextWrapping wrapping, double fontSize)
     {
         FormattedText formattedCandidateLine = new FormattedText(
             line, 
             typeface, 
             fontSize, 
             alignment, 
-            TextWrapping.NoWrap, 
+            wrapping, 
             new Size(width, height));
 
         return formattedCandidateLine.Bounds;

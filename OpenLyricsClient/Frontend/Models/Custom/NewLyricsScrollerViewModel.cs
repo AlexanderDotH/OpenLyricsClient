@@ -58,7 +58,6 @@ public class NewLyricsScrollerViewModel : ViewModelBase, INotifyPropertyChanged
     {
         get
         {
-
             if (!DataValidator.ValidateData(this._lyricData))
                 return new ObservableCollection<LyricPart>();
             
@@ -66,6 +65,8 @@ public class NewLyricsScrollerViewModel : ViewModelBase, INotifyPropertyChanged
         }
     }
 
+    public bool Resyncing { get; set; }
+    
     public LyricPart? Lyric
     {
         get => this._lyric;

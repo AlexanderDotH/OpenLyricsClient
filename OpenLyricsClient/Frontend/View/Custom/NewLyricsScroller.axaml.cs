@@ -61,6 +61,8 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
     private double _speed;
     private bool _isSyncing;
     private bool _isResyncing;
+
+    private LyricPart _targetLock;
     
     public event PropertyChangedEventHandler? PropertyChanged;
     
@@ -104,42 +106,55 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
             this._repeater.Opacity = 1.0d;
 
         double y = this._customScrollViewer.Offset.Y;
+
+        if (!this._isResyncing)
+            this._targetLock = this._viewModel.Lyric;
         
-        if (this.IsSynced && !this._isSyncing && this._nextScrollOffset > y && !_isResyncing)
+        if (this.IsSynced && !this._isSyncing && !this._isResyncing)
         {
             y = SmoothAnimator.Lerp(
                 this._currentScrollOffset,
                 this._nextScrollOffset,
                 (int)obj.Milliseconds, this.Speed, EnumAnimationStyle.SIGMOID);
         }
-        else if (this._isSyncing || 
-                 this.IsSynced && !this._isSyncing && this._nextScrollOffset < y)
+        else if (!this.IsSynced && this._isSyncing || this._isResyncing)
         {
             y = CalcResyncStep(this._currentScrollOffset, this._nextScrollOffset, this.Speed);
         }
         
-        if (!double.IsNaN(y))
+        if (!double.IsNaN(y) && this._targetLock == this._viewModel.Lyric)
         {
             this._customScrollViewer.ScrollDirection = ScrollDirection.DOWN;
             this._customScrollViewer.Offset = new Vector(0, y);
+        }
+
+        if (!double.IsNaN(y))
+        {
             this._currentScrollOffset = y;
         }
     }
 
     private double CalcResyncStep(double currentOffset, double nextOffset, double speed)
     {
-        double step = Math.Abs(nextOffset - currentOffset) / (speed * 0.4);
+        double step = Math.Abs(nextOffset - currentOffset) / (speed);
         
         currentOffset += (currentOffset < nextOffset) ? step : -step;
         
         double diff = Math.Abs(nextOffset - currentOffset);
-
+        
         if (diff < 1 && this._isSyncing)
         {
-            this._isResyncing = false;
             this.IsSynced = true;
             this._isSyncing = false;
             this._customScrollViewer.BypassScrollDirectionCheck = false;
+        }
+        
+        if (this._isResyncing && diff < 0.5 && this._viewModel.Lyric.Equals(_targetLock))
+        {
+            this._isResyncing = false;
+            this._viewModel.Resyncing = false;
+            UnSync();
+            Resync();
         }
 
         return currentOffset;
@@ -263,8 +278,7 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
     {
         if (e.Delta.Y != 0)
         {
-            this.IsSynced = false;
-            this._customScrollViewer.BypassScrollDirectionCheck = true;
+            UnSync();
         }
 
         if (e.Delta.Y > 0)
@@ -299,7 +313,6 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
         return true;
     }
 
-
     public static NewLyricsScroller Instance
     {
         get => _instance;
@@ -313,14 +326,13 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
     
     public void Resync(LyricPart part)
     {
-        this._isSyncing = true;
-        
         double offset = GetRenderedOffset(part, this._viewModel.Lyrics);
-        
-        this._currentScrollOffset = this._customScrollViewer.Offset.Y;
         this._nextScrollOffset = offset;
+        this._isResyncing = true;
+
+        this._targetLock = part;
         
-        IsSynced = false;
+        Resync();
     }
 
     public void UnSync()
