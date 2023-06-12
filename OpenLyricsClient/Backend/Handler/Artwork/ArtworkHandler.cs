@@ -60,6 +60,8 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
             song.Artwork = args.Artwork;
             
             ArtworkAppliedEvent(args.Artwork);
+            
+            CalcAndApplyColors(args.Artwork);
         }
 
         public async Task FireArtworkSearch(SongResponseObject songResponseObject, SongChangedEventArgs songChangedEventArgs)
@@ -105,21 +107,21 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
 
                 if (!DataValidator.ValidateData(artworkCache))
                     continue;
-
-                CalcAndApplyColors(artworkCache);
                 
-                if (artworkCache.Equals(song.Artwork))
-                    continue;
-
-                if (artworkCache.ArtworkColor.A == 0 &&
+                if ((artworkCache.ArtworkColor.A == 0 &&
                     artworkCache.ArtworkColor.R == 0 &&
                     artworkCache.ArtworkColor.G == 0 &&
-                    artworkCache.ArtworkColor.B == 0)
+                    artworkCache.ArtworkColor.B == 0 || 
+                    artworkCache.ArtworkColor == new Color(255, 220, 20, 60))) 
                 {
                     await artworkCache.CalculateColor();
+                    
+                    artworkCache.ArtworkApplied = false;
+                    CalcAndApplyColors(artworkCache);
+                    
                     Core.INSTANCE.CacheManager.WriteToCache(songRequestObject, artworkCache);
                 }
-
+                
                 if (!DataValidator.ValidateData(artworkCache))
                     continue;
                 
@@ -129,14 +131,22 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
             }
         }
 
-        private void CalcAndApplyColors(Shared.Structure.Artwork.Artwork artwork)
+        public void CalcAndApplyColors(Shared.Structure.Artwork.Artwork artwork)
         {
             if (!DataValidator.ValidateData(artwork.ArtworkColor))
                 return;
+         
+            SolidColorBrush secondaryColor = App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush;
+
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                if (artwork.ArtworkApplied || 
+                    secondaryColor.Color != artwork.ArtworkColor)
+                    return;
+            });
 
             SolidColorBrush primaryColor = App.Current.FindResource("PrimaryColorBrush") as SolidColorBrush;
             SolidColorBrush color = App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
-            SolidColorBrush secondaryColor = App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush;
             SolidColorBrush textColor = App.Current.FindResource("PrimaryThemeFontColorBrush") as SolidColorBrush;
             SolidColorBrush secondaryTextColor = App.Current.FindResource("SecondaryThemeFontColorBrush") as SolidColorBrush;
             SolidColorBrush lightTextColor = App.Current.FindResource("LightThemeFontColorBrush") as SolidColorBrush;
@@ -204,6 +214,8 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                     secondaryTextColor!.Color = new Color(255, secondary, secondary, secondary);
                 }
             });
+
+            artwork.ArtworkApplied = true;
         }
         
         protected virtual void ArtworkFoundEvent(SongRequestObject songResponseObject, Shared.Structure.Artwork.Artwork artwork)
