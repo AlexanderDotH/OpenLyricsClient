@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
+using DevBase.Avalonia.Color.Extensions;
 using DevBase.Avalonia.Color.Image;
 using Squalr.Engine.Utils.Extensions;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
@@ -47,7 +48,7 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
 
         private bool IsColorValid(Color color, double brightnessPercentage)
         {
-            double brightness = GetBrightness(color);
+            double brightness = color.BrightnessPercentage();
 
             if (brightness < brightnessPercentage || 
                 brightness < brightnessPercentage && brightness > 90)
@@ -66,8 +67,15 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
         {
             try
             {
-                double brightnessPercentage = 20;
+                double brightnessPercentage = 30;
 
+                Color clusterColor = GetClusterColor();
+                if (IsColorValid(clusterColor, brightnessPercentage))
+                {
+                    this._artworkColor = clusterColor;
+                    return;
+                }
+                
                 Color groupColor = GetGroupColor();
                 if (IsColorValid(groupColor, brightnessPercentage))
                 {
@@ -95,8 +103,25 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
             {
                 this._artworkColor = new Color(255, 220, 20, 60);
             }
-
             this._data = null;
+        }
+
+        private Color GetClusterColor()
+        {
+            ClusterColorCalculator clusterColorCalculator = new ClusterColorCalculator();
+
+            clusterColorCalculator.PredefinedDataset = true;
+            clusterColorCalculator.FilterSaturation = true;
+            clusterColorCalculator.FilterBrightness = false;
+
+            clusterColorCalculator.SmallShift = 1.0d;
+            clusterColorCalculator.BigShift = 1.0d;
+            
+            clusterColorCalculator.MinSaturation = 30;
+            clusterColorCalculator.MaxRange = 3;
+            clusterColorCalculator.Clusters = 10;
+            
+            return clusterColorCalculator.GetColorFromBitmap(this.ArtworkAsImage);
         }
         
         private Color GetGroupColor()

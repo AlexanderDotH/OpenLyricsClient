@@ -10,4 +10,8 @@
     <ProjectReference Include="..\OpenLyricsClient.Shared\OpenLyricsClient.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="DevBase.Cryptography" Version="1.0.3" />
+  </ItemGroup>
+
 </Project>
