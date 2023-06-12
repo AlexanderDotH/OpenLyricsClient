@@ -23,12 +23,16 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
         private ArtworkReturnCode _returnCode;
         private Color _artworkColor;
         private string _filePath;
+
+        private bool _artworkApplied;
         
         public Artwork(byte[] data, string filePath, ArtworkReturnCode returnCode)
         {
             this._data = data;
             this._returnCode = returnCode;
             this._filePath = filePath;
+            
+            this._artworkColor = new Color(255, 220, 20, 60);
         }
         
         public Artwork() : this(null, string.Empty, ArtworkReturnCode.FAILED) { }
@@ -42,7 +46,7 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
             {
                 CalculateArtworkColor();
             });
-            
+
             await t;
         }
 
@@ -103,7 +107,11 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
             {
                 this._artworkColor = new Color(255, 220, 20, 60);
             }
+            
             this._data = null;
+            
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         private Color GetClusterColor()
@@ -147,7 +155,7 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
             return colorCalculator.GetColorFromBitmap(this.ArtworkAsImage);
         }
 
-        public double GetBrightness(Color color)
+        public double GetBrightness(Color color) 
         {
             double averageColor = (color.R + color.G + color.B) / 3.0D;
             double min = 100D / 255D;
@@ -160,23 +168,11 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
         {
             return GetBrightness(this._artworkColor);
         }
-        
-        public string ArtworkAsBase64String
+
+        public bool ArtworkApplied
         {
-            get
-            {
-                if (this._data.IsNullOrEmpty())
-                    return string.Empty;
-                
-                return Convert.ToBase64String(this._data);
-            }
-            set
-            {
-                if (value.IsNullOrEmpty())
-                    return;
-                
-                this._data = Convert.FromBase64String(value);
-            }
+            get => _artworkApplied;
+            set => _artworkApplied = value;
         }
 
         public IBitmap ArtworkAsImage

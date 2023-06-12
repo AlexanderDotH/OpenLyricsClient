@@ -229,8 +229,6 @@ namespace OpenLyricsClient.Backend.Cache
                 JsonCacheData jsonLyricData =
                     new JsonDeserializer().Deserialize<JsonCacheData>(data);
                 
-                GCHandle.Alloc(data).Free();
-                
                 return ConvertToCacheData(jsonLyricData, cacheID);
             }
 
@@ -273,7 +271,7 @@ namespace OpenLyricsClient.Backend.Cache
 
             if (!DataValidator.ValidateData(data.Artwork))
                 return null;
-
+            
             return data.Artwork;
         }
 
@@ -363,6 +361,7 @@ namespace OpenLyricsClient.Backend.Cache
             }
             
             artwork.ArtworkColor = artworkData.ArtworkColor;
+            artwork.ArtworkApplied = false;
 
             return new CacheData(metadata, lyrics, artwork);
         }
