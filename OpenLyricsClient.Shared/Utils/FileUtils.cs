@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using DevBase.IO;
 using SpotifyAPI.Web;
 using Squalr.Engine.Utils.Extensions;
 
@@ -77,11 +78,13 @@ namespace OpenLyricsClient.Shared.Utils
         {
             if (data.IsNullOrEmpty())
                 return;
-            
-            using (FileStream fileStream = File.Create(fileInfo.FullName))
+
+            try
             {
-                fileStream.Write(data, 0, data.Length);
+                using (FileStream fileStream = File.Create(fileInfo.FullName))
+                    fileStream.Write(data, 0, data.Length);
             }
+            catch (Exception e) { }
         }
 
         public static void WriteFileString(FileInfo fileInfo, string data)

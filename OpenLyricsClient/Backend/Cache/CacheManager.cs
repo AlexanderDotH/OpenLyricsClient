@@ -361,7 +361,7 @@ namespace OpenLyricsClient.Backend.Cache
             }
             
             artwork.ArtworkColor = artworkData.ArtworkColor;
-            artwork.ArtworkApplied = false;
+            artwork.ArtworkApplied = artworkData.ArtworkApplied;
 
             return new CacheData(metadata, lyrics, artwork);
         }
@@ -416,6 +416,7 @@ namespace OpenLyricsClient.Backend.Cache
                 FileUtils.WriteFile(fi, artwork.Data);
 
             jsonArtwork.ArtworkColor = artwork.ArtworkColor;
+            jsonArtwork.ArtworkApplied = artwork.ArtworkApplied;
 
             JsonCacheData jsonCacheData = new JsonCacheData();
             jsonCacheData.SongMetadata = jsonSongMetadata;

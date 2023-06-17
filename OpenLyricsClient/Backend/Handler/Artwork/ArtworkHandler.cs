@@ -8,6 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
 using DevBase.Async.Task;
+using Material.Colors.ColorManipulation;
 using OpenLyricsClient.Backend.Cache;
 using OpenLyricsClient.Backend.Collector.Artwork;
 using OpenLyricsClient.Backend.Debugger;
@@ -140,8 +141,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
 
             Dispatcher.UIThread.InvokeAsync(() =>
             {
-                if (artwork.ArtworkApplied || 
-                    secondaryColor.Color != artwork.ArtworkColor)
+                if (artwork.ArtworkApplied)
                     return;
             });
 
@@ -166,7 +166,6 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                 }
 
                 color.Color = artwork.ArtworkColor;
-                secondaryColor.Color = artwork.DarkArtworkColor;
 
                 byte light = 120;
                 byte primary = 22;
@@ -184,8 +183,11 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
 
                 if (artwork.GetBrightness() < 30)
                 {
-                    selectedLineTextColor!.Color = new Color(255, (byte)(minR * darkSelected),
-                            (byte)(minG * darkSelected), (byte)(minB * darkSelected));
+                    secondaryColor.Color = artwork.ArtworkColor.Lighten();
+                    selectedLineTextColor.Color = artwork.ArtworkColor.Lighten(2);
+                    
+                    /*selectedLineTextColor!.Color = new Color(255, (byte)(minR * darkSelected),
+                            (byte)(minG * darkSelected), (byte)(minB * darkSelected));*/
                     
                     unSelectedLineTextColor!.Color = new Color(255, (byte)(minR * darkUnselected),
                             (byte)(minG * darkUnselected), (byte)(minB * darkUnselected));
@@ -201,6 +203,8 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                 }
                 else
                 {
+                    secondaryColor.Color = artwork.ArtworkColor.Darken();
+                    
                     selectedLineTextColor!.Color = new Color(255, (byte)(minR * selected), (byte)(minG * selected), 
                         (byte)(minB * selected)); 
                     

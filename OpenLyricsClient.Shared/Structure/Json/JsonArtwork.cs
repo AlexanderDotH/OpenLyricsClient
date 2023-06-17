@@ -7,4 +7,8 @@ public class JsonArtwork
 {
     [JsonProperty("Color")]
     public Color ArtworkColor { get; set; }
+    
+    [JsonProperty("Applied")]
+    public bool ArtworkApplied { get; set; }
+
 }
