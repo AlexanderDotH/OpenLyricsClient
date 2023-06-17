@@ -38,17 +38,7 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
 
             this._artworkApplied = false;
 
-            //RGBToLabConverter converter = new RGBToLabConverter();
-            
             this._artworkColor = new Color(255, 220, 20, 60);
-            /*this._artworkColor = 
-                this._artworkColor
-                    .Normalize()
-                    .ToRgbColor()
-                    .ToLabColor(converter)
-                    .ToPastel()
-                    .ToRgbColor(converter)
-                    .DeNormalize();*/
         }
         
         public Artwork() : this(null, string.Empty, ArtworkReturnCode.FAILED) { }
@@ -68,8 +58,22 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
 
         private Color GetClusterColor()
         {
-            LabClusterColorCalculator labCluster = new LabClusterColorCalculator();
-            return labCluster.GetColorFromBitmap(this.ArtworkAsImage);
+            try
+            {
+                LabClusterColorCalculator labCluster = new LabClusterColorCalculator();
+                return labCluster.GetColorFromBitmap(this.ArtworkAsImage);
+            }
+            catch (Exception e)
+            {
+                RGBToLabConverter converter = new RGBToLabConverter();
+                return this._artworkColor
+                    .Normalize()
+                    .ToRgbColor()
+                    .ToLabColor(converter)
+                    .ToPastel()
+                    .ToRgbColor(converter)
+                    .DeNormalize();
+            }
         }
 
         public double GetBrightness()
