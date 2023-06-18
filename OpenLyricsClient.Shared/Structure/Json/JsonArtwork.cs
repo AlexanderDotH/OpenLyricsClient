@@ -11,4 +11,6 @@ public class JsonArtwork
     [JsonProperty("Calculated")]
     public bool ArtworkCalculated { get; set; }
 
+    [JsonProperty("FilePath")]
+    public string FilePath { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Net;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
@@ -117,19 +118,12 @@ public partial class LyricsPage : UserControl
             return;
 
         if (e.PropertyName?.Equals("Artwork") == true &&
-            DataValidator.ValidateData(this._lyricsPageViewModel.Artwork))
+            DataValidator.ValidateData(this._lyricsPageViewModel.Artwork) &&
+            System.IO.File.Exists(this._lyricsPageViewModel.Artwork))
         {
             Dispatcher.UIThread.InvokeAsync(() =>
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    AsyncImageLoader.ImageLoader.SetSource(this._artworkImage, this._lyricsPageViewModel.Artwork);
-                } 
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    this._artworkImage.Source = new Bitmap(this._lyricsPageViewModel.Artwork);
-                }
-                
+                this._artworkImage.Source = new Bitmap(this._lyricsPageViewModel.Artwork);
                 this._oldImagePath = this._lyricsPageViewModel.Artwork;
             });
         }

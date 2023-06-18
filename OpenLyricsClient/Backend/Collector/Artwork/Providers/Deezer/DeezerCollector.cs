@@ -70,7 +70,7 @@ public class DeezerCollector : IArtworkCollector
     private async Task<Shared.Structure.Artwork.Artwork> GetArtwork(string url)
     {
         ResponseData artwork = await new Request(url).GetResponseAsync();
-        return new Shared.Structure.Artwork.Artwork(artwork.Content, string.Empty, ArtworkReturnCode.SUCCESS);
+        return new Shared.Structure.Artwork.Artwork(artwork.Content, ArtworkReturnCode.SUCCESS);
     }
 
     public string CollectorName()

@@ -30,6 +30,7 @@ using OpenLyricsClient.Frontend.Structure;
 using OpenLyricsClient.Frontend.Utils;
 using OpenLyricsClient.Frontend.View.Pages;
 using OpenLyricsClient.Frontend.View.Windows;
+using OpenLyricsClient.Shared.Structure.Enum;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 using OpenLyricsClient.Shared.Structure.Visual;
 using OpenLyricsClient.Shared.Utils;
@@ -104,7 +105,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
         MainWindow.Instance.PageSelectionChangedFinished += InstanceOnPageSelectionChangedFinished;
     }
 
-    private void UpdateView(double width, double height)
+    private void UpdateView(double height)
     {
         if (this.SuppressActivity)
             return;
@@ -191,7 +192,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
     private void InstanceOnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
     {
-        UpdateView(e.EffectiveViewport.Width, e.EffectiveViewport.Height);
+        UpdateView(e.EffectiveViewport.Height);
     }
     
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -320,14 +321,26 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
         }
     }
     
+    public SolidColorBrush MergedLineBrush { get; set; }
+    
     public SolidColorBrush SelectedLineBrush
     {
         get
         {
-            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
-                return App.Current.FindResource("SelectedLineFontColorBrush") as SolidColorBrush;
+            SolidColorBrush colorBrush = App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
             
-            return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
+                colorBrush = App.Current.FindResource("SelectedLineFontColorBrush") as SolidColorBrush;
+
+            /*if (Core.INSTANCE.SettingsHandler
+                    .Settings<LyricsSection>()!
+                    .GetValue<EnumLyricsDisplayMode>(
+                    "Selection Mode") == EnumLyricsDisplayMode.FADE)
+            {
+                colorBrush.AdjustBrightness(this.)
+            }*/
+
+            return colorBrush;
         }
     }
     

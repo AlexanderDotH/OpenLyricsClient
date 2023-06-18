@@ -17,61 +17,16 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
         private bool _artworkApplied;
         private bool _artworkCalculated;
         
-        public Artwork(byte[] data, string filePath, ArtworkReturnCode returnCode)
+        public Artwork(byte[] data, ArtworkReturnCode returnCode)
         {
             this._data = data;
             this._returnCode = returnCode;
-            this._filePath = filePath;
 
             this._artworkApplied = false;
         }
         
-        public Artwork() : this(null, string.Empty, ArtworkReturnCode.FAILED) { }
-
-        /*public Color[] GetClusterColor()
-        {
-            try
-            {
-                LabClusterColorCalculator labCluster = new LabClusterColorCalculator();
-
-                labCluster.PostProcessing.PastelLightness = 20d;
-                labCluster.GetColorListFromBitmap()
-                return labCluster.GetColorFromBitmap(this.ArtworkAsImage);
-            }
-            catch (Exception e)
-            {
-                Color[] colors = new Color[]
-                {
-
-                };
-                
-                RGBToLabConverter converter = new RGBToLabConverter();
-                return this._artworkColor
-                    .Normalize()
-                    .ToRgbColor()
-                    .ToLabColor(converter)
-                    .ToPastel()
-                    .ToRgbColor(converter)
-                    .DeNormalize();
-            }
-        }*/
-
-        /*public double GetBrightness()
-        {
-            return this._artworkColor.BrightnessPercentage();
-        }*/
-
-        public bool Equals(Artwork obj)
-        {
-            if (!DataValidator.ValidateData(obj))
-                return false;
-
-            if (!DataValidator.ValidateData(this))
-                return false;
-
-            return this._filePath.Equals(obj.FilePath);
-        }
-
+        public Artwork() : this(null, ArtworkReturnCode.FAILED) { }
+        
         public bool ArtworkApplied
         {
             get => _artworkApplied;

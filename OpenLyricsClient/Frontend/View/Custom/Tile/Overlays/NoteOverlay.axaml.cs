@@ -60,6 +60,8 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
 
     private bool _headlessMode;
     private bool _isPointerOver;
+
+    private SolidColorBrush _selectedLineColorBrush;
     
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -432,10 +434,12 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     {
         get
         {
-            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
-                return App.Current.FindResource("SelectedLineFontColorBrush") as SolidColorBrush;
+            this._selectedLineColorBrush = App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush; 
             
-            return App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
+                this._selectedLineColorBrush = App.Current.FindResource("SelectedLineFontColorBrush") as SolidColorBrush;
+
+            return this._selectedLineColorBrush;
         }
     }
     

@@ -19,4 +19,25 @@ public static class ColorBrushExtension
         
         return new SolidColorBrush(new Color(color.A, r, g, b));
     }
+
+    public static SolidColorBrush Merge(this SolidColorBrush from, SolidColorBrush to, double percentage)
+    {
+        Color color = from.Color;
+        Color otherColor = to.Color;
+
+        double p = Math.Clamp(percentage, 0, 100);
+            
+        double red = (otherColor.R * (1 - p) + color.R * p);
+        double green = (otherColor.G * (1 - p) + color.G * p);
+        double blue = (otherColor.B * (1 - p) + color.B * p);
+
+        Color newColor = new Color(
+            255,
+            (byte)Math.Clamp(red, 0, 255), 
+            (byte)Math.Clamp(green, 0, 255), 
+            (byte)Math.Clamp(blue, 0, 255));
+
+        from.Color = newColor;
+        return from;
+    }
 }

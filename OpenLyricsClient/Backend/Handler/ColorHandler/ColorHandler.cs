@@ -151,7 +151,6 @@ public class ColorHandler
         });
 
         artwork.ArtworkApplied = true;
-        Core.INSTANCE.CacheManager.OverwriteCache(artwork);
     }
 
     private Color GetColor(Artwork artwork)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using DevBase.IO;
@@ -41,10 +42,13 @@ namespace OpenLyricsClient.Shared.Utils
                         buffer = reader.ReadBytes(buffer.Length);
                     }
                 }
-                
+
                 return buffer;
             }
-            catch (Exception e) { }
+            catch (Exception e)
+            {
+                Debug.WriteLine($"FileUtils: {e.Message}");
+            }
 
             return null;
         }

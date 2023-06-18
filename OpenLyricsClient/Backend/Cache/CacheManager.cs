@@ -124,17 +124,6 @@ namespace OpenLyricsClient.Backend.Cache
             WriteToCache(songRequestObject, data);
         }
 
-        public void OverwriteCache(Artwork artwork)
-        {
-            this._cache.ForEach(t =>
-            {
-                if (t.CacheData.Artwork.Equals(artwork))
-                {
-                    t.CacheData.Artwork = artwork;
-                }
-            });
-        }
-        
         public void AddToCache(SongRequestObject songRequestObject, CacheData cacheData)
         {
             string id = CalculateID(songRequestObject);
@@ -282,7 +271,7 @@ namespace OpenLyricsClient.Backend.Cache
 
             if (!DataValidator.ValidateData(data.Artwork))
                 return null;
-            
+
             return data.Artwork;
         }
 
@@ -368,9 +357,10 @@ namespace OpenLyricsClient.Backend.Cache
 
             if (!data.IsNullOrEmpty())
             {
-                artwork = new Artwork(data, fileName, ArtworkReturnCode.SUCCESS);
+                artwork = new Artwork(data, ArtworkReturnCode.SUCCESS);
             }
-            
+
+            artwork.FilePath = artworkData.FilePath;
             artwork.ArtworkColor = artworkData.ArtworkColor;
             artwork.ArtworkCalculated = artworkData.ArtworkCalculated;
 
@@ -426,6 +416,7 @@ namespace OpenLyricsClient.Backend.Cache
             if (!fi.Exists || fi.Length == 0)
                 FileUtils.WriteFile(fi, artwork.Data);
 
+            jsonArtwork.FilePath = fi.FullName;
             jsonArtwork.ArtworkColor = artwork.ArtworkColor;
             jsonArtwork.ArtworkCalculated = artwork.ArtworkCalculated;
 

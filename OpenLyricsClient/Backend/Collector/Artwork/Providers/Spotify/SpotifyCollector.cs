@@ -56,7 +56,7 @@ public class SpotifyCollector : IArtworkCollector
     private async Task<Shared.Structure.Artwork.Artwork> GetArtwork(string url)
     {
         byte[] artwork = await new WebClient().DownloadDataTaskAsync(url);
-        return new Shared.Structure.Artwork.Artwork(artwork, string.Empty, ArtworkReturnCode.SUCCESS);
+        return new Shared.Structure.Artwork.Artwork(artwork, ArtworkReturnCode.SUCCESS);
     }
     
     public string CollectorName()

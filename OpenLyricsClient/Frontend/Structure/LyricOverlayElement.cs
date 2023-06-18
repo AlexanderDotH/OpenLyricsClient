@@ -2,6 +2,11 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media;
+using OpenLyricsClient.Backend;
+using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
+using OpenLyricsClient.Frontend.Extensions;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 
 namespace OpenLyricsClient.Frontend.Structure;
@@ -9,10 +14,6 @@ namespace OpenLyricsClient.Frontend.Structure;
 public class LyricOverlayElement : INotifyPropertyChanged
 {
     private double _width;
-    
-    public Rect Rect { get; set; }
-    
-    public string Line { get; set; }
 
     public LyricOverlayElement() { }
 
@@ -21,6 +22,10 @@ public class LyricOverlayElement : INotifyPropertyChanged
         this.Line = line;
         this.Rect = rect;
     }
+    
+    public Rect Rect { get; set; }
+    
+    public string Line { get; set; }
 
     public double Width
     {
@@ -30,6 +35,7 @@ public class LyricOverlayElement : INotifyPropertyChanged
             SetField(ref this._width, value);
         }
     }
+    
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

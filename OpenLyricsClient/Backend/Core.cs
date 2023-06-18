@@ -97,7 +97,7 @@ namespace OpenLyricsClient.Backend
             
             this._licenseHandler = new LicenseHandler();
             
-            this._cacheManager = new CacheManager(workingDirectory, 10, TimeSpan.FromMinutes(5).Milliseconds);
+            this._cacheManager = new CacheManager(workingDirectory, 20, TimeSpan.FromMinutes(5).Milliseconds);
 
             this._tokenCollector = new TokenCollector();
 
