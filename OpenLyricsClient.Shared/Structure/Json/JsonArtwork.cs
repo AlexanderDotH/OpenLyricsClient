@@ -1,14 +1,14 @@
-using Avalonia.Media;
 using Newtonsoft.Json;
+using OpenLyricsClient.Shared.Structure.Palette;
 
 namespace OpenLyricsClient.Shared.Structure.Json;
 
 public class JsonArtwork
 {
     [JsonProperty("Color")]
-    public Color ArtworkColor { get; set; }
+    public ColorPalette ArtworkColor { get; set; }
     
-    [JsonProperty("Applied")]
-    public bool ArtworkApplied { get; set; }
+    [JsonProperty("Calculated")]
+    public bool ArtworkCalculated { get; set; }
 
 }

@@ -1,22 +1,8 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
-using Colourful;
-using DevBase.Avalonia.Color.Extensions;
-using DevBase.Avalonia.Color.Image;
-using DevBase.Avalonia.Extension.Color.Image;
-using DevBase.Avalonia.Extension.Converter;
-using DevBase.Avalonia.Extension.Extension;
+﻿using Avalonia.Media.Imaging;
+using OpenLyricsClient.Shared.Structure.Palette;
+using OpenLyricsClient.Shared.Utils;
 using Squalr.Engine.Utils.Extensions;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
-using Color = Avalonia.Media.Color;
 
 namespace OpenLyricsClient.Shared.Structure.Artwork
 {
@@ -25,10 +11,11 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
     {
         private byte[] _data;
         private ArtworkReturnCode _returnCode;
-        private Color _artworkColor;
+        private ColorPalette _artworkColor;
         private string _filePath;
 
         private bool _artworkApplied;
+        private bool _artworkCalculated;
         
         public Artwork(byte[] data, string filePath, ArtworkReturnCode returnCode)
         {
@@ -37,34 +24,27 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
             this._filePath = filePath;
 
             this._artworkApplied = false;
-
-            this._artworkColor = new Color(255, 220, 20, 60);
         }
         
         public Artwork() : this(null, string.Empty, ArtworkReturnCode.FAILED) { }
 
-        public async Task CalculateColor()
-        {
-            if (this._data.IsNullOrEmpty())
-                return;
-            
-            Task t = Task.Factory.StartNew(() =>
-            {
-                this._artworkColor = GetClusterColor();
-            });
-
-            await t;
-        }
-
-        private Color GetClusterColor()
+        /*public Color[] GetClusterColor()
         {
             try
             {
                 LabClusterColorCalculator labCluster = new LabClusterColorCalculator();
+
+                labCluster.PostProcessing.PastelLightness = 20d;
+                labCluster.GetColorListFromBitmap()
                 return labCluster.GetColorFromBitmap(this.ArtworkAsImage);
             }
             catch (Exception e)
             {
+                Color[] colors = new Color[]
+                {
+
+                };
+                
                 RGBToLabConverter converter = new RGBToLabConverter();
                 return this._artworkColor
                     .Normalize()
@@ -74,17 +54,34 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
                     .ToRgbColor(converter)
                     .DeNormalize();
             }
-        }
+        }*/
 
-        public double GetBrightness()
+        /*public double GetBrightness()
         {
             return this._artworkColor.BrightnessPercentage();
+        }*/
+
+        public bool Equals(Artwork obj)
+        {
+            if (!DataValidator.ValidateData(obj))
+                return false;
+
+            if (!DataValidator.ValidateData(this))
+                return false;
+
+            return this._filePath.Equals(obj.FilePath);
         }
 
         public bool ArtworkApplied
         {
             get => _artworkApplied;
             set => _artworkApplied = value;
+        }
+
+        public bool ArtworkCalculated
+        {
+            get => _artworkCalculated;
+            set => _artworkCalculated = value;
         }
 
         public IBitmap ArtworkAsImage
@@ -106,7 +103,7 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
             set => _filePath = value;
         }
 
-        public Color ArtworkColor
+        public ColorPalette ArtworkColor
         {
             get => this._artworkColor;
             set => this._artworkColor = value;

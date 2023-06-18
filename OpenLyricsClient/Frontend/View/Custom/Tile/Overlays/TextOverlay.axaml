@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:overlays = "clr-namespace:OpenLyricsClient.Frontend.View.Custom.Tile.Overlays"
              xmlns:romanization="clr-namespace:OpenLyricsClient.Backend.Romanization"
+             Foreground="Transparent"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OpenLyricsClient.Frontend.View.Custom.Tile.Overlays.TextOverlay">
     

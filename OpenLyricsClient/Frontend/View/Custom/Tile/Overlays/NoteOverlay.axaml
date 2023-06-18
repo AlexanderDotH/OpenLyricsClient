@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:overlays="clr-namespace:OpenLyricsClient.Frontend.View.Custom.Tile.Overlays"
+             Foreground="Transparent"
              mc:Ignorable="d"
              x:Class="OpenLyricsClient.Frontend.View.Custom.Tile.Overlays.NoteOverlay">
     

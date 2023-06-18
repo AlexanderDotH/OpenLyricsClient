@@ -62,7 +62,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
             
             ArtworkAppliedEvent(args.Artwork);
             
-            CalcAndApplyColors(args.Artwork);
+            //CalcAndApplyColors(args.Artwork);
         }
 
         public async Task FireArtworkSearch(SongResponseObject songResponseObject, SongChangedEventArgs songChangedEventArgs)
@@ -109,7 +109,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                 if (!DataValidator.ValidateData(artworkCache))
                     continue;
                 
-                if ((artworkCache.ArtworkColor.A == 0 &&
+                /*if ((artworkCache.ArtworkColor.A == 0 &&
                     artworkCache.ArtworkColor.R == 0 &&
                     artworkCache.ArtworkColor.G == 0 &&
                     artworkCache.ArtworkColor.B == 0 || 
@@ -121,7 +121,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                     CalcAndApplyColors(artworkCache);
                     
                     Core.INSTANCE.CacheManager.WriteToCache(songRequestObject, artworkCache);
-                }
+                }*/
                 
                 if (!DataValidator.ValidateData(artworkCache))
                     continue;
@@ -132,7 +132,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
             }
         }
 
-        public void CalcAndApplyColors(Shared.Structure.Artwork.Artwork artwork)
+        /*public void CalcAndApplyColors(Shared.Structure.Artwork.Artwork artwork)
         {
             if (!DataValidator.ValidateData(artwork.ArtworkColor))
                 return;
@@ -187,7 +187,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
                     selectedLineTextColor.Color = artwork.ArtworkColor.Lighten(2);
                     
                     /*selectedLineTextColor!.Color = new Color(255, (byte)(minR * darkSelected),
-                            (byte)(minG * darkSelected), (byte)(minB * darkSelected));*/
+                            (byte)(minG * darkSelected), (byte)(minB * darkSelected));#1#
                     
                     unSelectedLineTextColor!.Color = new Color(255, (byte)(minR * darkUnselected),
                             (byte)(minG * darkUnselected), (byte)(minB * darkUnselected));
@@ -220,7 +220,7 @@ namespace OpenLyricsClient.Backend.Handler.Artwork
             });
 
             artwork.ArtworkApplied = true;
-        }
+        }*/
         
         protected virtual void ArtworkFoundEvent(SongRequestObject songResponseObject, Shared.Structure.Artwork.Artwork artwork)
         {
