@@ -3,11 +3,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Threading;
 using DevBase.Api.Apis.OpenLyricsClient.Structure.Json;
 using DevBase.Async.Task;
 using DevBase.Generics;
 using Microsoft.Extensions.Configuration;
+using OpenLyricsClient.Backend.Authentication;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
 using OpenLyricsClient.Shared.Structure.Enum;
@@ -15,7 +17,7 @@ using OpenLyricsClient.Shared.Structure.Other;
 using OpenLyricsClient.Shared.Utils;
 using OpenLyricsClient.Frontend.Structure;
 using OpenLyricsClient.Frontend.View.Windows;
-using OpenLyricsClient.Frontend.View.Windows.Auth;
+using OpenLyricsClient.Shared.Structure.Access;
 using SpotifyAPI.Web;
 using SimpleArtist = OpenLyricsClient.Shared.Structure.Other.SimpleArtist;
 using SimpleTrack = OpenLyricsClient.Shared.Structure.Other.SimpleTrack;
@@ -200,20 +202,21 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
         public async Task StartAuthorization()
         {
             Token token = null;
-
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                CefAuthWindow cefAuthWindow = new CefAuthWindow("https://openlyricsclient.com/api/auth/spotify/begin", "/welcome");
-             
-                cefAuthWindow.Width = 1100;
-                cefAuthWindow.Height = 850;
-                cefAuthWindow.Title = "Connect to spotify";
-             
-                cefAuthWindow.ShowDialog(MainWindow.Instance);
-             
-                token = await cefAuthWindow.GetAuthCode();
-             
-                cefAuthWindow.Close();
+                string authFlow = 
+                    await Core.INSTANCE.AuthenticationPipe.RequestAuthenticationWindow(
+                        EnumAuthProvider.SPOTIFY,
+                    "https://openlyricsclient.com/api/auth/spotify/begin", 
+                        "/welcome", 
+                        1100, 
+                        850);
+
+                AccessToken response = await Core.INSTANCE.AuthenticationPipe.GetToken<AccessToken>(authFlow);
+                
+                Core.INSTANCE.AuthenticationPipe.KillAuthWindow(authFlow);
+                
+                token = new Token(response.Access, response.Refresh);
             } 
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
@@ -221,7 +224,7 @@ namespace OpenLyricsClient.Backend.Handler.Services.Services.Spotify
                 processStartInfo.UseShellExecute = true;
                 Process.Start(processStartInfo);
                 
-                Listener.Listener l = new Listener.Listener("http://127.0.0.1:45674/", "/complete", "refresh_token", "access_token");
+                Listener l = new Listener("http://127.0.0.1:45674/", "/complete", "refresh_token", "access_token");
                 await l.StartListener();
                 token = l.Response;
             }

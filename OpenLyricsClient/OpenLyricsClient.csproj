@@ -101,7 +101,6 @@
     <PackageReference Include="Avalonia.X11" Version="0.10.19" />
     <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.19" />
     <PackageReference Include="AvaloniaColorPicker" Version="1.3.4" />
-    <PackageReference Include="CefGlue.Avalonia" Version="106.5249.7" />
     <PackageReference Include="DevBase" Version="1.2.3" />
     <PackageReference Include="DevBase.Api" Version="1.1.5" />
     <PackageReference Include="DevBase.Avalonia" Version="1.2.1" />
@@ -109,11 +108,16 @@
     <PackageReference Include="DevBase.Cryptography" Version="1.0.3" />
     <PackageReference Include="DevBase.Cryptography.BouncyCastle" Version="1.1.8" />
     <PackageReference Include="DevBase.Format" Version="1.2.1" />
+    <PackageReference Include="JKang.IpcServiceFramework.Client.NamedPipe" Version="3.1.0" />
+    <PackageReference Include="JKang.IpcServiceFramework.Client.Tcp" Version="3.1.0" />
+    <PackageReference Include="JKang.IpcServiceFramework.Hosting.NamedPipe" Version="3.1.0" />
+    <PackageReference Include="JKang.IpcServiceFramework.Hosting.Tcp" Version="3.1.0" />
     <PackageReference Include="Kawazu" Version="1.1.4" />
     <PackageReference Include="Material.Avalonia" Version="2.5.1" />
     <PackageReference Include="MaterialDesign.Avalonia.PackIcon" Version="1.25.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0-preview.3.23174.8" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SkiaSharp" Version="2.88.3" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.3" />

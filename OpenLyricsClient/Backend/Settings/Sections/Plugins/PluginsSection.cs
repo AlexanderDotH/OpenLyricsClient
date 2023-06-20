@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using DevBase.Generics;
 using Newtonsoft.Json.Linq;
-using OpenLyricsClient.Backend;
-using OpenLyricsClient.Backend.Settings;
-using OpenLyricsClient.Backend.Settings.Sections.Plugins;
 using OpenLyricsClient.Shared.Utils;
+
+namespace OpenLyricsClient.Backend.Settings.Sections.Plugins;
 
 public class PluginsSection : ISettingSection
 {

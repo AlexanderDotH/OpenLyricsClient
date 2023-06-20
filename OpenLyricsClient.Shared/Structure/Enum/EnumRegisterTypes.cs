@@ -14,6 +14,7 @@
         COLLECT_TOKENS,
         SYNC_SCROLLER,
         GLOBAL_TICK,
-        REFRESH_LICENSE
+        REFRESH_LICENSE,
+        SERVICE_TASK
     }
 }

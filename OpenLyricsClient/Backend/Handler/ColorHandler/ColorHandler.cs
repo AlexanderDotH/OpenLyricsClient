@@ -158,6 +158,7 @@ public class ColorHandler
         try
         {
             LabClusterColorCalculator labCalculator = new LabClusterColorCalculator();
+            labCalculator.PreProcessing.BlurPreProcessing = true;
             return labCalculator.GetColorFromBitmap(artwork.ArtworkAsImage);
         }
         catch (Exception e)

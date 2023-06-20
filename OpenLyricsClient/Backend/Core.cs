@@ -3,9 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls.Shapes;
 using DevBase.Async.Task;
+using OpenLyricsClient.Backend.Authentication;
 using OpenLyricsClient.Backend.Cache;
 using OpenLyricsClient.Backend.Collector.Song;
 using OpenLyricsClient.Backend.Collector.Token;
+using OpenLyricsClient.Backend.Communication;
 using OpenLyricsClient.Backend.Debugger;
 using OpenLyricsClient.Backend.Events.EventHandler;
 using OpenLyricsClient.Backend.Handler.Artwork;
@@ -15,6 +17,7 @@ using OpenLyricsClient.Backend.Handler.Lyrics;
 using OpenLyricsClient.Backend.Handler.Services;
 using OpenLyricsClient.Backend.Handler.Song;
 using OpenLyricsClient.Backend.Helper;
+using OpenLyricsClient.Backend.Plugins;
 using OpenLyricsClient.Shared.Plugin;
 using OpenLyricsClient.Backend.Settings;
 using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
@@ -57,6 +60,9 @@ namespace OpenLyricsClient.Backend
         private TaskSuspensionToken _tickSuspensionToken;
 
         private PluginManager _pluginManager;
+
+        private InterProcessService _interProcessService;
+        private AuthenticationPipe _authenticationPipe;
 
         public event TickEventHandler TickHandler;
         public event SlowTickEventHandler SlowTickHandler;
@@ -120,6 +126,9 @@ namespace OpenLyricsClient.Backend
             _loaded = true;
 
             Task.Factory.StartNew(async () => await SettingsHandler.TriggerGlobal());
+            
+            this._interProcessService = new InterProcessService("openlyricsclient", null);
+            this._authenticationPipe = new AuthenticationPipe();
         }
 
         private async Task TickTask()
@@ -225,6 +234,16 @@ namespace OpenLyricsClient.Backend
         public LicenseHandler LicenseHandler
         {
             get => _licenseHandler;
+        }
+
+        public InterProcessService InterProcessService
+        {
+            get => _interProcessService;
+        }
+
+        public AuthenticationPipe AuthenticationPipe
+        {
+            get => _authenticationPipe;
         }
 
         public static bool IsDisposed()

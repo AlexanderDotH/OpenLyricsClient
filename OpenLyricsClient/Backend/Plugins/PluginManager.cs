@@ -1,13 +1,10 @@
-﻿using OpenLyricsClient.Shared.Plugin;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using OpenLyricsClient.Shared.Plugin;
 
-namespace OpenLyricsClient.Shared.Plugin
+namespace OpenLyricsClient.Backend.Plugins
 {
     internal class PluginManager
     {

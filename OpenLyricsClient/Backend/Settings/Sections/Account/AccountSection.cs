@@ -1,17 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.IO;
 using System.Threading.Tasks;
 using DevBase.Api.Apis.OpenLyricsClient.Structure.Json;
 using DevBase.Generics;
 using Newtonsoft.Json.Linq;
-using OpenLyricsClient.Backend;
-using OpenLyricsClient.Backend.Settings;
-using OpenLyricsClient.Backend.Settings.Sections.Account;
-using OpenLyricsClient.Shared.Structure;
 using OpenLyricsClient.Shared.Utils;
-using OpenLyricsClient = DevBase.Api.Apis.OpenLyricsClient.OpenLyricsClient;
+
+namespace OpenLyricsClient.Backend.Settings.Sections.Account;
 
 public class AccountSection : ISettingSection
 {

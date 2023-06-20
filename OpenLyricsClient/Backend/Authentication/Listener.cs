@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DevBase.Async.Task;
 using OpenLyricsClient.Frontend.Structure;
 
-namespace OpenLyricsClient.Backend.Listener
+namespace OpenLyricsClient.Backend.Authentication
 {
     class Listener
     {

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Avalonia.Threading;
 using OpenLyricsClient.Backend;
-using Xilium.CefGlue.Common;
 
 namespace OpenLyricsClient
 {
@@ -27,14 +26,8 @@ namespace OpenLyricsClient
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .LogToTrace()
-                .With(new Win32PlatformOptions
-                {
-                    UseWindowsUIComposition = false
-                })
                 .AfterSetup(t =>
                 {
-                    CefRuntimeLoader.Initialize();
-                    
                     new Core();
                 })
                 .UseReactiveUI();

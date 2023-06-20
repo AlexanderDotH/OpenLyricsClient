@@ -111,7 +111,7 @@ namespace OpenLyricsClient.Frontend.View.Windows
                 {
                     UnselectAll();
                     SelectButton(this.BTN_SettingsButton);
-                    this._windowDragable = false;
+                    //this._windowDragable = false;
                     PageChanged(from, to);
                     break;
                 }

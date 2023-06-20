@@ -1,0 +1,14 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:OpenLyricsClient.Auth"
+             xmlns:auth="clr-namespace:OpenLyricsClient.Auth"
+             x:Class="OpenLyricsClient.Auth.App">
+
+    <Application.DataTemplates>
+        <auth:ViewLocator/>
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme Mode="Light"/>
+    </Application.Styles>
+</Application>

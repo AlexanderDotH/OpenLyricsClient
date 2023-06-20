@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <RootNamespace>OpenLyricsClient.Auth</RootNamespace>
+        <ApplicationIcon>Assets\app-logo.ico</ApplicationIcon>
+        <Title>OpenLyricsClient Authentication</Title>
+        <Authors>AlexanderDotH</Authors>
+        <Description>A simple authentication webview</Description>
+        <Copyright>AlexanderDotH</Copyright>
+        <PackageProjectUrl>https://github.com/AlexanderDotH/OpenLyricsClient</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/AlexanderDotH/OpenLyricsClient/blob/master/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/AlexanderDotH/OpenLyricsClient</RepositoryUrl>
+        <Company>OpenLyricsClient</Company>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Folder Include="Models\" />
+        <AvaloniaResource Include="Assets\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectCapability Include="Avalonia" />
+        <TrimmerRootAssembly Include="Avalonia.Themes.Fluent" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="0.10.21" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.21" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.21" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.21" />
+        <PackageReference Include="CefGlue.Avalonia" Version="106.5249.7" />
+        <PackageReference Include="CommandLineParser" Version="2.9.1" />
+        <PackageReference Include="JKang.IpcServiceFramework.Client.NamedPipe" Version="3.1.0" />
+        <PackageReference Include="JKang.IpcServiceFramework.Client.Tcp" Version="3.1.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OpenLyricsClient.Shared\OpenLyricsClient.Shared.csproj" />
+    </ItemGroup>
+</Project>

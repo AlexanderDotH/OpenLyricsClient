@@ -123,8 +123,12 @@ public partial class LyricsPage : UserControl
         {
             Dispatcher.UIThread.InvokeAsync(() =>
             {
-                this._artworkImage.Source = new Bitmap(this._lyricsPageViewModel.Artwork);
-                this._oldImagePath = this._lyricsPageViewModel.Artwork;
+                try
+                {
+                    this._artworkImage.Source = new Bitmap(this._lyricsPageViewModel.Artwork!);
+                    this._oldImagePath = this._lyricsPageViewModel.Artwork;
+                }
+                catch (Exception exception) { }
             });
         }
 
