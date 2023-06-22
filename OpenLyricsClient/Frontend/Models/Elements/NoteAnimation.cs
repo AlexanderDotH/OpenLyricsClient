@@ -8,9 +8,8 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using DevBase.Generics;
-using OpenLyricsClient.Backend;
-using OpenLyricsClient.Backend.Settings.Sections.Connection.Spotify;
-using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
+using OpenLyricsClient.Logic;
+using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
 using OpenLyricsClient.Shared.Structure.Enum;
 using OpenLyricsClient.Shared.Utils;
 

@@ -13,13 +13,13 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DevBase.Async.Task;
 using Material.Styles;
-using OpenLyricsClient.Backend;
-using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Frontend.Events.EventArgs;
 using OpenLyricsClient.Shared.Utils;
 using OpenLyricsClient.Frontend.Models.Pages;
 using OpenLyricsClient.Frontend.View.Custom;
 using OpenLyricsClient.Frontend.View.Windows;
+using OpenLyricsClient.Logic;
+using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
 using Squalr.Engine.Utils.Extensions;
 using LyricsScroller = OpenLyricsClient.Frontend.View.Custom.LyricsScroller;
 

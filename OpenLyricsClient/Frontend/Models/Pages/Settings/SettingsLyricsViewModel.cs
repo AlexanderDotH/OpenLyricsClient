@@ -2,9 +2,8 @@
 using System.ComponentModel;
 using System.Reactive;
 using System.Runtime.CompilerServices;
-using OpenLyricsClient.Backend;
-using OpenLyricsClient.Backend.Romanization;
-using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
+using OpenLyricsClient.Logic;
+using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
 using OpenLyricsClient.Shared.Structure.Enum;
 using ReactiveUI;
 

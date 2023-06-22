@@ -9,9 +9,6 @@ using Avalonia.Media;
 using Avalonia.Rendering;
 using Avalonia.Threading;
 using DevBase.Generics;
-using OpenLyricsClient.Backend;
-using OpenLyricsClient.Backend.Handler.Song;
-using OpenLyricsClient.Backend.Romanization;
 using OpenLyricsClient.Shared.Structure.Song;
 using OpenLyricsClient.Frontend.View.Windows;
 

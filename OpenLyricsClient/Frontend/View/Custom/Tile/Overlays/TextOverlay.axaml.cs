@@ -19,23 +19,21 @@ using Avalonia.Threading;
 using DevBase.Generics;
 using DynamicData;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using OpenLyricsClient.Backend;
-using OpenLyricsClient.Backend.Events.EventArgs;
-using OpenLyricsClient.Backend.Handler.Services.Services;
-using OpenLyricsClient.Backend.Romanization;
-using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Frontend.Events.EventArgs;
 using OpenLyricsClient.Frontend.Extensions;
 using OpenLyricsClient.Frontend.Structure;
 using OpenLyricsClient.Frontend.Utils;
 using OpenLyricsClient.Frontend.View.Pages;
 using OpenLyricsClient.Frontend.View.Windows;
+using OpenLyricsClient.Logic;
+using OpenLyricsClient.Logic.Events.EventArgs;
+using OpenLyricsClient.Logic.Handler.Services.Services;
+using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
 using OpenLyricsClient.Shared.Structure.Enum;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 using OpenLyricsClient.Shared.Structure.Visual;
 using OpenLyricsClient.Shared.Utils;
 using Org.BouncyCastle.Asn1.X509.Qualified;
-using Romanization = OpenLyricsClient.Backend.Romanization.Romanization;
 
 namespace OpenLyricsClient.Frontend.View.Custom.Tile.Overlays;
 
@@ -54,7 +52,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
     
-    private Backend.Romanization.Romanization _romanization;
+    private Logic.Romanization.Romanization _romanization;
     
     private LyricPart _lyricPart;
     private ItemsControl _itemsControl;
@@ -94,7 +92,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
         this.LyricMargin = new Thickness(0, 0, 0, 5);
 
-        this._romanization = new Backend.Romanization.Romanization();
+        this._romanization = new Logic.Romanization.Romanization();
         
         NewLyricsScroller.Instance.EffectiveViewportChanged += InstanceOnEffectiveViewportChanged;
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;

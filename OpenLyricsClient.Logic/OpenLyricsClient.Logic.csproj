@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OpenLyricsClient.Plugin\OpenLyricsClient.Plugin.csproj" />
+      <ProjectReference Include="..\OpenLyricsClient.Shared\OpenLyricsClient.Shared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DevBase" Version="1.2.3" />
+      <PackageReference Include="JKang.IpcServiceFramework.Hosting.NamedPipe" Version="3.1.0" />
+      <PackageReference Include="JKang.IpcServiceFramework.Hosting.Tcp" Version="3.1.0" />
+      <PackageReference Include="Kawazu" Version="1.1.4" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="HangeulRomanizer">
+        <HintPath>..\Libraries\HangeulRomanizer.dll</HintPath>
+      </Reference>
+      <Reference Include="MusixmatchClientLib">
+        <HintPath>..\Libraries\MusixmatchClientLib.dll</HintPath>
+      </Reference>
+      <Reference Include="Romanization.NET">
+        <HintPath>..\Libraries\Romanization.NET.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>

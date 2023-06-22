@@ -4,10 +4,9 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
 using Avalonia.Media;
-using OpenLyricsClient.Backend;
-using OpenLyricsClient.Backend.Events.EventArgs;
-using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
-using OpenLyricsClient.Frontend.Models.Pages.Settings;
+using OpenLyricsClient.Logic;
+using OpenLyricsClient.Logic.Events.EventArgs;
+using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 using OpenLyricsClient.Shared.Utils;
 

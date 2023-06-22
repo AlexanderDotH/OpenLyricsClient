@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Reactive;
 using System.Runtime.CompilerServices;
-using OpenLyricsClient.Backend;
+using OpenLyricsClient.Logic;
 using ReactiveUI;
 
 namespace OpenLyricsClient.Frontend.Models.Pages.Settings;

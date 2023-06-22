@@ -5,7 +5,8 @@ using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Avalonia.Threading;
-using OpenLyricsClient.Backend;
+using OpenLyricsClient.Frontend.Handler;
+using OpenLyricsClient.Logic;
 
 namespace OpenLyricsClient
 {
@@ -29,6 +30,8 @@ namespace OpenLyricsClient
                 .AfterSetup(t =>
                 {
                     new Core();
+
+                    new ColorHandler();
                 })
                 .UseReactiveUI();
     }

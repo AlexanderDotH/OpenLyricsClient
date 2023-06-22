@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reactive;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using OpenLyricsClient.Backend;
-using OpenLyricsClient.Backend.Romanization;
-using OpenLyricsClient.Backend.Settings.Sections.Romanization;
+using OpenLyricsClient.Logic;
+using OpenLyricsClient.Logic.Settings.Sections.Romanization;
+using OpenLyricsClient.Shared.Structure.Romanization;
 using ReactiveUI;
 
 namespace OpenLyricsClient.Frontend.Models.Pages.Settings;

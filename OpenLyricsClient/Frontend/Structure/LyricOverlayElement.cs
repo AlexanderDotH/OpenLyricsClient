@@ -2,12 +2,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Media;
-using OpenLyricsClient.Backend;
-using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
-using OpenLyricsClient.Frontend.Extensions;
-using OpenLyricsClient.Shared.Structure.Lyrics;
 
 namespace OpenLyricsClient.Frontend.Structure;
 

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLyricsClient.Plugin", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLyricsClient.Auth", "OpenLyricsClient.Auth\OpenLyricsClient.Auth.csproj", "{71FE24BC-319F-43DA-8B63-3BDF144348D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLyricsClient.Logic", "OpenLyricsClient.Logic\OpenLyricsClient.Logic.csproj", "{3B1F56D9-5D4F-46FD-8586-582A1878F666}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{71FE24BC-319F-43DA-8B63-3BDF144348D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71FE24BC-319F-43DA-8B63-3BDF144348D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71FE24BC-319F-43DA-8B63-3BDF144348D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B1F56D9-5D4F-46FD-8586-582A1878F666}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B1F56D9-5D4F-46FD-8586-582A1878F666}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B1F56D9-5D4F-46FD-8586-582A1878F666}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B1F56D9-5D4F-46FD-8586-582A1878F666}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

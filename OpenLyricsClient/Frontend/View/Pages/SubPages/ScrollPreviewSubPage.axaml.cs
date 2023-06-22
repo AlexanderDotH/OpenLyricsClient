@@ -9,12 +9,12 @@ using Avalonia.Media;
 using Avalonia.Rendering;
 using Avalonia.Threading;
 using DynamicData;
-using OpenLyricsClient.Backend;
-using OpenLyricsClient.Backend.Settings.Sections.Lyrics;
 using OpenLyricsClient.Shared.Structure.Enum;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 using OpenLyricsClient.Shared.Utils;
 using OpenLyricsClient.Frontend.Models.Elements;
+using OpenLyricsClient.Logic;
+using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
 
 namespace OpenLyricsClient.Frontend.View.Pages.SubPages;
 

@@ -5,9 +5,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using DevBase.Api.Apis.OpenLyricsClient.Structure.Enum;
-using OpenLyricsClient.Backend;
-using OpenLyricsClient.Backend.Events.EventArgs;
-using OpenLyricsClient.Backend.Settings.Sections.Account;
+using OpenLyricsClient.Logic;
+using OpenLyricsClient.Logic.Events.EventArgs;
+using OpenLyricsClient.Logic.Settings.Sections.Account;
 using ReactiveUI;
 using TextCopy;
 
