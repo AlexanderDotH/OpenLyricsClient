@@ -1,0 +1,208 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
+    <TrimMode>copyused</TrimMode>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationIcon>Assets\app-logo.ico</ApplicationIcon>
+    <AssemblyVersion>1.2.0</AssemblyVersion>
+    <FileVersion>1.2.0</FileVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+    <None Remove=".gitignore" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\af.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\am.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\af.pak" />
+    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\am.pak" />
+    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\af.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\bg.pak" />
+    <None Remove="Binaries\IpaDic\AUTHORS" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\bg.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\ar.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\ar.pak" />
+    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\bg.pak" />
+    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\ar.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\ca.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\bn.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\ca.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\bn.pak" />
+    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\ca.pak" />
+    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\bn.pak" />
+    <None Remove="Binaries\IpaDic\COPYING" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\lv.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\lt.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\ko.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\kn.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\ja.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\it.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\id.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\hr.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\he.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\gu.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\fr.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\fil.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\fi.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\et.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\es.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\es-419.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\en-US.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\en-GB.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\el.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\da.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\cs.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\icudtl.dat" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\chrome_200_percent.pak" />
+    <None Remove="Binaries\CefBinaries\win-x86\Resources\chrome_100_percent.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\lv.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\lt.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\ko.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\ja.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\it.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\id.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\hu.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\hr.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\hi.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\he.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\gu.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\fil.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\fi.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\fa.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\et.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\es.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\es-419.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\en-US.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\en-GB.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\el.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\de.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\da.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\icudtl.dat" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\chrome_200_percent.pak" />
+    <None Remove="Binaries\CefBinaries\win-x64\Resources\chrome_100_percent.pak" />
+    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\lv.pak" />
+    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\lt.pak" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--This helps with theme dll-s trimming.
+	If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
+	https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
+    <TrimmableAssembly Include="Avalonia.Themes.Fluent" />
+    <TrimmableAssembly Include="Avalonia.Themes.Default" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AsyncImageLoader.Avalonia" Version="2.4.0" />
+    <PackageReference Include="Avalonia" Version="0.10.19" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.19" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.19" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
+    <PackageReference Include="Avalonia.X11" Version="0.10.19" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="0.10.19" />
+    <PackageReference Include="AvaloniaColorPicker" Version="1.3.4" />
+    <PackageReference Include="DevBase" Version="1.2.3" />
+    <PackageReference Include="DevBase.Api" Version="1.1.5" />
+    <PackageReference Include="DevBase.Avalonia" Version="1.2.1" />
+    <PackageReference Include="DevBase.Avalonia.Extension" Version="1.1.0" />
+    <PackageReference Include="DevBase.Cryptography" Version="1.0.3" />
+    <PackageReference Include="DevBase.Cryptography.BouncyCastle" Version="1.1.8" />
+    <PackageReference Include="DevBase.Format" Version="1.2.1" />
+    <PackageReference Include="JKang.IpcServiceFramework.Client.NamedPipe" Version="3.1.0" />
+    <PackageReference Include="JKang.IpcServiceFramework.Client.Tcp" Version="3.1.0" />
+    <PackageReference Include="JKang.IpcServiceFramework.Hosting.NamedPipe" Version="3.1.0" />
+    <PackageReference Include="JKang.IpcServiceFramework.Hosting.Tcp" Version="3.1.0" />
+    <PackageReference Include="Material.Avalonia" Version="2.5.1" />
+    <PackageReference Include="MaterialDesign.Avalonia.PackIcon" Version="1.25.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0-preview.3.23174.8" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="SkiaSharp" Version="2.88.3" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.3" />
+    <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="2.88.3" />
+    <PackageReference Include="SkiaSharp.NativeAssets.WebAssembly" Version="2.88.3" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="2.88.3" />
+    <PackageReference Include="SpotifyAPI.Web" Version="7.0.0" />
+    <PackageReference Include="Squalr.Engine.Scanning" Version="2.3.0.1" />
+    <PackageReference Include="TextCopy" Version="6.2.1" />
+    <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\MainWindow.axaml" />
+    <UpToDateCheckInput Remove="Frontend\Styles\Cards.axaml" />
+    <UpToDateCheckInput Remove="Frontend\Styles\Grid.axaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="Styles\Cards.axaml" />
+    <AdditionalFiles Include="Styles\Grid.axaml" />
+    <AdditionalFiles Include="View\Custom\Badges\DefaultBadge.axaml" />
+    <AdditionalFiles Include="View\Custom\Badges\MasterBadge.axaml" />
+    <AdditionalFiles Include="View\Custom\Badges\Other\DesignerBadge.axaml" />
+    <AdditionalFiles Include="View\Custom\Badges\Other\FeatureBadge.axaml" />
+    <AdditionalFiles Include="View\Custom\Badges\Other\IdeaBadge.axaml" />
+    <AdditionalFiles Include="View\Custom\Badges\Other\TesterBadge.axaml" />
+    <AdditionalFiles Include="View\Custom\Badges\Plattform\LinuxBadge.axaml" />
+    <AdditionalFiles Include="View\Custom\Badges\Plattform\WindowsBadge.axaml" />
+    <AdditionalFiles Include="View\Custom\Badges\PlusBadge.axaml" />
+    <AdditionalFiles Include="View\Custom\CustomScrollViewer.axaml" />
+    <AdditionalFiles Include="View\Custom\LyricsScroller.axaml" />
+    <AdditionalFiles Include="View\Custom\NewLyricsScroller.axaml" />
+    <AdditionalFiles Include="View\Custom\Tile\LyricsTile.axaml" />
+    <AdditionalFiles Include="View\Custom\Tile\Overlays\NoteOverlay.axaml" />
+    <AdditionalFiles Include="View\Custom\Tile\Overlays\TextOverlay.axaml" />
+    <AdditionalFiles Include="View\Elements\AnimatedScrollView.axaml" />
+    <AdditionalFiles Include="View\Elements\AvalonPresenterList.axaml" />
+    <AdditionalFiles Include="View\Elements\ComboBox.axaml" />
+    <AdditionalFiles Include="View\Elements\ContentExpandControl.axaml" />
+    <AdditionalFiles Include="View\Elements\Expander.axaml" />
+    <AdditionalFiles Include="View\Elements\GroupBox.axaml" />
+    <AdditionalFiles Include="View\Elements\LyricsCard.axaml" />
+    <AdditionalFiles Include="View\Elements\MaterialCheckBox.axaml" />
+    <AdditionalFiles Include="View\Elements\NoteAnimation.axaml" />
+    <AdditionalFiles Include="View\Elements\RadioButton.axaml" />
+    <AdditionalFiles Include="View\Elements\SearchingAnimation.axaml" />
+    <AdditionalFiles Include="View\Pages\Settings\Providers\SettingsSpotify.axaml" />
+    <AdditionalFiles Include="View\Pages\Settings\SettingsCache.axaml" />
+    <AdditionalFiles Include="View\Pages\Settings\SettingsCredits.axaml" />
+    <AdditionalFiles Include="View\Pages\Settings\SettingsLyrics.axaml" />
+    <AdditionalFiles Include="View\Pages\Settings\SettingsRomanization.axaml" />
+    <AdditionalFiles Include="View\Pages\Settings\SettingsUserPage.axaml" />
+    <AdditionalFiles Include="View\Pages\SubPages\ScrollPreviewSubPage.axaml" />
+    <AdditionalFiles Include="View\Windows\MainWindow.axaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Frontend\View\Views\MainWindow.axaml.cs">
+      <DependentUpon>MainWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Frontend\View\Windows\Authentification\CefAuthWindow.axaml.cs">
+      <DependentUpon>CefAuthWindow.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="CefNet">
+      <HintPath>..\Libraries\CefNet.dll</HintPath>
+    </Reference>
+    <Reference Include="CefNet.Avalonia">
+      <HintPath>..\Libraries\CefNet.Avalonia.dll</HintPath>
+    </Reference>
+    <Reference Include="HangeulRomanizer">
+      <HintPath>..\Libraries\HangeulRomanizer.dll</HintPath>
+    </Reference>
+    <Reference Include="MusixmatchClientLib">
+      <HintPath>..\Libraries\MusixmatchClientLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Romanization.NET">
+      <HintPath>..\Libraries\Romanization.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="XWindowManager">
+      <HintPath>..\Libraries\XWindowManager.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenLyricsClient.Logic\OpenLyricsClient.Logic.csproj" />
+    <ProjectReference Include="..\OpenLyricsClient.Shared\OpenLyricsClient.Shared.csproj" />
+  </ItemGroup>
+</Project>

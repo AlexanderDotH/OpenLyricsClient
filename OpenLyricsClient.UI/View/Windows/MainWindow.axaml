@@ -1,0 +1,239 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:icon="using:Material.Icons.Avalonia"
+        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:windows="clr-namespace:OpenLyricsClient.UI.Models.Windows"
+        xmlns:pages1="clr-namespace:OpenLyricsClient.UI.View.Pages"
+        mc:Ignorable="d"
+        MinWidth="1200"
+        MinHeight="600"
+        Width="1500"
+        Height="800"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="PreferSystemChrome"
+        x:Class="OpenLyricsClient.UI.View.Windows.MainWindow"
+        Background="{DynamicResource PrimaryBackgroundBrush}"
+        WindowStartupLocation="CenterScreen"
+        Icon="/Assets/app-logo.ico"
+        Title="OpenLyricsClient">
+
+    <Design.DataContext>
+        <windows:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="Button.noshadow">
+            <Setter Property="assists:ShadowAssist.ShadowDepth" Value="Depth0"></Setter>
+        </Style>
+    </Window.Styles>
+    
+    <Grid PointerPressed="InputElement_OnPointerPressed">
+        
+        <DockPanel HorizontalAlignment="Left"
+                   Width="55">
+            <StackPanel
+                Name="PNL_Sidebar"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Stretch"
+                Width="55"
+                Background="{DynamicResource SecondaryBackgroundBrush}"
+            >
+                <Button Classes="noshadow" 
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Stretch"
+                        Width="100"
+                        Height="55"
+                        Background="{DynamicResource SecondaryBackgroundBrush}"
+                        Foreground="{DynamicResource PrimaryFontColorBrush}"
+                        CornerRadius="0"
+                        Name="BTN_LyricsButton"
+                        Click="LyricsPage_Click">
+                  
+                    <Button.Content>
+                        <Panel 
+                            Width="55"
+                            Height="55">
+                            
+                            <icon:MaterialIcon Kind="Text"
+                                               Width="24" 
+                                               Height="24" 
+                                               HorizontalAlignment="Center" 
+                                               VerticalAlignment="Center"
+                                               Margin="0, 0, 0, 15"
+                                               Foreground="{Binding ElementName=BTN_LyricsButton, Path=Foreground}"
+                                               ></icon:MaterialIcon>
+                            <TextBlock Text="Lyrics"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="14"
+                                       Margin="0, 20, 0, 0"
+                                       Foreground="{Binding ElementName=BTN_LyricsButton, Path=Foreground}"
+                                       ></TextBlock>
+                        </Panel>
+                    </Button.Content>
+                </Button>
+                
+                <!--
+                <Button Classes="noshadow"  
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Stretch"
+                        Width="100"
+                        Height="55"
+                        Background="{DynamicResource SecondaryBackgroundBrush}"
+                        Foreground="{DynamicResource SecondaryFontColorBrush}"
+                        CornerRadius="0"
+                        Name="BTN_FullTextButton"
+                        Click="FullTextPage_Click">
+                    <Button.Content>
+                        <Panel 
+                            Width="55"
+                            Height="55">
+                            
+                            <icon:MaterialIcon Kind="TextBox"
+                                               Width="24" 
+                                               Height="24" 
+                                               HorizontalAlignment="Center" 
+                                               VerticalAlignment="Center"
+                                               Margin="0, 0, 0, 20"
+                                               Foreground="{Binding ElementName=BTN_FullTextButton, Path=Foreground}"/>
+                            <TextBlock Text="Full Text"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="12"
+                                       Foreground="{Binding ElementName=BTN_FullTextButton, Path=Foreground}"
+                                       Margin="0, 25, 0, 0"></TextBlock>
+                        </Panel>
+                    </Button.Content>
+                </Button>
+                -->
+                
+            </StackPanel>
+            
+            <DockPanel PointerPressed="InputElement_OnPointerPressed"
+                       Classes="noshadow" 
+                       VerticalAlignment="Bottom" 
+                       HorizontalAlignment="Right"
+                       Background="{DynamicResource SecondaryBackgroundBrush}"
+                       Width="55"
+                       Height="55">
+                <Button HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Width="100"
+                        Height="55"
+                        Background="{DynamicResource SecondaryBackgroundBrush}"
+                        Foreground="{DynamicResource SecondaryFontColorBrush}"
+                        CornerRadius="0"
+                        Name="BTN_SettingsButton"
+                        Click="SettingsPage_Click">
+                    <Button.Content>
+                        <Panel 
+                            Width="55"
+                            Height="55">
+                            
+                            <icon:MaterialIcon Kind="Settings"
+                                               Width="24" 
+                                               Height="24" 
+                                               HorizontalAlignment="Center" 
+                                               VerticalAlignment="Center"
+                                               Margin="0, 0, 0, 20"
+                                               Foreground="{Binding ElementName=BTN_SettingsButton, Path=Foreground}"/>
+                            <TextBlock Text="Settings"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="12"
+                                       Foreground="{Binding ElementName=BTN_SettingsButton, Path=Foreground}"
+                                       Margin="0, 25, 0, 0"></TextBlock>
+                        </Panel>
+                    </Button.Content>
+                </Button>
+
+            </DockPanel>
+            
+        </DockPanel>
+        
+        <DockPanel 
+            Margin="55, 0, 0, 0"
+                   Background="{DynamicResource PrimaryBackgroundBrush}">
+            
+            <Carousel Name="PageSelection"
+                      HorizontalAlignment="Stretch">
+                <Carousel.Styles>
+                    <Style Selector="Carousel#PageSelection:not(.notransitions)">
+                        <Setter Property="PageTransition">
+                            <PageSlide Duration="0.5" 
+                                       SlideOutEasing="QuadraticEaseOut"
+                                       Orientation="Vertical"
+                                       SlideInEasing="QuadraticEaseOut" />
+                        </Setter>
+                    </Style>
+                </Carousel.Styles>
+                    
+                <pages1:LyricsPage Name="LyricsPage"/>
+                    
+                <pages1:FullLyricsPage Name="FullLyricsPage"/>
+                
+                <pages1:SettingsPage Name="SettingsPage"/>
+
+            </Carousel>
+        </DockPanel>
+        
+        <styles:Card Name="CRD_WindowDecoration" 
+                     Width="85"
+                     Height="40"
+                     VerticalAlignment="Top"
+                     HorizontalAlignment="Right"
+                     Margin="0,10,10,0"
+                     Background="{DynamicResource SecondaryBackgroundBrush}">
+            <Grid Margin="0,0,0,0">
+                <styles:FloatingButton Background="#FE2E2E"
+                                       MinHeight="15"
+                                       Height="15"
+                                       MinWidth="15"
+                                       Width="15"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Right"
+                                       Command="{Binding CloseButtonActionCommand}"/>
+                <styles:FloatingButton Background="#00cc33"
+                                       MinHeight="15"
+                                       Height="15"
+                                       MinWidth="15"
+                                       Width="15"
+                                       Margin="0,0,25,0"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Right"
+                                       Command="{Binding ExpandButtonActionCommand}"/>
+                <styles:FloatingButton Background="#ffa500"
+                                       MinHeight="15"
+                                       Height="15"
+                                       MinWidth="15"
+                                       Width="15"
+                                       Margin="0,0,50,0"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Right"
+                                       Command="{Binding HideButtonActionCommand}"/>
+            </Grid>
+        </styles:Card>
+        
+        <styles:Card Name="CRD_WindowDecoration_FullScreen" 
+                     Width="40"
+                     Height="40"
+                     VerticalAlignment="Top"
+                     HorizontalAlignment="Right"
+                     Margin="0,10,100,0"
+                     Background="{DynamicResource SecondaryBackgroundBrush}">
+            <Grid Margin="0,0,0,0">
+                <styles:FloatingButton Background="#0389ff"
+                                       MinHeight="15"
+                                       Height="15"
+                                       MinWidth="15"
+                                       Width="15"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Command="{Binding FullButtonActionCommand}"/>
+                </Grid>
+        </styles:Card>
+    </Grid>
+</Window>

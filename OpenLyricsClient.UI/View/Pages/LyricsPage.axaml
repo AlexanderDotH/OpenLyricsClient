@@ -1,0 +1,359 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:pages="clr-namespace:OpenLyricsClient.UI.Models.Pages"
+             xmlns:elements="clr-namespace:OpenLyricsClient.UI.Models.Elements"
+             xmlns:custom="clr-namespace:OpenLyricsClient.UI.View.Custom"
+             mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
+             Background="{Binding UiBackground}"
+             Foreground="{Binding UiForeground}"
+             Name="PG_LyricsPage"
+             x:Class="OpenLyricsClient.UI.View.Pages.LyricsPage">
+    
+    <UserControl.DataContext>
+        <pages:LyricsPageViewModel></pages:LyricsPageViewModel>
+    </UserControl.DataContext>
+    
+    <UserControl.Styles>
+        <Style Selector="StackPanel">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Width" Duration="0:0:0.2"></DoubleTransition>
+                    <DoubleTransition Property="Height" Duration="0:0:0.2"></DoubleTransition>
+                </Transitions>
+            </Setter>
+        </Style>
+        
+        <Style Selector="TextBlock.progress_text">
+            <Setter Property="Opacity" Value="1"></Setter>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.2"></DoubleTransition>
+                </Transitions>
+            </Setter>
+        </Style>
+        
+        <Style Selector="styles|Card.height_transition">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Height" Duration="0:0:0.2"></DoubleTransition>
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="styles|Card.height_transition:pointerover">
+            <Setter Property="Height" Value="60"></Setter>
+        </Style>
+    </UserControl.Styles>
+    
+    <Grid PointerPressed="InputElement_OnPointerPressed" Name="GRD_Page" >
+        
+        <Border HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="10, 10, 0, 0"
+                CornerRadius="5"
+                Background="{DynamicResource SecondaryBackgroundBrush}">
+            <TextBlock 
+                Margin="8"
+                Text="Lyrics"
+                FontWeight="Bold"
+                FontSize="18"></TextBlock>
+        </Border>
+        
+        <elements:GroupBox Classes="clean" 
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Width="400"
+                           IsVisible="{Binding !IsAnyServiceConnected}"
+                           Background="{DynamicResource SecondaryBackgroundBrush}">
+                        
+            <StackPanel Margin="15" 
+                        Orientation="Vertical" 
+                        Spacing="15">
+                           
+                <TextBlock FontSize="16"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Left"
+                           FontWeight="Bold"
+                           Text="It's pretty empty here">
+                </TextBlock>
+                            
+                <TextBlock Text="It looks like you didn't connect any service with the OpenLyricsClient. Simply take a look at the 'Services' section inside the settings"
+                           TextWrapping="Wrap"/>
+                
+                <Button Background="{DynamicResource LightBackgroundBrush}" 
+                        Width="300" 
+                        Margin="5" 
+                        Command="{Binding SwitchToSettingsCommand}"
+                        VerticalAlignment="Bottom">
+                    
+                    <StackPanel Orientation="Horizontal" 
+                                Spacing="10">
+                        
+                        <TextBlock Text="Go to settings"/>
+                        
+                        <avalonia:MaterialIcon Kind="Link"
+                                               VerticalAlignment="Stretch"
+                                               HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </Button>
+
+            </StackPanel>
+        </elements:GroupBox>
+        
+        <elements:GroupBox Classes="clean" 
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Width="400"
+                           IsVisible="{Binding IsEmpty}"
+                           Background="{DynamicResource SecondaryBackgroundBrush}">
+                        
+            <StackPanel Margin="15" 
+                        Orientation="Vertical" 
+                        Spacing="15">
+                           
+                <TextBlock FontSize="16"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Left"
+                           FontWeight="Bold"
+                           Text="It's pretty empty here">
+                </TextBlock>
+                            
+                <TextBlock Text="Simply listen to a song and have fun!"
+                           TextWrapping="Wrap"/>
+
+            </StackPanel>
+        </elements:GroupBox>
+        
+        <Grid Name="GRD_Info"
+              HorizontalAlignment="Left"
+              IsVisible="{Binding IsSongAvailable}"
+              Width="500">
+            
+            <StackPanel Orientation="Vertical" 
+                        Spacing="5"
+                        VerticalAlignment="Center">
+                
+                <Grid Name="GRD_Content">
+                    <Grid Width="320"
+                          Height="320"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Center"
+                          Background="{DynamicResource PrimaryBackgroundBrush}"
+                          Margin="0,0,0,0"></Grid>
+                </Grid>
+                
+                <styles:Card Name="CRD_SongInfo" 
+                             Width="320"
+                             MaxWidth="320"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             Margin="0, 0,0,0"
+                             CornerRadius="8"
+                             IsVisible="{Binding IsSongAvailable}"
+                             Background="{DynamicResource SecondaryBackgroundBrush}">
+
+                    <StackPanel Orientation="Vertical" Spacing="20">
+                        <StackPanel Orientation="Vertical" Spacing="5">
+                            
+                            <Grid ColumnDefinitions="*, 25">
+                                <TextBlock Grid.Column="0"
+                                           Name="TXT_Title"
+                                           Width="285"
+                                           Text="{Binding SongName}"
+                                           TextWrapping="Wrap"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Top"
+                                           FontWeight="Bold"
+                                           FontSize="20"/>
+                                
+                                <Border Grid.Column="1" 
+                                        CornerRadius="7" 
+                                        Background="{DynamicResource LightBackgroundBrush}" 
+                                        Width="25" 
+                                        Height="25"
+                                        IsVisible="{Binding AiBadge}">
+                                    <ToolTip.Tip>
+                                        <TextBlock Text="This song was synchronized using Ai"></TextBlock>
+                                    </ToolTip.Tip>
+                                    <TextBlock Text="Ai" 
+                                               VerticalAlignment="Center" 
+                                               HorizontalAlignment="Center"/>
+                                </Border>
+                                
+                                <!--<Border Grid.Column="3" 
+                                        CornerRadius="7" 
+                                        Background="{DynamicResource LightBackgroundBrush}" 
+                                        Width="25" 
+                                        Height="25"
+                                        ToolTip.Tip="Published on: March 2023">
+                                    <avalonia:MaterialIcon Kind="Information" VerticalAlignment="Center" HorizontalAlignment="Center"></avalonia:MaterialIcon>
+                                </Border>-->
+                            </Grid>
+                           
+                            <TextBlock Name="TXT_Artists" 
+                                       Width="320"
+                                       Text="{Binding Artists}"
+                                       TextWrapping="Wrap"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Bottom"
+                                       Margin="0,0,0,0"
+                                       FontSize="13"></TextBlock>
+                        </StackPanel>
+                        
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center" 
+                                    IsVisible="{Binding IsPlayerAvailable}"
+                                    Spacing="20">
+                            <Button Background="{DynamicResource LightBackgroundBrush}" 
+                                    CornerRadius="20" 
+                                    Width="30" 
+                                    Height="30"
+                                    Command="{Binding PreviousSongCommand}"
+                                    assists:ShadowAssist.ShadowDepth="Depth2">
+                                <avalonia:MaterialIcon Kind="StepBackward"/>
+                            </Button>
+                            
+                            <Button Background="{DynamicResource LightBackgroundBrush}" 
+                                    CornerRadius="20" 
+                                    Width="35" 
+                                    Height="35"
+                                    Command="{Binding UpdatePlaybackCommand}"
+                                    assists:ShadowAssist.ShadowDepth="Depth2">
+                                <Panel>
+                                    <avalonia:MaterialIcon Kind="Pause" IsVisible="{Binding IsSongPlaying}"/>
+                                    <avalonia:MaterialIcon Kind="Play" IsVisible="{Binding !IsSongPlaying}"/>
+                                </Panel>
+                            </Button>
+                            
+                            <Button Background="{DynamicResource LightBackgroundBrush}" 
+                                    CornerRadius="20" 
+                                    Width="30" 
+                                    Height="30"
+                                    Command="{Binding NextSongCommand}"
+                                    assists:ShadowAssist.ShadowDepth="Depth2">
+                                <avalonia:MaterialIcon Kind="StepForward"/>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </styles:Card>
+            </StackPanel>
+        </Grid>
+        
+        <Grid Name="GRD_Presenter"
+              Background="{DynamicResource PrimaryBackgroundBrush}"
+              
+              Margin="500,50,5,50">
+            
+            
+            <custom:NewLyricsScroller Name="LRC_Display"
+                                       HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Stretch"/>
+            
+            <!--<custom1:LyricsScroller
+                Name="LRC_Display"
+                IsVisible="{Binding IsSongAvailable}"
+                FontSize="30"
+                LyricsFontWeight="Bold"
+                ItemMargin="0,0,0,70"/>-->
+            
+            <!--<Panel HorizontalAlignment="Left" 
+                   VerticalAlignment="Center"
+                   Name="PNL_Loading"
+                   Margin="0,0,0,0">
+                  <elements:SearchingAnimation></elements:SearchingAnimation>
+            </Panel>-->
+            
+        </Grid>
+        
+        <Button Name="BTN_SyncMode"
+                IsEnabled="{Binding ElementName=LRC_Display, Path=!IsSynced, Mode=OneWay}"
+                assists:ButtonAssist.CornerRadius="10"
+                assists:ShadowAssist.ShadowDepth="Depth3"
+                UseLayoutRounding="True"
+                Width="45"
+                Height="45" 
+                Background="{DynamicResource SecondaryBackgroundBrush}"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Right"
+                Margin="0,0,30,80"
+                Click="Button_OnClick">
+            <Button.Content>
+                <avalonia:MaterialIcon CornerRadius="20" Kind="ArrowVerticalLock" Width="24" Height="24" />
+            </Button.Content>
+            <Button.Transitions>
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.7" Easing="CircularEaseOut"></DoubleTransition>
+                </Transitions>
+            </Button.Transitions>
+            <Button.Styles>
+                <Style Selector="Button[IsEnabled=true]">
+                    <Setter Property="Opacity" Value="1"></Setter>
+                </Style>
+                <Style Selector="Button[IsEnabled=False]">
+                    <Setter Property="Opacity" Value="0"></Setter>
+                </Style>
+            </Button.Styles>
+        </Button>
+        
+        
+        <Grid VerticalAlignment="Bottom"
+              IsVisible="{Binding IsSongAvailable}"
+              Height="50">
+            
+            <styles:Card Name="CRD_Bar" 
+                         Classes="height_transition"
+                         Background="{DynamicResource SecondaryBackgroundBrush}"
+                         VerticalAlignment="Bottom"
+                         Margin="10,0,10,10"
+                         PointerMoved="InputElement_OnPointerMoved"
+                         PointerLeave="InputElement_OnPointerLeave">
+               <Grid>
+                   <ProgressBar Foreground="{DynamicResource PrimaryThemeColorBrush}"
+                                Background="{DynamicResource PrimaryBackgroundBrush}"
+                                BorderBrush="{DynamicResource PrimaryBackgroundBrush}"
+                                VerticalAlignment="Bottom"
+                                Height="5"
+                                Minimum="0"
+                                Maximum="100"
+                                Value="{Binding Percentage}"
+                                Margin="10, 0,10,10">
+                       <ProgressBar.Transitions>
+                           <Transitions>
+                               <BrushTransition Property="Foreground"
+                                                Easing="CircularEaseOut"
+                                                Duration="0:0:1.500"></BrushTransition>
+                           </Transitions>
+                       </ProgressBar.Transitions>
+                   </ProgressBar>
+                
+                   <TextBlock Classes="progress_text" 
+                              Name="TXT_TimeFrom"
+                              Text="{Binding CurrentTime}" 
+                              VerticalAlignment="Bottom"
+                              HorizontalAlignment="Left"
+                              Opacity="0"
+                              Margin="12, 0,10,22"
+                              FontSize="14">
+                   </TextBlock>
+                   
+                   <TextBlock Classes="progress_text"
+                              Name="TXT_TimeTo"
+                              Text="{Binding CurrentMaxTime}" 
+                              VerticalAlignment="Bottom"
+                              HorizontalAlignment="Right"
+                              Opacity="0"
+                              Margin="0, 0,12,22"
+                              FontSize="14"></TextBlock>
+               </Grid>
+                
+            </styles:Card>
+        </Grid>
+        
+        
+    </Grid>
+</UserControl>

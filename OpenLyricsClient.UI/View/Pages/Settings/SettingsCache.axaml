@@ -1,0 +1,99 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:OpenLyricsClient.UI.Models.Pages.Settings"
+             xmlns:elements="clr-namespace:OpenLyricsClient.UI.Models.Elements"
+             mc:Ignorable="d" 
+             d:DesignWidth="1000"
+             d:DesignHeight="1000"
+             x:Class="OpenLyricsClient.UI.View.Pages.Settings.SettingsCache">
+    
+    <UserControl.DataContext>
+        <settings:SettingsCacheViewModel/>
+    </UserControl.DataContext>
+    
+    <Grid Background="{DynamicResource PrimaryBackgroundBrush}">
+        
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalAlignment="Top"
+                      Margin="10,0,10,0">
+            
+            <StackPanel Margin="0,20,0,0"
+                        HorizontalAlignment="Center"
+                        Width="800">
+               
+                <StackPanel Orientation="Vertical" 
+                            Spacing="10">
+                    <elements:GroupBox Classes="clean" 
+                                       Background="{DynamicResource SecondaryBackgroundBrush}">
+                        <StackPanel Margin="15" 
+                                    Orientation="Vertical" 
+                                    Spacing="15">
+                           
+                            <TextBlock FontSize="16"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Bold"
+                                       Text="Cache">
+                            </TextBlock>
+                            
+                            <Grid ColumnDefinitions="Auto,1, Auto"
+                                     >
+                                   
+                                   <StackPanel Spacing="20"
+                                               VerticalAlignment="Center"
+                                               Grid.Column="0"
+                                               Width="380">
+                                       <TextBlock FontSize="14"
+                                                  VerticalAlignment="Top"
+                                                  HorizontalAlignment="Left"
+                                                  FontWeight="Normal"
+                                                  TextWrapping="Wrap"
+                                                  Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                                  Text="You can clear the cache here">
+                                       </TextBlock>
+                               
+                                       <Button Grid.Column="0" 
+                                               Grid.Row="1"
+                                               Command="{Binding ClearCacheCommand}"
+                                               Background="{DynamicResource PrimaryThemeColorBrush}">
+                                           <TextBlock FontSize="14"
+                                                      HorizontalAlignment="Left"
+                                                      FontWeight="Normal"
+                                                      TextWrapping="Wrap"
+                                                      Foreground="{DynamicResource PrimaryThemeFontColorBrush}"
+                                                      Text="Clear it now">
+                                           </TextBlock>
+                                       </Button>
+                                   </StackPanel>
+                                   
+                                   <Panel Grid.Column="1" 
+                                          Grid.RowSpan="2" 
+                                          Width="1" 
+                                          Margin="20,0,20,0"
+                                          Background="{DynamicResource LightBackgroundBrush}"/>
+                                   
+                                   <StackPanel Spacing="15" 
+                                               Grid.Column="2"
+                                               Width="350">
+                                       <TextBlock Grid.Column="2" 
+                                                  Grid.RowSpan="2" 
+                                                  FontSize="14"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Left"
+                                                  FontWeight="Normal"
+                                                  TextWrapping="Wrap"
+                                                  Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                                  Text="Lyrics being cached for offline storage is a feature that allows you to access your favorite songs' lyrics even when you are not connected to the internet.">
+                                       </TextBlock>    
+                                   </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </elements:GroupBox>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

@@ -1,0 +1,26 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             x:Class="OpenLyricsClient.UI.View.Custom.Badges.Plattform.WindowsBadge">
+    <Border CornerRadius="10" Background="{DynamicResource LightBackgroundBrush}">
+        
+        <StackPanel Orientation="Horizontal" Spacing="0">
+            
+            <Border CornerRadius="5" Background="#537FE7">
+                
+                <StackPanel Orientation="Horizontal" Spacing="5" Margin="4">
+                    
+                    <TextBlock Text="Windows"
+                               FontWeight="Normal"
+                               Margin="5,5,0,5"
+                               FontSize="14"/>
+                    
+                    <avalonia:MaterialIcon Kind="MicrosoftWindows" 
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Stretch"/>
+                </StackPanel>
+            </Border>
+                                                
+        </StackPanel>
+    </Border>
+</UserControl>

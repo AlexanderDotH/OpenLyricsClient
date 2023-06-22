@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.32804.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenLyricsClient", "OpenLyricsClient\OpenLyricsClient.csproj", "{74C7EDB4-60C1-4171-821D-907AE104431F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenLyricsClient.UI", "OpenLyricsClient.UI\OpenLyricsClient.UI.csproj", "{74C7EDB4-60C1-4171-821D-907AE104431F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLyricsClient.Shared", "OpenLyricsClient.Shared\OpenLyricsClient.Shared.csproj", "{2E60814E-9ACF-4118-AC61-8D1638666264}"
 EndProject

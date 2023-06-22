@@ -1,0 +1,192 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:settings="clr-namespace:OpenLyricsClient.UI.Models.Pages.Settings"
+             xmlns:elements="clr-namespace:OpenLyricsClient.UI.Models.Elements"
+             xmlns:subPages1="clr-namespace:OpenLyricsClient.UI.View.Pages.SubPages"
+             mc:Ignorable="d"
+             d:DesignWidth="1000"
+             d:DesignHeight="1000"
+             x:Class="OpenLyricsClient.UI.View.Pages.Settings.SettingsLyrics">
+    
+    <UserControl.DataContext>
+        <settings:SettingsLyricsViewModel/>
+    </UserControl.DataContext>
+
+    <Grid Background="{DynamicResource PrimaryBackgroundBrush}">
+        
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalAlignment="Top"
+                      Margin="10,0,10,0">
+            
+           <StackPanel Margin="0,20,0,0"
+                       HorizontalAlignment="Center"
+                       Width="800">
+               
+               <StackPanel Orientation="Vertical" 
+                           Spacing="10">
+               
+                 <elements:GroupBox Classes="clean" 
+                                    Background="{DynamicResource SecondaryBackgroundBrush}">
+                       
+                     <StackPanel Margin="15" 
+                                 Orientation="Vertical" 
+                                 Spacing="10">
+                           
+                           <TextBlock FontSize="16"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      FontWeight="Bold"
+                                      Text="Lyrics">
+                           </TextBlock>
+                           
+                           <TextBlock FontSize="14"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      FontWeight="Normal"
+                                      TextWrapping="Wrap"
+                                      Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                      Text="Settings for the lyric scroller">
+                           </TextBlock>
+                           
+                       </StackPanel>
+                 </elements:GroupBox>
+                   
+                   <elements:GroupBox Classes="clean" 
+                                      Background="{DynamicResource SecondaryBackgroundBrush}">
+                       
+                       <StackPanel Margin="15" 
+                                   Orientation="Vertical" 
+                                   Spacing="10">
+                           
+                           <TextBlock FontSize="16"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Left"
+                                      FontWeight="Bold"
+                                      Text="Line selection">
+                           </TextBlock>
+                           
+                           <Grid Margin="0,10,0,0" 
+                                 ColumnDefinitions="Auto, 5, Auto"
+                                 HorizontalAlignment="Center">
+                               <elements:RadioButton RippleBrush="{DynamicResource LightBackgroundBrush}" 
+                                                     SelectionBrush="{DynamicResource LightBackgroundBrush}"
+                                                     CornerRadius="10"
+                                                     Grid.Column="0" 
+                                                     Classes="Button" 
+                                                     Command="{Binding SwitchToKaraokeModeCommand}"
+                                                     IsChecked="{Binding IsKaraoke}"
+                                                     GroupName="3">
+                                   <StackPanel Orientation="Vertical" 
+                                               Spacing="10"
+                                               Width="300">
+                                       <subPages1:ScrollPreviewSubPage  Margin="5,5,5,5"
+                                                                       Background="{DynamicResource SecondaryBackgroundBrush}"
+                                                                       SelectedLineBrush="#FFFFFF"
+                                                                       LyricDisplayMode="KARAOKE"
+                                                                       FontSize="20"
+                                                                       LyricsFontWeight="Bold"
+                                                                       UnSelectedLineBrush="#646464"
+                                                                       ItemMargin="0,0,0,5"/>
+                                       
+                                       <TextBlock Text="Karaoke like"
+                                                  FontSize="15"
+                                                  HorizontalAlignment="Center"
+                                                  Foreground="{DynamicResource PrimaryFontColorBrush}"/>
+                                   </StackPanel>
+                               </elements:RadioButton>
+                               
+                               <elements:RadioButton RippleBrush="{DynamicResource LightBackgroundBrush}" 
+                                                     SelectionBrush="{DynamicResource LightBackgroundBrush}" 
+                                                     Grid.Column="2" 
+                                                     CornerRadius="10"
+                                                     Classes="Button" 
+                                                     Command="{Binding SwitchToFadeModeCommand}"
+                                                     IsChecked="{Binding IsFade}"
+                                                     GroupName="3">
+                                   <StackPanel Orientation="Vertical" 
+                                               Spacing="10"
+                                               Width="300">
+                                       <subPages1:ScrollPreviewSubPage  Margin="5,5,5,5"
+                                                                       Background="{DynamicResource SecondaryBackgroundBrush}"
+                                                                       SelectedLineBrush="#FFFFFF"
+                                                                       LyricDisplayMode="FADE"
+                                                                       FontSize="20"
+                                                                       LyricsFontWeight="Bold"
+                                                                       UnSelectedLineBrush="#646464"
+                                                                       ItemMargin="0,0,0,5"/>
+                                       
+                                       <TextBlock Text="Fade in"
+                                                  FontSize="15"
+                                                  HorizontalAlignment="Center"
+                                                  Foreground="{DynamicResource PrimaryFontColorBrush}"/>
+                                   </StackPanel>
+                               </elements:RadioButton>
+                           </Grid>
+                       </StackPanel>
+                   </elements:GroupBox>
+                   
+                   <elements:GroupBox Classes="clean" 
+                                      Background="{DynamicResource SecondaryBackgroundBrush}">
+                       
+                       <StackPanel Margin="15" 
+                                   Orientation="Vertical" 
+                                   Spacing="10">
+                           
+                           <Grid Margin="0">
+                               <TextBlock FontSize="14"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Left"
+                                          FontWeight="Normal"
+                                          TextWrapping="Wrap"
+                                          Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                          Text="Artwork color as background color">
+                               </TextBlock>
+                           
+                               <ToggleSwitch VerticalAlignment="Center"
+                                             HorizontalAlignment="Right"
+                                             Background="{DynamicResource PrimaryThemeColorBrush}"
+                                             assists:ToggleSwitchAssist.SwitchTrackOnBackground="{DynamicResource SecondaryThemeColorBrush}"
+                                             Command="{Binding ToggleArtworkBackgroundCommand}"
+                                             IsChecked="{Binding UseArtworkBackground}"
+                                             Margin="0,0,0,0"></ToggleSwitch>
+                           </Grid>
+                       </StackPanel>
+                   </elements:GroupBox>
+                   
+                   <elements:GroupBox Classes="clean" 
+                                      Background="{DynamicResource SecondaryBackgroundBrush}">
+                       
+                       <StackPanel Margin="15" 
+                                   Orientation="Vertical" 
+                                   Spacing="10">
+                           
+                           <Grid Margin="0">
+                               <TextBlock FontSize="14"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Left"
+                                          FontWeight="Normal"
+                                          TextWrapping="Wrap"
+                                          Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                          Text="Lyrics blur"> 
+                               </TextBlock>
+                           
+                               <ToggleSwitch VerticalAlignment="Center"
+                                             HorizontalAlignment="Right"
+                                             Background="{DynamicResource PrimaryThemeColorBrush}"
+                                             assists:ToggleSwitchAssist.SwitchTrackOnBackground="{DynamicResource SecondaryThemeColorBrush}"
+                                             Command="{Binding ToggleLyricsBlurCommand}"
+                                             IsChecked="{Binding IsBlurred}"
+                                             Margin="0,0,0,0"></ToggleSwitch>
+                           </Grid>
+                       </StackPanel>
+                   </elements:GroupBox>
+               </StackPanel>
+           </StackPanel>
+        </ScrollViewer>
+    </Grid>
+    
+</UserControl>

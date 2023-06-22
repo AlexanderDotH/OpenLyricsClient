@@ -1,0 +1,89 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:elements="clr-namespace:OpenLyricsClient.UI.Models.Elements">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <elements:GroupBox Classes="clean" Width="100" Height="100"></elements:GroupBox>
+        </Border>
+    </Design.PreviewWith>
+    
+    <Style Selector="elements|GroupBox">
+        <Setter Property="assists:ShadowAssist.ShadowDepth" Value="Depth2"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="HeaderBrush" Value="{DynamicResource PrimaryColorBrush}"/>
+        <Setter Property="HeaderTextBrush" Value="#FFFFFF"></Setter>
+        <Setter Property="HeaderText" Value="Header"></Setter>
+        <Setter Property="Background" Value="{DynamicResource MaterialDesignCardBackground}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="BarHeight" Value="35"></Setter>
+        <Setter Property="ContentMargin" Value="0,45,0,0"></Setter>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <Border Name="PART_BackgroundBorder"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            assists:ShadowAssist.ShadowDepth="{TemplateBinding assists:ShadowAssist.ShadowDepth}">
+                    </Border>
+                    
+                    <Border
+                            Background="{TemplateBinding elements:GroupBox.HeaderBrush}"
+                            Height="{TemplateBinding BarHeight}"
+                            Margin="0,0,0,0"
+                            VerticalAlignment="Top"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            assists:ShadowAssist.ShadowDepth="{TemplateBinding assists:ShadowAssist.ShadowDepth}">
+                        
+                        <TextBlock Text="{ TemplateBinding elements:GroupBox.HeaderText}"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Center"
+                                   Foreground="{TemplateBinding HeaderTextBrush}"
+                                   Margin="10,0,0,0"
+                                   FontSize="{TemplateBinding FontSize}"></TextBlock>
+                    </Border>
+                    
+                    <ContentPresenter Name="ContentPresenter"
+                                      Margin="{TemplateBinding ContentMargin}"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        
+    </Style>
+    
+        <Style Selector="elements|GroupBox.clean">
+        <Setter Property="assists:ShadowAssist.ShadowDepth" Value="Depth2"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HeaderBrush" Value="{DynamicResource PrimaryColorBrush}"/>
+        <Setter Property="HeaderTextBrush" Value="#FFFFFF"></Setter>
+        <Setter Property="HeaderText" Value="Header"></Setter>
+        <Setter Property="Background" Value="{DynamicResource MaterialDesignCardBackground}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="BarHeight" Value="35"></Setter>
+        <Setter Property="ContentMargin" Value="0,45,0,0"></Setter>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel>
+                    <Border Name="PART_BackgroundBorder"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            assists:ShadowAssist.ShadowDepth="{TemplateBinding assists:ShadowAssist.ShadowDepth}">
+                    </Border>
+                    
+                    <ContentPresenter Name="ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        
+    </Style>
+        <!-- Add Styles Here -->
+</Styles>

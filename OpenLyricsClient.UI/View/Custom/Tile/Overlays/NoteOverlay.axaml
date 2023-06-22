@@ -1,0 +1,109 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:overlays1="clr-namespace:OpenLyricsClient.UI.View.Custom.Tile.Overlays"
+             Foreground="Transparent"
+             mc:Ignorable="d"
+             x:Class="OpenLyricsClient.UI.View.Custom.Tile.Overlays.NoteOverlay">
+    
+    <UserControl.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="FontSize" Value="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}"/>
+            <Setter Property="FontWeight" Value="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}"/>
+            <Setter Property="TextAlignment" Value="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}"/>
+            
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Foreground"
+                                     Easing="CircularEaseOut"
+                                     Duration="0:0:0.500"/>
+                </Transitions>
+            </Setter>
+        </Style>
+    </UserControl.Styles>
+    
+    <Panel Height="{Binding AnimationHeight, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}"
+           PointerEnter="InputElement_OnPointerEnter"
+           PointerLeave="InputElement_OnPointerLeave"
+           PointerPressed="InputElement_OnPointerPressed">
+        
+        <Border Width="{Binding Percentage, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}"
+                HorizontalAlignment="Left"
+                Opacity="0.2" 
+                CornerRadius="5">
+            <Border.Transitions>
+                <Transitions>
+                    <DoubleTransition Property="Width" Easing="CircularEaseOut" Duration="0:0:0.4"/>
+                </Transitions>
+            </Border.Transitions>
+            
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,40">
+                    <GradientStop Color="Transparent" Offset="0.0" />
+                    <GradientStop Color="{Binding SelectedLineBrush.Color, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        
+        <StackPanel Name="PART_StackPanel" 
+                    Orientation="Horizontal" 
+                    Spacing="10"
+                    Margin="5,0,5,0"
+                    Background="Transparent">
+        
+            <TextBlock Name="PART_TextBlock_Visible_Note1" 
+                       Classes.idle1="{Binding !Animate, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" 
+                       Classes.note1="{Binding Animate, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" 
+                       Text="♪" 
+                       Foreground="{Binding UnSelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" VerticalAlignment="Bottom"/>
+            <TextBlock Name="PART_TextBlock_Visible_Note2" 
+                       Classes.idle2="{Binding !Animate, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" 
+                       Classes.note2="{Binding Animate, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" 
+                       Text="♪" 
+                       Foreground="{Binding UnSelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" VerticalAlignment="Bottom"/>
+            <TextBlock Name="PART_TextBlock_Visible_Note3" 
+                       Classes.idle3="{Binding !Animate, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" 
+                       Classes.note3="{Binding Animate, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" 
+                       Text="♪" 
+                       Foreground="{Binding UnSelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" VerticalAlignment="Bottom"/>
+        </StackPanel>
+        
+        <Viewbox Name="PART_Viewbox" 
+                 HorizontalAlignment="Left" 
+                 VerticalAlignment="Bottom"
+                 Stretch="None" 
+                 Width="{Binding Percentage, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}">
+                        
+            <Viewbox.Transitions>
+                <Transitions>
+                    <DoubleTransition Property="Width" Easing="CircularEaseOut" Duration="0:0:0.4"/>
+                </Transitions>
+            </Viewbox.Transitions>
+                        
+            <StackPanel Orientation="Horizontal" 
+                        VerticalAlignment="Bottom"
+                        Spacing="10"
+                        Margin="5,0,5,0"
+                        Background="Transparent">
+        
+                <TextBlock Name="PART_TextBlock_InVisible_Note1" 
+                           Classes.idle1="{Binding !Animate, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" 
+                           Classes.note1="{Binding Animate, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" 
+                           Text="♪" 
+                           Foreground="{Binding SelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" VerticalAlignment="Bottom"/>
+                <TextBlock Name="PART_TextBlock_InVisible_Note2" 
+                           Classes.idle2="{Binding !Animate, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" 
+                           Classes.note2="{Binding Animate, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" 
+                           Text="♪" 
+                           Foreground="{Binding SelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" VerticalAlignment="Bottom"/>
+                <TextBlock Name="PART_TextBlock_InVisible_Note3" 
+                           Classes.idle3="{Binding !Animate, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" 
+                           Classes.note3="{Binding Animate, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" 
+                           Text="♪" 
+                           Foreground="{Binding SelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}" VerticalAlignment="Bottom"/>
+            </StackPanel>
+        </Viewbox>
+    </Panel>
+    
+</UserControl>

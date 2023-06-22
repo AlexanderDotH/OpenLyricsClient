@@ -1,0 +1,295 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:settings="clr-namespace:OpenLyricsClient.UI.Models.Pages.Settings"
+             xmlns:elements="clr-namespace:OpenLyricsClient.UI.Models.Elements"
+             xmlns:plattform1="clr-namespace:OpenLyricsClient.UI.View.Custom.Badges.Plattform"
+             xmlns:other1="clr-namespace:OpenLyricsClient.UI.View.Custom.Badges.Other"
+             mc:Ignorable="d" 
+             d:DesignWidth="1000"
+             d:DesignHeight="1000"
+             x:Class="OpenLyricsClient.UI.View.Pages.Settings.SettingsCredits">
+    
+    <UserControl.DataContext>
+        <settings:SettingsCreditsViewModel/>
+    </UserControl.DataContext>
+    
+    <Grid Background="{DynamicResource PrimaryBackgroundBrush}">
+        
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalAlignment="Top"
+                      Margin="10,0,10,0">
+            
+            <StackPanel Margin="0,20,0,20"
+                        HorizontalAlignment="Center"
+                        Width="800">
+               
+                <StackPanel Orientation="Vertical" 
+                            Spacing="10">
+                    <elements:GroupBox Classes="clean" 
+                                       Background="{DynamicResource SecondaryBackgroundBrush}">
+                        <StackPanel Margin="15" 
+                                    Orientation="Vertical" 
+                                    Spacing="15">
+                           
+                            <TextBlock FontSize="16"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Bold"
+                                       Text="Credits">
+                            </TextBlock>
+                            
+                            <TextBlock FontSize="14"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Normal"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                       Text="I want to express my genuine thanks to everyone who has shared their ideas for my project, particularly the testers for the various platforms. Your valuable feedback has helped me fix errors, improve user-friendliness, and optimize performance. Your support has been crucial to the success of the project, and I am grateful for your enthusiasm and commitment.">
+                            </TextBlock>
+   
+                        </StackPanel>
+                    </elements:GroupBox>
+                    
+                    <elements:GroupBox Classes="clean" 
+                                       Background="{DynamicResource SecondaryBackgroundBrush}">
+                        <StackPanel Margin="15" 
+                                    Orientation="Vertical" 
+                                    Spacing="15">
+                           
+                            <TextBlock FontSize="14"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Bold"
+                                       Text="Kagariii">
+                            </TextBlock>
+                            
+                            <TextBlock FontSize="14"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Normal"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                       Text="A special thank you goes out to my girlfriend, whose idea of Romanization and general suggestions have made the overall project more polished.">
+                            </TextBlock>
+                            
+                            <Panel Background="{DynamicResource LightBackgroundBrush}" 
+                                   
+                                   Height="1" 
+                                   HorizontalAlignment="Stretch"/>
+                            
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="15">
+                                
+                                <plattform1:WindowsBadge/>
+                                
+                                <other1:IdeaBadge/>
+                                
+                            </StackPanel>
+                        </StackPanel>
+                    </elements:GroupBox>
+                    
+                    <elements:GroupBox Classes="clean" 
+                                       Background="{DynamicResource SecondaryBackgroundBrush}">
+                        <StackPanel Margin="15" 
+                                    Orientation="Vertical" 
+                                    Spacing="15">
+                           
+                            <TextBlock FontSize="14"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Bold"
+                                       Text="Eimaen">
+                            </TextBlock>
+                            
+                            <TextBlock FontSize="14"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Normal"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                       Text="The inventor of the plugin system, which provides a tremendous amount of flexibility and greatly improves the project.">
+                            </TextBlock>
+                            
+                            <Panel Background="{DynamicResource LightBackgroundBrush}" 
+                                   
+                                   Height="1" 
+                                   HorizontalAlignment="Stretch"/>
+                            
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="15">
+                                
+                                <plattform1:WindowsBadge/>
+                                
+                                <other1:IdeaBadge/>
+                                
+                                <other1:FeatureBadge/>
+                                
+                                <other1:TesterBadge/>
+                                
+                            </StackPanel>
+                            
+                            <StackPanel Orientation="Horizontal" 
+                                        Spacing="15">
+                                
+                                <Button Width="35" 
+                                        Height="35"
+                                        Command="{Binding OpenEimaenGithubCommand}"
+                                        Background="{DynamicResource LightBackgroundBrush}">
+                                    
+                                    <avalonia:MaterialIcon Kind="Github" 
+                                                           VerticalAlignment="Stretch"
+                                                           HorizontalAlignment="Stretch"/>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </elements:GroupBox>
+                    
+                     <elements:GroupBox Classes="clean" 
+                                       Background="{DynamicResource SecondaryBackgroundBrush}">
+                        <StackPanel Margin="15" 
+                                    Orientation="Vertical" 
+                                    Spacing="15">
+                           
+                            <TextBlock FontSize="14"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Bold"
+                                       Text="D3SOX">
+                            </TextBlock>
+                            
+                            <TextBlock FontSize="14"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Normal"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                       Text="The software tester for the Linux version of the OpenLyricsClient has been invaluable, as they found numerous bugs during the alpha testing phase.">
+                            </TextBlock>
+                            
+                            <Panel Background="{DynamicResource LightBackgroundBrush}" 
+                                   Height="1" 
+                                   HorizontalAlignment="Stretch"/>
+                            
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="15">
+                                
+                                <plattform1:LinuxBadge/>
+                                
+                                <other1:TesterBadge/>
+                                
+                            </StackPanel>
+                            
+                            <StackPanel Orientation="Horizontal" 
+                                        Spacing="15">
+                                
+                                <Button Width="35" 
+                                        Height="35"
+                                        Command="{Binding OpenD3SOXGithubCommand}"
+                                        Background="{DynamicResource LightBackgroundBrush}">
+                                    
+                                    <avalonia:MaterialIcon Kind="Github" 
+                                                           VerticalAlignment="Stretch"
+                                                           HorizontalAlignment="Stretch"/>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </elements:GroupBox>
+                    
+                     <elements:GroupBox Classes="clean" 
+                                       Background="{DynamicResource SecondaryBackgroundBrush}">
+                        <StackPanel Margin="15" 
+                                    Orientation="Vertical" 
+                                    Spacing="15">
+                           
+                            <TextBlock FontSize="14"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Bold"
+                                       Text="PKMNPlatin">
+                            </TextBlock>
+                            
+                            <TextBlock FontSize="14"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Normal"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                       Text="The logo designer for the OpenLyricsClient">
+                            </TextBlock>
+                            
+                            <Panel Background="{DynamicResource LightBackgroundBrush}" 
+                                   Height="1" 
+                                   HorizontalAlignment="Stretch"/>
+                            
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="15">
+                                
+                                <plattform1:WindowsBadge/>
+                                
+                                <plattform1:LinuxBadge/>
+                                
+                                <other1:DesignerBadge/>
+                                
+                            </StackPanel>
+                            
+                            <StackPanel Orientation="Horizontal" 
+                                        Spacing="15">
+                                
+                                <Button Width="35" 
+                                        Height="35"
+                                        Command="{Binding OpenPKMNPlatinGithubCommand}"
+                                        Background="{DynamicResource LightBackgroundBrush}">
+                                    
+                                    <avalonia:MaterialIcon Kind="Github" 
+                                                           VerticalAlignment="Stretch"
+                                                           HorizontalAlignment="Stretch"/>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </elements:GroupBox>
+                    
+                    <elements:GroupBox Classes="clean" 
+                                       Background="{DynamicResource SecondaryBackgroundBrush}">
+                        <StackPanel Margin="15" 
+                                    Orientation="Vertical" 
+                                    Spacing="15">
+                           
+                            <TextBlock FontSize="14"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Bold"
+                                       Text="Jhannes">
+                            </TextBlock>
+                            
+                            <TextBlock FontSize="14"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       FontWeight="Normal"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                       Text="One of the early tester of the OpenLyricsClient">
+                            </TextBlock>
+                            
+                            <Panel Background="{DynamicResource LightBackgroundBrush}" 
+                                   Height="1" 
+                                   HorizontalAlignment="Stretch"/>
+                            
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="15">
+                                
+                                <plattform1:WindowsBadge/>
+                                
+                                <other1:TesterBadge/>
+                                
+                            </StackPanel>
+                        </StackPanel>
+                    </elements:GroupBox>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

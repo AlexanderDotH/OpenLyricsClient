@@ -1,0 +1,52 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:custom="clr-namespace:OpenLyricsClient.UI.Models.Custom">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+
+    <!-- Add Styles Here -->
+    <Style Selector="custom|CustomScrollViewer">
+        <Setter Property="Template">
+            <ControlTemplate>
+        <Grid ColumnDefinitions="*,Auto" RowDefinitions="*,Auto">
+          <ScrollContentPresenter Name="PART_ContentPresenter"
+                                  Background="{TemplateBinding Background}"
+                                  CanHorizontallyScroll="{TemplateBinding CanHorizontallyScroll}"
+                                  CanVerticallyScroll="{TemplateBinding CanVerticallyScroll}"
+                                  Content="{TemplateBinding Content}"
+                                  Extent="{TemplateBinding Extent, Mode=TwoWay}"
+                                  Margin="{TemplateBinding Padding}"
+                                  Offset="{TemplateBinding Offset, Mode=TwoWay}"
+                                  Viewport="{TemplateBinding Viewport, Mode=TwoWay}">
+            <ScrollContentPresenter.GestureRecognizers>
+              <ScrollGestureRecognizer
+                  CanHorizontallyScroll="{TemplateBinding CanHorizontallyScroll}"
+                  CanVerticallyScroll="{TemplateBinding CanVerticallyScroll}" />
+            </ScrollContentPresenter.GestureRecognizers>
+          </ScrollContentPresenter>
+          <ScrollBar Name="horizontalScrollBar"
+                     Classes="Modern"
+                     Orientation="Horizontal"
+                     Maximum="{TemplateBinding HorizontalScrollBarMaximum}"
+                     Value="{TemplateBinding HorizontalScrollBarValue, Mode=TwoWay}"
+                     ViewportSize="{TemplateBinding HorizontalScrollBarViewportSize}"
+                     Visibility="{TemplateBinding HorizontalScrollBarVisibility}"
+                     Grid.Row="1" Grid.Column="0"
+                     Focusable="False" />
+          <ScrollBar Name="verticalScrollBar"
+                     Classes="Modern"
+                     Orientation="Vertical"
+                     Maximum="{TemplateBinding VerticalScrollBarMaximum}"
+                     Value="{TemplateBinding VerticalScrollBarValue, Mode=TwoWay}"
+                     ViewportSize="{TemplateBinding VerticalScrollBarViewportSize}"
+                     Visibility="{TemplateBinding VerticalScrollBarVisibility}"
+                     Grid.Row="0" Grid.Column="1"
+                     Focusable="False" />
+        </Grid>
+      </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

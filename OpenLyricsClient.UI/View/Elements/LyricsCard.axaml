@@ -1,0 +1,111 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:elements="clr-namespace:OpenLyricsClient.UI.Models.Elements"
+        xmlns:blur="clr-namespace:OpenLyricsClient.UI.Models.Elements.Blur">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <elements:LyricsCard Text="CurrentLine" 
+                                 Current="True" 
+                                 Percentage="50" 
+                                 BlurSigma="0"></elements:LyricsCard>
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="elements|LyricsCard">
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Percentage" Easing="CircularEaseOut" Duration="0:0:0.4" ></DoubleTransition>
+            </Transitions>
+        </Setter>
+    </Style>
+    
+    <Style Selector="elements|LyricsCard[Current=True] /template/ elements|LyricsCard">
+        <Setter Property="Percentage" Value="0"></Setter>
+    </Style>
+    
+    <Style Selector="elements|LyricsCard[Current=False] /template/ elements|LyricsCard">
+        <Setter Property="Percentage" Value="-10"></Setter>
+    </Style>
+    
+    <!-- Add Styles Here -->
+    <Style Selector="elements|LyricsCard">
+        <Setter Property="Background" Value="{DynamicResource SecondaryBackgroundBrush}"/>
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid Name="PART_Grid">
+                    
+                    <Border Name="PART_BackgroundBorder"
+                            HorizontalAlignment="Left"
+                            Width="{TemplateBinding Percentage}" 
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                    </Border>
+                    
+                    <elements:NoteAnimation Name="PART_NoteAnimation"
+                                            IsVisible="False"
+                                            FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
+                                            FontSize="{TemplateBinding FontSize}"/>
+                    
+                    <TextBlock Name="PART_TextBlock1"
+                               Classes="grow"
+                               HorizontalAlignment="Left"
+                               Text="{TemplateBinding Text}"
+                               FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
+                               FontSize="{TemplateBinding FontSize}"
+                               TextWrapping="Wrap"
+                               Margin="5,0,5,5">
+                        <TextBlock.Transitions>
+                            <Transitions>
+                                <BrushTransition Property="Foreground"
+                                                 Easing="CircularEaseOut"
+                                                 Duration="0:0:0.500"></BrushTransition>
+                            </Transitions>
+                        </TextBlock.Transitions>
+                    </TextBlock>
+                    
+                    <Viewbox Name="PART_Viewbox" 
+                             HorizontalAlignment="Left" 
+                             VerticalAlignment="Top"
+                             Stretch="None" 
+                             >
+                        <TextBlock Name="PART_TextBlock"
+                                   Classes="grow"
+                                   VerticalAlignment="Top"
+                                   HorizontalAlignment="Left"
+                                   Text="{TemplateBinding Text}"
+                                   FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
+                                   FontSize="{TemplateBinding FontSize}"
+                                   Margin="5,0,5,5"
+                                   TextWrapping="Wrap"
+                                   Width="{TemplateBinding Width}">
+                            <TextBlock.Transitions>
+                                <Transitions>
+                                    <BrushTransition Property="Foreground"
+                                                     Easing="CircularEaseOut"
+                                                     Duration="0:0:0.500"></BrushTransition>
+                                </Transitions>
+                            </TextBlock.Transitions>
+                        </TextBlock>
+                    </Viewbox>
+                    
+                    <blur:BlurArea 
+                        IsVisible="False"
+                        Name="PART_BlurArea"
+                        SigmaX="{TemplateBinding BlurSigma}" 
+                        SigmaY="{TemplateBinding BlurSigma}" 
+                        Width="{TemplateBinding Width}" 
+                        Height="{TemplateBinding Height}">
+                        <blur:BlurArea.Transitions>
+                            <Transitions>
+                                <FloatTransition Property="SigmaX" Duration="0:0:0.8" Easing="CircularEaseOut"></FloatTransition>
+                                <FloatTransition Property="SigmaY" Duration="0:0:0.8" Easing="CircularEaseOut"></FloatTransition>
+                            </Transitions>
+                        </blur:BlurArea.Transitions>
+                    </blur:BlurArea>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>
