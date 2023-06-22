@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.19" />
-    <PackageReference Include="Avalonia.X11" Version="0.10.19" />
+    <PackageReference Include="Avalonia" Version="0.10.21" />
+    <PackageReference Include="Avalonia.X11" Version="0.10.21" />
     <PackageReference Include="DevBase" Version="1.2.3" />
     <PackageReference Include="DevBase.Api" Version="1.1.5" />
     <PackageReference Include="DevBase.Avalonia" Version="1.2.1" />
