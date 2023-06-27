@@ -11,7 +11,7 @@
     </Application.DataTemplates>
 
     <Application.Resources>
-        <themes:BundledTheme BaseTheme="Dark" PrimaryColor="Purple" SecondaryColor="DeepPurple"/>
+        <themes:BundledTheme x:Key="Theme" BaseTheme="Dark" PrimaryColor="Purple" SecondaryColor="DeepPurple"/>
         <converter:FontSizeConverter x:Key="FontSizeConverter"/>
         <converter:FontWeightConverter x:Key="FontWeightConverter"/>
     </Application.Resources>
