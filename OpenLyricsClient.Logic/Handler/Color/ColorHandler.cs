@@ -101,7 +101,20 @@ public class ColorHandler
         try
         {
             LabClusterColorCalculator labCalculator = new LabClusterColorCalculator();
-            //labCalculator.PreProcessing.BlurPreProcessing = true;
+            
+            /*labCalculator.Filter.BrightnessConfiguration.FilterBrightness = true;
+            
+            labCalculator.Filter.BrightnessConfiguration.MinBrightness = 10d;
+            labCalculator.Filter.BrightnessConfiguration.MaxBrightness = 70d;
+
+            labCalculator.Filter.ChromaConfiguration.MinChroma = 10d;*/
+            
+            labCalculator.UsePredefinedSet = true;
+            
+            labCalculator.PreProcessing.BlurPreProcessing = false;
+
+            labCalculator.Clusters = 20;
+            
             return labCalculator.GetColorFromBitmap(artwork.ArtworkAsImage);
         }
         catch (Exception e)
