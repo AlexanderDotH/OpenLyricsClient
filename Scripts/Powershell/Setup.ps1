@@ -6,6 +6,8 @@ $UiProjectPath = $PSScriptRoot + "../../../OpenLyricsClient.UI/OpenLyricsClient.
 $AuthProjectPath = $PSScriptRoot + "../../../OpenLyricsClient.Auth/OpenLyricsClient.Auth.csproj"
 $AuthFilePath = $WorkingDirectory + "/Authentication" 
 
+$SharedProjectPath = $PSScriptRoot + "../../../OpenLyricsClient.Shared/OpenLyricsClient.Shared.csproj"
+
 $TempPath = $PSScriptRoot + "../../../Temp"
 $TempBin = $TempPath + "/Binaries"
 $TempFile = $TempPath + "/Binaries.zip"
@@ -43,6 +45,7 @@ if ((Test-Path -path $AuthProjectPath) -and !(Test-Path -path $AuthFilePath)) {
     Write-Output "Building Webview"
     Write-Output "----------------------------------------------------"
 
+    Start-Process -FilePath "dotnet" -ArgumentList "build `"$SharedProjectPath`" --configuration Release --output `"$AuthFilePath`"" -NoNewWindow -Wait
     Start-Process -FilePath "dotnet" -ArgumentList "build `"$AuthProjectPath`" --configuration Release --output `"$AuthFilePath`"" -NoNewWindow -Wait
 }
 
