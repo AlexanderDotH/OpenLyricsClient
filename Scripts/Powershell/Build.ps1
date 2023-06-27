@@ -45,7 +45,7 @@ if ((Test-Path -path $UiProjectPath)) {
     Write-Output "Building project"
     Write-Output "----------------------------------------------------"
 
-    Start-Process -FilePath "dotnet" -ArgumentList "build `"$UiProjectPath`" --configuration Release --output `"$WorkingDirectory`"" -NoNewWindow -Wait
+    Start-Process -FilePath "dotnet" -ArgumentList "publish `"$UiProjectPath`" --configuration Release --output `"$WorkingDirectory`"" -NoNewWindow -Wait
 }
 
 if ((Test-Path -path $AuthProjectPath) -and !(Test-Path -path $AuthFilePath)) {
@@ -54,8 +54,8 @@ if ((Test-Path -path $AuthProjectPath) -and !(Test-Path -path $AuthFilePath)) {
     Write-Output "Building Webview"
     Write-Output "----------------------------------------------------"
 
-    Start-Process -FilePath "dotnet" -ArgumentList "build `"$AuthProjectPath`" --configuration Release --output `"$AuthFilePath`"" -NoNewWindow -Wait
-    Start-Process -FilePath "dotnet" -ArgumentList "build `"$SharedProjectPath`" --configuration Release --output `"$AuthFilePath`"" -NoNewWindow -Wait
+    Start-Process -FilePath "dotnet" -ArgumentList "publish `"$AuthProjectPath`" --configuration Release --output `"$AuthFilePath`"" -NoNewWindow -Wait
+    Start-Process -FilePath "dotnet" -ArgumentList "publish `"$SharedProjectPath`" --configuration Release --output `"$AuthFilePath`"" -NoNewWindow -Wait
 }
 
 Write-Output "----------------------------------------------------"
