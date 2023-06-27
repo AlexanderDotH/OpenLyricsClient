@@ -13,76 +13,8 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
     <None Remove=".gitignore" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\af.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\am.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\af.pak" />
-    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\am.pak" />
-    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\af.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\bg.pak" />
     <None Remove="Binaries\IpaDic\AUTHORS" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\bg.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\ar.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\ar.pak" />
-    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\bg.pak" />
-    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\ar.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\ca.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\bn.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\ca.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\bn.pak" />
-    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\ca.pak" />
-    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\bn.pak" />
     <None Remove="Binaries\IpaDic\COPYING" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\lv.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\lt.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\ko.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\kn.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\ja.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\it.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\id.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\hr.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\he.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\gu.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\fr.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\fil.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\fi.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\et.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\es.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\es-419.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\en-US.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\en-GB.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\el.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\da.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\locales\cs.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\icudtl.dat" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\chrome_200_percent.pak" />
-    <None Remove="Binaries\CefBinaries\win-x86\Resources\chrome_100_percent.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\lv.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\lt.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\ko.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\ja.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\it.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\id.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\hu.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\hr.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\hi.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\he.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\gu.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\fil.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\fi.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\fa.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\et.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\es.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\es-419.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\en-US.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\en-GB.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\el.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\de.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\locales\da.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\icudtl.dat" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\chrome_200_percent.pak" />
-    <None Remove="Binaries\CefBinaries\win-x64\Resources\chrome_100_percent.pak" />
-    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\lv.pak" />
-    <None Remove="Binaries\CefBinaries\linux-x64\Resources\locales\lt.pak" />
   </ItemGroup>
   <ItemGroup>
     <!--This helps with theme dll-s trimming.
@@ -166,12 +98,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="CefNet">
-      <HintPath>..\Libraries\CefNet.dll</HintPath>
-    </Reference>
-    <Reference Include="CefNet.Avalonia">
-      <HintPath>..\Libraries\CefNet.Avalonia.dll</HintPath>
-    </Reference>
     <Reference Include="HangeulRomanizer">
       <HintPath>..\Libraries\HangeulRomanizer.dll</HintPath>
     </Reference>
