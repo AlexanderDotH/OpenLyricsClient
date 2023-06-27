@@ -15,8 +15,8 @@
       <PackageReference Include="Avalonia" Version="0.10.21" />
       <PackageReference Include="DevBase" Version="1.2.3" />
       <PackageReference Include="DevBase.Api" Version="1.1.5" />
-      <PackageReference Include="DevBase.Avalonia" Version="1.2.1" />
-      <PackageReference Include="DevBase.Avalonia.Extension" Version="1.1.0" />
+      <PackageReference Include="DevBase.Avalonia" Version="1.2.3" />
+      <PackageReference Include="DevBase.Avalonia.Extension" Version="1.1.2" />
       <PackageReference Include="DevBase.Cryptography" Version="1.0.3" />
       <PackageReference Include="DevBase.Cryptography.BouncyCastle" Version="1.1.8" />
       <PackageReference Include="DevBase.Format" Version="1.2.1" />

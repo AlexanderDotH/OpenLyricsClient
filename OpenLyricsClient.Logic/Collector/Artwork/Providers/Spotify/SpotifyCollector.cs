@@ -48,13 +48,13 @@ public class SpotifyCollector : IArtworkCollector
             }
         }
 
-        return await GetArtwork(maxImage.Url);
+        return await GetArtwork(maxImage.Url, songResponseObject.SongRequestObject);
     }
 
-    private async Task<Shared.Structure.Artwork.Artwork> GetArtwork(string url)
+    private async Task<Shared.Structure.Artwork.Artwork> GetArtwork(string url, SongRequestObject songRequestObject)
     {
         byte[] artwork = await new WebClient().DownloadDataTaskAsync(url);
-        return new Shared.Structure.Artwork.Artwork(artwork, ArtworkReturnCode.SUCCESS);
+        return new Shared.Structure.Artwork.Artwork(artwork, Core.INSTANCE.CacheManager.ArtworkPath(songRequestObject), ArtworkReturnCode.SUCCESS);
     }
     
     public string CollectorName()

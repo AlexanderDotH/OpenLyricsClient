@@ -47,8 +47,7 @@ namespace OpenLyricsClient.Logic.Handler.Artwork
 
         private void OnArtworkFoundHandler(object sender, ArtworkFoundEventArgs args)
         {
-            Shared.Structure.Song.Song song = this._songHandler.CurrentSong;
-            song.Artwork = args.Artwork;
+            args.SongRequestObject.Song.Artwork = args.Artwork;
             ArtworkAppliedEvent(args.Artwork);
         }
 
@@ -95,13 +94,16 @@ namespace OpenLyricsClient.Logic.Handler.Artwork
 
                 if (!DataValidator.ValidateData(artworkCache))
                     continue;
+
+                if (artworkCache.Equals(this._oldArtwork))
+                    continue;
                 
                 ArtworkFoundEvent(songRequestObject, artworkCache);
                 this._oldArtwork = artworkCache;
             }
         }
         
-        protected virtual void ArtworkFoundEvent(SongRequestObject songResponseObject, Shared.Structure.Artwork.Artwork artwork)
+        public void ArtworkFoundEvent(SongRequestObject songResponseObject, Shared.Structure.Artwork.Artwork artwork)
         {
             ArtworkFoundEventHandler artworkFound = ArtworkFoundHandler;
             artworkFound?.Invoke(this, new ArtworkFoundEventArgs(artwork, songResponseObject));

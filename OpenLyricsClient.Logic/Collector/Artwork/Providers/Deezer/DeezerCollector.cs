@@ -31,7 +31,7 @@ public class DeezerCollector : IArtworkCollector
         if (artworkUrl.IsNullOrEmpty())
             return new Shared.Structure.Artwork.Artwork();
             
-        Shared.Structure.Artwork.Artwork artwork = await GetArtwork(artworkUrl);
+        Shared.Structure.Artwork.Artwork artwork = await GetArtwork(artworkUrl, songResponseObject.SongRequestObject);
 
         if (DataValidator.ValidateData(artwork))
             return artwork;
@@ -65,10 +65,10 @@ public class DeezerCollector : IArtworkCollector
         return string.Empty;
     }
     
-    private async Task<Shared.Structure.Artwork.Artwork> GetArtwork(string url)
+    private async Task<Shared.Structure.Artwork.Artwork> GetArtwork(string url, SongRequestObject requestObject)
     {
         ResponseData artwork = await new Request(url).GetResponseAsync();
-        return new Shared.Structure.Artwork.Artwork(artwork.Content, ArtworkReturnCode.SUCCESS);
+        return new Shared.Structure.Artwork.Artwork(artwork.Content, Core.INSTANCE.CacheManager.ArtworkPath(requestObject), ArtworkReturnCode.SUCCESS);
     }
 
     public string CollectorName()

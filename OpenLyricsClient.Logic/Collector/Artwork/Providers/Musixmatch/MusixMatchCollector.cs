@@ -39,7 +39,7 @@ namespace OpenLyricsClient.Logic.Collector.Artwork.Providers.Musixmatch
             if (artworkUrl.IsNullOrEmpty())
                 return new Shared.Structure.Artwork.Artwork();
             
-            Shared.Structure.Artwork.Artwork artwork = await GetArtwork(artworkUrl);
+            Shared.Structure.Artwork.Artwork artwork = await GetArtwork(artworkUrl, songResponseObject.SongRequestObject);
 
             if (DataValidator.ValidateData(artwork))
                 return artwork;
@@ -47,10 +47,10 @@ namespace OpenLyricsClient.Logic.Collector.Artwork.Providers.Musixmatch
             return new Shared.Structure.Artwork.Artwork();
         }
 
-        private async Task<Shared.Structure.Artwork.Artwork> GetArtwork(string url)
+        private async Task<Shared.Structure.Artwork.Artwork> GetArtwork(string url, SongRequestObject songRequestObject)
         {
             ResponseData artwork = await new Request(url).GetResponseAsync();
-            return new Shared.Structure.Artwork.Artwork(artwork.Content, ArtworkReturnCode.SUCCESS);
+            return new Shared.Structure.Artwork.Artwork(artwork.Content, Core.INSTANCE.CacheManager.ArtworkPath(songRequestObject), ArtworkReturnCode.SUCCESS);
         }
 
         private string GetArtworkUrl(Track track)

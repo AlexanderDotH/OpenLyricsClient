@@ -1,5 +1,8 @@
-﻿using Avalonia.Media.Imaging;
+﻿using System.Threading.Tasks.Sources;
+using Accord.Imaging.Filters;
+using Avalonia.Media.Imaging;
 using OpenLyricsClient.Shared.Structure.Palette;
+using OpenLyricsClient.Shared.Structure.Song;
 using OpenLyricsClient.Shared.Utils;
 using Squalr.Engine.Utils.Extensions;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
@@ -17,15 +20,17 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
         private bool _artworkApplied;
         private bool _artworkCalculated;
         
-        public Artwork(byte[] data, ArtworkReturnCode returnCode)
+        public Artwork(byte[] data, string filePath, ArtworkReturnCode returnCode)
         {
             this._data = data;
             this._returnCode = returnCode;
 
+            this._filePath = filePath;
+            
             this._artworkApplied = false;
         }
         
-        public Artwork() : this(null, ArtworkReturnCode.FAILED) { }
+        public Artwork() : this(null, string.Empty, ArtworkReturnCode.FAILED) { }
         
         public bool ArtworkApplied
         {
@@ -39,7 +44,7 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
             set => _artworkCalculated = value;
         }
 
-        public IBitmap ArtworkAsImage
+        public Bitmap ArtworkAsImage
         {
             get
             {

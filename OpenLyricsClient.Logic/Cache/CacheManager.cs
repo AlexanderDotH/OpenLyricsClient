@@ -332,6 +332,8 @@ namespace OpenLyricsClient.Logic.Cache
             return DateTimeOffset.Now.ToUnixTimeMilliseconds() + this._expirationMS;
         }
 
+        public string ArtworkPath(SongRequestObject songRequestObject) => string.Format("{0}{1}.png", CACHE_PATH, CalculateID(songRequestObject));
+        
         private CacheData ConvertToCacheData(JsonCacheData cacheData, string cacheID)
         {
             JsonSongMetadata songMetadata = cacheData.SongMetadata;
@@ -350,7 +352,7 @@ namespace OpenLyricsClient.Logic.Cache
 
             if (!data.IsNullOrEmpty())
             {
-                artwork = new Artwork(data, ArtworkReturnCode.SUCCESS);
+                artwork = new Artwork(data, fileName, ArtworkReturnCode.SUCCESS);
             }
 
             artwork.FilePath = artworkData.FilePath;
