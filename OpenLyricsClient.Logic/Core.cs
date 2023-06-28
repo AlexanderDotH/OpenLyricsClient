@@ -7,6 +7,7 @@ using OpenLyricsClient.Logic.Debugger;
 using OpenLyricsClient.Logic.Events.EventHandler;
 using OpenLyricsClient.Logic.Handler.Artwork;
 using OpenLyricsClient.Logic.Handler.Color;
+using OpenLyricsClient.Logic.Handler.Debug;
 using OpenLyricsClient.Logic.Handler.License;
 using OpenLyricsClient.Logic.Handler.Lyrics;
 using OpenLyricsClient.Logic.Handler.Services;
@@ -37,6 +38,7 @@ namespace OpenLyricsClient.Logic
         private ArtworkHandler _artworkHandler;
         private LicenseHandler _licenseHandler;
         private ColorHandler _colorHandler;
+        private DebugHandler _debugHandler;
         
         private CacheManager _cacheManager;
 
@@ -90,6 +92,8 @@ namespace OpenLyricsClient.Logic
             string workingDirectory =
                 System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) +
                 string.Format("{0}OpenLyricsClient{0}", System.IO.Path.DirectorySeparatorChar);
+
+            this._debugHandler = new DebugHandler(Path.Combine(workingDirectory, "Logs"));
             
             this._settingsHandler = new SettingsHandler(workingDirectory);
             
@@ -241,6 +245,11 @@ namespace OpenLyricsClient.Logic
         public AuthenticationPipe AuthenticationPipe
         {
             get => _authenticationPipe;
+        }
+
+        public DebugHandler DebugHandler
+        {
+            get => _debugHandler;
         }
 
         public static bool IsDisposed()

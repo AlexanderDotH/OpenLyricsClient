@@ -1,6 +1,6 @@
 ﻿namespace OpenLyricsClient.Logic.Debugger
 {
-    enum DebugType
+    public enum DebugType
     {
         INFO, DEBUG, ERROR, FATAL
     }

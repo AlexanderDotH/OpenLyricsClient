@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Avalonia;
@@ -91,7 +92,6 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
                 }
             });
         }
-
     }
     
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -123,6 +123,9 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
             double width = s.Width + t.Right + t.Left;
             double height = s.Height + t.Top + t.Bottom + 5;
+
+            width = Math.Floor(width);
+            height = Math.Floor(height);
 
             return new Size(
                 width,

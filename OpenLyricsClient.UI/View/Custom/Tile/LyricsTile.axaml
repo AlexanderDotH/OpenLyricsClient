@@ -12,7 +12,9 @@
                 </Transitions>
             </Decorator.Transitions>
         </Decorator>
-        <TextBlock Name="PART_Debug_Text" IsVisible="False" Foreground="Red" FontSize="12" VerticalAlignment="Center" TextWrapping="Wrap"/>
+        <Border Background="Black" Padding="5" CornerRadius="5" VerticalAlignment="Center">
+            <TextBlock Name="PART_Debug_Text" IsVisible="False" Foreground="White" FontSize="12" TextWrapping="Wrap"/>
+        </Border>
     </Grid>
                <!--Margin="{Binding LyricsMargin, RelativeSource={RelativeSource AncestorType=tile:LyricsTile}}"-->
 </UserControl>
