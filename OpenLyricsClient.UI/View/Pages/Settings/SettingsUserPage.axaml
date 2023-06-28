@@ -136,7 +136,7 @@
                                        Text="Interested?">
                             </TextBlock>
                             
-                            <TextBlock Text="Do you want to test Ai sync for free? Simply write me on Discord: Alex.#8988"></TextBlock>
+                            <TextBlock Text="Do you want to test Ai sync for free? Simply write me on Discord: alexdoth"></TextBlock>
 
                         </StackPanel>
                     </elements:GroupBox>

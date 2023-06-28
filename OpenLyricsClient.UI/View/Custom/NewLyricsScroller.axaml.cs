@@ -241,7 +241,7 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
             if (itemContainer == null)
                 itemContainer = this._hiddenRepeater.GetOrCreateElement(index) as LyricsTile;
 
-            return itemContainer.DesiredSize;
+            return itemContainer.Size;
         }
         catch (Exception e)
         {

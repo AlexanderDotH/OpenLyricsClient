@@ -4,12 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OpenLyricsClient.UI.View.Custom.Tile.LyricsTile">
-    <Decorator Name="PART_Decorator" Margin="0,0,0,70">
-        <Decorator.Transitions>
-            <Transitions>
-                <ThicknessTransition Property="Margin" Duration="0:0:1.0" Easing="CircularEaseOut"/>
-            </Transitions>
-        </Decorator.Transitions>
-    </Decorator>
+    <Grid>
+        <Decorator Name="PART_Decorator" Margin="0,0,0,70">
+            <Decorator.Transitions>
+                <Transitions>
+                    <ThicknessTransition Property="Margin" Duration="0:0:1.0" Easing="CircularEaseOut"/>
+                </Transitions>
+            </Decorator.Transitions>
+        </Decorator>
+        <TextBlock Name="PART_Debug_Text" IsVisible="False" Foreground="Red" FontSize="12" VerticalAlignment="Center" TextWrapping="Wrap"/>
+    </Grid>
                <!--Margin="{Binding LyricsMargin, RelativeSource={RelativeSource AncestorType=tile:LyricsTile}}"-->
 </UserControl>

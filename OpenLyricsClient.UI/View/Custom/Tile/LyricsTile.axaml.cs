@@ -4,9 +4,11 @@ using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using OpenLyricsClient.Logic;
 using OpenLyricsClient.Logic.Events.EventArgs;
 using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
+using OpenLyricsClient.Shared.Structure.Enum;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 using OpenLyricsClient.Shared.Structure.Visual;
 using OpenLyricsClient.Shared.Utils;
@@ -26,21 +28,28 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     
     private LyricPart _lyricPart;
     private Decorator _decorator;
-
+    private TextBlock _debugBlock;
+    
     private Thickness _lyricsMargin;
 
     private UserControl _overlay;
-
+    
     private double _speed;
 
     private bool _headless;
+
+    private EnumElementType _elementType;
     
     public LyricsTile()
     {
         AvaloniaXamlLoader.Load(this);
 
         this._decorator = this.Get<Decorator>(nameof(PART_Decorator));
+        this._debugBlock = this.Get<TextBlock>(nameof(PART_Debug_Text));
 
+        if (Core.DEBUG_MODE)
+            this._debugBlock.IsVisible = true;
+        
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
         
@@ -53,11 +62,6 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         this._decorator.Margin = t.ToThickness();
     }
 
-    public void UpdateViewPort(double width, double height)
-    {
-        //this._overlay.UpdateViewPort(width, height);
-    }
-    
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
@@ -70,7 +74,24 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     
     private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)
     {
-        
+        if (Core.DEBUG_MODE)
+        {
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                if (this._elementType == EnumElementType.NOTE)
+                {
+                    this._debugBlock.Text = string.Format(
+                        "Type: NoteElement | Data: {0}% | Dimensions: {1}w : {2}h", 
+                        LyricPart.Part, this.Size.Width, this.Size.Height);
+                } 
+                else if (this._elementType == EnumElementType.TEXT)
+                {
+                    this._debugBlock.Text = string.Format("Type: TextElement | Data: {0} {1}% | Dimensions: {2}w : {3}h", 
+                        LyricPart.Part, LyricPart.Percentage, this.Size.Width, this.Size.Height);
+                }
+            });
+        }
+
     }
     
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -100,9 +121,12 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
             
             Thickness t = this._decorator.Margin;
 
+            double width = s.Width + t.Right + t.Left;
+            double height = s.Height + t.Top + t.Bottom + 5;
+
             return new Size(
-                s.Width + t.Right + t.Left,
-                s.Height + t.Top + t.Bottom + 5);
+                width,
+                height);
         }
     }
     
@@ -142,11 +166,13 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         {
             this._overlay = new NoteOverlay();
             (this._overlay as NoteOverlay).LyricPart = lyricPart;
+            this._elementType = EnumElementType.NOTE;
         } 
         else if (!lyricPart.Part.Contains("♪"))
         {
             this._overlay = new TextOverlay();
             (this._overlay as TextOverlay).LyricPart = lyricPart;
+            this._elementType = EnumElementType.TEXT;
         }
 
     }
