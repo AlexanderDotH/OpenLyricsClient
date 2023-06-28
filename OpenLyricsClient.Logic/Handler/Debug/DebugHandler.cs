@@ -54,7 +54,7 @@ public class DebugHandler
         WriteToDisk();
     }
 
-    public void Write<T>(Exception exception, T type) => Write<T>(exception.Message, DebugType.ERROR, type);
+    public void Write<T>(Exception exception, T type) => Write<T>(string.Format("{0}\n{1}", exception.Message, exception.StackTrace!), DebugType.ERROR, type);
 
     private void ReadFromFile()
     {
@@ -70,6 +70,9 @@ public class DebugHandler
         });
 
         entries = entries.OrderByDescending(e => e.Timestamp.ToUnixTimeMilliseconds()).ToList();
+
+        if (entries.Count > 100)
+            entries = entries.GetRange(0, 100);
         
         this._globalEntries.AddRange(entries);
     }
