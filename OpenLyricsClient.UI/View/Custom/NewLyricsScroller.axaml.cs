@@ -14,6 +14,7 @@ using Avalonia.Rendering;
 using Avalonia.Threading;
 using DevBase.Async.Task;
 using OpenLyricsClient.Logic;
+using OpenLyricsClient.Logic.Debugger;
 using OpenLyricsClient.Logic.Events;
 using OpenLyricsClient.Logic.Events.EventArgs;
 using OpenLyricsClient.Shared.Structure.Enum;
@@ -59,6 +60,8 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
     private bool _isResyncing;
 
     private LyricPart _targetLock;
+
+    private Debugger<NewLyricsScroller> _debugger;
     
     public event PropertyChangedEventHandler? PropertyChanged;
     
@@ -66,6 +69,8 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
     {
         AvaloniaXamlLoader.Load(this);
 
+        this._debugger = new Debugger<NewLyricsScroller>(this);
+        
         _instance = this;
 
         this._isResyncing = false;
@@ -96,37 +101,44 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
 
     private void UiThreadRenderTimerOnTick(TimeSpan obj)
     {
-        this._repeater.Margin = GetMargin();
+        try
+        {
+            this._repeater.Margin = GetMargin();
 
-        if (DataValidator.ValidateData(this._viewModel.Lyrics))
-            this._repeater.Opacity = 1.0d;
+            if (DataValidator.ValidateData(this._viewModel.Lyrics))
+                this._repeater.Opacity = 1.0d;
 
-        double y = this._customScrollViewer.Offset.Y;
+            double y = this._customScrollViewer.Offset.Y;
 
-        if (!this._isResyncing)
-            this._targetLock = this._viewModel.Lyric;
+            if (!this._isResyncing)
+                this._targetLock = this._viewModel.Lyric;
         
-        if (this.IsSynced && !this._isSyncing && !this._isResyncing)
-        {
-            y = SmoothAnimator.Lerp(
-                this._currentScrollOffset,
-                this._nextScrollOffset,
-                (int)obj.Milliseconds, this.Speed, EnumAnimationStyle.SIGMOID);
-        }
-        else if (!this.IsSynced && this._isSyncing || this._isResyncing)
-        {
-            y = CalcResyncStep(this._currentScrollOffset, this._nextScrollOffset, this.Speed);
-        }
+            if (this.IsSynced && !this._isSyncing && !this._isResyncing)
+            {
+                y = SmoothAnimator.Lerp(
+                    this._currentScrollOffset,
+                    this._nextScrollOffset,
+                    (int)obj.Milliseconds, this.Speed, EnumAnimationStyle.SIGMOID);
+            }
+            else if (!this.IsSynced && this._isSyncing || this._isResyncing)
+            {
+                y = CalcResyncStep(this._currentScrollOffset, this._nextScrollOffset, this.Speed);
+            }
         
-        if (!double.IsNaN(y) && this._targetLock == this._viewModel.Lyric)
-        {
-            this._customScrollViewer.ScrollDirection = ScrollDirection.DOWN;
-            this._customScrollViewer.Offset = new Vector(0, y);
-        }
+            if (!double.IsNaN(y) && this._targetLock == this._viewModel.Lyric)
+            {
+                this._customScrollViewer.ScrollDirection = ScrollDirection.DOWN;
+                this._customScrollViewer.Offset = new Vector(0, y);
+            }
 
-        if (!double.IsNaN(y))
+            if (!double.IsNaN(y))
+            {
+                this._currentScrollOffset = y;
+            }
+        }
+        catch (Exception e)
         {
-            this._currentScrollOffset = y;
+            this._debugger.Write(e);
         }
     }
 
@@ -143,6 +155,8 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
             this.IsSynced = true;
             this._isSyncing = false;
             this._customScrollViewer.BypassScrollDirectionCheck = false;
+            
+            this._debugger.Write("Attached Scroll-Wheel", DebugType.INFO);
         }
         
         if (this._isResyncing && diff < 0.5 && this._viewModel.Lyric.Equals(_targetLock))
@@ -257,13 +271,14 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
     
     private void Reset()
     {
+        this._debugger.Write("Reset scroller", DebugType.INFO);
+        
         Dispatcher.UIThread.InvokeAsync(() =>
         {
             this._repeater.Opacity = 0;
             this._customScrollViewer.ScrollDirection = ScrollDirection.DOWN;
             this._currentScrollOffset = 0;
             this._customScrollViewer.Offset = new Vector(0, 0);
-            this._customScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
             
             //Resync();
             this.IsSynced = true;
@@ -275,6 +290,7 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
         if (e.Delta.Y != 0)
         {
             UnSync();
+            this._debugger.Write("Detached Scroll-Wheel", DebugType.INFO);
         }
 
         if (e.Delta.Y > 0)
