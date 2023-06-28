@@ -83,7 +83,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
                 {
                     this._debugBlock.Text = string.Format(
                         "Type: NoteElement | Data: {0}% | Dimensions: {1}w : {2}h", 
-                        LyricPart.Part, this.Size.Width, this.Size.Height);
+                        LyricPart.Percentage, this.Size.Width, this.Size.Height);
                 } 
                 else if (this._elementType == EnumElementType.TEXT)
                 {
@@ -122,10 +122,10 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
             Thickness t = this._decorator.Margin;
 
             double width = s.Width + t.Right + t.Left;
-            double height = s.Height + t.Top + t.Bottom + 5;
+            double height = s.Height + t.Top + t.Bottom;
 
-            width = Math.Floor(width);
-            height = Math.Floor(height);
+            /*width = Math.Ceiling(width);
+            height = Math.Ceiling(height);*/
 
             return new Size(
                 width,
