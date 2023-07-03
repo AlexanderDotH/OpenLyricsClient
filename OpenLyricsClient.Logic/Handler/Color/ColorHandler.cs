@@ -4,6 +4,7 @@ using DevBase.Avalonia.Color.Extensions;
 using DevBase.Avalonia.Extension.Color.Image;
 using DevBase.Avalonia.Extension.Converter;
 using DevBase.Avalonia.Extension.Extension;
+using OpenLyricsClient.Logic.Debugger;
 using OpenLyricsClient.Logic.Events.EventArgs;
 using OpenLyricsClient.Logic.Events.EventHandler;
 using OpenLyricsClient.Shared.Structure.Palette;
@@ -18,11 +19,15 @@ public class ColorHandler
     private Avalonia.Media.Color _defaultColor;
 
     private readonly double _lightAdjustment = 80d;
+
+    private Debugger<ColorHandler> _debugger;
     
     public event ColorPaletteChangedEventHandler ColorPaletteChangedEvent;
     
     public ColorHandler()
     {
+        this._debugger = new Debugger<ColorHandler>(this);
+        
         this._defaultColor = new Avalonia.Media.Color(255, 220, 20, 60);
 
         Core.INSTANCE.ArtworkHandler.ArtworkFoundHandler += ArtworkHandlerOnArtworkFoundHandler;
@@ -119,6 +124,8 @@ public class ColorHandler
         }
         catch (Exception e)
         {
+            this._debugger.Write(e);
+            
             // Change the default color to something pastel like, cuz that is the drip
             RGBToLabConverter converter = new RGBToLabConverter();
 

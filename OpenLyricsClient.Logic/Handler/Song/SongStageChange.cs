@@ -11,7 +11,6 @@ namespace OpenLyricsClient.Logic.Handler.Song
         {
         }
 
-
         public bool HasSongChanged(Shared.Structure.Song.Song currentSong)
         {
             if (DataValidator.ValidateData(currentSong))
@@ -62,8 +61,6 @@ namespace OpenLyricsClient.Logic.Handler.Song
                         this._lastSong = currentSong;
                         return true;
                     }
-
-
                 }
 
                 //if (DataValidator.ValidateData(this._lastSong.Lyrics) &&

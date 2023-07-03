@@ -516,7 +516,7 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     {
         get
         {
-            return new Size(this._size.Width, this._height);
+            return this.DesiredSize;
         }
     }
     

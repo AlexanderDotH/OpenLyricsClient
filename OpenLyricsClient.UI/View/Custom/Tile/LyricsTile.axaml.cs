@@ -30,6 +30,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     private LyricPart _lyricPart;
     private Decorator _decorator;
     private TextBlock _debugBlock;
+    private Border _debugBorder;
     
     private Thickness _lyricsMargin;
 
@@ -47,9 +48,13 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
         this._decorator = this.Get<Decorator>(nameof(PART_Decorator));
         this._debugBlock = this.Get<TextBlock>(nameof(PART_Debug_Text));
+        this._debugBorder = this.Get<Border>(nameof(PART_Debug_Border));
 
         if (Core.DEBUG_MODE)
+        {
             this._debugBlock.IsVisible = true;
+            this._debugBorder.IsVisible = true;
+        }
         
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
@@ -111,6 +116,9 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     {
         get
         {
+            this.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            return this.DesiredSize;
+            
             Size s = new Size();
             
             if (this._overlay is NoteOverlay overlay)

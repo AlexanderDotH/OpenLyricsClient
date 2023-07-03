@@ -89,6 +89,8 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
         this._viewModel = this.DataContext as NewLyricsScrollerViewModel;
         
         this._hiddenRepeater = this.Get<ItemsRepeater>(nameof(HIDDEN_CTRL_Repeater));
+        this._hiddenRepeater.Height = double.PositiveInfinity;
+        
         this._repeater = this.Get<ItemsRepeater>(nameof(CTRL_Repeater));
         this._customScrollViewer = this.Get<CustomScrollViewer>(nameof(CTRL_Viewer));
         this._container = this.Get<Panel>(nameof(CTRL_Container));
@@ -250,15 +252,13 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
 
         try
         {
-            LyricsTile itemContainer = this._hiddenRepeater.TryGetElement(index) as LyricsTile;
-
-            if (itemContainer == null)
-                itemContainer = this._hiddenRepeater.GetOrCreateElement(index) as LyricsTile;
+            LyricsTile itemContainer = this._hiddenRepeater.GetOrCreateElement(index) as LyricsTile;
 
             return itemContainer.Size;
         }
         catch (Exception e)
         {
+            this._debugger.Write(e);
             return new Size();
         }
     }

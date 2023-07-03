@@ -120,14 +120,17 @@ namespace OpenLyricsClient.Logic.Handler.Song.SongProvider
                         Core.INSTANCE.TaskRegister.ResumeByArray(this._spotifyTypes);
                         break;
                     }
-                    case EnumSongProvider.TIDAL:
+                    /*case EnumSongProvider.TIDAL:
                     {
                         Core.INSTANCE.TaskRegister.ResumeByArray(this._tidalTypes);
                         break;
-                    }
+                    }*/
                 }
             }
-            catch (Exception e) { }
+            catch (Exception e)
+            {
+                this._debugger.Write(e);
+            }
         }
 
         private void SuspendProvider(EnumSongProvider songProvider)
@@ -141,14 +144,17 @@ namespace OpenLyricsClient.Logic.Handler.Song.SongProvider
                         Core.INSTANCE.TaskRegister.SuspendByArray(this._spotifyTypes);
                         break;
                     }
-                    case EnumSongProvider.TIDAL:
+                    /*case EnumSongProvider.TIDAL:
                     {
                         Core.INSTANCE.TaskRegister.SuspendByArray(this._tidalTypes);
                         break;
-                    }
+                    }*/
                 }
             }
-            catch (Exception e) { }
+            catch (Exception e)
+            {
+                this._debugger.Write(e);
+            }
         }
 
         public EnumSongProvider GetSongProvider()

@@ -12,7 +12,7 @@
                 </Transitions>
             </Decorator.Transitions>
         </Decorator>
-        <Border Background="Black" Padding="5" CornerRadius="5" VerticalAlignment="Center">
+        <Border Name="PART_Debug_Border" IsVisible="False" Background="Black" Padding="5" CornerRadius="5" VerticalAlignment="Center">
             <TextBlock Name="PART_Debug_Text" IsVisible="False" Foreground="White" FontSize="12" TextWrapping="Wrap"/>
         </Border>
     </Grid>

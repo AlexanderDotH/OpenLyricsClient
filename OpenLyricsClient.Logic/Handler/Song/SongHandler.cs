@@ -51,14 +51,6 @@ namespace OpenLyricsClient.Logic.Handler.Song
                 new Task(async () => await ManageCurrentSong(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
                 EnumRegisterTypes.SONGHANDLER_MANAGECURRENTSONG);
 
-            if (EnvironmentUtils.IsDebugLogEnabled())
-            {
-                Core.INSTANCE.TaskRegister.Register(
-                    out _songInformationSuspensionToken,
-                    new Task(async () => await SongInformation(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
-                    EnumRegisterTypes.SONGHANDLER_SONGINFORMATION);
-            }
-
             this.SongChanged += OnSongChanged;
             
             this._disposed = false;
@@ -68,6 +60,8 @@ namespace OpenLyricsClient.Logic.Handler.Song
         {
             if (songChangedEventArgs.EventType == EventType.PRE)
                 return;
+            
+            this._debugger.Write("Song collection fired", DebugType.INFO);
             
             Task.Factory.StartNew(async () =>
             {
@@ -111,44 +105,6 @@ namespace OpenLyricsClient.Logic.Handler.Song
                         
                         MemoryHelper.ForceGC();
                     }
-                }
-            }
-        }
-
-        private async Task SongInformation()
-        {
-            while (!this._disposed)
-            {
-                await this._songInformationSuspensionToken.WaitForRelease();
-
-                await Task.Delay(10);
-                //PrintSongState(GetCurrentSong());
-            }
-        }
-
-        private void PrintSongState(Shared.Structure.Song.Song song)
-        {
-            if (DataValidator.ValidateData(song) &&
-                DataValidator.ValidateData(song.SongMetadata.Name, song.Time, song.TimeThreshold))
-            {
-                this._debugger.Write("Name: " + song.SongMetadata.Name, DebugType.INFO);
-                this._debugger.Write("----------------------", DebugType.INFO);
-                this._debugger.Write("Time in sec: " + song.Time / 1000, DebugType.INFO);
-                this._debugger.Write("Time in ms: " + song.Time, DebugType.INFO);
-                this._debugger.Write("----------------------", DebugType.INFO);
-                this._debugger.Write("Progress in sec: " + song.ProgressMs / 1000, DebugType.INFO);
-                this._debugger.Write("Progress in ms: " + song.ProgressMs, DebugType.INFO);
-                this._debugger.Write("----------------------", DebugType.INFO);
-                this._debugger.Write("Diff in ms: " + Math.Abs(song.ProgressMs - song.Time), DebugType.INFO);
-                this._debugger.Write("----------------------", DebugType.INFO);
-
-                this._debugger.Write("Threshold: " + song.TimeThreshold, DebugType.INFO);
-                this._debugger.Write("----------------------", DebugType.INFO);
-
-                if (DataValidator.ValidateData(song.CurrentLyricPart) &&
-                    DataValidator.ValidateData(song.CurrentLyricPart.Part, song.CurrentLyricPart.Time))
-                {
-                    this._debugger.Write("LyricPart: " + song.CurrentLyricPart.Part, DebugType.INFO);
                 }
             }
         }
