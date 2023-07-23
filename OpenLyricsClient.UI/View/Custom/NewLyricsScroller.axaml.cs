@@ -31,7 +31,7 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
 {
     // Styled Properties
     public static readonly StyledProperty<bool> IsSyncedProperty =
-        AvaloniaProperty.Register<LyricsScroller, bool>(nameof(IsSynced));
+        AvaloniaProperty.Register<NewLyricsScroller, bool>(nameof(IsSynced));
 
     // Controls
     private CustomScrollViewer _customScrollViewer;
