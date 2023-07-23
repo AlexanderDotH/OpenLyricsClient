@@ -368,6 +368,12 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
         }
     }
 
+    public bool IsSyncing
+    {
+        get => _isSyncing;
+        set => _isSyncing = value;
+    }
+
     public double Speed
     {
         get => this._speed;

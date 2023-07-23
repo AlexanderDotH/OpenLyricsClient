@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using OpenLyricsClient.Logic;
 using OpenLyricsClient.Logic.Events.EventArgs;
 using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
@@ -13,7 +15,10 @@ using OpenLyricsClient.Shared.Structure.Enum;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 using OpenLyricsClient.Shared.Structure.Visual;
 using OpenLyricsClient.Shared.Utils;
+using OpenLyricsClient.UI.Models.Custom;
+using OpenLyricsClient.UI.Models.Elements.Blur;
 using OpenLyricsClient.UI.View.Custom.Tile.Overlays;
+using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.UI.View.Custom.Tile;
 
@@ -31,6 +36,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     private Decorator _decorator;
     private TextBlock _debugBlock;
     private Border _debugBorder;
+    private BlurArea _blur;
     
     private Thickness _lyricsMargin;
 
@@ -49,6 +55,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         this._decorator = this.Get<Decorator>(nameof(PART_Decorator));
         this._debugBlock = this.Get<TextBlock>(nameof(PART_Debug_Text));
         this._debugBorder = this.Get<Border>(nameof(PART_Debug_Border));
+        this._blur = this.Get<BlurArea>(nameof(PART_Blur));
 
         if (Core.DEBUG_MODE)
         {
@@ -58,8 +65,57 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
+        Core.INSTANCE.LyricHandler.LyricChanged += LyricHandlerOnLyricChanged;
         
         Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
+    }
+
+    private void LyricHandlerOnLyricChanged(object sender, LyricChangedEventArgs lyricchangedeventargs)
+    {
+        ApplyBlur(lyricchangedeventargs.LyricPart);
+    }
+
+    private void ApplyBlur(LyricPart part)
+    {
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            int pos1 = GetPositionOfElement(part);
+            int pos2 = GetPositionOfElement(this._lyricPart);
+
+            float size = Math.Abs(pos1 - pos2) / 1.5f;
+            
+            bool isBlurEnabled =
+                Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Blur Lyrics");
+            
+            this._blur.IsVisible = size >= 0 && 
+                                   size <= 10 && 
+                                   NewLyricsScroller.Instance.IsSynced && 
+                                   !NewLyricsScroller.Instance.IsSyncing && 
+                                   isBlurEnabled;
+            
+            this._blur.Sigma = size;
+        });
+    }
+
+    private int GetPositionOfElement(LyricPart part)
+    {
+        NewLyricsScroller parent = NewLyricsScroller.Instance;
+        NewLyricsScrollerViewModel model = parent.DataContext as NewLyricsScrollerViewModel;
+
+        for (int i = 0; i < model.Lyrics.Count; i++)
+        {
+            if (model.Lyrics[i].Equals(part))
+                return i;
+        }
+
+        return -1;
+    }
+
+    private LyricPart GetCurrentElement()
+    {
+        NewLyricsScroller parent = NewLyricsScroller.Instance;
+        NewLyricsScrollerViewModel model = parent.DataContext as NewLyricsScrollerViewModel;
+        return model.Lyric;
     }
 
     private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
@@ -75,7 +131,10 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
     private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
     {
-        //Dispatcher.UIThread.InvokeAsync(() => this._overlay.UpdateViewPort(this.Width, this.Height));
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            ApplyBlur(this.GetCurrentElement());
+        });
     }
     
     private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)
