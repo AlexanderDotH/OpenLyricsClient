@@ -2,28 +2,34 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using Avalonia.Threading;
 using DevBase.Generics;
 using DynamicData;
 using OpenLyricsClient.Logic;
 using OpenLyricsClient.Logic.Events.EventArgs;
 using OpenLyricsClient.Logic.Handler.Services.Services;
 using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
+using OpenLyricsClient.Shared.Structure.Enum;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 using OpenLyricsClient.Shared.Utils;
 using OpenLyricsClient.UI.Events.EventArgs;
 using OpenLyricsClient.UI.Extensions;
+using OpenLyricsClient.UI.Models.Pages.Settings;
 using OpenLyricsClient.UI.Structure;
 using OpenLyricsClient.UI.Utils;
 using OpenLyricsClient.UI.View.Pages;
 using OpenLyricsClient.UI.View.Windows;
+using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.UI.View.Custom.Tile.Overlays;
 
@@ -61,6 +67,9 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
     private bool _suppressActivity;
 
     private readonly int LEFT_SPACE;
+
+    private bool _selectedElement;
+    private double _percentage;
     
     public TextOverlay()
     {
@@ -73,6 +82,9 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
         this.SuppressActivity = false;
 
         this._isPointerOver = false;
+        this._selectedElement = false;
+
+        this._percentage = 0;
         
         this._lines = new ObservableCollection<LyricOverlayElement>();
         
@@ -81,16 +93,33 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
             FontStyle.Normal, this.LyricsWeight);
 
         this.LyricMargin = new Thickness(0, 0, 0, 5);
-
+        
         this._romanization = new Logic.Romanization.Romanization();
         
         NewLyricsScroller.Instance.EffectiveViewportChanged += InstanceOnEffectiveViewportChanged;
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
+        Core.INSTANCE.LyricHandler.LyricChanged += LyricHandlerOnLyricChanged;
+        Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
 
         this._lyricPart = new LyricPart(-9999, "Hello there ;)");
         
         MainWindow.Instance.PageSelectionChanged += InstanceOnPageSelectionChanged;
         MainWindow.Instance.PageSelectionChangedFinished += InstanceOnPageSelectionChangedFinished;
+    }
+
+    private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
+    {
+        if (settingschangedeventargs.Field.Equals("Selection Mode"))
+        {
+            OnPropertyChanged("IsFade");
+            OnPropertyChanged("IsKaraoke");
+            OnPropertyChanged("IsSolid");
+        }
+    }
+
+    private void LyricHandlerOnLyricChanged(object sender, LyricChangedEventArgs lyricchangedeventargs)
+    {
+        this._selectedElement = lyricchangedeventargs.LyricPart.Equals(this._lyricPart);
     }
 
     private void UpdateView(double height)
@@ -134,31 +163,51 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
         double remainder = (full / 100) * percentage;
 
-        for (var i = 0; i < this._lines.Count; i++)
+        Dispatcher.UIThread.InvokeAsync(() =>
         {
-            LyricOverlayElement element = this._lines[i];
-
-            double width = element.Rect.Width + mod;
+            for (var i = 0; i < this._lines.Count; i++)
+            {
+                LyricOverlayElement element = this._lines[i];
             
-            if (width >= remainder)
-            {
-                element.Width = remainder;
-                remainder = 0;
+                double width = element.Rect.Width + mod;
+            
+                if (width >= remainder)
+                {
+                    element.Width = remainder;
+                    
+                    double per = 100 / remainder * element.Width;
+                    element.PercentageMargin = per;
+                    
+                    remainder = 0;
+                }
+                else
+                {
+                    element.Width = width;
+                    
+                    double per = 100 / width * element.Width;
+                    element.PercentageMargin = per;
+                    
+                    remainder -= width;
+                }
+                
+                element.Percentage = percentage;
+                
+                element.Selected = this._selectedElement;
             }
-            else
-            {
-                element.Width = width;
-                remainder -= width;
-            }
-        }
+        });
     }
 
-    private void ResetWidths()
+    private void ResetDefaults()
     {
-        for (var i = 0; i < this._lines.Count; i++)
+        Dispatcher.UIThread.InvokeAsync(() =>
         {
-            this._lines[i].Width = 0;
-        }
+            for (var i = 0; i < this._lines.Count; i++)
+            {
+                this._lines[i].Width = 0;
+                this._lines[i].Percentage = 0;
+                this._lines[i].Selected = false;
+            }
+        });
     }
 
     #region Events
@@ -170,11 +219,14 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
         if (args.LyricPart.Equals(this._lyricPart))
         {
+            this._percentage = args.Percentage;
             CalculatePercentage(args.Percentage);
+            OnPropertyChanged("SelectedLineBrush");
         }
         else
         {
-            ResetWidths();
+            this._percentage = 0;
+            ResetDefaults();
         }
     }
 
@@ -210,7 +262,8 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
             return;
         
         this._isPointerOver = true;
-        OnPropertyChanged("UnSelectedLineBrush");
+        
+        this._lines.ForEach(a => a.PointerOver = true);
     }
 
     private void InputElement_OnPointerLeave(object? sender, PointerEventArgs e)
@@ -226,7 +279,8 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
             return;
         
         this._isPointerOver = false;
-        OnPropertyChanged("UnSelectedLineBrush");
+
+        this._lines.ForEach(a => a.PointerOver = false);
     }    
 
     private void InstanceOnPageSelectionChanged(object sender, PageSelectionChangedEventArgs pageselectionchanged)
@@ -320,14 +374,6 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
             if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
                 colorBrush = App.Current.FindResource("SelectedLineFontColorBrush") as SolidColorBrush;
 
-            /*if (Core.INSTANCE.SettingsHandler
-                    .Settings<LyricsSection>()!
-                    .GetValue<EnumLyricsDisplayMode>(
-                    "Selection Mode") == EnumLyricsDisplayMode.FADE)
-            {
-                colorBrush.AdjustBrightness(this.)
-            }*/
-
             return colorBrush;
         }
     }
@@ -366,6 +412,24 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
     public TextAlignment LyricsAlignment 
     {
         get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<TextAlignment>("Lyrics Alignment");
+    }
+
+    public bool IsKaraoke
+    {
+        get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()
+            .GetValue<EnumLyricsDisplayMode>("Selection Mode") == EnumLyricsDisplayMode.KARAOKE;
+    }
+    
+    public bool IsFade
+    {
+        get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()
+            .GetValue<EnumLyricsDisplayMode>("Selection Mode") == EnumLyricsDisplayMode.FADE;
+    }
+    
+    public bool IsSolid
+    {
+        get => Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()
+            .GetValue<EnumLyricsDisplayMode>("Selection Mode") == EnumLyricsDisplayMode.SOLID;
     }
     
     public bool Headless

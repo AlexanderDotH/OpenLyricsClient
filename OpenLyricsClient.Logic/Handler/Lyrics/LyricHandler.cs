@@ -13,6 +13,7 @@ using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Logic.Handler.Lyrics
 {
+    // TODO: Legacy code! Needs some refactoring
     public class LyricHandler : IHandler
     {
         private Debugger<LyricHandler> _debugger;

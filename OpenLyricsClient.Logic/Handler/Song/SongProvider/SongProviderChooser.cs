@@ -19,7 +19,6 @@ namespace OpenLyricsClient.Logic.Handler.Song.SongProvider
 
         private readonly object[] _spotifyTypes = new object[]
         {
-            EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK,
             EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATESONGDATA,
             EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC,
             EnumRegisterTypes.SPOTIFY_REFRESHTOKEN

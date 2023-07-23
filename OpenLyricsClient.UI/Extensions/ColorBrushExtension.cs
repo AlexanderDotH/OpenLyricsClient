@@ -1,5 +1,6 @@
 ﻿using System;
 using Avalonia.Media;
+using DevBase.Avalonia.Color.Extensions;
 
 namespace OpenLyricsClient.UI.Extensions;
 
@@ -25,7 +26,7 @@ public static class ColorBrushExtension
         Color color = from.Color;
         Color otherColor = to.Color;
 
-        double p = Math.Clamp(percentage, 0, 100);
+        double p = Math.Clamp(percentage / 100.0, 0, 100);
             
         double red = (otherColor.R * (1 - p) + color.R * p);
         double green = (otherColor.G * (1 - p) + color.G * p);
@@ -39,5 +40,24 @@ public static class ColorBrushExtension
 
         from.Color = newColor;
         return from;
+    }
+    
+    public static SolidColorBrush InterpolateTo(this SolidColorBrush color1, SolidColorBrush color2, double percentage, bool reverse = true)
+    {
+        double normalizedPercentage = percentage / 100.0;
+
+        if (reverse)
+            normalizedPercentage = 1 - percentage / 100.0;
+        
+        double r = color1.Color.R + (color2.Color.R - color1.Color.R) * normalizedPercentage;
+        double g = color1.Color.G + (color2.Color.G - color1.Color.G) * normalizedPercentage;
+        double b = color1.Color.B + (color2.Color.B - color1.Color.B) * normalizedPercentage;
+
+        return new SolidColorBrush(
+            new Color(
+                255, 
+                (byte)r, 
+                (byte)g, 
+                (byte)b).Correct());
     }
 }

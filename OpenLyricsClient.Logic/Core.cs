@@ -23,7 +23,7 @@ namespace OpenLyricsClient.Logic
     public class Core
     {
         public static Core INSTANCE;
-        public const bool DEBUG_MODE = true;
+        public const bool DEBUG_MODE = false;
 
         private static bool _loaded;
 

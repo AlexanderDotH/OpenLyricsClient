@@ -181,8 +181,7 @@ namespace OpenLyricsClient.Logic.Handler.Song.SongProvider.Spotify
 
             Core.INSTANCE.TaskRegister.Kill(
                 EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATESONGDATA, 
-                EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC, 
-                EnumRegisterTypes.SPOTIFYSONGPROVIDER_UPDATEPLAYBACK);
+                EnumRegisterTypes.SPOTIFYSONGPROVIDER_TIMESYNC);
         }
 
         public Shared.Structure.Song.Song GetCurrentSong()

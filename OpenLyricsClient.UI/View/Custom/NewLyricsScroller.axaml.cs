@@ -160,13 +160,16 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
             
             this._debugger.Write("Attached Scroll-Wheel", DebugType.INFO);
         }
-        
-        if (this._isResyncing && diff < 0.5 && this._viewModel.Lyric.Equals(_targetLock))
+
+        if (DataValidator.ValidateData(this._viewModel.Lyric))
         {
-            this._isResyncing = false;
-            this._viewModel.Resyncing = false;
-            UnSync();
-            Resync();
+            if (this._isResyncing && diff < 0.5 && this._viewModel.Lyric.Equals(_targetLock))
+            {
+                this._isResyncing = false;
+                this._viewModel.Resyncing = false;
+                UnSync();
+                Resync();
+            }
         }
 
         return currentOffset;
@@ -254,7 +257,9 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
         {
             LyricsTile itemContainer = this._hiddenRepeater.GetOrCreateElement(index) as LyricsTile;
 
-            return itemContainer.Size;
+            Size s = new Size(itemContainer.DesiredSize.Width, itemContainer.DesiredSize.Height);
+            
+            return s;
         }
         catch (Exception e)
         {

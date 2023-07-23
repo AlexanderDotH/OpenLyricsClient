@@ -22,11 +22,13 @@
                        PointerPressed="InputElement_OnPointerPressed"
                        PointerLeave="InputElement_OnPointerLeave">
                     
-                    <Border Width="{Binding Width}" 
-                            HorizontalAlignment="Left"
-                            Background="{Binding SelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}" 
-                            Opacity="0.2" 
-                            CornerRadius="5">
+                    <Panel IsVisible="{Binding IsKaraoke, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}">
+                        
+                        <Border Width="{Binding Width}" 
+                                HorizontalAlignment="Left"
+                                Background="{Binding SolidSelectedColor}" 
+                                Opacity="0.2" 
+                                CornerRadius="5">
                         <Border.Transitions>
                             <Transitions>
                                 <DoubleTransition Property="Width" Easing="CircularEaseOut" Duration="0:0:0.4"/>
@@ -38,7 +40,7 @@
                                FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
                                FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
                                Margin="5,0,5,0"
-                               Foreground="{Binding UnSelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
+                               Foreground="{Binding UnSelectedColor}"
                                TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}">
                         <TextBlock.Transitions>
                             <Transitions>
@@ -49,25 +51,71 @@
                         </TextBlock.Transitions>
                     </TextBlock>
                     
-                    <Viewbox Name="PART_Viewbox" 
-                             HorizontalAlignment="Left" 
-                             VerticalAlignment="Top"
-                             Stretch="None" 
-                             Width="{Binding Width}">
-                        
-                        <Viewbox.Transitions>
-                            <Transitions>
-                                <DoubleTransition Property="Width" Easing="CircularEaseOut" Duration="0:0:0.4"/>
-                            </Transitions>
-                        </Viewbox.Transitions>
+                        <Viewbox Name="PART_Viewbox" 
+                                 HorizontalAlignment="Left" 
+                                 VerticalAlignment="Top"
+                                 Stretch="None" 
+                                 Width="{Binding Width}">
+                            
+                            <Viewbox.Transitions>
+                                <Transitions>
+                                    <DoubleTransition Property="Width" Easing="CircularEaseOut" Duration="0:0:0.4"/>
+                                </Transitions>
+                            </Viewbox.Transitions>
+                            
+                            <TextBlock Text="{Binding Line, Converter={StaticResource RomanizationConverter}}"
+                                       FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
+                                       FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
+                                       Margin="5,0,5,0"
+                                       Foreground="{Binding  SolidSelectedColor}"
+                                       TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}">
+                                <TextBlock.Transitions>
+                                    <Transitions>
+                                        <BrushTransition Property="Foreground"
+                                                         Easing="CircularEaseOut"
+                                                         Duration="0:0:0.500"/>
+                                    </Transitions>
+                                </TextBlock.Transitions>
+                            </TextBlock>
+                        </Viewbox>
+                    </Panel>
+                    
+                    <Panel IsVisible="{Binding IsFade, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}">
                         
                         <TextBlock Text="{Binding Line, Converter={StaticResource RomanizationConverter}}"
                                    FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
                                    FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
                                    Margin="5,0,5,0"
-                                   Foreground="{Binding SelectedLineBrush, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
-                                   TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"/>
-                    </Viewbox>
+                                   Foreground="{Binding FadeSelectedColor}"
+                                   TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}">
+                            <TextBlock.Transitions>
+                                <Transitions>
+                                    <BrushTransition Property="Foreground"
+                                                     Easing="CircularEaseOut"
+                                                     Duration="0:0:0.500"/>
+                                </Transitions>
+                            </TextBlock.Transitions>
+                        </TextBlock>
+                    </Panel>
+                    
+                    <Panel IsVisible="{Binding IsSolid, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}">
+                        
+                        <TextBlock Text="{Binding Line, Converter={StaticResource RomanizationConverter}}"
+                                   FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
+                                   FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
+                                   Margin="5,0,5,0"
+                                   Foreground="{Binding SolidSelectedColor}"
+                                   TextAlignment="{Binding LyricsAlignment, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}">
+                            <TextBlock.Transitions>
+                                <Transitions>
+                                    <BrushTransition Property="Foreground"
+                                                     Easing="CircularEaseOut"
+                                                     Duration="0:0:0.500"/>
+                                </Transitions>
+                            </TextBlock.Transitions>
+                        </TextBlock>
+                    </Panel>
+                    
                 </Panel>
             </DataTemplate>
         </ItemsControl.ItemTemplate>
