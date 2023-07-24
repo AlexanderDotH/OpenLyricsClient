@@ -62,7 +62,7 @@
     <AdditionalFiles Include="View\Custom\Badges\Plattform\WindowsBadge.axaml" />
     <AdditionalFiles Include="View\Custom\Badges\PlusBadge.axaml" />
     <AdditionalFiles Include="View\Custom\CustomScrollViewer.axaml" />
-    <AdditionalFiles Include="View\Custom\NewLyricsScroller.axaml" />
+    <AdditionalFiles Include="View\Custom\LyricsScroller.axaml" />
     <AdditionalFiles Include="View\Custom\Tile\LyricsTile.axaml" />
     <AdditionalFiles Include="View\Custom\Tile\Overlays\NoteOverlay.axaml" />
     <AdditionalFiles Include="View\Custom\Tile\Overlays\TextOverlay.axaml" />

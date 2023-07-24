@@ -96,7 +96,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
         
         this._romanization = new Logic.Romanization.Romanization();
         
-        NewLyricsScroller.Instance.EffectiveViewportChanged += InstanceOnEffectiveViewportChanged;
+        LyricsScroller.Instance.EffectiveViewportChanged += InstanceOnEffectiveViewportChanged;
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
         Core.INSTANCE.LyricHandler.LyricChanged += LyricHandlerOnLyricChanged;
         Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
@@ -127,7 +127,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
         if (this.SuppressActivity)
             return;
         
-        UpdateTextWrappingLines(this._lyricPart.Part, NewLyricsScroller.Instance.Bounds.Width - LEFT_SPACE, height);
+        UpdateTextWrappingLines(this._lyricPart.Part, LyricsScroller.Instance.Bounds.Width - LEFT_SPACE, height);
     }
     
     private void UpdateTextWrappingLines(string text, double width, double height)
@@ -204,7 +204,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
             for (var i = 0; i < this._lines.Count; i++)
             {
                 this._lines[i].Width = 0;
-                this._lines[i].Percentage = 0;
+                this._lines[i].Percentage = 100;
                 this._lines[i].Selected = false;
             }
         });
@@ -243,7 +243,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
             return;
         
         //NewLyricsScroller.Instance.UnSync();
-        NewLyricsScroller.Instance.Resync(this.LyricPart);
+        LyricsScroller.Instance.Resync(this.LyricPart);
         
         if (service.CanSeek())
             Task.Factory.StartNew(async () => await service.Seek(this._lyricPart.Time));
@@ -338,7 +338,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
             if (this.SuppressActivity)
                 return;
             
-            UpdateTextWrappingLines(this._lyricPart.Part, NewLyricsScroller.Instance.Bounds.Width - LEFT_SPACE,
+            UpdateTextWrappingLines(this._lyricPart.Part, LyricsScroller.Instance.Bounds.Width - LEFT_SPACE,
                 double.PositiveInfinity);
             
             this._initialized = true;

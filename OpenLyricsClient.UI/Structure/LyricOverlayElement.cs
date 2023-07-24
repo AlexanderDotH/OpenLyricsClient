@@ -11,11 +11,12 @@ using OpenLyricsClient.Logic;
 using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
 using OpenLyricsClient.Shared.Structure.Enum;
 using OpenLyricsClient.UI.Extensions;
+using OpenLyricsClient.UI.Models;
 using OpenLyricsClient.UI.View.Custom.Tile.Overlays;
 
 namespace OpenLyricsClient.UI.Structure;
 
-public class LyricOverlayElement : INotifyPropertyChanged
+public class LyricOverlayElement : ModelBase
 {
     private double _width;
     private double _percentage;
@@ -197,20 +198,5 @@ public class LyricOverlayElement : INotifyPropertyChanged
             
             return colorBrush;
         }
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
     }
 }

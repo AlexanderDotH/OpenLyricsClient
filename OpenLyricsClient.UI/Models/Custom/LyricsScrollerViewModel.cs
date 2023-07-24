@@ -12,15 +12,13 @@ using OpenLyricsClient.Shared.Utils;
 
 namespace OpenLyricsClient.UI.Models.Custom;
 
-public class NewLyricsScrollerViewModel : ViewModelBase, INotifyPropertyChanged
+public class LyricsScrollerViewModel : ModelBase
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     private LyricData _lyricData;
     
     private LyricPart? _lyric;
     
-    public NewLyricsScrollerViewModel()
+    public LyricsScrollerViewModel()
     {
         Core.INSTANCE.LyricHandler.LyricChanged += LyricHandlerOnLyricChanged;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
@@ -81,18 +79,5 @@ public class NewLyricsScrollerViewModel : ViewModelBase, INotifyPropertyChanged
             
             return App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;
         }
-    }
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
     }
 }

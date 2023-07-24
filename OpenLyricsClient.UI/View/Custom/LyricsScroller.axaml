@@ -6,10 +6,10 @@
              xmlns:custom="clr-namespace:OpenLyricsClient.UI.Models.Custom"
              xmlns:tile1="clr-namespace:OpenLyricsClient.UI.View.Custom.Tile"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="OpenLyricsClient.UI.View.Custom.NewLyricsScroller">
+             x:Class="OpenLyricsClient.UI.View.Custom.LyricsScroller">
     
     <UserControl.DataContext>
-        <custom:NewLyricsScrollerViewModel/>
+        <custom:LyricsScrollerViewModel/>
     </UserControl.DataContext>
     
     <Grid Background="{Binding UiBackground}">

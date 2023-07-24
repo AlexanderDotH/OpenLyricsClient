@@ -14,12 +14,10 @@ using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.UI.Models.Pages.Settings.Providers;
 
-public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
+public class SettingsSpotifyViewModel : ModelBase
 {
     public ReactiveCommand<Unit, Unit> ConnectToSpotify { get; }
     public ReactiveCommand<Unit, Unit> DisconnectFromSpotify { get; }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     public SettingsSpotifyViewModel()
     {
@@ -37,17 +35,6 @@ public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
     
     private void StartSpotifyAuthFlow()
     {
-        /*if (Core.INSTANCE.SettingManager.Settings.SpotifyAccess.IsSpotifyConnected == false && 
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess?.Statistics != null &&
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess?.UserData?.DisplayName != string.Empty)
-        {
-            Core.INSTANCE.SettingManager.Settings.SpotifyAccess!.IsSpotifyConnected = true;
-            Core.INSTANCE.SettingManager.WriteSettings();
-        }
-        else
-        {
-            await Core.INSTANCE.ServiceHandler.AuthorizeService("Spotify");
-        }*/
         Core.INSTANCE.ServiceHandler.AuthorizeService("Spotify");
     }
 
@@ -117,18 +104,5 @@ public class SettingsSpotifyViewModel : ViewModelBase, INotifyPropertyChanged
     public bool IsConnected
     {
         get => Core.INSTANCE.ServiceHandler.IsConnected("Spotify");
-    }
-    
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
     }
 }

@@ -76,30 +76,27 @@
                                <elements:Expander HorizontalAlignment="Center"
                                                   Name="PART_ExpanderJapanese">
                                    <elements:Expander.Header>
-                                       <Grid VerticalAlignment="Stretch"
-                                             HorizontalAlignment="Stretch">
-                                           <StackPanel Orientation="Vertical" 
-                                                       HorizontalAlignment="Left" 
-                                                       VerticalAlignment="Stretch"
-                                                       Width="660"
-                                                       Spacing="2">
+                                       <StackPanel Orientation="Vertical" 
+                                                   HorizontalAlignment="Left" 
+                                                   VerticalAlignment="Stretch"
+                                                   Width="660"
+                                                   Spacing="2">
                                            
-                                               <TextBlock FontSize="15"
-                                                          VerticalAlignment="Top"
-                                                          HorizontalAlignment="Left"
-                                                          FontWeight="Normal"
-                                                          Text="Japanese">
-                                               </TextBlock>
+                                           <TextBlock FontSize="15"
+                                                      VerticalAlignment="Top"
+                                                      HorizontalAlignment="Left"
+                                                      FontWeight="Normal"
+                                                      Text="Japanese">
+                                           </TextBlock>
                                
-                                               <TextBlock FontSize="13"
-                                                          Foreground="{DynamicResource SecondaryFontColorBrush}"
-                                                          VerticalAlignment="Top"
-                                                          HorizontalAlignment="Left"
-                                                          FontWeight="Normal"
-                                                          Text="Converts japanese characters to roman letters">
-                                               </TextBlock>
-                                           </StackPanel>
-                                       </Grid>
+                                           <TextBlock FontSize="13"
+                                                      Foreground="{DynamicResource SecondaryFontColorBrush}"
+                                                      VerticalAlignment="Top"
+                                                      HorizontalAlignment="Left"
+                                                      FontWeight="Normal"
+                                                      Text="Converts japanese characters to roman letters">
+                                           </TextBlock>
+                                       </StackPanel>
                                    </elements:Expander.Header>
                                    
                                    <elements:Expander.Content>

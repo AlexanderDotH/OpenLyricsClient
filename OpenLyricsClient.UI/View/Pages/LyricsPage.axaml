@@ -250,7 +250,7 @@
               Margin="500,50,5,50">
             
             
-            <custom:NewLyricsScroller Name="LRC_Display"
+            <custom:LyricsScroller Name="LRC_Display"
                                        HorizontalAlignment="Stretch"
                                        VerticalAlignment="Stretch"/>
             

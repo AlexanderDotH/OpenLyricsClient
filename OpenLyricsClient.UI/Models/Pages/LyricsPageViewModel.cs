@@ -22,10 +22,8 @@ using ReactiveUI;
 
 namespace OpenLyricsClient.UI.Models.Pages;
 
-public class LyricsPageViewModel : INotifyPropertyChanged
+public class LyricsPageViewModel : ModelBase
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     private TaskSuspensionToken _songInfoSuspensionToken;
 
     public ReactiveCommand<Unit, Unit> UpdatePlaybackCommand { get; }
@@ -258,18 +256,5 @@ public class LyricsPageViewModel : INotifyPropertyChanged
             
             return App.Current.FindResource("PrimaryFontColorBrush") as SolidColorBrush;
         }
-    }
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
     }
 }

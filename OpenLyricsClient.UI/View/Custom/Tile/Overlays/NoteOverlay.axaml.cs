@@ -147,7 +147,7 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         if (service.CanSeek())
             Task.Factory.StartNew(async () => await service.Seek(this._lyricPart.Time));
         
-        NewLyricsScroller.Instance.Resync(this.LyricPart);
+        LyricsScroller.Instance.Resync(this.LyricPart);
     }    
     
     private void InputElement_OnPointerEnter(object? sender, PointerEventArgs e)

@@ -89,8 +89,8 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
             
             this._blur.IsVisible = size >= 0 && 
                                    size <= 10 && 
-                                   NewLyricsScroller.Instance.IsSynced && 
-                                   !NewLyricsScroller.Instance.IsSyncing && 
+                                   LyricsScroller.Instance.IsSynced && 
+                                   !LyricsScroller.Instance.IsSyncing && 
                                    isBlurEnabled;
             
             this._blur.Sigma = size;
@@ -99,8 +99,8 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
     private int GetPositionOfElement(LyricPart part)
     {
-        NewLyricsScroller parent = NewLyricsScroller.Instance;
-        NewLyricsScrollerViewModel model = parent.DataContext as NewLyricsScrollerViewModel;
+        LyricsScroller parent = LyricsScroller.Instance;
+        LyricsScrollerViewModel model = parent.DataContext as LyricsScrollerViewModel;
 
         for (int i = 0; i < model.Lyrics.Count; i++)
         {
@@ -113,8 +113,8 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
     private LyricPart GetCurrentElement()
     {
-        NewLyricsScroller parent = NewLyricsScroller.Instance;
-        NewLyricsScrollerViewModel model = parent.DataContext as NewLyricsScrollerViewModel;
+        LyricsScroller parent = LyricsScroller.Instance;
+        LyricsScrollerViewModel model = parent.DataContext as LyricsScrollerViewModel;
         return model.Lyric;
     }
 

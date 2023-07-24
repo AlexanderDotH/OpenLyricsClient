@@ -10,10 +10,8 @@ using ReactiveUI;
 
 namespace OpenLyricsClient.UI.Models.Pages.Settings;
 
-public class SettingsRomanizationViewModel : ViewModelBase, INotifyPropertyChanged
+public class SettingsRomanizationViewModel : ModelBase
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     public ReactiveCommand<Unit, Unit> JapaneseCommand { get; }
     public ReactiveCommand<Unit, Unit> KoreanCommand { get; }
     public ReactiveCommand<Unit, Unit> RussianCommand { get; }
@@ -70,18 +68,5 @@ public class SettingsRomanizationViewModel : ViewModelBase, INotifyPropertyChang
     public bool IsRussianEnabled
     {
         get => IsAvailable(RomanizeSelection.RUSSIA_TO_LATIN);
-    }
-    
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
     }
 }

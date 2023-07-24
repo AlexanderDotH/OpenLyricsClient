@@ -7,7 +7,7 @@ using OpenLyricsClient.Shared.Structure.Lyrics;
 
 namespace OpenLyricsClient.UI.Models.Pages.SubPages;
 
-public class ScrollPreviewSubPageViewModel
+public class ScrollPreviewSubPageViewModel : ModelBase
 {
     public ObservableCollection<LyricPart> _lyricParts;
     private LyricPart _lyricPart;
@@ -43,12 +43,5 @@ public class ScrollPreviewSubPageViewModel
             _lyricPart = value;
             OnPropertyChanged("CurrentLyricPart");
         }
-    }
-    
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

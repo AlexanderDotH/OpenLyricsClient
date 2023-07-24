@@ -27,11 +27,11 @@ using OpenLyricsClient.UI.View.Custom.Tile;
 
 namespace OpenLyricsClient.UI.View.Custom;
 
-public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
+public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 {
     // Styled Properties
     public static readonly StyledProperty<bool> IsSyncedProperty =
-        AvaloniaProperty.Register<NewLyricsScroller, bool>(nameof(IsSynced));
+        AvaloniaProperty.Register<LyricsScroller, bool>(nameof(IsSynced));
 
     // Controls
     private CustomScrollViewer _customScrollViewer;
@@ -40,10 +40,10 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
     private Panel _container;
 
     // ViewModel
-    private NewLyricsScrollerViewModel _viewModel;
+    private LyricsScrollerViewModel _viewModel;
     
     // Instance
-    private static NewLyricsScroller _instance;
+    private static LyricsScroller _instance;
 
     // Multithreadding
     private TaskSuspensionToken _suspensionToken;
@@ -61,15 +61,15 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
 
     private LyricPart _targetLock;
 
-    private Debugger<NewLyricsScroller> _debugger;
+    private Debugger<LyricsScroller> _debugger;
     
     public event PropertyChangedEventHandler? PropertyChanged;
     
-    public NewLyricsScroller()
+    public LyricsScroller()
     {
         AvaloniaXamlLoader.Load(this);
 
-        this._debugger = new Debugger<NewLyricsScroller>(this);
+        this._debugger = new Debugger<LyricsScroller>(this);
         
         _instance = this;
 
@@ -85,8 +85,8 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
 
         Reset();
         
-        this.DataContext = new NewLyricsScrollerViewModel();
-        this._viewModel = this.DataContext as NewLyricsScrollerViewModel;
+        this.DataContext = new LyricsScrollerViewModel();
+        this._viewModel = this.DataContext as LyricsScrollerViewModel;
         
         this._hiddenRepeater = this.Get<ItemsRepeater>(nameof(HIDDEN_CTRL_Repeater));
         this._hiddenRepeater.Height = double.PositiveInfinity;
@@ -330,7 +330,7 @@ public partial class NewLyricsScroller : UserControl, INotifyPropertyChanged
         return true;
     }
 
-    public static NewLyricsScroller Instance
+    public static LyricsScroller Instance
     {
         get => _instance;
     }

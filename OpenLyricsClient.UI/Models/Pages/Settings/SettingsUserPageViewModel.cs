@@ -13,9 +13,8 @@ using TextCopy;
 
 namespace OpenLyricsClient.UI.Models.Pages.Settings;
 
-public class SettingsUserPageViewModel : ViewModelBase, INotifyPropertyChanged
+public class SettingsUserPageViewModel : ModelBase
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
     public ReactiveCommand<Unit, Unit> CopyIDCommand { get; }
     public ReactiveCommand<Unit, Unit> CopySecretCommand { get; }
 
@@ -98,17 +97,4 @@ public class SettingsUserPageViewModel : ViewModelBase, INotifyPropertyChanged
     }
     
     public EnumSubscriptions Subscription => Core.INSTANCE!.LicenseHandler!.License!.Model!;
-    
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
-    }
 }
