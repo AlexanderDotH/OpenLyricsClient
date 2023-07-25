@@ -16,8 +16,7 @@
     <Grid Background="{Binding UiBackground}">
         
         <ItemsControl Name="HIDDEN_CTRL_ItemsControl"  
-                      IsVisible="True"
-                      Opacity="0"
+                      IsVisible="False"
                       ItemsSource="{Binding Lyrics}">
                     
             <ItemsControl.ItemsPanel>
@@ -28,7 +27,7 @@
                     
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="lyrics:LyricPart">
-                    <tile1:LyricsTile LyricPart="{Binding}"/>
+                    <tile1:LyricsTile Headless="True" LyricPart="{Binding}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
@@ -38,7 +37,7 @@
                        ItemsSource="{Binding Lyrics}">
             <ItemsRepeater.ItemTemplate>
                 <DataTemplate DataType="lyrics:LyricPart">
-                    <tile1:LyricsTile LyricPart="{Binding}"/>
+                    <tile1:LyricsTile Headless="True" LyricPart="{Binding}"/>
                 </DataTemplate>
             </ItemsRepeater.ItemTemplate>
         </ItemsRepeater>
@@ -62,7 +61,7 @@
             
             <ScrollViewer.Transitions>
                 <Transitions>
-                    <VectorTransition Property="Offset" Easing="CircularEaseOut" Duration="0:0:1"/>
+                    <VectorTransition Property="Offset" Easing="CircularEaseInOut" Duration="0:0:0.75"/>
                 </Transitions>
             </ScrollViewer.Transitions>
             

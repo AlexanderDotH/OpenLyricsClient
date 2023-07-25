@@ -154,6 +154,9 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
     private void CalculatePercentage(double percentage)
     {
+        if (this.Headless)
+            return;
+        
         double full = 0;
         double mod = 10;
 

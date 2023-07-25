@@ -36,7 +36,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     private Decorator _decorator;
     private TextBlock _debugBlock;
     private Border _debugBorder;
-    //private BlurArea _blur;
+    private BlurArea _blur;
     
     private Thickness _lyricsMargin;
 
@@ -55,7 +55,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         this._decorator = this.Get<Decorator>(nameof(PART_Decorator));
         /*this._debugBlock = this.Get<TextBlock>(nameof(PART_Debug_Text));
         this._debugBorder = this.Get<Border>(nameof(PART_Debug_Border));*/
-        //this._blur = this.Get<BlurArea>(nameof(PART_Blur));
+        this._blur = this.Get<BlurArea>(nameof(PART_Blur));
 
         if (Core.DEBUG_MODE)
         {
@@ -87,13 +87,13 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
             bool isBlurEnabled =
                 Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Blur Lyrics");
             
-            /*this._blur.IsVisible = size >= 0 && 
+            this._blur.IsVisible = size >= 0 && 
                                    size <= 10 && 
                                    LyricsScroller.Instance.IsSynced && 
                                    !LyricsScroller.Instance.IsSyncing && 
                                    isBlurEnabled;
             
-            this._blur.Sigma = size;*/
+            this._blur.Sigma = size;
         });
     }
 

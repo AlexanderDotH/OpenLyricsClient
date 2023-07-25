@@ -218,6 +218,9 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         {
             if (lyricchangedeventargs.LyricPart.Equals(this._lastPart)) 
                 return;
+
+            this._hiddenItemsControl.IsVisible = true;
+            this._hiddenItemsControl.Opacity = 0;
             
             double offset = GetRenderedOffset(lyricchangedeventargs.LyricPart, this._viewModel.Lyrics);
             this._repeater.Margin = GetMargin();
@@ -240,7 +243,9 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         for (int i = 0; i < index; i++)
             position += GetRenderedSize(i).Height;
 
-        //position -= halfHeight;
+        double halfHeight = this._scrollViewer.Viewport.Height / 2.2d;
+        
+        position -= halfHeight;
         position += margin.Top;
 
         return position;
@@ -248,8 +253,6 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 
     private Size GetRenderedSize(int index)
     {
-        this._scrollViewer.UpdateLayout();
-        
         Size repeater = RepeaterSize(index);
         Size container = ContainerSize(index);
 
@@ -259,16 +262,20 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
     private Size ContainerSize(int index)
     {
         this._hiddenItemsControl.UpdateLayout();
-
-        Control content = this._hiddenItemsControl.ContainerFromIndex(index);
-
-        if (DataValidator.ValidateData(content) && content is ContentPresenter presenter)
+        
+        try
         {
-            LyricsTile tile = presenter.Child as LyricsTile;
+            Control content = this._hiddenItemsControl.ContainerFromIndex(index);
 
-            if (tile != null)
-                return tile.DesiredSize;
-        } 
+            if (DataValidator.ValidateData(content) && content is ContentPresenter presenter)
+            {
+                LyricsTile tile = presenter.Child as LyricsTile;
+
+                if (tile != null)
+                    return tile.DesiredSize;
+            }
+        }
+        catch (Exception e){}
         
         return new Size(0, 111);
     }
