@@ -83,14 +83,20 @@
                                    <StackPanel Orientation="Vertical" 
                                                Spacing="10"
                                                Width="300">
-                                       <subPages1:ScrollPreviewSubPage  Margin="5,5,5,5"
+                                       <!--<subPages1:ScrollPreviewSubPage  Margin="5,5,5,5"
                                                                        Background="{DynamicResource SecondaryBackgroundBrush}"
-                                                                       SelectedLineBrush="#FFFFFF"
                                                                        LyricDisplayMode="KARAOKE"
                                                                        FontSize="20"
                                                                        LyricsFontWeight="Bold"
-                                                                       UnSelectedLineBrush="#646464"
-                                                                       ItemMargin="0,0,0,5"/>
+                                                                       ItemMargin="0,0,0,5">
+                                           <subPages1:ScrollPreviewSubPage.SelectedLineBrush>
+                                               <SolidColorBrush Color="#FFFFFF"/>
+                                           </subPages1:ScrollPreviewSubPage.SelectedLineBrush>
+                                           
+                                           <subPages1:ScrollPreviewSubPage.UnSelectedLineBrush>
+                                               <SolidColorBrush Color="#646464"/>
+                                           </subPages1:ScrollPreviewSubPage.UnSelectedLineBrush>
+                                       </subPages1:ScrollPreviewSubPage>-->
                                        
                                        <TextBlock Text="Karaoke like"
                                                   FontSize="15"
@@ -110,14 +116,21 @@
                                    <StackPanel Orientation="Vertical" 
                                                Spacing="10"
                                                Width="300">
-                                       <subPages1:ScrollPreviewSubPage  Margin="5,5,5,5"
+                                       <!--<subPages1:ScrollPreviewSubPage  Margin="5,5,5,5"
                                                                        Background="{DynamicResource SecondaryBackgroundBrush}"
-                                                                       SelectedLineBrush="#FFFFFF"
                                                                        LyricDisplayMode="FADE"
                                                                        FontSize="20"
                                                                        LyricsFontWeight="Bold"
-                                                                       UnSelectedLineBrush="#646464"
-                                                                       ItemMargin="0,0,0,5"/>
+                                                                       ItemMargin="0,0,0,5">
+                                           
+                                           <subPages1:ScrollPreviewSubPage.SelectedLineBrush>
+                                               <SolidColorBrush Color="#FFFFFF"/>
+                                           </subPages1:ScrollPreviewSubPage.SelectedLineBrush>
+                                           
+                                           <subPages1:ScrollPreviewSubPage.UnSelectedLineBrush>
+                                               <SolidColorBrush Color="#646464"/>
+                                           </subPages1:ScrollPreviewSubPage.UnSelectedLineBrush>
+                                       </subPages1:ScrollPreviewSubPage>-->
                                        
                                        <TextBlock Text="Fade in"
                                                   FontSize="15"

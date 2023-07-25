@@ -47,7 +47,7 @@ class Program
             .UsePlatformDetect()
             .With(new Win32PlatformOptions()
             {
-                UseWindowsUIComposition = false
+                //UseWindowsUIComposition = false
             })
             .LogToTrace()
             .UseReactiveUI();

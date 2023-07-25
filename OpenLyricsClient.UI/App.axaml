@@ -4,6 +4,7 @@
              xmlns:local="using:OpenLyricsClient"
              xmlns:converter="clr-namespace:OpenLyricsClient.Logic.Utils.Converter;assembly=OpenLyricsClient.Logic"
              xmlns:ui="clr-namespace:OpenLyricsClient.UI"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
 
              x:Class="OpenLyricsClient.UI.App">
     <Application.DataTemplates>
@@ -11,24 +12,23 @@
     </Application.DataTemplates>
 
     <Application.Resources>
-        <themes:BundledTheme x:Key="Theme" BaseTheme="Dark" PrimaryColor="Purple" SecondaryColor="DeepPurple"/>
         <converter:FontSizeConverter x:Key="FontSizeConverter"/>
         <converter:FontWeightConverter x:Key="FontWeightConverter"/>
     </Application.Resources>
     
     <Application.Styles>
-        <StyleInclude Source="avares://Material.Avalonia/Material.Avalonia.Templates.xaml" />
-        <StyleInclude Source="avares://Material.Icons.Avalonia/App.xaml"/>
-        <StyleInclude Source="avares://AsyncImageLoader.Avalonia/AdvancedImage.axaml" />
+        
+        <themes:MaterialTheme BaseTheme="Dark" PrimaryColor="Purple" SecondaryColor="Lime" />
+        <avalonia:MaterialIconStyles />
+        
+        <!--<StyleInclude Source="avares://Material.Avalonia/Material.Avalonia.Templates.xaml" />
+        <StyleInclude Source="avares://Material.Icons.Avalonia/App.xaml"/>-->
+        <!--<StyleInclude Source="avares://AsyncImageLoader.Avalonia/AdvancedImage.axaml" />-->
         <StyleInclude Source="avares://OpenLyricsClient.UI/View/Elements/SearchingAnimation.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient.UI/View/Elements/GroupBox.axaml"/>
-        <StyleInclude Source="avares://OpenLyricsClient.UI/View/Elements/ComboBox.axaml"/>
-        <StyleInclude Source="avares://OpenLyricsClient.UI/View/Elements/AnimatedScrollView.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient.UI/View/Elements/LyricsCard.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient.UI/View/Elements/RadioButton.axaml"/>
-        <StyleInclude Source="avares://OpenLyricsClient.UI/View/Elements/NoteAnimation.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient.UI/View/Elements/MaterialCheckBox.axaml"/>
-        <StyleInclude Source="avares://OpenLyricsClient.UI/View/Custom/CustomScrollViewer.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient.UI/View/Elements/Expander.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient.UI/View/Elements/ContentExpandControl.axaml"/>
         <StyleInclude Source="avares://OpenLyricsClient.UI/View/Elements/RadioButton.axaml"/>

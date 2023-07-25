@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 using Avalonia;
 using Avalonia.Media;
@@ -25,9 +26,15 @@ public class StringUtils
 
             currentLine.Append(word);
             
-            FormattedText formattedCandidateLine = new FormattedText(currentLine.ToString(), typeface, fontSize, alignment, TextWrapping.NoWrap, new Size(width, height));
-
-            if (formattedCandidateLine.Bounds.Width > width)
+            FormattedText formattedCandidateLine = new FormattedText(
+                currentLine.ToString(), 
+                CultureInfo.CurrentUICulture, 
+                FlowDirection.LeftToRight, 
+                typeface, 
+                fontSize, 
+                new SolidColorBrush(new Color(255,255,255,255)));
+            
+            if (formattedCandidateLine.Width > width)
             {
                 currentLine.Length -= word.Length;
                 if (currentLine.Length > 0 && char.IsWhiteSpace(currentLine[currentLine.Length - 1]))
@@ -49,16 +56,16 @@ public class StringUtils
         return lines;
     }
     
-    public static Rect MeasureSingleString(string line, double width, double height, Typeface typeface, TextAlignment alignment, TextWrapping wrapping, double fontSize)
+    public static Size MeasureSingleString(string line, double width, double height, Typeface typeface, TextAlignment alignment, TextWrapping wrapping, double fontSize)
     {
-        FormattedText formattedCandidateLine = new FormattedText(
+        FormattedText t = new FormattedText(
             line, 
+            CultureInfo.CurrentUICulture, 
+            FlowDirection.LeftToRight, 
             typeface, 
             fontSize, 
-            alignment, 
-            wrapping, 
-            new Size(width, height));
+            new SolidColorBrush(new Color(255,255,255,255)));
 
-        return formattedCandidateLine.Bounds;
+        return new Size(t.Width, t.Height);
     }
 }

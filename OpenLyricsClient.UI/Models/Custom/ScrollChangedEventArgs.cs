@@ -10,7 +10,7 @@ public class ScrollChangedEventArgs : RoutedEventArgs
         Vector extentDelta,
         Vector offsetDelta,
         Vector viewportDelta)
-        : this(CustomScrollViewer.ScrollChangedEvent, extentDelta, offsetDelta, viewportDelta)
+        : this(ScrollViewer.ScrollChangedEvent, extentDelta, offsetDelta, viewportDelta)
     {
     }
 

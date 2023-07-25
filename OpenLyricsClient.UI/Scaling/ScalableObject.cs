@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Material.Styles;
+using Material.Styles.Controls;
 using OpenLyricsClient.UI.Models.Elements;
 
 namespace OpenLyricsClient.UI.Scaling;

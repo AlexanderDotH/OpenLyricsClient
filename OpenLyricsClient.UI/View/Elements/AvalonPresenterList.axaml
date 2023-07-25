@@ -17,7 +17,7 @@
                               Width="{TemplateBinding Width}"
                               Height="{TemplateBinding Height}">
                     <Panel>
-                        <ItemsRepeater Items="{TemplateBinding Elements}">
+                        <ItemsRepeater ItemsSource="{TemplateBinding Elements}">
                             <ItemsRepeater.ItemTemplate>
                                 <DataTemplate DataType="structure:AvalonPresenterElement">
                                     <StackPanel Orientation="Horizontal" 

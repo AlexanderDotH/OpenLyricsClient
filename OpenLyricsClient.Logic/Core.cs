@@ -123,8 +123,8 @@ namespace OpenLyricsClient.Logic
 
             Task.Factory.StartNew(async () => await SettingsHandler.TriggerGlobal());
             
-            this._interProcessService = new InterProcessService("openlyricsclient", null);
-            this._authenticationPipe = new AuthenticationPipe();
+            /*this._interProcessService = new InterProcessService("openlyricsclient", null);
+            this._authenticationPipe = new AuthenticationPipe();*/
         }
 
         private async Task TickTask()

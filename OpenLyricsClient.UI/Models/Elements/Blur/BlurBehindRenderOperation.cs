@@ -73,12 +73,16 @@ class BlurBehindRenderOperation : ICustomDrawOperation
 
         return SKColorFilter.CreateTable(a, c, c, c);
     }
-
-    public void Render(IDrawingContextImpl context)
+    
+    public void Render(ImmediateDrawingContext context)
     {
-        if (context is not ISkiaDrawingContextImpl skia)
+        var leaseFeature = context.TryGetFeature<ISkiaSharpApiLeaseFeature>();
+        
+        if (leaseFeature == null)
             return;
-
+        
+        using var skia = leaseFeature.Lease();
+        
         if (!skia.SkCanvas.TotalMatrix.TryInvert(out var currentInvertedTransform))
             return;
 

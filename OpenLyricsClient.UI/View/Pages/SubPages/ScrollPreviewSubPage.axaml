@@ -22,7 +22,7 @@
     </UserControl.DataContext>
     
     <Grid Background="{DynamicResource SecondaryBackgroundBrush}">
-        <ItemsRepeater Name="CTRL_Repeater" Items="{Binding CurrentLyricParts}" >
+        <ItemsRepeater Name="CTRL_Repeater" ItemsSource="{Binding CurrentLyricParts}" >
             <ItemsRepeater.ItemTemplate>
                 <DataTemplate>
                     <elements:LyricsCard 

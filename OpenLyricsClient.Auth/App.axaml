@@ -9,6 +9,6 @@
     </Application.DataTemplates>
 
     <Application.Styles>
-        <FluentTheme Mode="Light"/>
+        <FluentTheme/>
     </Application.Styles>
 </Application>

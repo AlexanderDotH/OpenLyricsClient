@@ -10,17 +10,6 @@ public class AvaloniaUtils
 {
     public static bool IsInPreviewerMode()
     {
-        try
-        {
-            using (PlatformManager.DesignerMode())
-            {
-                AvaloniaXamlLoader.IRuntimeXamlLoader loader = AvaloniaLocator.Current.GetService<AvaloniaXamlLoader.IRuntimeXamlLoader>();
-                return loader != null;
-            }
-        }
-        catch (Exception e)
-        {
-            return true;
-        }
+        return false;
     }
 }

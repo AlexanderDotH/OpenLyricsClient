@@ -13,7 +13,11 @@
         <Setter Property="assists:ShadowAssist.ShadowDepth" Value="Depth2"/>
         <Setter Property="CornerRadius" Value="4"/>
         <Setter Property="HeaderBrush" Value="{DynamicResource PrimaryColorBrush}"/>
-        <Setter Property="HeaderTextBrush" Value="#FFFFFF"></Setter>
+        <Setter Property="HeaderTextBrush">
+            <Setter.Value>
+                <SolidColorBrush Color="#FFFFFF"/>
+            </Setter.Value>
+        </Setter>
         <Setter Property="HeaderText" Value="Header"></Setter>
         <Setter Property="Background" Value="{DynamicResource MaterialDesignCardBackground}" />
         <Setter Property="ClipToBounds" Value="False" />
@@ -60,7 +64,11 @@
         <Setter Property="assists:ShadowAssist.ShadowDepth" Value="Depth2"/>
         <Setter Property="CornerRadius" Value="10"/>
         <Setter Property="HeaderBrush" Value="{DynamicResource PrimaryColorBrush}"/>
-        <Setter Property="HeaderTextBrush" Value="#FFFFFF"></Setter>
+        <Setter Property="HeaderTextBrush">
+            <Setter.Value>
+                <SolidColorBrush Color="#FFFFFF"/>
+            </Setter.Value>
+        </Setter>
         <Setter Property="HeaderText" Value="Header"></Setter>
         <Setter Property="Background" Value="{DynamicResource MaterialDesignCardBackground}" />
         <Setter Property="ClipToBounds" Value="False" />

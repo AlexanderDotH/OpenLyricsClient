@@ -127,7 +127,6 @@ public class BlurArea : Control
         {
             _sigmaX = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SigmaX"));
-            InvalidateVisual();
         }
     }
     
@@ -138,7 +137,6 @@ public class BlurArea : Control
         {
             _sigmaY = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SigmaX"));
-            InvalidateVisual();
         }
     }
 
@@ -152,7 +150,6 @@ public class BlurArea : Control
         {
             SigmaX = value;
             SigmaY = value;
-            InvalidateVisual();
         }
     }
     

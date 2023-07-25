@@ -1,14 +1,15 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles">
+        xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles">
     <Design.PreviewWith>
         <Border Padding="20">
-            <styles:Card Classes="default"></styles:Card>
+            <controls:Card Classes="default"></controls:Card>
         </Border>
     </Design.PreviewWith>
 
     <!-- Add Styles Here -->
-    <Style Selector="styles|Card.default">
+    <Style Selector="controls|Card.default">
         <Setter Property="Background" Value="{DynamicResource PrimaryBackgroundBrush}"/>
         <Setter Property="Transitions">
             <Transitions>

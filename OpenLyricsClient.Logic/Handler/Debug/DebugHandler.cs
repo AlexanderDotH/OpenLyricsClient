@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Net;
+using System.Reflection;
 using Accord.MachineLearning.DecisionTrees.Pruning;
 using DevBase.Generics;
 using DevBase.IO;
@@ -66,7 +67,9 @@ public class DebugHandler
         files.ForEach(e =>
         {
             DebugFile file = deserializer.Deserialize<DebugFile>(e.ToStringData());
-            entries.AddRange(file.Entries);
+            
+            if (DataValidator.ValidateData(file))
+                entries.AddRange(file.Entries);
         });
 
         entries = entries.OrderByDescending(e => e.Timestamp.ToUnixTimeMilliseconds()).ToList();

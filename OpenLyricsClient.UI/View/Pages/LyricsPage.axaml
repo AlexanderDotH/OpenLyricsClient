@@ -8,6 +8,7 @@
              xmlns:pages="clr-namespace:OpenLyricsClient.UI.Models.Pages"
              xmlns:elements="clr-namespace:OpenLyricsClient.UI.Models.Elements"
              xmlns:custom="clr-namespace:OpenLyricsClient.UI.View.Custom"
+             xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{Binding UiBackground}"
              Foreground="{Binding UiForeground}"
@@ -37,7 +38,7 @@
             </Setter>
         </Style>
         
-        <Style Selector="styles|Card.height_transition">
+        <Style Selector="controls|Card.height_transition">
             <Setter Property="Height" Value="40"/>
             <Setter Property="Transitions">
                 <Transitions>
@@ -45,7 +46,7 @@
                 </Transitions>
             </Setter>
         </Style>
-        <Style Selector="styles|Card.height_transition:pointerover">
+        <Style Selector="controls|Card.height_transition:pointerover">
             <Setter Property="Height" Value="60"></Setter>
         </Style>
     </UserControl.Styles>
@@ -147,15 +148,15 @@
                           Margin="0,0,0,0"></Grid>
                 </Grid>
                 
-                <styles:Card Name="CRD_SongInfo" 
-                             Width="320"
-                             MaxWidth="320"
-                             VerticalAlignment="Center"
-                             HorizontalAlignment="Center"
-                             Margin="0, 0,0,0"
-                             CornerRadius="8"
-                             IsVisible="{Binding IsSongAvailable}"
-                             Background="{DynamicResource SecondaryBackgroundBrush}">
+                <controls:Card Name="CRD_SongInfo" 
+                               Width="320"
+                               MaxWidth="320"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Margin="0, 0,0,0"
+                               CornerRadius="8"
+                               IsVisible="{Binding IsSongAvailable}"
+                               Background="{DynamicResource SecondaryBackgroundBrush}">
 
                     <StackPanel Orientation="Vertical" Spacing="20">
                         <StackPanel Orientation="Vertical" Spacing="5">
@@ -240,7 +241,7 @@
                             </Button>
                         </StackPanel>
                     </StackPanel>
-                </styles:Card>
+                </controls:Card>
             </StackPanel>
         </Grid>
         
@@ -272,7 +273,7 @@
         
         <Button Name="BTN_SyncMode"
                 IsEnabled="{Binding ElementName=LRC_Display, Path=!IsSynced, Mode=OneWay}"
-                assists:ButtonAssist.CornerRadius="10"
+                CornerRadius="10"
                 assists:ShadowAssist.ShadowDepth="Depth3"
                 UseLayoutRounding="True"
                 Width="45"
@@ -305,13 +306,13 @@
               IsVisible="{Binding IsSongAvailable}"
               Height="50">
             
-            <styles:Card Name="CRD_Bar" 
-                         Classes="height_transition"
-                         Background="{DynamicResource SecondaryBackgroundBrush}"
-                         VerticalAlignment="Bottom"
-                         Margin="10,0,10,10"
-                         PointerMoved="InputElement_OnPointerMoved"
-                         PointerLeave="InputElement_OnPointerLeave">
+            <controls:Card Name="CRD_Bar" 
+                           Classes="height_transition"
+                           Background="{DynamicResource SecondaryBackgroundBrush}"
+                           VerticalAlignment="Bottom"
+                           Margin="10,0,10,10"
+                           PointerMoved="InputElement_OnPointerMoved"
+                           PointerExited="InputElement_OnPointerLeave">
                <Grid>
                    <ProgressBar Foreground="{DynamicResource PrimaryThemeColorBrush}"
                                 Background="{DynamicResource PrimaryBackgroundBrush}"
@@ -351,7 +352,7 @@
                               FontSize="14"></TextBlock>
                </Grid>
                 
-            </styles:Card>
+            </controls:Card>
         </Grid>
         
         

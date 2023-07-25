@@ -24,8 +24,8 @@
     </UserControl.Styles>
     
     <Panel Height="{Binding AnimationHeight, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}"
-           PointerEnter="InputElement_OnPointerEnter"
-           PointerLeave="InputElement_OnPointerLeave"
+           PointerEntered="InputElement_OnPointerEnter"
+           PointerExited="InputElement_OnPointerLeave"
            PointerPressed="InputElement_OnPointerPressed">
         
         <Border Width="{Binding Percentage, RelativeSource={RelativeSource AncestorType=overlays1:NoteOverlay}}"

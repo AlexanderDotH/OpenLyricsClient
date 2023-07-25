@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Media;
 using Material.Styles;
+using Material.Styles.Controls;
 
 namespace OpenLyricsClient.UI.Models.Elements;
 

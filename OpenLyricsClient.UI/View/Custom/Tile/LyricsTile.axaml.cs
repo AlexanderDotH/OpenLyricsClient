@@ -36,7 +36,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     private Decorator _decorator;
     private TextBlock _debugBlock;
     private Border _debugBorder;
-    private BlurArea _blur;
+    //private BlurArea _blur;
     
     private Thickness _lyricsMargin;
 
@@ -53,9 +53,9 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         AvaloniaXamlLoader.Load(this);
 
         this._decorator = this.Get<Decorator>(nameof(PART_Decorator));
-        this._debugBlock = this.Get<TextBlock>(nameof(PART_Debug_Text));
-        this._debugBorder = this.Get<Border>(nameof(PART_Debug_Border));
-        this._blur = this.Get<BlurArea>(nameof(PART_Blur));
+        /*this._debugBlock = this.Get<TextBlock>(nameof(PART_Debug_Text));
+        this._debugBorder = this.Get<Border>(nameof(PART_Debug_Border));*/
+        //this._blur = this.Get<BlurArea>(nameof(PART_Blur));
 
         if (Core.DEBUG_MODE)
         {
@@ -87,13 +87,13 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
             bool isBlurEnabled =
                 Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Blur Lyrics");
             
-            this._blur.IsVisible = size >= 0 && 
+            /*this._blur.IsVisible = size >= 0 && 
                                    size <= 10 && 
                                    LyricsScroller.Instance.IsSynced && 
                                    !LyricsScroller.Instance.IsSyncing && 
                                    isBlurEnabled;
             
-            this._blur.Sigma = size;
+            this._blur.Sigma = size;*/
         });
     }
 
@@ -175,16 +175,19 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     {
         get
         {
+            /*this.InitializeIfNeeded();
             this.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            return this.DesiredSize;
-            
+            return this.DesiredSize;*/
+            //return this.MeasureOverride(new Size(double.PositiveInfinity, double.PositiveInfinity));
             Size s = new Size();
             
             if (this._overlay is NoteOverlay overlay)
                 s = overlay.Size;
-            
+
             if (this._overlay is TextOverlay text)
-                s = text.Size;    
+            {
+                s = new Size(text.Size.Width, text.Size.Height);
+            }
             
             Thickness t = this._decorator.Margin;
 
@@ -232,7 +235,13 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
     private void ApplyDataToOverlay(LyricPart lyricPart)
     {
-        if (lyricPart.Part.Contains("♪"))
+        /*
+        this._overlay = new TextOverlay();
+        (this._overlay as TextOverlay).LyricPart = lyricPart;
+        this._elementType = EnumElementType.TEXT;
+        */
+        
+        if (lyricPart.Part.Trim().Equals("♪"))
         {
             this._overlay = new NoteOverlay();
             (this._overlay as NoteOverlay).LyricPart = lyricPart;

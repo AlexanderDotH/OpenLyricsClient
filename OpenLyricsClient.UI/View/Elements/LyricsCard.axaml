@@ -43,11 +43,6 @@
                             CornerRadius="{TemplateBinding CornerRadius}">
                     </Border>
                     
-                    <elements:NoteAnimation Name="PART_NoteAnimation"
-                                            IsVisible="False"
-                                            FontWeight="{TemplateBinding FontWeight, Converter={StaticResource FontWeightConverter}}"
-                                            FontSize="{TemplateBinding FontSize}"/>
-                    
                     <TextBlock Name="PART_TextBlock1"
                                Classes="grow"
                                HorizontalAlignment="Left"

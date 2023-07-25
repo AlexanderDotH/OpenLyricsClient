@@ -60,8 +60,8 @@
                                       VerticalAlignment="Stretch"
                                       HorizontalAlignment="Stretch"
                                       PointerPressed="ExpandJapaneseSection"
-                                      PointerEnter="ExpandJapaneseSectionEnter"
-                                      PointerLeave="ExpandJapaneseSectionLeave"
+                                      PointerEntered="ExpandJapaneseSectionEnter"
+                                      PointerExited="ExpandJapaneseSectionLeave"
                                       Background="{DynamicResource SecondaryBackgroundBrush}">
                        <Grid>
                            <StackPanel Orientation="Horizontal" 
@@ -154,8 +154,8 @@
                    <!--Korean to Roman-->
                    <elements:GroupBox Classes="clean" 
                                       PointerPressed="ExpandKoreanSection"
-                                      PointerEnter="ExpandKoreanSectionEnter"
-                                      PointerLeave="ExpandKoreanSectionLeave"
+                                      PointerEntered="ExpandKoreanSectionEnter"
+                                      PointerExited="ExpandKoreanSectionLeave"
                                       Background="{DynamicResource SecondaryBackgroundBrush}">
                        
                        <Grid>
@@ -254,8 +254,8 @@
                    <!--Russia to Roman-->
                    <elements:GroupBox Classes="clean" 
                                       PointerPressed="ExpandRussianSection"
-                                      PointerEnter="ExpandRussianSectionEnter"
-                                      PointerLeave="ExpandRussianSectionLeave"
+                                      PointerEntered="ExpandRussianSectionEnter"
+                                      PointerExited="ExpandRussianSectionLeave"
                                       Background="{DynamicResource SecondaryBackgroundBrush}">
                        
                        <Grid>

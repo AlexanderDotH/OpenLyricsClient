@@ -52,7 +52,6 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
     private Border _border;
     private Viewbox _viewbox;
     private Panel _panel;
-    private NoteAnimation _noteAnimation;
     private BlurArea _blurArea;
     
     private LyricPart? _lyricPart;
@@ -136,7 +135,6 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
             
             Dispatcher.UIThread.InvokeAsync(() =>
             {
-                this.InvalidateVisual();
                 
                 if (DataValidator.ValidateData(this._lyricPart))
                 {
@@ -144,18 +142,14 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
                     {
                         Current = false;
                         Percentage = -10;
-                        this._noteAnimation.Current = false;
-                        this._noteAnimation.Percentage = -10;
                     }
                     else
                     {
                         Current = true;
-                        this._noteAnimation.Current = true;
                     }
                 }
            
-                if (!(DataValidator.ValidateData(this._presenterBlock, this._greyBlock, this._noteAnimation,
-                        this._border)))
+                if (!(DataValidator.ValidateData(this._presenterBlock, this._greyBlock, this._border)))
                     return;
 
                 if (!(DataValidator.ValidateData(this._presenterBlock.Text) &&
@@ -166,36 +160,16 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
                 {
                     this._presenterBlock.IsVisible = false;
                     this._greyBlock.IsVisible = false;
-                    this._noteAnimation.IsVisible = true;
                     this._border.IsVisible = false;
                 }
                 else
                 {
                     this._presenterBlock.IsVisible = true;
                     this._greyBlock.IsVisible = true;
-                    this._noteAnimation.IsVisible = false;
                     this._border.IsVisible = true;
                 }
             });
         };
-    }
-    
-    public Rect GetBounds()
-    {
-        if (this.FontSize <= 0)
-            return new Rect();
-        
-        if (this.FontWeight <= 0)
-            return new Rect();
-
-        FormattedText text = new FormattedText(Text,
-            new Typeface(FontFamily.Parse(
-                    "avares://Material.Styles/Fonts/Roboto#Roboto"), 
-                FontStyle.Normal, this.FontWeight), this.FontSize * App.INSTANCE.ScalingManager.CurrentScaling, TextAlignment.Left,
-            TextWrapping.Wrap, new Size(this._greyBlock.DesiredSize.Width, this._greyBlock.DesiredSize.Height));
-
-        Rect rect = new Rect(new Size(text.Bounds.Width, text.Bounds.Height));
-        return rect;
     }
 
     public string Text
@@ -218,9 +192,6 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
                 if (this._oldValue == value)
                     return;
 
-                if (DataValidator.ValidateData(this._noteAnimation))
-                    this._noteAnimation.Percentage = value;
-                
                 this._oldValue = value;
 
                 SetValue(PercentageProperty, value);
@@ -233,9 +204,6 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
         get { return this._current; }
         set
         {
-            if (DataValidator.ValidateData(this._noteAnimation))
-                this._noteAnimation.Current = value;
-
             SetAndRaise(CurrentProperty, ref _current, value);
             // this._alreadySet = true;
         }
@@ -300,16 +268,12 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
 
             OnPropertyChanged("Blur");
 
-            if (this._noteAnimation != null)
-                this._noteAnimation.InvalidateVisual();
-
             if (this._blurArea != null)
                 this._blurArea.Sigma = value;
 
             /*if (this._greyBlock != null && this._lyricPart != null && this._lyricPart.Part != null)
                 this._greyBlock!.Text = this._lyricPart?.Part + " | " + value;*/
             
-            InvalidateVisual();
         }
     }
     
@@ -352,8 +316,7 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
         if (!(DataValidator.ValidateData(
                 this._presenterBlock, 
                 this._viewbox, 
-                this._border, 
-                this._noteAnimation)))
+                this._border)))
             return;
 
         if (DataValidator.ValidateData(this._blurArea))
@@ -406,8 +369,8 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
             this._border.Opacity = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background") ? 0.1 : 1.0;
             
             this._viewbox.IsVisible = true;
-            this._presenterBlock.MaxWidth = this._greyBlock.TextLayout.Size.Width;
-            this._presenterBlock.Width = this._greyBlock.TextLayout.Size.Width;
+            this._presenterBlock.MaxWidth = this._greyBlock.TextLayout.Width;
+            this._presenterBlock.Width = this._greyBlock.TextLayout.Width;
 
             this._viewbox.MaxWidth = this._greyBlock.DesiredSize.Width;
             this._viewbox.Width = ((this._viewbox.MaxWidth) / 100) * Percentage;
@@ -416,8 +379,6 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
 
         if (this._blurArea != null)
             this._blurArea.LyricPart = this._lyricPart;
-        
-        this._noteAnimation.Render(context);
         
         if (!this._current)
         {
@@ -476,12 +437,6 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
         var panel = e.NameScope.Find("PART_Panel");
         var blurArea = e.NameScope.Find("PART_BlurArea");
 
-        if (noteAnimation is NoteAnimation)
-        {
-            NoteAnimation animation = ((NoteAnimation)(noteAnimation));
-            this._noteAnimation = animation;
-        }
-        
         if (panel is Panel)
         {
             Panel p = (Panel)panel;

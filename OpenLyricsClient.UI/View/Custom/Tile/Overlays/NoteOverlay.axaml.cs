@@ -34,8 +34,8 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     public static readonly DirectProperty<NoteOverlay, LyricPart> LyricPartProperty = 
         AvaloniaProperty.RegisterDirect<NoteOverlay, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
     
-    public static StyledProperty<Thickness> LyricMarginProperty =
-        AvaloniaProperty.Register<NoteOverlay, Thickness>(nameof(LyricMargin));
+    public static readonly StyledProperty<Thickness> LyricsMarginProperty = 
+        AvaloniaProperty.Register<TextOverlay, Thickness>("LyricsMargin");
     
     private LyricPart _lyricPart;
     private Thickness _lyricMargin;
@@ -340,7 +340,7 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
 
     private Size CalculateSize()
     {
-        Rect r = StringUtils.MeasureSingleString(
+        Size r = StringUtils.MeasureSingleString(
             "♪", 
             double.PositiveInfinity, 
             double.PositiveInfinity, 
@@ -418,11 +418,8 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     
     public Thickness LyricMargin
     {
-        get { return this._lyricMargin; }
-        set
-        {
-            SetAndRaise(LyricMarginProperty, ref _lyricMargin, value);
-        }
+        get => GetValue(LyricsMarginProperty);
+        set => SetValue(LyricsMarginProperty, value);
     }
     
     public SolidColorBrush SelectedLineBrush

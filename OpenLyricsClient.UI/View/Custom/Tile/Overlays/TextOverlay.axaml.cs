@@ -38,8 +38,8 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
     public static readonly DirectProperty<TextOverlay, LyricPart> LyricPartProperty = 
         AvaloniaProperty.RegisterDirect<TextOverlay, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
     
-    public static StyledProperty<Thickness> LyricMarginProperty =
-        AvaloniaProperty.Register<LyricsTile, Thickness>(nameof(LyricMargin));
+    public static readonly StyledProperty<Thickness> LyricsMarginProperty = 
+        AvaloniaProperty.Register<TextOverlay, Thickness>("LyricsMargin");
     
     public static readonly DirectProperty<TextOverlay,  ObservableCollection<LyricOverlayElement>> LyricLinesProperty = 
         AvaloniaProperty.RegisterDirect<TextOverlay,  ObservableCollection<LyricOverlayElement>>(nameof(LyricLines), 
@@ -85,6 +85,8 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
         this._selectedElement = false;
 
         this._percentage = 0;
+        
+        AffectsMeasure<TextOverlay>(LyricLinesProperty, LyricPartProperty, LyricsMarginProperty);
         
         this._lines = new ObservableCollection<LyricOverlayElement>();
         
@@ -132,10 +134,10 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
     
     private void UpdateTextWrappingLines(string text, double width, double height)
     {
-        ObservableCollection<LyricOverlayElement> sizedLines = new ObservableCollection<LyricOverlayElement>();
-
-        Task.Factory.StartNew(async () =>
+        Dispatcher.UIThread.InvokeAsync(async() =>
         {
+            ObservableCollection<LyricOverlayElement> sizedLines = new ObservableCollection<LyricOverlayElement>();
+            
             AList<LyricOverlayElement> lines = StringUtils.SplitTextToLines(
                 await this._romanization.Romanize(text),
                 width,
@@ -145,9 +147,9 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
                 this.LyricsSize);
 
             sizedLines.AddRange(lines.GetAsList());
-        }).GetAwaiter().GetResult();
-        
-        SetAndRaise(LyricLinesProperty, ref _lines, sizedLines);
+            
+            SetAndRaise(LyricLinesProperty, ref _lines, sizedLines);
+        });
     }
 
     private void CalculatePercentage(double percentage)
@@ -347,11 +349,8 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
     
     public Thickness LyricMargin
     {
-        get { return this._lyricMargin; }
-        set
-        {
-            SetAndRaise(LyricMarginProperty, ref _lyricMargin, value);
-        }
+        get => GetValue(LyricsMarginProperty);
+        set => SetValue(LyricsMarginProperty, value);
     }
     
     public ObservableCollection<LyricOverlayElement> LyricLines
@@ -385,7 +384,6 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
             if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
             {
                 SolidColorBrush colorBrush = App.Current.FindResource("UnSelectedLineFontColorBrush") as SolidColorBrush;
-
                 if (this._isPointerOver)
                     return colorBrush.AdjustBrightness(120);
                 
@@ -448,6 +446,9 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
     {
         get
         {
+            return this.MeasureOverride(new Size(Double.PositiveInfinity, Double.PositiveInfinity));
+            
+            
             double width = 0;
             double height = 0;
             

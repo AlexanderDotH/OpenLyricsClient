@@ -51,7 +51,7 @@
                             Spacing="10">
                 
                     <Button Name="BTN_Romanization" 
-                            assists:ButtonAssist.CornerRadius="10"
+                            CornerRadius="10"
                             Width="260" 
                             Height="46"
                             Background="{DynamicResource SecondaryBackgroundBrush}"
@@ -76,7 +76,7 @@
                     </Button>
                     
                     <Button Name="BTN_Lyrics" Width="260" 
-                            assists:ButtonAssist.CornerRadius="10"
+                            CornerRadius="10"
                             Height="45"
                             Background="{DynamicResource SecondaryBackgroundBrush}"
                             Click="BTN_Lyrics_OnClick">
@@ -112,7 +112,7 @@
                             Spacing="10">
                 
                     <Button Name="BTN_Spotify" 
-                            assists:ButtonAssist.CornerRadius="10"
+                            CornerRadius="10"
                             Width="260" 
                             Height="45"
                             Background="{DynamicResource SecondaryBackgroundBrush}"
@@ -148,7 +148,7 @@
                             Spacing="10">
                 
                     <Button Name="BTN_Profile" 
-                            assists:ButtonAssist.CornerRadius="10"
+                            CornerRadius="10"
                             Width="260" 
                             Height="45"
                             Background="{DynamicResource SecondaryBackgroundBrush}"
@@ -184,7 +184,7 @@
                             Spacing="10">
                 
                     <Button Name="BTN_Cache" 
-                            assists:ButtonAssist.CornerRadius="10"
+                            CornerRadius="10"
                             Width="260" 
                             Height="45"
                             Background="{DynamicResource SecondaryBackgroundBrush}"
@@ -221,7 +221,7 @@
                             Spacing="10">
                 
                     <Button Name="BTN_Credits" 
-                            assists:ButtonAssist.CornerRadius="10"
+                            CornerRadius="10"
                             Width="260" 
                             Height="45"
                             Background="{DynamicResource SecondaryBackgroundBrush}"

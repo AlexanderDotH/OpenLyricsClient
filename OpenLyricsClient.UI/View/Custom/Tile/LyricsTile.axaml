@@ -14,11 +14,11 @@
             </Decorator.Transitions>
         </Decorator>
         
-        <blur:BlurArea Name="PART_Blur" IsHitTestVisible="False"/>
+        <!--<blur:BlurArea Name="PART_Blur" IsHitTestVisible="False"/>-->
         
-        <Border Name="PART_Debug_Border" IsVisible="False" Background="Black" Padding="5" CornerRadius="5" VerticalAlignment="Center" HorizontalAlignment="Left">
+        <!--<Border Name="PART_Debug_Border" IsVisible="False" Background="Black" Padding="5" CornerRadius="5" VerticalAlignment="Center" HorizontalAlignment="Left">
             <TextBlock Name="PART_Debug_Text" IsVisible="False" Foreground="White" FontSize="12" TextWrapping="Wrap"/>
-        </Border>
+        </Border>-->
     </Grid>
                <!--Margin="{Binding LyricsMargin, RelativeSource={RelativeSource AncestorType=tile:LyricsTile}}"-->
 </UserControl>

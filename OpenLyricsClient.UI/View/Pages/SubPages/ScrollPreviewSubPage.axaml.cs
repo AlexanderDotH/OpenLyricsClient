@@ -64,7 +64,7 @@ public partial class ScrollPreviewSubPage : UserControl
         this._currentPercentage = 0;
         this.LyricDisplayMode = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<EnumLyricsDisplayMode>("Selection Mode");
         
-        this._uiThreadRenderTimer = new UiThreadRenderTimer(60);
+        /*this._uiThreadRenderTimer = new UiThreadRenderTimer(60);
         this._uiThreadRenderTimer.Tick += delegate(TimeSpan span)
         {
             Dispatcher.UIThread.InvokeAsync(() =>
@@ -105,7 +105,7 @@ public partial class ScrollPreviewSubPage : UserControl
                     this._currentPercentage = 0;
                 }
             });
-        };
+        };*/
     }
 
     

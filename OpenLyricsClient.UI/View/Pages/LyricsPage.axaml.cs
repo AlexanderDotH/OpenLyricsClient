@@ -11,6 +11,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DevBase.Async.Task;
 using Material.Styles;
+using Material.Styles.Controls;
 using OpenLyricsClient.Logic;
 using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
 using OpenLyricsClient.Shared.Utils;

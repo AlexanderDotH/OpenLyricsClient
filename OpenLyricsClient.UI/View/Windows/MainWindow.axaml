@@ -7,6 +7,7 @@
         xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         xmlns:windows="clr-namespace:OpenLyricsClient.UI.Models.Windows"
         xmlns:pages1="clr-namespace:OpenLyricsClient.UI.View.Pages"
+        xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
         mc:Ignorable="d"
         MinWidth="1200"
         MinHeight="600"
@@ -180,7 +181,7 @@
             </Carousel>
         </DockPanel>
         
-        <styles:Card Name="CRD_WindowDecoration" 
+        <controls:Card Name="CRD_WindowDecoration" 
                      Width="85"
                      Height="40"
                      VerticalAlignment="Top"
@@ -188,15 +189,15 @@
                      Margin="0,10,10,0"
                      Background="{DynamicResource SecondaryBackgroundBrush}">
             <Grid Margin="0,0,0,0">
-                <styles:FloatingButton Background="#FE2E2E"
-                                       MinHeight="15"
-                                       Height="15"
-                                       MinWidth="15"
-                                       Width="15"
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Right"
-                                       Command="{Binding CloseButtonActionCommand}"/>
-                <styles:FloatingButton Background="#00cc33"
+                <controls:FloatingButton Background="#FE2E2E"
+                                         MinHeight="15"
+                                         Height="15"
+                                         MinWidth="15"
+                                         Width="15"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Right"
+                                         Command="{Binding CloseButtonActionCommand}"/>
+                <controls:FloatingButton Background="#00cc33"
                                        MinHeight="15"
                                        Height="15"
                                        MinWidth="15"
@@ -205,19 +206,19 @@
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Right"
                                        Command="{Binding ExpandButtonActionCommand}"/>
-                <styles:FloatingButton Background="#ffa500"
-                                       MinHeight="15"
-                                       Height="15"
-                                       MinWidth="15"
-                                       Width="15"
-                                       Margin="0,0,50,0"
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Right"
-                                       Command="{Binding HideButtonActionCommand}"/>
+                <controls:FloatingButton Background="#ffa500"
+                                         MinHeight="15"
+                                         Height="15"
+                                         MinWidth="15"
+                                         Width="15"
+                                         Margin="0,0,50,0"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Right"
+                                         Command="{Binding HideButtonActionCommand}"/>
             </Grid>
-        </styles:Card>
+        </controls:Card>
         
-        <styles:Card Name="CRD_WindowDecoration_FullScreen" 
+        <controls:Card Name="CRD_WindowDecoration_FullScreen" 
                      Width="40"
                      Height="40"
                      VerticalAlignment="Top"
@@ -225,15 +226,15 @@
                      Margin="0,10,100,0"
                      Background="{DynamicResource SecondaryBackgroundBrush}">
             <Grid Margin="0,0,0,0">
-                <styles:FloatingButton Background="#0389ff"
-                                       MinHeight="15"
-                                       Height="15"
-                                       MinWidth="15"
-                                       Width="15"
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Center"
-                                       Command="{Binding FullButtonActionCommand}"/>
+                <controls:FloatingButton Background="#0389ff"
+                                         MinHeight="15"
+                                         Height="15"
+                                         MinWidth="15"
+                                         Width="15"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center"
+                                         Command="{Binding FullButtonActionCommand}"/>
                 </Grid>
-        </styles:Card>
+        </controls:Card>
     </Grid>
 </Window>

@@ -51,13 +51,13 @@ public class LyricOverlayElement : ModelBase
         }
     }
 
-    public LyricOverlayElement(string line, Rect rect) : this()
+    public LyricOverlayElement(string line, Size rect) : this()
     {
         this.Line = line;
         this.Rect = rect;
     }
     
-    public Rect Rect { get; set; }
+    public Size Rect { get; set; }
     
     public string Line { get; set; }
 

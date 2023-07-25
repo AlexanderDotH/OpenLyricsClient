@@ -57,7 +57,7 @@ public partial class SettingsPage : UserControl
         
         SelectPage(0);
 
-        UiThreadRenderTimer uiThreadRenderTimer = new UiThreadRenderTimer(60);
+        /*UiThreadRenderTimer uiThreadRenderTimer = new UiThreadRenderTimer(60);
         uiThreadRenderTimer.Tick += span =>
         {
             if (this._currentIndex != this._oldIndex || this._oldIndex < 0)
@@ -68,7 +68,7 @@ public partial class SettingsPage : UserControl
                 element.Background = App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush;
                 this._oldIndex = this._currentIndex;
             }
-        };
+        };*/
 
         this._loaded = true;
     }
