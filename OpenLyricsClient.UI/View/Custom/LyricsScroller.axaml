@@ -14,50 +14,25 @@
     </UserControl.DataContext>
     
     <Grid Background="{Binding UiBackground}">
-        
-        <ItemsControl Name="HIDDEN_CTRL_ItemsControl"  
-                      IsVisible="False"
-                      ItemsSource="{Binding Lyrics}">
-                    
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-                    
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="lyrics:LyricPart">
-                    <tile1:LyricsTile Headless="True" LyricPart="{Binding}"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-        
-        <ItemsRepeater Name="HIDDEN_CTRL_Repeater"
-                       IsVisible="False"
-                       ItemsSource="{Binding Lyrics}">
-            <ItemsRepeater.ItemTemplate>
-                <DataTemplate DataType="lyrics:LyricPart">
-                    <tile1:LyricsTile Headless="True" LyricPart="{Binding}"/>
-                </DataTemplate>
-            </ItemsRepeater.ItemTemplate>
-        </ItemsRepeater>
+       
+        <Grid Name="CTRL_VisualElements" IsVisible="True" Opacity="0"/>
         
         <ScrollViewer Name="CTRL_Viewer" Padding="0">
-            <ItemsRepeater Name="CTRL_Repeater"
-                           ItemsSource="{Binding Lyrics}">
-                    
-                <ItemsRepeater.ItemTemplate>
+            
+            <ItemsControl Name="CTRL_Items">
+                
+                <ItemsControl.ItemsPanel>
+                     <ItemsPanelTemplate>
+                         <VirtualizingStackPanel/>
+                     </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                
+                <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="lyrics:LyricPart">
                         <tile1:LyricsTile LyricPart="{Binding}"/>
                     </DataTemplate>
-                </ItemsRepeater.ItemTemplate>
-                <ItemsRepeater.Transitions>
-                    <Transitions>
-                        <DoubleTransition Property="Opacity" Duration="0:0:3.0" Easing="CircularEaseOut"/>
-                        <ThicknessTransition Property="Margin" Duration="0:0:1.0" Easing="CircularEaseOut"/>
-                    </Transitions>
-                </ItemsRepeater.Transitions>
-            </ItemsRepeater>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
             
             <ScrollViewer.Transitions>
                 <Transitions>

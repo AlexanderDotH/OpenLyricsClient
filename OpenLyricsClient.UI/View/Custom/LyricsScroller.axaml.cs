@@ -42,10 +42,8 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 
     // Controls
     private ScrollViewer _scrollViewer;
-    private ItemsRepeater _repeater;
-    
-    private ItemsRepeater _hiddenRepeater;
-    private ItemsControl _hiddenItemsControl;
+    private ItemsControl _itemsControl;
+    private Grid _visualElementsGrid;
     
     // ViewModel
     private LyricsScrollerViewModel _viewModel;
@@ -67,10 +65,10 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
     private LyricPart _targetLock;
     private LyricPart _lastPart;
 
+    private List<(int, Size)> _visualElementsList;
+
     private Debugger<LyricsScroller> _debugger;
 
-    private ATupleList<int, ScrollerElement> _measurementCache;
-    
     public event PropertyChangedEventHandler? PropertyChanged;
     
     public LyricsScroller()
@@ -79,8 +77,6 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 
         this._debugger = new Debugger<LyricsScroller>(this);
 
-        this._measurementCache = new ATupleList<int, ScrollerElement>();
-        
         _instance = this;
 
         this._isResyncing = false;
@@ -90,29 +86,24 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         this._isSyncing = false;
 
         Reset();
+
+        this._visualElementsList = new List<(int, Size)>();
         
         this.DataContext = new LyricsScrollerViewModel();
         this._viewModel = this.DataContext as LyricsScrollerViewModel;
         
-        this._hiddenItemsControl = this.Get<ItemsControl>(nameof(HIDDEN_CTRL_ItemsControl));
-        
-        this._hiddenRepeater = this.Get<ItemsRepeater>(nameof(HIDDEN_CTRL_Repeater));
-        //this._hiddenRepeater.Height = double.PositiveInfinity;
-        
-        this._repeater = this.Get<ItemsRepeater>(nameof(CTRL_Repeater));
+        this._itemsControl = this.Get<ItemsControl>(nameof(CTRL_Items));
         this._scrollViewer = this.Get<ScrollViewer>(nameof(CTRL_Viewer));
+        this._visualElementsGrid = this.Get<Grid>(nameof(CTRL_VisualElements));
         
         this.EffectiveViewportChanged += OnEffectiveViewportChanged;
-        
-        /*this._uiThreadRenderTimer = new UiThreadRenderTimer(150);
-        this._uiThreadRenderTimer.Tick += UiThreadRenderTimerOnTick;*/
 
         AttachedToVisualTree += OnAttachedToVisualTree;
     }
 
     private void OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
     {
-        this._measurementCache.Clear();
+        this.FillVisualElements();
     }
 
     private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
@@ -130,8 +121,7 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
             this._scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
         });
         
-        this._measurementCache.Clear();
-
+        this.FillVisualElements();
         this.Speed = args.LyricData.LyricSpeed * 0.1f;
     }
 
@@ -149,11 +139,8 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
             if (lyricchangedeventargs.LyricPart.Equals(this._lastPart)) 
                 return;
 
-            this._hiddenItemsControl.IsVisible = true;
-            this._hiddenItemsControl.Opacity = 0;
-            
             double offset = GetRenderedOffset(lyricchangedeventargs.LyricPart, this._viewModel.Lyrics);
-            this._repeater.Margin = GetMargin();
+            this._itemsControl.Margin = GetMargin();
             this._scrollViewer.Offset = new Vector(0, offset);
 
             this._lastPart = lyricchangedeventargs.LyricPart;
@@ -187,66 +174,62 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 
     private Size GetRenderedSize(int index)
     {
-        try
+        if (index > this._visualElementsList.Count)
+            return new Size();
+        
+        for (int i = 0; i < this._visualElementsList.Count; i++)
         {
-            ScrollerElement e = this._measurementCache.FindEntry(index);
+            var e = this._visualElementsList[i];
 
-            if (DataValidator.ValidateData(e))
-                return e.Size;
+            if (e.Item1 == index)
+                return e.Item2;
         }
-        catch (Exception e)
-        {
-            this._debugger.Write(e);
-        }
         
-        Size repeater = RepeaterSize(index);
-        Size container = ContainerSize(index);
-
-        Size value = new Size(Math.Max(repeater.Width, container.Width), Math.Max(repeater.Height, container.Height));
-
-        if (value.Height == 70)
-            return new Size(0, 111);
-        
-        ScrollerElement element = new ScrollerElement()
-        {
-            Index = index,
-            Size = value
-        };
- 
-        this._measurementCache.Add(index, element);
-        
-        return value;
+        return new Size();
     }
 
-    private Size ContainerSize(int index)
+    private void FillVisualElements()
     {
-        this._hiddenItemsControl.UpdateLayout();
-        
-        try
+        Dispatcher.UIThread.InvokeAsync(() =>
         {
-            Control content = this._hiddenItemsControl.ContainerFromIndex(index);
-
-            if (DataValidator.ValidateData(content) && content is ContentPresenter presenter)
+            this._itemsControl.Items.Clear();
+            this._visualElementsGrid.Children.Clear();
+            this._visualElementsList.Clear();
+            
+            for (var i = 0; i < this._viewModel.Lyrics.Count; i++)
             {
-                LyricsTile tile = presenter.Child as LyricsTile;
+                LyricPart part = this._viewModel.Lyrics[i];
 
-                if (tile != null)
-                    return tile.DesiredSize;
+                LyricsTile dummyTile = new LyricsTile()
+                {
+                    LyricPart = part,
+                    Headless = true
+                };
+
+                dummyTile.LayoutUpdated += TileOnLayoutUpdated;
+                
+                this._visualElementsGrid.Children.Add(dummyTile);
+
+                LyricsTile realTile = new LyricsTile()
+                {
+                    LyricPart = part
+                };
+                
+                this._itemsControl.Items.Add(realTile);
             }
-        }
-        catch (Exception e){}
-        
-        return new Size(0, 111);
+        });
     }
-    
-    private Size RepeaterSize(int index)
-    {
-        this._hiddenRepeater.UpdateLayout();
-        
-        Control content = this._hiddenRepeater.GetOrCreateElement(index);
-        content.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
-        return content.DesiredSize;
+    private void TileOnLayoutUpdated(object? sender, EventArgs e)
+    {
+        if (sender is LyricsTile tile)
+        {
+            if (tile.DesiredSize.Height == 70 || tile.DesiredSize.Height == 0)
+                return;
+            
+            int index = GetIndexOfLyric(tile.LyricPart, this._viewModel.Lyrics);
+            this._visualElementsList.Add((index, tile.DesiredSize));
+        }
     }
 
     private int GetIndexOfLyric(LyricPart lyricPart, ObservableCollection<LyricPart> lyricParts) => lyricParts.IndexOf(lyricPart);
