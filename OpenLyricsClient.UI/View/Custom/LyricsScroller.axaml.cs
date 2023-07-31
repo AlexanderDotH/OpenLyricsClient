@@ -12,11 +12,13 @@ using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 using Avalonia.Rendering;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using DevBase.Async.Task;
+using DevBase.Generics;
 using OpenLyricsClient.Logic;
 using OpenLyricsClient.Logic.Debugger;
 using OpenLyricsClient.Logic.Events;
@@ -58,9 +60,6 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
     private CancellationTokenSource _renderTimerCancellationTokenSource;
     
     // Variables
-    private double _currentScrollOffset;
-    private double _nextScrollOffset;
-    private double _frameRate;
     private double _speed;
     private bool _isSyncing;
     private bool _isResyncing;
@@ -69,6 +68,8 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
     private LyricPart _lastPart;
 
     private Debugger<LyricsScroller> _debugger;
+
+    private ATupleList<int, ScrollerElement> _measurementCache;
     
     public event PropertyChangedEventHandler? PropertyChanged;
     
@@ -77,18 +78,16 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         AvaloniaXamlLoader.Load(this);
 
         this._debugger = new Debugger<LyricsScroller>(this);
+
+        this._measurementCache = new ATupleList<int, ScrollerElement>();
         
         _instance = this;
 
         this._isResyncing = false;
         
-        this._currentScrollOffset = 0;
-        this._nextScrollOffset = 0;
         this.Speed = 15 * 0.1;
 
         this._isSyncing = false;
-
-        this._frameRate = 144;
 
         Reset();
         
@@ -103,85 +102,19 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         this._repeater = this.Get<ItemsRepeater>(nameof(CTRL_Repeater));
         this._scrollViewer = this.Get<ScrollViewer>(nameof(CTRL_Viewer));
         
+        this.EffectiveViewportChanged += OnEffectiveViewportChanged;
+        
         /*this._uiThreadRenderTimer = new UiThreadRenderTimer(150);
         this._uiThreadRenderTimer.Tick += UiThreadRenderTimerOnTick;*/
 
         AttachedToVisualTree += OnAttachedToVisualTree;
     }
 
-    private void UiThreadRenderTimerOnTick(TimeSpan obj)
+    private void OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
     {
-        try
-        {
-            this._repeater.Margin = GetMargin();
-
-            if (DataValidator.ValidateData(this._viewModel.Lyrics))
-                this._repeater.Opacity = 1.0d;
-
-            double y = this._scrollViewer.Offset.Y;
-
-            if (!this._isResyncing)
-                this._targetLock = this._viewModel.Lyric;
-        
-            if (this.IsSynced && !this._isSyncing && !this._isResyncing)
-            {
-                y = SmoothAnimator.Lerp(
-                    this._currentScrollOffset,
-                    this._nextScrollOffset,
-                    (int)obj.Milliseconds, this.Speed, EnumAnimationStyle.SIGMOID);
-            }
-            else if (!this.IsSynced && this._isSyncing || this._isResyncing)
-            {
-                y = CalcResyncStep(this._currentScrollOffset, this._nextScrollOffset, this.Speed);
-            }
-        
-            if (!double.IsNaN(y) && this._targetLock == this._viewModel.Lyric)
-            {
-                //this._scrollViewer.ScrollDirection = ScrollDirection.DOWN;
-                this._scrollViewer.Offset = new Vector(0, y);
-            }
-
-            if (!double.IsNaN(y))
-            {
-                this._currentScrollOffset = y;
-            }
-        }
-        catch (Exception e)
-        {
-            this._debugger.Write(e);
-        }
+        this._measurementCache.Clear();
     }
 
-    private double CalcResyncStep(double currentOffset, double nextOffset, double speed)
-    {
-        double step = Math.Abs(nextOffset - currentOffset) / (speed);
-        
-        currentOffset += (currentOffset < nextOffset) ? step : -step;
-        
-        double diff = Math.Abs(nextOffset - currentOffset);
-        
-        if (diff < 1 && this._isSyncing)
-        {
-            this.IsSynced = true;
-            this._isSyncing = false;
-            
-            this._debugger.Write("Attached Scroll-Wheel", DebugType.INFO);
-        }
-
-        if (DataValidator.ValidateData(this._viewModel.Lyric))
-        {
-            if (this._isResyncing && diff < 0.5 && this._viewModel.Lyric.Equals(_targetLock))
-            {
-                this._isResyncing = false;
-                this._viewModel.Resyncing = false;
-                UnSync();
-                Resync();
-            }
-        }
-
-        return currentOffset;
-    }
-    
     private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
     {
         if (songchangedevent.EventType != EventType.PRE)
@@ -196,17 +129,14 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         {
             this._scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
         });
+        
+        this._measurementCache.Clear();
 
         this.Speed = args.LyricData.LyricSpeed * 0.1f;
     }
 
     private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
     {
-        /*Core.INSTANCE.TaskRegister.Register(
-            out _suspensionToken, 
-            new Task(async () => await UpdateOffset(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning), 
-            EnumRegisterTypes.GLOBAL_TICK);*/
-        
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
         Core.INSTANCE.LyricHandler.LyricChanged += LyricHandlerOnLyricChanged;
         Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
@@ -241,7 +171,11 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         double position = 0;
 
         for (int i = 0; i < index; i++)
-            position += GetRenderedSize(i).Height;
+        {
+            Size element = GetRenderedSize(i);
+            
+            position += element.Height;
+        }
 
         double halfHeight = this._scrollViewer.Viewport.Height / 2.2d;
         
@@ -253,10 +187,35 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 
     private Size GetRenderedSize(int index)
     {
+        try
+        {
+            ScrollerElement e = this._measurementCache.FindEntry(index);
+
+            if (DataValidator.ValidateData(e))
+                return e.Size;
+        }
+        catch (Exception e)
+        {
+            this._debugger.Write(e);
+        }
+        
         Size repeater = RepeaterSize(index);
         Size container = ContainerSize(index);
 
-        return new Size(Math.Max(repeater.Width, container.Width), Math.Max(repeater.Height, container.Height));
+        Size value = new Size(Math.Max(repeater.Width, container.Width), Math.Max(repeater.Height, container.Height));
+
+        if (value.Height == 70)
+            return new Size(0, 111);
+        
+        ScrollerElement element = new ScrollerElement()
+        {
+            Index = index,
+            Size = value
+        };
+ 
+        this._measurementCache.Add(index, element);
+        
+        return value;
     }
 
     private Size ContainerSize(int index)
@@ -307,8 +266,6 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         
         Dispatcher.UIThread.InvokeAsync(() =>
         {
-            //this._repeater.Opacity = 0;
-            this._currentScrollOffset = 0;
             this._scrollViewer.Offset = new Vector(0, 0);
             
             //Resync();
@@ -361,14 +318,12 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
     
     public void Resync()
     {
-        this._currentScrollOffset = this._scrollViewer.Offset.Y;
         this._isSyncing = true;
     }
     
     public void Resync(LyricPart part)
     {
         double offset = GetRenderedOffset(part, this._viewModel.Lyrics);
-        this._nextScrollOffset = offset;
         this._isResyncing = true;
 
         this._targetLock = part;
