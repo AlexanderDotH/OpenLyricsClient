@@ -45,6 +45,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     private double _speed;
 
     private bool _headless;
+    private bool _prevBlurSetting;
 
     private EnumElementType _elementType;
     
@@ -56,7 +57,10 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         /*this._debugBlock = this.Get<TextBlock>(nameof(PART_Debug_Text));
         this._debugBorder = this.Get<Border>(nameof(PART_Debug_Border));*/
         this._blur = this.Get<BlurArea>(nameof(PART_Blur));
+        //this._blur.IsVisible = false;
 
+        this._prevBlurSetting = false;
+        
         if (Core.DEBUG_MODE)
         {
             this._debugBlock.IsVisible = true;
@@ -72,6 +76,22 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
     private void LyricHandlerOnLyricChanged(object sender, LyricChangedEventArgs lyricchangedeventargs)
     {
+        bool isBlurEnabled =
+            Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Blur Lyrics");
+
+        if (isBlurEnabled != this._prevBlurSetting)
+        {
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                this._blur.IsVisible = isBlurEnabled;
+            });
+
+            this._prevBlurSetting = isBlurEnabled;
+        }
+        
+        if (!isBlurEnabled)
+            return;
+        
         ApplyBlur(lyricchangedeventargs.LyricPart);
     }
 
@@ -87,10 +107,9 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
             bool isBlurEnabled =
                 Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Blur Lyrics");
             
-            this._blur.IsVisible = size >= 0 && 
-                                   size <= 10 && 
-                                   LyricsScroller.Instance.IsSynced && 
+            this._blur.IsVisible = LyricsScroller.Instance.IsSynced && 
                                    !LyricsScroller.Instance.IsSyncing && 
+                                   size < 10 && size >= 0 &&
                                    isBlurEnabled;
             
             this._blur.Sigma = size;
@@ -131,10 +150,10 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
     private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
     {
-        Dispatcher.UIThread.InvokeAsync(() =>
+        /*Dispatcher.UIThread.InvokeAsync(() =>
         {
             ApplyBlur(this.GetCurrentElement());
-        });
+        });*/
     }
     
     private void LyricHandlerOnLyricsPercentageUpdated(object sender, LyricsPercentageUpdatedEventArgs args)

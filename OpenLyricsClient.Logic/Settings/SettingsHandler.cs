@@ -1,4 +1,5 @@
-﻿using Avalonia.Threading;
+﻿using System.Runtime.CompilerServices;
+using Avalonia.Threading;
 using DevBase.Generics;
 using OpenLyricsClient.Logic.Events.EventArgs;
 using OpenLyricsClient.Logic.Events.EventHandler;
@@ -57,7 +58,15 @@ public class SettingsHandler
 
     public T? Settings<T>() where T : ISettingSection
     {
-        return (T)this._sections.GetAsList().Find(s => s is T);
+        /*if (this._prevSection is T s && 
+            this._prevSection.Equals(s))
+            return s;*/
+        
+        for (int i = 0; i < this._sections.Length; i++)
+            if (this._sections.Get(i) is T section)
+                return section;
+
+        return default;
     }
 
     public async Task TriggerEvent<T>(T section, string field)

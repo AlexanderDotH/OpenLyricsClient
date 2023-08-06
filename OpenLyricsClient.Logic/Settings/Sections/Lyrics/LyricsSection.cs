@@ -63,7 +63,7 @@ public class LyricsSection : ISettingSection
             LyricsAlignment = TextAlignment.Left,
             LyricsMargin = new Margin(0,0,0,70),
             LyricsWeight = FontWeight.Bold,
-            LyricsSize = 30
+            LyricsSize = 34
         };
         
         return new JsonDeserializer().Serialize(structure);

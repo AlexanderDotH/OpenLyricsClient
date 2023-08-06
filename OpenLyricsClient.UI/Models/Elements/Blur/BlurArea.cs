@@ -31,6 +31,9 @@ public class BlurArea : Control
     public static StyledProperty<double> NoiseOpacityProperty =
         AvaloniaProperty.Register<BlurArea, double>(nameof(NoiseOpacity));
     
+    public static readonly StyledProperty<float> CornerRadiusProperty = AvaloniaProperty.Register<BlurArea, float>(
+        "CornerRadius");
+    
     public static readonly StyledProperty<ExperimentalAcrylicMaterial> MaterialProperty = AvaloniaProperty.Register<BlurArea, ExperimentalAcrylicMaterial>(
             "Material");
 
@@ -40,7 +43,10 @@ public class BlurArea : Control
 
     private float _sigmaX;
     private float _sigmaY;
-    
+
+    private float _prevSigmaX;
+    private float _prevSigmaY;
+
     private LyricPart _lyricPart;
     
     public BlurArea()
@@ -50,6 +56,10 @@ public class BlurArea : Control
         SigmaY = 3;
         UseNoise = false;
         NoiseOpacity = 0.0225;
+        CornerRadius = 0;
+
+        this._prevSigmaX = 0;
+        this._prevSigmaY = 0;
         
         ExperimentalAcrylicMaterial experimentalAcrylicMaterial = new ExperimentalAcrylicMaterial()
         {
@@ -63,41 +73,23 @@ public class BlurArea : Control
 
         Material = experimentalAcrylicMaterial;
         
-        //LyricsScroller.INSTANCE.BlurChanged += INSTANCEOnBlurChanged;
-        
-        AffectsRender<BlurArea>(MaterialProperty);
-    }
-
-    /*private void INSTANCEOnBlurChanged(object sender, BlurChangedEventArgs blurchangedevent)
-    {
-        if (this._lyricPart == null)
-            return;
-        
-        if (blurchangedevent.LyricPart == this._lyricPart)
-        {
-            this.Sigma = blurchangedevent.BlurSigma;
-            this.InvalidateVisual();
-        }
-    }*/
-
-    public override void Render(DrawingContext context)
-    {
-        base.Render(context);
-        
         ImmutableExperimentalAcrylicMaterial material = Material != null
             ? (ImmutableExperimentalAcrylicMaterial)Material.ToImmutable()
             : DefaultAcrylicMaterial;
         
-        this._behindRenderOperation = new BlurBehindRenderOperation(
-            material, 
-            this.SigmaX, 
-            this.SigmaY, 
-            this.UseNoise,
-            this.NoiseOpacity,
-            new Rect(default, Bounds.Size));
+        this._behindRenderOperation = new BlurBehindRenderOperation(material);
         
+        AffectsRender<BlurArea>(MaterialProperty);
+    }
+
+    public override void Render(DrawingContext context)
+    {
+        base.Render(context);
+
         if (!DataValidator.ValidateData(this._behindRenderOperation))
             return;
+
+        this._behindRenderOperation.Bounds = this.Bounds;
         
         context?.Custom(this._behindRenderOperation);
     }
@@ -105,13 +97,43 @@ public class BlurArea : Control
     public bool UseNoise
     {
         get => GetValue(UseNoiseProperty);
-        set => SetValue(UseNoiseProperty, value);
+        set
+        {
+            SetValue(UseNoiseProperty, value);
+                 
+            if (!DataValidator.ValidateData(this._behindRenderOperation))
+                return;
+            
+            this._behindRenderOperation.UseNoise = value;
+        }
     }
     
     public double NoiseOpacity
     {
         get => GetValue(NoiseOpacityProperty);
-        set => SetValue(NoiseOpacityProperty, value);
+        set
+        {
+            SetValue(NoiseOpacityProperty, value);
+                
+            if (!DataValidator.ValidateData(this._behindRenderOperation))
+                return;
+            
+            this._behindRenderOperation.NoiseOpacity = value;
+        }
+    }
+    
+    public float CornerRadius
+    {
+        get => GetValue(CornerRadiusProperty);
+        set
+        {
+            SetValue(CornerRadiusProperty, value);
+
+            if (!DataValidator.ValidateData(this._behindRenderOperation))
+                return;
+            
+            this._behindRenderOperation.CornerRadius = value;
+        }
     }
     
     public LyricPart LyricPart
@@ -122,21 +144,37 @@ public class BlurArea : Control
 
     public float SigmaX
     {
-        get => _sigmaX;
+        get => this._sigmaX;
         set
         {
-            _sigmaX = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SigmaX"));
+            if (this._prevSigmaX == value)
+                return;
+            
+            this._sigmaX = value;
+            this._prevSigmaX = value;
+            
+            if (!DataValidator.ValidateData(this._behindRenderOperation))
+                return;
+            
+            this._behindRenderOperation.SigmaX = value;
         }
     }
     
     public float SigmaY
     {
-        get => _sigmaY;
+        get => this._sigmaY;
         set
         {
-            _sigmaY = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SigmaX"));
+            if (this._prevSigmaY == value)
+                return;
+            
+            this._sigmaY = value;
+            this._prevSigmaY = value;
+            
+            if (!DataValidator.ValidateData(this._behindRenderOperation))
+                return;
+            
+            this._behindRenderOperation.SigmaY = value;
         }
     }
 

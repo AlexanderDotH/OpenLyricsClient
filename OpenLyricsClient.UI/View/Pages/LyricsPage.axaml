@@ -9,9 +9,11 @@
              xmlns:elements="clr-namespace:OpenLyricsClient.UI.Models.Elements"
              xmlns:custom="clr-namespace:OpenLyricsClient.UI.View.Custom"
              xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+             xmlns:blur="clr-namespace:OpenLyricsClient.UI.Models.Elements.Blur"
+             xmlns:providers="clr-namespace:OpenLyricsClient.UI.View.Custom.Badges.Lyrics.Providers"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{Binding UiBackground}"
-             Foreground="{Binding UiForeground}"
+             Foreground="{Binding UiFontForeground}"
              Name="PG_LyricsPage"
              x:Class="OpenLyricsClient.UI.View.Pages.LyricsPage">
     
@@ -62,7 +64,7 @@
                 Margin="8"
                 Text="Lyrics"
                 FontWeight="Bold"
-                FontSize="18"></TextBlock>
+                FontSize="18"/>
         </Border>
         
         <elements:GroupBox Classes="clean" 
@@ -130,148 +132,92 @@
             </StackPanel>
         </elements:GroupBox>
         
-        <Grid Name="GRD_Info"
-              HorizontalAlignment="Left"
-              IsVisible="{Binding IsSongAvailable}"
-              Width="500">
-            
-            <StackPanel Orientation="Vertical" 
-                        Spacing="5"
-                        VerticalAlignment="Center">
-                
-                <Grid Name="GRD_Content">
-                    <Grid Width="320"
-                          Height="320"
-                          VerticalAlignment="Center"
-                          HorizontalAlignment="Center"
-                          Background="{DynamicResource PrimaryBackgroundBrush}"
-                          Margin="0,0,0,0"></Grid>
-                </Grid>
-                
-                <controls:Card Name="CRD_SongInfo" 
-                               Width="320"
-                               MaxWidth="320"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Center"
-                               Margin="0, 0,0,0"
-                               CornerRadius="8"
-                               IsVisible="{Binding IsSongAvailable}"
-                               Background="{DynamicResource SecondaryBackgroundBrush}">
-
-                    <StackPanel Orientation="Vertical" Spacing="20">
-                        <StackPanel Orientation="Vertical" Spacing="5">
-                            
-                            <Grid ColumnDefinitions="*, 25">
-                                <TextBlock Grid.Column="0"
-                                           Name="TXT_Title"
-                                           Width="285"
-                                           Text="{Binding SongName}"
-                                           TextWrapping="Wrap"
-                                           HorizontalAlignment="Left"
-                                           VerticalAlignment="Top"
-                                           FontWeight="Bold"
-                                           FontSize="20"/>
-                                
-                                <Border Grid.Column="1" 
-                                        CornerRadius="7" 
-                                        Background="{DynamicResource LightBackgroundBrush}" 
-                                        Width="25" 
-                                        Height="25"
-                                        IsVisible="{Binding AiBadge}">
-                                    <ToolTip.Tip>
-                                        <TextBlock Text="This song was synchronized using Ai"></TextBlock>
-                                    </ToolTip.Tip>
-                                    <TextBlock Text="Ai" 
-                                               VerticalAlignment="Center" 
-                                               HorizontalAlignment="Center"/>
-                                </Border>
-                                
-                                <!--<Border Grid.Column="3" 
-                                        CornerRadius="7" 
-                                        Background="{DynamicResource LightBackgroundBrush}" 
-                                        Width="25" 
-                                        Height="25"
-                                        ToolTip.Tip="Published on: March 2023">
-                                    <avalonia:MaterialIcon Kind="Information" VerticalAlignment="Center" HorizontalAlignment="Center"></avalonia:MaterialIcon>
-                                </Border>-->
-                            </Grid>
-                           
-                            <TextBlock Name="TXT_Artists" 
-                                       Width="320"
-                                       Text="{Binding Artists}"
-                                       TextWrapping="Wrap"
-                                       HorizontalAlignment="Left"
-                                       VerticalAlignment="Bottom"
-                                       Margin="0,0,0,0"
-                                       FontSize="13"></TextBlock>
-                        </StackPanel>
-                        
-                        <StackPanel Orientation="Horizontal"
-                                    HorizontalAlignment="Center" 
-                                    IsVisible="{Binding IsPlayerAvailable}"
-                                    Spacing="20">
-                            <Button Background="{DynamicResource LightBackgroundBrush}" 
-                                    CornerRadius="20" 
-                                    Width="30" 
-                                    Height="30"
-                                    Command="{Binding PreviousSongCommand}"
-                                    assists:ShadowAssist.ShadowDepth="Depth2">
-                                <avalonia:MaterialIcon Kind="StepBackward"/>
-                            </Button>
-                            
-                            <Button Background="{DynamicResource LightBackgroundBrush}" 
-                                    CornerRadius="20" 
-                                    Width="35" 
-                                    Height="35"
-                                    Command="{Binding UpdatePlaybackCommand}"
-                                    assists:ShadowAssist.ShadowDepth="Depth2">
-                                <Panel>
-                                    <avalonia:MaterialIcon Kind="Pause" IsVisible="{Binding IsSongPlaying}"/>
-                                    <avalonia:MaterialIcon Kind="Play" IsVisible="{Binding !IsSongPlaying}"/>
-                                </Panel>
-                            </Button>
-                            
-                            <Button Background="{DynamicResource LightBackgroundBrush}" 
-                                    CornerRadius="20" 
-                                    Width="30" 
-                                    Height="30"
-                                    Command="{Binding NextSongCommand}"
-                                    assists:ShadowAssist.ShadowDepth="Depth2">
-                                <avalonia:MaterialIcon Kind="StepForward"/>
-                            </Button>
-                        </StackPanel>
-                    </StackPanel>
-                </controls:Card>
-            </StackPanel>
-        </Grid>
         
         <Grid Name="GRD_Presenter"
-              Background="{DynamicResource PrimaryBackgroundBrush}"
-              
-              Margin="500,50,5,50">
-            
+              IsVisible="{Binding IsInCache}"
+              Background="{Binding UiBackground}"
+              HorizontalAlignment="Stretch"
+              Margin="5,50,5,5">
             
             <custom:LyricsScroller Name="LRC_Display"
-                                       HorizontalAlignment="Stretch"
-                                       VerticalAlignment="Stretch"/>
-            
-            <!--<custom1:LyricsScroller
-                Name="LRC_Display"
-                IsVisible="{Binding IsSongAvailable}"
-                FontSize="30"
-                LyricsFontWeight="Bold"
-                ItemMargin="0,0,0,70"/>-->
-            
-            <!--<Panel HorizontalAlignment="Left" 
-                   VerticalAlignment="Center"
-                   Name="PNL_Loading"
-                   Margin="0,0,0,0">
-                  <elements:SearchingAnimation></elements:SearchingAnimation>
-            </Panel>-->
-            
+                                   Margin="200,0,10,0"
+                                   HorizontalAlignment="Stretch"
+                                   VerticalAlignment="Stretch"/>
         </Grid>
         
-        <Button Name="BTN_SyncMode"
+        
+          
+        <StackPanel Orientation="Vertical" 
+                    VerticalAlignment="Top" 
+                    HorizontalAlignment="Left" 
+                    IsVisible="{Binding IsInCache}"
+                    Margin="10, 60, 0, 20">
+             
+            <providers:AiLyricsBadge Name="CTRL_AiBadge"
+                                     IsVisible="{Binding AiBadge}"
+                                     StartColor="{Binding AiBadgeStartColor}"
+                                     EndColor="{Binding AiBadgeEndColor}"
+                                     ForegroundColorBrush="{Binding UiFontForeground}">
+                <providers:AiLyricsBadge.Transitions>
+                   <Transitions>
+                       <ColorTransition Property="StartColor" Duration="0:0:0.5" Easing="CircularEaseOut"/>
+                       <ColorTransition Property="EndColor" Duration="0:0:0.5" Easing="CircularEaseOut"/>
+                       <BrushTransition Property="Foreground" Duration="0:0:0.5" Easing="CircularEaseOut"/>
+                   </Transitions>
+                </providers:AiLyricsBadge.Transitions>
+            </providers:AiLyricsBadge>
+            
+            <providers:LyricFindLyricsBadge IsVisible="{Binding LyricFindBadge}"/>
+            
+            <providers:MusixMatchLyricsBadge IsVisible="{Binding MusixMatchBadge}"/>
+            
+            <providers:NetEaseLyricsBadge IsVisible="{Binding NetEaseBadge}"/>
+            
+            <providers:TextylLyricsBadge IsVisible="{Binding TextylBadge}"/>
+        </StackPanel>
+        
+        <Border Name="CTRL_PercentageBorder" 
+              VerticalAlignment="Bottom" 
+              HorizontalAlignment="Stretch" 
+              Background="{Binding UiForeground}"
+              Margin="10,0,10,10" 
+              Opacity="0.8"
+              CornerRadius="5"
+              Height="80">
+            
+            <Grid>
+               
+                <blur:BlurArea Sigma="5" CornerRadius="5"/>
+                
+                <Border Name="CTRL_PercentagePanel" 
+                        Opacity="0.1"
+                        CornerRadius="5"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Stretch" 
+                        Background="White">
+                    <Border.Transitions>
+                        <Transitions>
+                            <DoubleTransition Property="Width" Easing="QuinticEaseInOut" Duration="0:0:1.0"/>
+                        </Transitions>
+                    </Border.Transitions>
+                </Border>
+            </Grid>  
+        </Border>
+       
+        <Grid Name="CTRL_InformationBorder" 
+              VerticalAlignment="Bottom" 
+              HorizontalAlignment="Stretch" 
+              Background="Transparent"
+              Margin="10,0,10,10" 
+              Height="80">
+            <Viewbox Name="CTRL_ViewBoxCover" 
+                     VerticalAlignment="Stretch" 
+                     HorizontalAlignment="Left"
+                     Margin="10,10,0,10"/>
+        </Grid>
+
+        
+        <!--<Button Name="BTN_SyncMode"
                 IsEnabled="{Binding ElementName=LRC_Display, Path=!IsSynced, Mode=OneWay}"
                 CornerRadius="10"
                 assists:ShadowAssist.ShadowDepth="Depth3"
@@ -299,10 +245,10 @@
                     <Setter Property="Opacity" Value="0"></Setter>
                 </Style>
             </Button.Styles>
-        </Button>
+        </Button>-->
         
         
-        <Grid VerticalAlignment="Bottom"
+        <!--<Grid VerticalAlignment="Bottom"
               IsVisible="{Binding IsSongAvailable}"
               Height="50">
             
@@ -353,7 +299,7 @@
                </Grid>
                 
             </controls:Card>
-        </Grid>
+        </Grid>-->
         
         
     </Grid>

@@ -147,11 +147,8 @@ namespace OpenLyricsClient.Logic.Handler.Song
         
         public async Task SongUpdatedEvent()
         {
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                SongUpdatedEventHandler songUpdatedEvent = SongUpdated;
-                songUpdatedEvent?.Invoke(this);
-            });
+            SongUpdatedEventHandler songUpdatedEvent = SongUpdated;
+            songUpdatedEvent?.Invoke(this);
         }
         
         public Shared.Structure.Song.Song CurrentSong

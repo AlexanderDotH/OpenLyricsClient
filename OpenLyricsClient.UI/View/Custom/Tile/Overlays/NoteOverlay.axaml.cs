@@ -146,8 +146,6 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         
         if (service.CanSeek())
             Task.Factory.StartNew(async () => await service.Seek(this._lyricPart.Time));
-        
-        LyricsScroller.Instance.Resync(this.LyricPart);
     }    
     
     private void InputElement_OnPointerEnter(object? sender, PointerEventArgs e)
@@ -321,7 +319,7 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
             }
         }
     }
-
+    
     private void ApplyDuration(string classes, TimeSpan span)
     {
         Dispatcher.UIThread.InvokeAsync(() =>
@@ -341,12 +339,8 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     private Size CalculateSize()
     {
         Size r = StringUtils.MeasureSingleString(
-            "♪", 
-            double.PositiveInfinity, 
-            double.PositiveInfinity, 
+            "♪",
             this._typeface,
-            this.LyricsAlignment, 
-            TextWrapping.NoWrap,
             this.LyricsSize);
 
         int amount = 3;
@@ -380,6 +374,11 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         return TimeSpan.FromMilliseconds(result);
     }
 
+    private void DisableAnimation()
+    {
+        this.Styles.Clear();
+    }
+    
     #endregion
 
     #region MVVM Stuff
@@ -526,7 +525,15 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     public bool Headless
     {
         get => this._headlessMode;
-        set => this.SetField(ref this._headlessMode, value);
+        set
+        {
+            this.SetField(ref this._headlessMode, value);
+
+            if (value)
+            {
+                this.DisableAnimation();
+            }
+        }
     }
 
     #endregion

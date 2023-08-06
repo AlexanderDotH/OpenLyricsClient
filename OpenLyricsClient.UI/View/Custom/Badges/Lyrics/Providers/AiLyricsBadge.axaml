@@ -1,0 +1,38 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:providers="clr-namespace:OpenLyricsClient.UI.View.Custom.Badges.Lyrics.Providers"
+             x:Class="OpenLyricsClient.UI.View.Custom.Badges.Lyrics.Providers.AiLyricsBadge">
+    <Border CornerRadius="10" Background="{DynamicResource LightBackgroundBrush}">
+        
+        <StackPanel Orientation="Horizontal" Spacing="0">
+            
+            <Border CornerRadius="5">
+                
+                <StackPanel Orientation="Horizontal" Spacing="5" Margin="2,2,6,2">
+                    
+                    <TextBlock Text="Ai"
+                               FontWeight="Normal"
+                               Margin="5,5,0,5"
+                               Foreground="{Binding ForegroundColorBrush, RelativeSource={RelativeSource AncestorType=providers:AiLyricsBadge}}"
+                               FontSize="14"/>
+                    
+                    <avalonia:MaterialIcon Kind="Stars" 
+                                           Foreground="{Binding ForegroundColorBrush, RelativeSource={RelativeSource AncestorType=providers:AiLyricsBadge}}"
+                                           VerticalAlignment="Center" 
+                                           HorizontalAlignment="Stretch"/>
+                </StackPanel>
+                
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" >
+                        <GradientStop Color="{Binding StartColor, RelativeSource={RelativeSource AncestorType=providers:AiLyricsBadge}}" Offset="0.0"/>
+                        <GradientStop Color="{Binding EndColor, RelativeSource={RelativeSource AncestorType=providers:AiLyricsBadge}}" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+            </Border>
+                                                
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -31,7 +31,7 @@
         </Style>
     </Window.Styles>
     
-    <Grid PointerPressed="InputElement_OnPointerPressed">
+    <Grid Name="CTRL_MainGrid" PointerPressed="InputElement_OnPointerPressed">
         
         <DockPanel HorizontalAlignment="Left"
                    Width="55">

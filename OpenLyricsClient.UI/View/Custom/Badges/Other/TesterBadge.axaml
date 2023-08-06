@@ -9,7 +9,7 @@
             
             <Border CornerRadius="5" Background="#F15A59">
                 
-                <StackPanel Orientation="Horizontal" Spacing="5" Margin="4">
+                <StackPanel Orientation="Horizontal" Spacing="5" Margin="4,4,9,4">
                     
                     <TextBlock Text="Tester"
                                FontWeight="Normal"

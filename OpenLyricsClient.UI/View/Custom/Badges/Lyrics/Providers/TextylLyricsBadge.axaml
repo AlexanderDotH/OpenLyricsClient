@@ -1,0 +1,32 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             x:Class="OpenLyricsClient.UI.View.Custom.Badges.Lyrics.Providers.TextylLyricsBadge">
+    <Border CornerRadius="10" Background="{DynamicResource LightBackgroundBrush}">
+        
+        <StackPanel Orientation="Horizontal" Spacing="0">
+            
+            <Border CornerRadius="5">
+                
+                <StackPanel Orientation="Horizontal" Spacing="5" Margin="2,2,7,2">
+                    
+                    <TextBlock Text="Textyl"
+                               Foreground="White"
+                               FontWeight="Normal"
+                               Margin="5,5,0,5"
+                               FontSize="14"/>
+                </StackPanel>
+                
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" >
+                        <GradientStop Color="#8062D6" Offset="0.0"/>
+                        <GradientStop Color="#a88afe" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+            </Border>
+                                                
+        </StackPanel>
+    </Border>
+</UserControl>

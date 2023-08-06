@@ -1,5 +1,6 @@
 using System;
 using Avalonia;
+using Avalonia.Logging;
 using Avalonia.ReactiveUI;
 using OpenLyricsClient.Logic;
 using OpenLyricsClient.UI.Handler;
@@ -22,12 +23,10 @@ namespace OpenLyricsClient.UI
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
-                .LogToTrace()
+                .LogToTrace(LogEventLevel.Fatal)
                 .AfterSetup(t =>
                 {
                     new Core();
-
-                    new ColorHandler();
                 })
                 .UseReactiveUI();
     }

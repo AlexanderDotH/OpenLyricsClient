@@ -22,33 +22,22 @@ namespace OpenLyricsClient.UI.Models.Elements.Blur;
 class BlurBehindRenderOperation : ICustomDrawOperation
 {
     private readonly ImmutableExperimentalAcrylicMaterial _material;
-    private readonly Rect _bounds;
+    private Rect _bounds;
     private SKShader _shader;
     
     private float _sigmaX;
     private float _sigmaY;
 
+    private float _cornerRadius;
+
     private bool _useNoise;
     private double _noiseOpacity;
 
     public BlurBehindRenderOperation(
-        ImmutableExperimentalAcrylicMaterial material,
-        float sigmaX, 
-        float sigmaY, 
-        bool useNoise, 
-        double noiseOpacity, Rect bounds)
+        ImmutableExperimentalAcrylicMaterial material)
     {
         this._material = material;
-        this._bounds = bounds;
-        
-        this._sigmaX = sigmaX;
-        this._sigmaY = sigmaY;
-
-        this._useNoise = useNoise;
-        this._noiseOpacity = noiseOpacity;
     }
-
-    public Rect Bounds => _bounds.Inflate(4);
     
     public void Dispose()
     {
@@ -97,6 +86,9 @@ class BlurBehindRenderOperation : ICustomDrawOperation
             (int)Math.Ceiling(this._bounds.Width),
             (int)Math.Ceiling(this._bounds.Height), SKImageInfo.PlatformColorType, SKAlphaType.Premul));
         
+        if (blurred == null)
+            return;
+        
         using (SKImageFilter filter = SKImageFilter.CreateBlur(this._sigmaX, this._sigmaY, SKShaderTileMode.Clamp))
             
         using (SKPaint blurPaint = new SKPaint
@@ -105,7 +97,7 @@ class BlurBehindRenderOperation : ICustomDrawOperation
                    ImageFilter = filter
                })
 
-        blurred.Canvas.DrawRect(0, 0, (float)_bounds.Width, (float)_bounds.Height, blurPaint);
+        blurred.Canvas.DrawRoundRect(new SKRect(0, 0, (float)_bounds.Width, (float)_bounds.Height), this._cornerRadius, this._cornerRadius, blurPaint);
 
         using (SKImage blurSnap = blurred.Snapshot())
 
@@ -117,7 +109,7 @@ class BlurBehindRenderOperation : ICustomDrawOperation
                    IsAntialias = true
                })
             
-        skia.SkCanvas.DrawRect(0, 0, (float)this._bounds.Width, (float)this._bounds.Height, blurSnapPaint);
+        skia.SkCanvas.DrawRoundRect(new SKRect(0, 0, (float)this._bounds.Width, (float)this._bounds.Height), this._cornerRadius, this._cornerRadius, blurSnapPaint);
 
             //return;
         using SKPaint acrylliPaint = new SKPaint();
@@ -156,10 +148,46 @@ class BlurBehindRenderOperation : ICustomDrawOperation
         {
             acrylliPaint.Shader = compose;
             acrylliPaint.IsAntialias = true;
-            skia.SkCanvas.DrawRect(0, 0, (float)this._bounds.Width, (float)this._bounds.Height, acrylliPaint);
+            skia.SkCanvas.DrawRoundRect(new SKRect(0, 0, (float)this._bounds.Width, (float)this._bounds.Height), this._cornerRadius, 10, acrylliPaint);
         }
     }
+
+    public float SigmaX
+    {
+        get => _sigmaX;
+        set => _sigmaX = value;
+    }
+
+    public float SigmaY
+    {
+        get => _sigmaY;
+        set => _sigmaY = value;
+    }
+
+    public float CornerRadius
+    {
+        get => _cornerRadius;
+        set => _cornerRadius = value;
+    }
+
+    public bool UseNoise
+    {
+        get => _useNoise;
+        set => _useNoise = value;
+    }
+
+    public double NoiseOpacity
+    {
+        get => _noiseOpacity;
+        set => _noiseOpacity = value;
+    }
     
+    public Rect Bounds
+    {
+        get => this._bounds;
+        set => this._bounds = value;
+    }
+
     public bool Equals(ICustomDrawOperation? other)
     {
         return other is BlurBehindRenderOperation op && op._bounds == _bounds && op._material.Equals(_material);

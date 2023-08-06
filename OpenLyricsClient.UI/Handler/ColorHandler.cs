@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using DevBase.Avalonia.Color.Extensions;
 using OpenLyricsClient.Logic;
 using OpenLyricsClient.Logic.Events.EventArgs;
+using OpenLyricsClient.Logic.Events.EventHandler;
 
 namespace OpenLyricsClient.UI.Handler;
 
@@ -19,6 +20,8 @@ public class ColorHandler
     private SolidColorBrush _lightThemeFontColorBrush;
     private SolidColorBrush _selectedLineFontColorBrush;
     private SolidColorBrush _unselectedLineFontColorBrush;
+
+    public event ColorResourceUpdatedEventHandler ColorResourceUpdated;
     
     public ColorHandler()
     {
@@ -60,6 +63,8 @@ public class ColorHandler
             }
 
             UpdateColor(this._lightThemeFontColorBrush, args.ColorPalette.PrimaryColor.Light);
+            
+            OnColorResourceUpdated();
         });
     }
     
@@ -71,5 +76,10 @@ public class ColorHandler
     private void UpdateColor(SolidColorBrush colorBrush, Avalonia.Media.Color color)
     {
         colorBrush.Color = color;
+    }
+
+    private void OnColorResourceUpdated()
+    {
+        this.ColorResourceUpdated.Invoke(this);
     }
 }

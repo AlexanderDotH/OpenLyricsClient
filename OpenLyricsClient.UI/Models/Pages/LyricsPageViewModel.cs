@@ -9,14 +9,18 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Threading;
 using DevBase.Async.Task;
+using DevBase.Avalonia.Color.Extensions;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using OpenLyricsClient.Logic;
 using OpenLyricsClient.Logic.Events.EventArgs;
 using OpenLyricsClient.Logic.Handler.Services.Services.Spotify;
 using OpenLyricsClient.Logic.Handler.Song.SongProvider;
 using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
 using OpenLyricsClient.Shared.Structure.Enum;
+using OpenLyricsClient.Shared.Structure.Palette;
 using OpenLyricsClient.Shared.Structure.Song;
 using OpenLyricsClient.Shared.Utils;
+using OpenLyricsClient.UI.Extensions;
 using OpenLyricsClient.UI.View.Windows;
 using ReactiveUI;
 
@@ -31,6 +35,8 @@ public class LyricsPageViewModel : ModelBase
     public ReactiveCommand<Unit, Unit> NextSongCommand { get; }
     
     public ReactiveCommand<Unit, Unit> SwitchToSettingsCommand { get; }
+
+    private ColorPalette _colorPalette;
     
     public LyricsPageViewModel()
     {
@@ -45,6 +51,15 @@ public class LyricsPageViewModel : ModelBase
         Core.INSTANCE.ArtworkHandler.ArtworkAppliedHandler += ArtworkHandlerOnArtworkAppliedHandler;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
         Core.INSTANCE.SongHandler.SongUpdated += SongHandlerOnSongUpdated;
+        
+        App.INSTANCE.ColorHandler.ColorResourceUpdated += ColorHandlerOnColorResourceUpdated;
+    }
+
+    private void ColorHandlerOnColorResourceUpdated(object sender)
+    {
+        OnPropertyChanged("UiFontForeground");
+        OnPropertyChanged("AiBadgeStartColor");
+        OnPropertyChanged("AiBadgeEndColor");
     }
 
     private void SongHandlerOnSongUpdated(object sender)
@@ -60,6 +75,10 @@ public class LyricsPageViewModel : ModelBase
         OnPropertyChanged("IsPlayerAvailable");
         OnPropertyChanged("IsSongAvailable");
         OnPropertyChanged("IsEmpty");
+        
+        OnPropertyChanged("UiFontForeground");
+        OnPropertyChanged("AiBadgeStartColor");
+        OnPropertyChanged("AiBadgeEndColor");
     }
 
     public void SwitchToSettings()
@@ -101,16 +120,22 @@ public class LyricsPageViewModel : ModelBase
     private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
     {
         OnPropertyChanged("AiBadge");
+        OnPropertyChanged("LyricFindBadge");
+        OnPropertyChanged("MusixMatchBadge");
+        OnPropertyChanged("TextylBadge");
+        OnPropertyChanged("NetEaseBadge");
+        OnPropertyChanged("IsInCache");
     }
 
     private void ArtworkHandlerOnArtworkAppliedHandler(object sender, ArtworkAppliedEventArgs args)
     {
-        OnPropertyChanged("Artwork");
-
         Dispatcher.UIThread.InvokeAsync(() =>
         {
+            OnPropertyChanged("Artwork");
             OnPropertyChanged("UiBackground");
+            OnPropertyChanged("UiLightBackground");
             OnPropertyChanged("UiForeground");
+            OnPropertyChanged("UiFontForeground");
         });
     }
 
@@ -128,9 +153,13 @@ public class LyricsPageViewModel : ModelBase
 
     private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
     {
-        OnPropertyChanged("SongName");
-        OnPropertyChanged("Artists");
-        OnPropertyChanged("Album");
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            OnPropertyChanged("SongName");
+            OnPropertyChanged("Artists");
+            OnPropertyChanged("IsInCache");
+        });
+        //OnPropertyChanged("Album");
     }
 
     public string? SongName
@@ -163,6 +192,11 @@ public class LyricsPageViewModel : ModelBase
         get => Core.INSTANCE.ServiceHandler.IsAnyConnected();
     }
 
+    public ColorPalette ColorPalette
+    {
+        get => _colorPalette;
+    }
+
     /*public string? SongName
     {
         get => "Never gonna give up";
@@ -175,9 +209,38 @@ public class LyricsPageViewModel : ModelBase
 
     public bool AiBadge
     {
-        get => Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricProvider?.SequenceEqual("OpenLyricsClient") == true && 
-               Core.INSTANCE.CacheManager.IsLyricsInCache(SongRequestObject.FromSong(Core.INSTANCE?.SongHandler?.CurrentSong!));
+        get => Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricProvider?.SequenceEqual("OpenLyricsClient") == true &&
+               IsInCache;
     }
+    
+    public bool LyricFindBadge
+    {
+        get => Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricProvider?.SequenceEqual("Deezer") == true &&
+               IsInCache;
+    }
+    
+    public bool NetEaseBadge
+    {
+        get => (Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricProvider?.SequenceEqual("NetEase") == true || 
+                Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricProvider?.SequenceEqual("NetEaseV2") == true) &&
+               IsInCache;
+    }
+    
+    public bool TextylBadge
+    {
+        get => Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricProvider?.SequenceEqual("Textyl") == true &&
+               IsInCache;
+    }
+
+    public bool MusixMatchBadge
+    {
+        get => Core.INSTANCE?.SongHandler?.CurrentSong?.Lyrics?.LyricProvider?.SequenceEqual("MusixMatch") == true &&
+               IsInCache;
+    }
+
+    public bool IsInCache =>
+        Core.INSTANCE.CacheManager.IsLyricsInCache(
+            SongRequestObject.FromSong(Core.INSTANCE?.SongHandler?.CurrentSong!));
     
     public string Artists
     {
@@ -198,7 +261,7 @@ public class LyricsPageViewModel : ModelBase
             return 0;
         }
     }
-
+    
     public string CurrentTime
     {
         get => Core.INSTANCE.SongHandler?.CurrentSong?.ProgressString!;
@@ -246,15 +309,55 @@ public class LyricsPageViewModel : ModelBase
             return App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush;
         }
     }
+
+    public SolidColorBrush UiLightBackground => UiBackground.AdjustBrightness(150);
     
     public SolidColorBrush UiForeground
     {
         get
         {
             if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
+                return (App.Current.FindResource("SecondaryBackgroundBrush") as SolidColorBrush).AdjustBrightness(50);
+            
+            return (App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush);
+        }
+    }
+
+    public Color AiBadgeStartColor
+    {
+        get
+        {
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
+                return (App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush).Color;
+
+            return (App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush).Color;
+        }
+    }
+    
+    public Color AiBadgeEndColor
+    {
+        get
+        {
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
+                return (App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush).Color;
+            
+            return (App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush).AdjustBrightness(150).Color;
+        }
+    }
+    
+    public SolidColorBrush UiFontForeground
+    {
+        get
+        {
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
                 return App.Current.FindResource("PrimaryFontColorBrush") as SolidColorBrush;
             
-            return App.Current.FindResource("PrimaryFontColorBrush") as SolidColorBrush;
+            SolidColorBrush brush = App.Current.FindResource("PrimaryFontColorBrush") as SolidColorBrush;
+
+            if (AiBadgeStartColor.BrightnessPercentage() > 80)
+                return brush.AdjustBrightness(70);
+
+            return brush;
         }
     }
 }

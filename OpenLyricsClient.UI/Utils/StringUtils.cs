@@ -41,7 +41,7 @@ public class StringUtils
                     currentLine.Length--;
 
                 lines.Add(new LyricOverlayElement(currentLine.ToString(), 
-                    MeasureSingleString(currentLine.ToString(), width, height, typeface, alignment, TextWrapping.NoWrap, fontSize)));
+                    MeasureSingleString(currentLine.ToString(),typeface, fontSize)));
                 currentLine.Clear();
                 currentLine.Append(word);
             }
@@ -50,13 +50,13 @@ public class StringUtils
         if (currentLine.Length > 0)
         {
             lines.Add(new LyricOverlayElement(currentLine.ToString(), 
-                MeasureSingleString(currentLine.ToString(), width, height, typeface, alignment, TextWrapping.NoWrap, fontSize)));
+                MeasureSingleString(currentLine.ToString(), typeface, fontSize)));
         }
 
         return lines;
     }
     
-    public static Size MeasureSingleString(string line, double width, double height, Typeface typeface, TextAlignment alignment, TextWrapping wrapping, double fontSize)
+    public static Size MeasureSingleString(string line, Typeface typeface, double fontSize)
     {
         FormattedText t = new FormattedText(
             line, 

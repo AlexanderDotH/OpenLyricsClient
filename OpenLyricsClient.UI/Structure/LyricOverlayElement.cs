@@ -19,9 +19,15 @@ namespace OpenLyricsClient.UI.Structure;
 public class LyricOverlayElement : ModelBase
 {
     private double _width;
+    private double _prevWidth;
+    
     private double _percentage;
+    private double _prevPercentage;
+    
     private bool _selected;
+    
     private double _percentageMargin;
+    private double _prevPercentageMargin;
 
     private SolidColorBrush _primaryThemeColorBrush;
     private SolidColorBrush _selectedLineFontColorBrush;
@@ -34,6 +40,10 @@ public class LyricOverlayElement : ModelBase
     public LyricOverlayElement()
     {
         this._selected = false;
+
+        this._prevPercentage = 0;
+        this._prevWidth = 0;
+        this._prevPercentageMargin = 0;
     }
 
     private void LocateResource()
@@ -96,7 +106,12 @@ public class LyricOverlayElement : ModelBase
         get => this._width;
         set
         {
+            if (value == this._prevWidth)
+                return;
+            
             SetField(ref this._width, value);
+
+            this._prevWidth = value;
         }
     }
 
@@ -107,9 +122,14 @@ public class LyricOverlayElement : ModelBase
         {
             SetField(ref this._percentage, value);
             
+            if (value == this._prevPercentage)
+                return;
+            
             OnPropertyChanged("FadeSelectedColor");
             OnPropertyChanged("SolidSelectedColor");
             OnPropertyChanged("UnSelectedColor");
+
+            this._prevPercentage = value;
         }
     }
     
@@ -118,7 +138,12 @@ public class LyricOverlayElement : ModelBase
         get => this._percentageMargin;
         set
         {
+            if (value == this._percentageMargin)
+                return;
+            
             SetField(ref this._percentageMargin, value);
+
+            this._prevPercentageMargin = value;
         }
     }
 
@@ -127,6 +152,12 @@ public class LyricOverlayElement : ModelBase
         get
         {
             LocateResource();
+            
+            EnumLyricsDisplayMode displayMode = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()
+                .GetValue<EnumLyricsDisplayMode>("Selection Mode");
+
+            if (displayMode != EnumLyricsDisplayMode.FADE)
+                return null;
             
             if (!this._selected)
                 return UnSelectedColor;
@@ -156,7 +187,7 @@ public class LyricOverlayElement : ModelBase
         get
         {
             LocateResource();
-            
+
             if (!this._selected)
                 return UnSelectedColor;
             

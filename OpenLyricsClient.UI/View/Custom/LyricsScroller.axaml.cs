@@ -23,13 +23,16 @@ using OpenLyricsClient.Logic;
 using OpenLyricsClient.Logic.Debugger;
 using OpenLyricsClient.Logic.Events;
 using OpenLyricsClient.Logic.Events.EventArgs;
+using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
 using OpenLyricsClient.Shared.Structure.Enum;
 using OpenLyricsClient.Shared.Structure.Lyrics;
+using OpenLyricsClient.Shared.Structure.Visual;
 using OpenLyricsClient.Shared.Utils;
 using OpenLyricsClient.UI.Animation;
 using OpenLyricsClient.UI.Models.Custom;
 using OpenLyricsClient.UI.Structure.Enum;
 using OpenLyricsClient.UI.View.Custom.Tile;
+using OpenLyricsClient.UI.View.Windows;
 using Debug = System.Diagnostics.Debug;
 
 namespace OpenLyricsClient.UI.View.Custom;
@@ -60,13 +63,14 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
     // Variables
     private double _speed;
     private bool _isSyncing;
-    private bool _isResyncing;
+    private bool _isPointerPressed;
 
-    private LyricPart _targetLock;
     private LyricPart _lastPart;
 
     private List<(int, Size)> _visualElementsList;
 
+    private Margin _itemMargin;
+    
     private Debugger<LyricsScroller> _debugger;
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -79,7 +83,9 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 
         _instance = this;
 
-        this._isResyncing = false;
+        this._isPointerPressed = false;
+        
+        this._itemMargin = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<Margin>("Lyrics Margin");
         
         this.Speed = 15 * 0.1;
 
@@ -97,13 +103,29 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         this._visualElementsGrid = this.Get<Grid>(nameof(CTRL_VisualElements));
         
         this.EffectiveViewportChanged += OnEffectiveViewportChanged;
-
+        
+        MainWindow.Instance.PointerPressed += InstanceOnPointerPressed;
+        MainWindow.Instance.PointerReleased += InstanceOnPointerReleased;
+        
         AttachedToVisualTree += OnAttachedToVisualTree;
+    }
+
+    private void InstanceOnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        this._isPointerPressed = true;
+    }
+
+    private void InstanceOnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        this._isPointerPressed = false;
     }
 
     private void OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
     {
-        this.FillVisualElements();
+        Debug.WriteLineIf(this._isPointerPressed, "Pressed");
+        
+        if (!this._isPointerPressed)
+            this.FillVisualElements();
     }
 
     private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
@@ -116,12 +138,12 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 
     private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
     {
-        Dispatcher.UIThread.InvokeAsync(async () =>
+        Dispatcher.UIThread.InvokeAsync(() =>
         {
             this._scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+            this.FillVisualElements();
         });
         
-        this.FillVisualElements();
         this.Speed = args.LyricData.LyricSpeed * 0.1f;
     }
 
@@ -130,15 +152,29 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
         Core.INSTANCE.LyricHandler.LyricChanged += LyricHandlerOnLyricChanged;
         Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
+        
+        Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
     }
-    
+
+    private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
+    {
+        if (settingschangedeventargs.Field.SequenceEqual("Lyrics Margin"))
+        {
+            Margin t = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<Margin>("Lyrics Margin");
+            this._itemMargin = t;
+            
+            // I don't wanna call that here, but I'm not sure if I can remove that
+            this.FillVisualElements();
+        }
+    }
+
     private void LyricHandlerOnLyricChanged(object sender, LyricChangedEventArgs lyricchangedeventargs)
     {
+        if (lyricchangedeventargs.LyricPart.Equals(this._lastPart)) 
+            return;
+
         Dispatcher.UIThread.InvokeAsync(() =>
         {
-            if (lyricchangedeventargs.LyricPart.Equals(this._lastPart)) 
-                return;
-
             double offset = GetRenderedOffset(lyricchangedeventargs.LyricPart, this._viewModel.Lyrics);
             this._itemsControl.Margin = GetMargin();
             this._scrollViewer.Offset = new Vector(0, offset);
@@ -164,7 +200,7 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
             position += element.Height;
         }
 
-        double halfHeight = this._scrollViewer.Viewport.Height / 2.2d;
+        double halfHeight = this._scrollViewer.Viewport.Height / 2.5;
         
         position -= halfHeight;
         position += margin.Top;
@@ -190,56 +226,75 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 
     private void FillVisualElements()
     {
-        Dispatcher.UIThread.InvokeAsync(() =>
+        this._itemsControl.Items.Clear();
+        this._visualElementsGrid.Children.Clear();
+        this._visualElementsList.Clear();
+        
+        this._visualElementsGrid.IsVisible = true;
+        
+        for (var i = 0; i < this._viewModel.Lyrics.Count; i++)
         {
-            this._itemsControl.Items.Clear();
-            this._visualElementsGrid.Children.Clear();
-            this._visualElementsList.Clear();
-            
-            for (var i = 0; i < this._viewModel.Lyrics.Count; i++)
+            LyricPart part = this._viewModel.Lyrics[i];
+
+            LyricsTile dummyTile = new LyricsTile()
             {
-                LyricPart part = this._viewModel.Lyrics[i];
+                LyricPart = part,
+                Headless = true
+            };
 
-                LyricsTile dummyTile = new LyricsTile()
-                {
-                    LyricPart = part,
-                    Headless = true
-                };
-
-                dummyTile.LayoutUpdated += TileOnLayoutUpdated;
+            dummyTile.LayoutUpdated += TileOnLayoutUpdated;
                 
-                this._visualElementsGrid.Children.Add(dummyTile);
+            this._visualElementsGrid.Children.Add(dummyTile);
 
-                LyricsTile realTile = new LyricsTile()
-                {
-                    LyricPart = part
-                };
+            LyricsTile realTile = new LyricsTile()
+            {
+                LyricPart = part
+            };
                 
-                this._itemsControl.Items.Add(realTile);
-            }
-        });
+            this._itemsControl.Items.Add(realTile);
+        }
+        
+        this._scrollViewer.UpdateLayout();
+        this._itemsControl.UpdateLayout();
     }
 
     private void TileOnLayoutUpdated(object? sender, EventArgs e)
     {
         if (sender is LyricsTile tile)
         {
-            if (tile.DesiredSize.Height == 70 || tile.DesiredSize.Height == 0)
+            if (tile.DesiredSize.Height == this._itemMargin.Bottom || tile.DesiredSize.Height == 0)
                 return;
             
             int index = GetIndexOfLyric(tile.LyricPart, this._viewModel.Lyrics);
+            
+            if (VisualContainsIndex(index))
+                return;
+
             this._visualElementsList.Add((index, tile.DesiredSize));
+
+            if (this._visualElementsList.Count == this._viewModel.Lyrics.Count)
+                this._visualElementsGrid.IsVisible = false;
         }
     }
 
+    private bool VisualContainsIndex(int index)
+    {
+        for (var i = 0; i < this._visualElementsList.Count; i++)
+        {
+            (int, Size) element = this._visualElementsList[i];
+            
+            if (element.Item1 == index)
+                return true;
+        }
+
+        return false;
+    }
+    
     private int GetIndexOfLyric(LyricPart lyricPart, ObservableCollection<LyricPart> lyricParts) => lyricParts.IndexOf(lyricPart);
 
     public Thickness GetMargin()
     {
-        double m = this._scrollViewer.Viewport.Height / 2.2d;
-
-        m = Math.Floor(m);
-        
+        double m = this._scrollViewer.Viewport.Height / 2.5d;
         return new Thickness(0, m, 0, m);
     }
     
@@ -302,16 +357,6 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
     public void Resync()
     {
         this._isSyncing = true;
-    }
-    
-    public void Resync(LyricPart part)
-    {
-        double offset = GetRenderedOffset(part, this._viewModel.Lyrics);
-        this._isResyncing = true;
-
-        this._targetLock = part;
-        
-        Resync();
     }
 
     public void UnSync()

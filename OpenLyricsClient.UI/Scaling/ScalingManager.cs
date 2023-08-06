@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.LogicalTree;
+using OpenLyricsClient.UI.Events.EventHandler;
 
 namespace OpenLyricsClient.UI.Scaling;
 
@@ -49,6 +50,10 @@ namespace OpenLyricsClient.UI.Scaling;
         /// </summary>
         public Dictionary<Type, BindingContext> Bindings { get; } = new Dictionary<Type, BindingContext>();
 
+        public event WindowStateUpdatedEventHandler WindowStateUpdated;
+
+        private WindowState _previousState;
+        
         /// <summary>
         /// Creates a new <see cref="ScalingManager"/> and sets up all bindings of the <paramref name="window"/>.
         /// </summary>
@@ -59,7 +64,9 @@ namespace OpenLyricsClient.UI.Scaling;
             _instance = this;
             this.viewModel = viewModel;
             this.window = window;
-            ScalableMainWindow = new ScalableObject(window); 
+            ScalableMainWindow = new ScalableObject(window);
+
+            this._previousState = WindowState.Normal;
             
             BindingContext windowBindingContext = new BindingContext
             {
@@ -161,6 +168,9 @@ namespace OpenLyricsClient.UI.Scaling;
             {
                 WindowState newWindowState = (WindowState)e.NewValue;
                 Debug.WriteLine("Width before WindowState change: " + ((Window)sender).Width.ToString());
+
+                OnWindowStateUpdated(newWindowState);
+                
                 if (newWindowState == WindowState.Maximized)
                 {
                     double scalingFactor = Math.Min(window.Width / MainWindowWidthScalable.DefaultValue, window.Height / MainWindowHeightScalable.DefaultValue);
@@ -316,6 +326,16 @@ namespace OpenLyricsClient.UI.Scaling;
             }
         }
 
+        private void OnWindowStateUpdated(WindowState state)
+        {
+            if (state == this._previousState)
+                return;
+            
+            this.WindowStateUpdated.Invoke(this, state);
+
+            this._previousState = state;
+        }
+        
         public bool OnlyScaleOnStartup
         {
             get => onlyScaleOnStartup;

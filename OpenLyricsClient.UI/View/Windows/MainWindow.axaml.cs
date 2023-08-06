@@ -27,6 +27,8 @@ namespace OpenLyricsClient.UI.View.Windows
         private Button _fulltextButton;
         private Button _settingsButton;
 
+        private Grid _mainGrid;
+        
         private ATupleList<int, UserControl> _pageList;
 
         private TimeSpan _animationSpan;
@@ -61,6 +63,30 @@ namespace OpenLyricsClient.UI.View.Windows
             this._lyricsButton = this.Get<Button>(nameof(BTN_LyricsButton));
             //this._fulltextButton = this.Get<Button>(nameof(BTN_FullTextButton));
             this._settingsButton = this.Get<Button>(nameof(BTN_SettingsButton));
+
+            this._mainGrid = this.Get<Grid>(nameof(CTRL_MainGrid));
+            
+            this.PropertyChanged += OnPropertyChanged;
+            
+        }
+
+        private void OnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            Type propertyType = e.Property.PropertyType;
+            
+            if (propertyType == typeof(WindowState))
+            {
+                WindowState windowstate = (WindowState)e.NewValue;
+
+                if (windowstate == WindowState.Maximized)
+                {
+                    this._mainGrid.Margin = new Thickness(5);
+                }
+                else
+                {
+                    this._mainGrid.Margin = new Thickness(0);
+                }
+            }
         }
 
         private void LyricsPage_Click(object? sender, RoutedEventArgs e)

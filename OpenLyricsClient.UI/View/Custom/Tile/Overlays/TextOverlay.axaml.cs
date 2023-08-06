@@ -157,6 +157,9 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
         if (this.Headless)
             return;
         
+        if (this.SuppressActivity)
+            return;
+        
         double full = 0;
         double mod = 10;
 
@@ -246,9 +249,6 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
         if (!DataValidator.ValidateData(service))
             return;
-        
-        //NewLyricsScroller.Instance.UnSync();
-        LyricsScroller.Instance.Resync(this.LyricPart);
         
         if (service.CanSeek())
             Task.Factory.StartNew(async () => await service.Seek(this._lyricPart.Time));

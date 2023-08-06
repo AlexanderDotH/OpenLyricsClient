@@ -36,7 +36,7 @@
             
             <ScrollViewer.Transitions>
                 <Transitions>
-                    <VectorTransition Property="Offset" Easing="CircularEaseOut" Duration="0:0:0.75"/>
+                    <VectorTransition Property="Offset" Easing="QuinticEaseInOut" Duration="0:0:0.75"/>
                 </Transitions>
             </ScrollViewer.Transitions>
             
