@@ -89,8 +89,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
             this._prevBlurSetting = isBlurEnabled;
         }
         
-        if (!isBlurEnabled && 
-            LyricsScroller.Instance.IsSynced)
+        if (!isBlurEnabled)
             return;
         
         ApplyBlur(lyricchangedeventargs.LyricPart);

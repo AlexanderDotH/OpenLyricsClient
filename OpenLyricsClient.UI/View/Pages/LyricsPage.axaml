@@ -144,8 +144,6 @@
                                    HorizontalAlignment="Stretch"
                                    VerticalAlignment="Stretch"/>
         </Grid>
-        
-        
           
         <StackPanel Orientation="Vertical" 
                     VerticalAlignment="Top" 
@@ -188,7 +186,7 @@
                     Background="{DynamicResource SecondaryBackgroundBrush}"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
-                    Margin="0,0,30,80"
+                    Margin="0,0,30,30"
                     Click="Button_OnClick">
                 <Button.Content>
                     <avalonia:MaterialIcon CornerRadius="20" Kind="ArrowVerticalLock" Width="24" Height="24" />
