@@ -69,7 +69,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         
         Core.INSTANCE.LyricHandler.LyricsPercentageUpdated += LyricHandlerOnLyricsPercentageUpdated;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
-        Core.INSTANCE.LyricHandler.LyricChanged += LyricHandlerOnLyricChanged;
+        Core.INSTANCE.LyricHandler.LyricTimeChanged += LyricHandlerOnLyricChanged;
         
         Core.INSTANCE.SettingsHandler.SettingsChanged += SettingsHandlerOnSettingsChanged;
     }
@@ -89,7 +89,8 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
             this._prevBlurSetting = isBlurEnabled;
         }
         
-        if (!isBlurEnabled)
+        if (!isBlurEnabled && 
+            LyricsScroller.Instance.IsSynced)
             return;
         
         ApplyBlur(lyricchangedeventargs.LyricPart);
@@ -108,7 +109,7 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
                 Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Blur Lyrics");
             
             this._blur.IsVisible = LyricsScroller.Instance.IsSynced && 
-                                   !LyricsScroller.Instance.IsSyncing && 
+                                   LyricsScroller.Instance.IsScrollerReady &&
                                    size < 10 && size >= 0 &&
                                    isBlurEnabled;
             

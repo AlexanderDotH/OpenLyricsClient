@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Avalonia.Threading;
 using DevBase.Async.Task;
 using OpenLyricsClient.Logic.Collector.Lyrics;
 using OpenLyricsClient.Logic.Debugger;
@@ -24,6 +25,8 @@ namespace OpenLyricsClient.Logic.Handler.Lyrics
         
         private LyricData _oldLyrics;
 
+        private LyricPart _prevLyricPart;
+
         private TaskSuspensionToken _manageLyricSuspensionToken;
         private TaskSuspensionToken _manageLyricsRollSuspensionToken;
         private TaskSuspensionToken _applyLyricSuspensionToken;
@@ -37,6 +40,7 @@ namespace OpenLyricsClient.Logic.Handler.Lyrics
         public event LyricChangedEventHandler LyricChanged;
         public event LyricsFoundEventHandler LyricsFound;
         public event LyricsPercentageUpdatedEventHandler LyricsPercentageUpdated;
+        public event LyricTimeChangedEventHandler LyricTimeChanged;
 
         public LyricHandler(SongHandler songHandler)
         {
@@ -60,12 +64,12 @@ namespace OpenLyricsClient.Logic.Handler.Lyrics
                 new Task(async () => await ApplyLyricsToSong(), Core.INSTANCE.CancellationTokenSource.Token, TaskCreationOptions.LongRunning),
                 EnumRegisterTypes.APPLY_LYRICS_TO_SONG);
             
-            this.LyricChanged += OnLyricChanged;
+            this.LyricTimeChanged += OnLyricTimeChanged;
             
             this._disposed = false;
         }
 
-        private void OnLyricChanged(object sender, LyricChangedEventArgs lyricChangedEventArgs)
+        private void OnLyricTimeChanged(object sender, LyricChangedEventArgs lyricChangedEventArgs)
         {
             Shared.Structure.Song.Song currentSong = this._songHandler.CurrentSong;
 
@@ -200,7 +204,8 @@ namespace OpenLyricsClient.Logic.Handler.Lyrics
                                         if (MathUtils.IsInRange(currentPart.Time, nextPart.Time, currentSong.Time + LYRIC_OFFSET))
                                         {
                                             currentSong.CurrentLyricPart = currentPart;
-                                            LyricChangedEvent(new LyricChangedEventArgs(currentPart));
+                                            OnLyricChangedEvent(currentPart);
+                                            OnLyricTimeChanged(currentPart);
                                             continue;
                                         }
                                     }
@@ -210,7 +215,8 @@ namespace OpenLyricsClient.Logic.Handler.Lyrics
                                     if (MathUtils.IsInRange(currentPart.Time, currentSong.SongMetadata.MaxTime, currentSong.Time + LYRIC_OFFSET))
                                     {
                                         currentSong.CurrentLyricPart = currentPart;
-                                        LyricChangedEvent(new LyricChangedEventArgs(currentPart));
+                                        OnLyricChangedEvent(currentPart);
+                                        OnLyricTimeChanged(currentPart);
                                         continue;
                                     }
                                 }
@@ -240,10 +246,24 @@ namespace OpenLyricsClient.Logic.Handler.Lyrics
             this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the lyrics!", DebugType.INFO);
         }
         
-        protected virtual void LyricChangedEvent(LyricChangedEventArgs lyricChangedEventArgs)
+        protected virtual void OnLyricChangedEvent(LyricPart lyricPart)
         {
-            LyricChangedEventHandler lyricChangedEventHandler = LyricChanged;
-            lyricChangedEventHandler?.Invoke(this, lyricChangedEventArgs);
+            if (lyricPart.Equals(this._prevLyricPart))
+                return;
+
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                LyricChangedEventHandler lyricChangedEventHandler = LyricChanged;
+                lyricChangedEventHandler?.Invoke(this, new LyricChangedEventArgs(lyricPart));
+            });
+
+            this._prevLyricPart = lyricPart;
+        }
+        
+        protected virtual void OnLyricTimeChanged(LyricPart lyricPart)
+        {
+            LyricTimeChangedEventHandler lyricTimeChanged = LyricTimeChanged;
+            lyricTimeChanged?.Invoke(this, new LyricChangedEventArgs(lyricPart));
         }
         
         protected virtual void LyricsFoundEvent(LyricData data)

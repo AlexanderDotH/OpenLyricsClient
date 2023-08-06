@@ -128,7 +128,7 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
             //SelectedLineBrush
         };
         
-        Core.INSTANCE.LyricHandler.LyricChanged += (sender, args) =>
+        /*Core.INSTANCE.LyricHandler.LyricChanged += (sender, args) =>
         {
             if (this._ignoreEvents)
                 return;
@@ -169,7 +169,7 @@ public class LyricsCard : TemplatedControl, INotifyPropertyChanged
                     this._border.IsVisible = true;
                 }
             });
-        };
+        };*/
     }
 
     public string Text

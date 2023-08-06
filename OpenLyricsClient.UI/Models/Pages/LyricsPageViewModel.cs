@@ -64,21 +64,24 @@ public class LyricsPageViewModel : ModelBase
 
     private void SongHandlerOnSongUpdated(object sender)
     {
-        OnPropertyChanged("SongName");
-        OnPropertyChanged("Artists");
-        /*OnPropertyChanged("Album");*/
-        OnPropertyChanged("IsSongPlaying");
-        OnPropertyChanged("CurrentTime");
-        OnPropertyChanged("Percentage");
-        OnPropertyChanged("CurrentTime");
-        OnPropertyChanged("CurrentMaxTime");
-        OnPropertyChanged("IsPlayerAvailable");
-        OnPropertyChanged("IsSongAvailable");
-        OnPropertyChanged("IsEmpty");
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            OnPropertyChanged("SongName");
+            OnPropertyChanged("Artists");
+            /*OnPropertyChanged("Album");*/
+            OnPropertyChanged("IsSongPlaying");
+            OnPropertyChanged("CurrentTime");
+            OnPropertyChanged("Percentage");
+            OnPropertyChanged("CurrentTime");
+            OnPropertyChanged("CurrentMaxTime");
+            OnPropertyChanged("IsPlayerAvailable");
+            OnPropertyChanged("IsSongAvailable");
+            OnPropertyChanged("IsEmpty");
         
-        OnPropertyChanged("UiFontForeground");
-        OnPropertyChanged("AiBadgeStartColor");
-        OnPropertyChanged("AiBadgeEndColor");
+            OnPropertyChanged("UiFontForeground");
+            OnPropertyChanged("AiBadgeStartColor");
+            OnPropertyChanged("AiBadgeEndColor");
+        });
     }
 
     public void SwitchToSettings()

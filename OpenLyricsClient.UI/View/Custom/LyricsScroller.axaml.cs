@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Accord.Diagnostics;
 using Avalonia;
+using Avalonia.Animation;
+using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
@@ -30,10 +32,13 @@ using OpenLyricsClient.Shared.Structure.Visual;
 using OpenLyricsClient.Shared.Utils;
 using OpenLyricsClient.UI.Animation;
 using OpenLyricsClient.UI.Models.Custom;
+using OpenLyricsClient.UI.Scaling;
 using OpenLyricsClient.UI.Structure.Enum;
 using OpenLyricsClient.UI.View.Custom.Tile;
 using OpenLyricsClient.UI.View.Windows;
+using Squalr.Engine.Utils.Extensions;
 using Debug = System.Diagnostics.Debug;
+using ScrollChangedEventArgs = Avalonia.Controls.ScrollChangedEventArgs;
 
 namespace OpenLyricsClient.UI.View.Custom;
 
@@ -53,6 +58,7 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
     
     // Instance
     private static LyricsScroller _instance;
+    private VectorTransition _transition;
 
     // Multithreadding
     private TaskSuspensionToken _suspensionToken;
@@ -62,12 +68,13 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
     
     // Variables
     private double _speed;
-    private bool _isSyncing;
     private bool _isPointerPressed;
 
+    private bool _isScrollerReady;
+    
     private LyricPart _lastPart;
 
-    private List<(int, Size)> _visualElementsList;
+    private List<ScrollerElement> _visualElementsList;
 
     private Margin _itemMargin;
     
@@ -84,16 +91,15 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         _instance = this;
 
         this._isPointerPressed = false;
+        this._isScrollerReady = false;
         
         this._itemMargin = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<Margin>("Lyrics Margin");
         
-        this.Speed = 15 * 0.1;
-
-        this._isSyncing = false;
-
         Reset();
 
-        this._visualElementsList = new List<(int, Size)>();
+        this._lastPart = new LyricPart(-1, "Never Gonna Give Me Up");
+
+        this._visualElementsList = new List<ScrollerElement>();
         
         this.DataContext = new LyricsScrollerViewModel();
         this._viewModel = this.DataContext as LyricsScrollerViewModel;
@@ -107,44 +113,14 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         MainWindow.Instance.PointerPressed += InstanceOnPointerPressed;
         MainWindow.Instance.PointerReleased += InstanceOnPointerReleased;
         
+        MainWindow.Instance.PropertyChanged += InstanceOnPropertyChanged;
+        
+        MainWindow.Instance.PointerWheelChanged += OnPointerWheelChanged;
+        this._itemsControl.PointerWheelChanged += OnPointerWheelChanged;
+        
         AttachedToVisualTree += OnAttachedToVisualTree;
-    }
-
-    private void InstanceOnPointerPressed(object? sender, PointerPressedEventArgs e)
-    {
-        this._isPointerPressed = true;
-    }
-
-    private void InstanceOnPointerReleased(object? sender, PointerReleasedEventArgs e)
-    {
-        this._isPointerPressed = false;
-    }
-
-    private void OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
-    {
-        Debug.WriteLineIf(this._isPointerPressed, "Pressed");
         
-        if (!this._isPointerPressed)
-            this.FillVisualElements();
-    }
-
-    private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
-    {
-        if (songchangedevent.EventType != EventType.PRE)
-            return;
-    
-        Reset();
-    }
-
-    private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
-    {
-        Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            this._scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-            this.FillVisualElements();
-        });
-        
-        this.Speed = args.LyricData.LyricSpeed * 0.1f;
+        ApplyTransitionSpeed(CalculateSpeedToTimeSpan(50, TimeSpan.FromSeconds(2)));
     }
 
     private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
@@ -173,14 +149,94 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         if (lyricchangedeventargs.LyricPart.Equals(this._lastPart)) 
             return;
 
+        if (!this.IsSynced)
+            return;
+            
+        double offset = GetRenderedOffset(lyricchangedeventargs.LyricPart, this._viewModel.Lyrics);
+        this._itemsControl.Margin = GetMargin();
+        this._scrollViewer.Offset = new Vector(0, offset);
+
+        this._isScrollerReady = true;
+        
+        this._lastPart = lyricchangedeventargs.LyricPart;
+    }
+    
+    private void InstanceOnPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        Type propertyType = e.Property.PropertyType;
+            
+        if (propertyType == typeof(WindowState))
+            this._isPointerPressed = false;
+    }
+
+    private void SongHandlerOnSongChanged(object sender, SongChangedEventArgs songchangedevent)
+    {
+        if (songchangedevent.EventType != EventType.PRE)
+            return;
+    
+        Reset();
+    }
+
+    private void LyricHandlerOnLyricsFound(object sender, LyricsFoundEventArgs args)
+    {
         Dispatcher.UIThread.InvokeAsync(() =>
         {
-            double offset = GetRenderedOffset(lyricchangedeventargs.LyricPart, this._viewModel.Lyrics);
-            this._itemsControl.Margin = GetMargin();
-            this._scrollViewer.Offset = new Vector(0, offset);
-
-            this._lastPart = lyricchangedeventargs.LyricPart;
+            this._scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+            
+            ApplyTransitionSpeed(CalculateSpeedToTimeSpan(args.LyricData.LyricSpeed, TimeSpan.FromSeconds(2)));
+            
+            this.FillVisualElements();
         });
+    }
+
+    private void InstanceOnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        this._isPointerPressed = true;
+    }
+
+    private void InstanceOnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        this._isPointerPressed = false;
+    }
+
+    private void OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
+    {
+        if (!this._isPointerPressed)
+            this.FillVisualElements();
+    }
+    
+    private void ApplyTransitionSpeed(TimeSpan span)
+    {
+        Transitions transitions = new Transitions();
+
+        VectorTransition vectorTransition = new VectorTransition
+        {
+            Property = ScrollViewer.OffsetProperty,
+            Duration = span,
+            Easing = new QuinticEaseInOut()
+        };
+        
+        transitions.Add(vectorTransition);
+
+        this._transition = vectorTransition;
+        
+        this._scrollViewer.Transitions = transitions;
+    }
+    
+    private TimeSpan CalculateSpeedToTimeSpan(double percentage, TimeSpan maxTimeSpan)
+    {
+        double multiplier = 1.0d;
+
+        double max = maxTimeSpan.TotalMilliseconds;
+        double x = percentage * (max * 0.01);
+        double y = max - x;
+
+        y = Math.Clamp(y, 0, max);
+        y = Math.Abs(y);
+
+        double result = y * multiplier;
+        
+        return TimeSpan.FromMilliseconds(result);
     }
 
     private double GetRenderedOffset(LyricPart lyricPart, ObservableCollection<LyricPart> lyricParts)
@@ -217,8 +273,8 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         {
             var e = this._visualElementsList[i];
 
-            if (e.Item1 == index)
-                return e.Item2;
+            if (e.Index == index)
+                return e.Size;
         }
         
         return new Size();
@@ -270,7 +326,11 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
             if (VisualContainsIndex(index))
                 return;
 
-            this._visualElementsList.Add((index, tile.DesiredSize));
+            this._visualElementsList.Add(new ScrollerElement()
+            {
+                Index = index,
+                Size = tile.DesiredSize
+            });
 
             if (this._visualElementsList.Count == this._viewModel.Lyrics.Count)
                 this._visualElementsGrid.IsVisible = false;
@@ -281,9 +341,9 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
     {
         for (var i = 0; i < this._visualElementsList.Count; i++)
         {
-            (int, Size) element = this._visualElementsList[i];
+            ScrollerElement element = this._visualElementsList[i];
             
-            if (element.Item1 == index)
+            if (element.Index == index)
                 return true;
         }
 
@@ -311,7 +371,7 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         });
     }
     
-    protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
+    private void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
         if (e.Delta.Y != 0)
         {
@@ -348,20 +408,39 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         OnPropertyChanged(propertyName);
         return true;
     }
-
-    public static LyricsScroller Instance
-    {
-        get => _instance;
-    }
     
-    public void Resync()
-    {
-        this._isSyncing = true;
-    }
-
     public void UnSync()
     {
         this.IsSynced = false;
+
+        this._scrollViewer.Transitions = null;
+    }
+
+    public void ReSync()
+    {
+        Transitions transitions = new Transitions();
+        transitions.Add(this._transition);
+        
+        double offset = GetRenderedOffset(this._viewModel.Lyric, this._viewModel.Lyrics);
+        
+        this._scrollViewer.Transitions = transitions;
+        
+        this.IsSynced = true;
+        this._scrollViewer.Offset = new Vector(0, offset);
+    }
+
+    public void AllowSync()
+    {
+        Transitions transitions = new Transitions();
+        transitions.Add(this._transition);
+        this._scrollViewer.Transitions = transitions;
+
+        IsSynced = true;
+    }
+
+    public bool IsScrollerReady
+    {
+        get => _isScrollerReady;
     }
 
     public bool IsSynced
@@ -373,16 +452,9 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
             OnPropertyChanged("IsSynced");
         }
     }
-
-    public bool IsSyncing
+    
+    public static LyricsScroller Instance
     {
-        get => _isSyncing;
-        set => _isSyncing = value;
-    }
-
-    public double Speed
-    {
-        get => this._speed;
-        set => SetField(ref this._speed, value);
+        get => _instance;
     }
 }

@@ -143,9 +143,12 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
 
         if (!DataValidator.ValidateData(service))
             return;
-        
+
         if (service.CanSeek())
+        {
+            LyricsScroller.Instance.AllowSync();
             Task.Factory.StartNew(async () => await service.Seek(this._lyricPart.Time));
+        }
     }    
     
     private void InputElement_OnPointerEnter(object? sender, PointerEventArgs e)

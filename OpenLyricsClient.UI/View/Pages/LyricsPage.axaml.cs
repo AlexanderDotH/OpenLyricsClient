@@ -183,9 +183,9 @@ public partial class LyricsPage : UserControl
 
     private void Button_OnClick(object? sender, RoutedEventArgs e)
     {
-        /*if (this._cstmLyricsDisplay != null)
+        if (this._cstmLyricsDisplay != null)
         {
-            this._cstmLyricsDisplay.Resync();
-        }*/
+            this._cstmLyricsDisplay.ReSync();
+        }
     }
 }

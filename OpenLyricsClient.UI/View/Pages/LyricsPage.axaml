@@ -176,45 +176,81 @@
             <providers:TextylLyricsBadge IsVisible="{Binding TextylBadge}"/>
         </StackPanel>
         
-        <Border Name="CTRL_PercentageBorder" 
-              VerticalAlignment="Bottom" 
-              HorizontalAlignment="Stretch" 
-              Background="{Binding UiForeground}"
-              Margin="10,0,10,10" 
-              Opacity="0.8"
-              CornerRadius="5"
-              Height="80">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+            
+                <Button Name="BTN_SyncMode"
+                    IsEnabled="{Binding ElementName=LRC_Display, Path=!IsSynced, Mode=OneWay}"
+                    CornerRadius="10"
+                    assists:ShadowAssist.ShadowDepth="Depth3"
+                    UseLayoutRounding="True"
+                    Width="45"
+                    Height="45" 
+                    Background="{DynamicResource SecondaryBackgroundBrush}"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,30,80"
+                    Click="Button_OnClick">
+                <Button.Content>
+                    <avalonia:MaterialIcon CornerRadius="20" Kind="ArrowVerticalLock" Width="24" Height="24" />
+                </Button.Content>
+                <Button.Transitions>
+                    <Transitions>
+                        <DoubleTransition Property="Opacity" Duration="0:0:0.7" Easing="CircularEaseOut"></DoubleTransition>
+                    </Transitions>
+                </Button.Transitions>
+                <Button.Styles>
+                    <Style Selector="Button[IsEnabled=true]">
+                        <Setter Property="Opacity" Value="1"></Setter>
+                    </Style>
+                    <Style Selector="Button[IsEnabled=False]">
+                        <Setter Property="Opacity" Value="0"></Setter>
+                    </Style>
+                </Button.Styles>
+            </Button>
             
             <Grid>
-               
-                <blur:BlurArea Sigma="5" CornerRadius="5"/>
-                
-                <Border Name="CTRL_PercentagePanel" 
-                        Opacity="0.1"
+                <Border Name="CTRL_PercentageBorder" 
+                        VerticalAlignment="Bottom" 
+                        HorizontalAlignment="Stretch" 
+                        Background="{Binding UiForeground}"
+                        Margin="10,0,10,10" 
+                        Opacity="0.8"
                         CornerRadius="5"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Stretch" 
-                        Background="White">
-                    <Border.Transitions>
-                        <Transitions>
-                            <DoubleTransition Property="Width" Easing="QuinticEaseInOut" Duration="0:0:1.0"/>
-                        </Transitions>
-                    </Border.Transitions>
+                        Height="80">
+            
+                    <Grid>
+               
+                        <blur:BlurArea Sigma="5" CornerRadius="5"/>
+                
+                        <Border Name="CTRL_PercentagePanel" 
+                                Opacity="0.1"
+                                CornerRadius="5"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Stretch" 
+                                Background="White">
+                            <Border.Transitions>
+                                <Transitions>
+                                    <DoubleTransition Property="Width" Easing="QuinticEaseInOut" Duration="0:0:1.0"/>
+                                </Transitions>
+                            </Border.Transitions>
+                        </Border>
+                    </Grid>  
                 </Border>
-            </Grid>  
-        </Border>
        
-        <Grid Name="CTRL_InformationBorder" 
-              VerticalAlignment="Bottom" 
-              HorizontalAlignment="Stretch" 
-              Background="Transparent"
-              Margin="10,0,10,10" 
-              Height="80">
-            <Viewbox Name="CTRL_ViewBoxCover" 
-                     VerticalAlignment="Stretch" 
-                     HorizontalAlignment="Left"
-                     Margin="10,10,0,10"/>
-        </Grid>
+                <Grid Name="CTRL_InformationBorder" 
+                      VerticalAlignment="Bottom" 
+                      HorizontalAlignment="Stretch" 
+                      Background="Transparent"
+                      Margin="10,0,10,10" 
+                      Height="80">
+                    <Viewbox Name="CTRL_ViewBoxCover" 
+                             VerticalAlignment="Stretch" 
+                             HorizontalAlignment="Left"
+                             Margin="10,10,0,10"/>
+                </Grid>
+            </Grid>
+            
+        </StackPanel>
 
         
         <!--<Button Name="BTN_SyncMode"
