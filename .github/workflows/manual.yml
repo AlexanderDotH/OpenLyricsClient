@@ -1,0 +1,13 @@
+name: Build Workflow
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '5.0.x'
+    - name: Run build script
+      shell: pwsh
+      run: | .\Scripts\Powershell\Build.ps1
