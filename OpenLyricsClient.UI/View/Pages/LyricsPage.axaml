@@ -61,6 +61,7 @@
                 CornerRadius="5"
                 Background="{DynamicResource SecondaryBackgroundBrush}">
             <TextBlock 
+                Foreground="White"
                 Margin="8"
                 Text="Lyrics"
                 FontWeight="Bold"

@@ -120,7 +120,7 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         
         AttachedToVisualTree += OnAttachedToVisualTree;
         
-        ApplyTransitionSpeed(CalculateSpeedToTimeSpan(50, TimeSpan.FromSeconds(2)));
+        ApplyTransitionSpeed(CalculateSpeedToTimeSpan(50, TimeSpan.FromSeconds(1.5)));
     }
 
     private void OnAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
@@ -151,7 +151,7 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 
         if (!this.IsSynced)
             return;
-            
+        
         double offset = GetRenderedOffset(lyricchangedeventargs.LyricPart, this._viewModel.Lyrics);
         this._itemsControl.Margin = GetMargin();
         this._scrollViewer.Offset = new Vector(0, offset);
@@ -183,7 +183,7 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         {
             this._scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
             
-            ApplyTransitionSpeed(CalculateSpeedToTimeSpan(args.LyricData.LyricSpeed, TimeSpan.FromSeconds(2)));
+            ApplyTransitionSpeed(CalculateSpeedToTimeSpan(args.LyricData.LyricSpeed, TimeSpan.FromSeconds(1.5)));
             
             this.FillVisualElements();
         });
@@ -301,17 +301,9 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
             dummyTile.LayoutUpdated += TileOnLayoutUpdated;
                 
             this._visualElementsGrid.Children.Add(dummyTile);
-
-            LyricsTile realTile = new LyricsTile()
-            {
-                LyricPart = part
-            };
-                
-            this._itemsControl.Items.Add(realTile);
         }
         
-        this._scrollViewer.UpdateLayout();
-        this._itemsControl.UpdateLayout();
+        //this._scrollViewer.UpdateLayout();
     }
 
     private void TileOnLayoutUpdated(object? sender, EventArgs e)
@@ -332,8 +324,28 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
                 Size = tile.DesiredSize
             });
 
+            tile.IsVisible = false;
+
             if (this._visualElementsList.Count == this._viewModel.Lyrics.Count)
+            {
                 this._visualElementsGrid.IsVisible = false;
+                this._visualElementsGrid.Children.Clear();
+                
+                FillRealItems();
+            }
+        }
+    }
+
+    private void FillRealItems()
+    {
+        for (int i = 0; i < this._viewModel.Lyrics.Count; i++)
+        {
+            LyricsTile realTile = new LyricsTile()
+            {
+                LyricPart = this._viewModel.Lyrics[i]
+            };
+                
+            this._itemsControl.Items.Add(realTile);
         }
     }
 

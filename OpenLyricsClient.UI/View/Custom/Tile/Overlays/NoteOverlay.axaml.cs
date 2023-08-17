@@ -428,6 +428,9 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     {
         get
         {
+            if (this.Headless)
+                return null;
+            
             this._selectedLineColorBrush = App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush; 
             
             if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
@@ -441,6 +444,9 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     {
         get
         {
+            if (this.Headless)
+                return null;
+            
             if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
             {
                 SolidColorBrush colorBrush = App.Current.FindResource("UnSelectedLineFontColorBrush") as SolidColorBrush;
@@ -488,6 +494,9 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         set
         {
             SetField(ref _speed, value);
+            
+            if (this.Headless)
+                return;
 
             if (double.IsInfinity(value) || double.IsNegative(value) || double.IsNaN(value))
                 return;

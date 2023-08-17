@@ -78,12 +78,9 @@ public class LyricOverlayElement : ModelBase
         {
             this._pointerOver = value;
 
-            if (value != PointerOver)
-            {
-                OnPropertyChanged("FadeSelectedColor");
-                OnPropertyChanged("SolidSelectedColor");
-                OnPropertyChanged("UnSelectedColor");
-            }
+            OnPropertyChanged("FadeSelectedColor");
+            OnPropertyChanged("SolidSelectedColor");
+            OnPropertyChanged("UnSelectedColor");
         }
     }
 
