@@ -274,4 +274,9 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         }
 
     }
+
+    public EnumElementType ElementType
+    {
+        get => _elementType;
+    }
 }

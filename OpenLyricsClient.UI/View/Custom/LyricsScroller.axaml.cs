@@ -75,6 +75,8 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
     private LyricPart _lastPart;
 
     private List<ScrollerElement> _visualElementsList;
+    private List<ScrollerElement> _missingVisualElementsList;
+    private Size _noteElementSize;
 
     private Margin _itemMargin;
     
@@ -92,6 +94,9 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 
         this._isPointerPressed = false;
         this._isScrollerReady = false;
+
+        this._noteElementSize = new Size(-1, -1);
+        this._missingVisualElementsList = new List<ScrollerElement>();
         
         this._itemMargin = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<Margin>("Lyrics Margin");
         
@@ -201,7 +206,7 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 
     private void OnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
     {
-        if (!this._isPointerPressed)
+        if (this._isPointerPressed)
             this.FillVisualElements();
     }
     
@@ -279,12 +284,15 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         
         return new Size();
     }
-
+    
     private void FillVisualElements()
     {
         this._itemsControl.Items.Clear();
         this._visualElementsGrid.Children.Clear();
         this._visualElementsList.Clear();
+        this._missingVisualElementsList.Clear();
+        
+        this._noteElementSize = new Size(0, 0);
         
         this._visualElementsGrid.IsVisible = true;
         
@@ -297,13 +305,23 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
                 LyricPart = part,
                 Headless = true
             };
-
+            
+            if (dummyTile.ElementType == EnumElementType.NOTE &&
+                !this._missingVisualElementsList.IsNullOrEmpty())
+            {
+                this._missingVisualElementsList.Add(new ScrollerElement() {Index = i});
+                continue;
+            }
+            
+            if (dummyTile.ElementType == EnumElementType.NOTE)
+                this._missingVisualElementsList.Add(new ScrollerElement() {Index = i});
+            
             dummyTile.LayoutUpdated += TileOnLayoutUpdated;
                 
             this._visualElementsGrid.Children.Add(dummyTile);
         }
         
-        //this._scrollViewer.UpdateLayout();
+        this._itemsControl.UpdateLayout();
     }
 
     private void TileOnLayoutUpdated(object? sender, EventArgs e)
@@ -318,6 +336,9 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
             if (VisualContainsIndex(index))
                 return;
 
+            if (tile.ElementType == EnumElementType.NOTE)
+                this._noteElementSize = tile.DesiredSize;
+            
             this._visualElementsList.Add(new ScrollerElement()
             {
                 Index = index,
@@ -326,12 +347,15 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 
             tile.IsVisible = false;
 
-            if (this._visualElementsList.Count == this._viewModel.Lyrics.Count)
+            if ((this._visualElementsList.Count + this._missingVisualElementsList.Count) == 
+                this._viewModel.Lyrics.Count)
             {
                 this._visualElementsGrid.IsVisible = false;
                 this._visualElementsGrid.Children.Clear();
                 
                 FillRealItems();
+                
+                CalculateMissingElements();
             }
         }
     }
@@ -347,6 +371,14 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
                 
             this._itemsControl.Items.Add(realTile);
         }
+    }
+
+    private void CalculateMissingElements()
+    {
+        for (int i = 0; i < this._missingVisualElementsList.Count; i++)
+            this._missingVisualElementsList[i].Size = this._noteElementSize;
+        
+        this._visualElementsList.AddRange(this._missingVisualElementsList);
     }
 
     private bool VisualContainsIndex(int index)
