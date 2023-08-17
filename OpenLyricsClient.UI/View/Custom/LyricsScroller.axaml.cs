@@ -52,6 +52,7 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
     private ScrollViewer _scrollViewer;
     private ItemsControl _itemsControl;
     private Grid _visualElementsGrid;
+    private Grid _layoutGrid;
     
     // ViewModel
     private LyricsScrollerViewModel _viewModel;
@@ -112,6 +113,7 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         this._itemsControl = this.Get<ItemsControl>(nameof(CTRL_Items));
         this._scrollViewer = this.Get<ScrollViewer>(nameof(CTRL_Viewer));
         this._visualElementsGrid = this.Get<Grid>(nameof(CTRL_VisualElements));
+        this._layoutGrid = this.Get<Grid>(nameof(CTRL_Layout));
         
         this.EffectiveViewportChanged += OnEffectiveViewportChanged;
         
@@ -122,6 +124,8 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         
         MainWindow.Instance.PointerWheelChanged += OnPointerWheelChanged;
         this._itemsControl.PointerWheelChanged += OnPointerWheelChanged;
+        this._layoutGrid.PointerWheelChanged += OnPointerWheelChanged;
+        this._visualElementsGrid.PointerWheelChanged += OnPointerWheelChanged;
         
         AttachedToVisualTree += OnAttachedToVisualTree;
         

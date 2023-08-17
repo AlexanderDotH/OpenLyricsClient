@@ -348,7 +348,7 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
 
         int amount = 3;
         double spacing = 10 * amount;
-        double margin = 10;
+        double margin = 0;
         double elements = (r.Width * amount) + margin + spacing;
 
         return new Size(elements, r.Height);

@@ -11,6 +11,7 @@ using Avalonia.VisualTree;
 using OpenLyricsClient.Logic;
 using OpenLyricsClient.Logic.Events.EventArgs;
 using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
+using OpenLyricsClient.Logic.Utils;
 using OpenLyricsClient.Shared.Structure.Enum;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 using OpenLyricsClient.Shared.Structure.Visual;
@@ -254,25 +255,29 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
 
     private void ApplyDataToOverlay(LyricPart lyricPart)
     {
-        /*
-        this._overlay = new TextOverlay();
-        (this._overlay as TextOverlay).LyricPart = lyricPart;
-        this._elementType = EnumElementType.TEXT;
-        */
-        
-        if (lyricPart.Part.Trim().Equals("♪"))
+        EnumElementType type = TypeClassifier.ClassifyLyricPart(lyricPart);
+
+        switch (type)
         {
-            this._overlay = new NoteOverlay();
-            (this._overlay as NoteOverlay).LyricPart = lyricPart;
-            this._elementType = EnumElementType.NOTE;
-        } 
-        else if (!lyricPart.Part.Contains("♪"))
-        {
-            this._overlay = new TextOverlay();
-            (this._overlay as TextOverlay).LyricPart = lyricPart;
-            this._elementType = EnumElementType.TEXT;
+            case EnumElementType.NOTE:
+            {
+                this._overlay = new NoteOverlay()
+                {
+                    LyricPart = lyricPart
+                };
+                break;
+            }
+            case EnumElementType.TEXT:
+            {
+                this._overlay = new TextOverlay()
+                {
+                    LyricPart = lyricPart
+                };
+                break;
+            }
         }
 
+        this._elementType = type;
     }
 
     public EnumElementType ElementType

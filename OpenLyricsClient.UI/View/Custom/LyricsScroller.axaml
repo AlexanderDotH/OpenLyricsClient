@@ -41,5 +41,8 @@
             </ScrollViewer.Transitions>-->
             
         </ScrollViewer>
+        
+        <Grid Name="CTRL_Layout" IsHitTestVisible="True"/>
+
     </Grid>
 </UserControl>
