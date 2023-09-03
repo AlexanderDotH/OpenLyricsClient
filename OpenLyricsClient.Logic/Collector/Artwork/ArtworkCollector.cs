@@ -43,11 +43,8 @@ namespace OpenLyricsClient.Logic.Collector.Artwork
                 if (artwork.ReturnCode != ArtworkReturnCode.SUCCESS || artwork.Data == null)
                     continue;
 
-                if (artwork.ReturnCode == ArtworkReturnCode.SUCCESS)
-                {
-                    Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, artwork);
-                    Core.INSTANCE.ArtworkHandler.ArtworkFoundEvent(songResponseObject.SongRequestObject, artwork);
-                }
+                Core.INSTANCE.CacheManager.WriteToCache(songResponseObject.SongRequestObject, artwork);
+                Core.INSTANCE.ArtworkHandler.ArtworkFoundEvent(songResponseObject.SongRequestObject, artwork);
             }
         }
     }

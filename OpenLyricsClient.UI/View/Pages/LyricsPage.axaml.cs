@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Reactive.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
@@ -41,7 +43,7 @@ public partial class LyricsPage : UserControl
 
     private Border _percentagePanel;
     private Grid _informationBorder;
-    private Viewbox _artworkViewBox;
+    //private Viewbox _artworkViewBox;
     
     private Image _artworkImage;
     private string _oldImagePath = string.Empty;
@@ -68,7 +70,7 @@ public partial class LyricsPage : UserControl
 
         this._percentagePanel = this.Get<Border>(nameof(CTRL_PercentagePanel));
         this._informationBorder = this.Get<Grid>(nameof(CTRL_InformationBorder));
-        this._artworkViewBox = this.Get<Viewbox>(nameof(CTRL_ViewBoxCover));
+        /*this._artworkViewBox = this.Get<Viewbox>(nameof(CTRL_ViewBoxCover));*/
 
         this._aiLyricsBadge = this.Get<AiLyricsBadge>(nameof(CTRL_AiBadge));
         
@@ -101,7 +103,7 @@ public partial class LyricsPage : UserControl
         
         this._artworkImage = image;
         
-        this._artworkViewBox.Child = image;
+        //this._artworkViewBox.Child = image;
         
         /*this._presenterGrid.Children.Add(image);
         this._presenterGrid.Children.Add(border);*/

@@ -36,6 +36,8 @@ namespace OpenLyricsClient.Logic.Handler.Artwork
             
             this._songHandler = songHandler;
             this._artworkCollector = new ArtworkCollector();
+
+            this._oldArtwork = new Shared.Structure.Artwork.Artwork();
             
             ArtworkFoundHandler += OnArtworkFoundHandler;
             
@@ -56,19 +58,21 @@ namespace OpenLyricsClient.Logic.Handler.Artwork
             if (songChangedEventArgs.EventType == EventType.PRE)
                 return;
             
-            if (DataValidator.ValidateData(songChangedEventArgs) &&
-                DataValidator.ValidateData(songChangedEventArgs.Song))
-            {
-                if (Core.INSTANCE.CacheManager.IsArtworkInCache(songResponseObject.SongRequestObject))
-                    return;
+            if (!DataValidator.ValidateData(songChangedEventArgs))
+                return;
+            
+            if (!DataValidator.ValidateData(songChangedEventArgs.Song))
+                return;
+            
+            if (Core.INSTANCE.CacheManager.IsArtworkInCache(songResponseObject.SongRequestObject))
+                return;
 
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
 
-                await this._artworkCollector.CollectArtwork(songResponseObject);
+            await this._artworkCollector.CollectArtwork(songResponseObject);
 
-                this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the artwork!", DebugType.INFO);
-            }
+            this._debugger.Write("Took " + stopwatch.ElapsedMilliseconds + "ms to fetch the artwork!", DebugType.INFO);
         }
 
         private async Task ApplyArtworkTask()
@@ -95,7 +99,10 @@ namespace OpenLyricsClient.Logic.Handler.Artwork
                 if (!DataValidator.ValidateData(artworkCache))
                     continue;
 
-                if (artworkCache.Equals(this._oldArtwork))
+                if (!DataValidator.ValidateData(artworkCache.FilePath))
+                    continue;
+                
+                if (artworkCache.FilePath.Equals(this._oldArtwork.FilePath))
                     continue;
                 
                 ArtworkFoundEvent(songRequestObject, artworkCache);

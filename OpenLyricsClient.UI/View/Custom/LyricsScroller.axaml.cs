@@ -238,6 +238,10 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 
         double max = maxTimeSpan.TotalMilliseconds;
         double x = percentage * (max * 0.01);
+
+        if (double.IsNaN(x))
+            x = 20;
+        
         double y = max - x;
 
         y = Math.Clamp(y, 0, max);

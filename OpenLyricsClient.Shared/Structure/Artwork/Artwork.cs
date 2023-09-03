@@ -15,7 +15,7 @@ namespace OpenLyricsClient.Shared.Structure.Artwork
         private byte[] _data;
         private ArtworkReturnCode _returnCode;
         private ColorPalette _artworkColor;
-        private string _filePath;
+        private string _filePath = string.Empty;
 
         private bool _artworkApplied;
         private bool _artworkCalculated;

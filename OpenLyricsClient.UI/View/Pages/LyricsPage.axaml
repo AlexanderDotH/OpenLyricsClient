@@ -11,6 +11,7 @@
              xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              xmlns:blur="clr-namespace:OpenLyricsClient.UI.Models.Elements.Blur"
              xmlns:providers="clr-namespace:OpenLyricsClient.UI.View.Custom.Badges.Lyrics.Providers"
+             xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
              mc:Ignorable="d" d:DesignWidth="1500" d:DesignHeight="900"
              Background="{Binding UiBackground}"
              Foreground="{Binding UiFontForeground}"
@@ -238,14 +239,38 @@
        
                 <Grid Name="CTRL_InformationBorder" 
                       VerticalAlignment="Bottom" 
+                      
                       HorizontalAlignment="Stretch" 
-                      Background="Transparent"
                       Margin="10,0,10,10" 
                       Height="80">
+                    
+                    <Border CornerRadius="8" 
+                            Width="60" 
+                            Height="60" 
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Left" 
+                            Margin="10,10,0,10">
+                        <Image asyncImageLoader:ImageLoader.Source="{Binding Artwork}" ClipToBounds="True"/>
+                    </Border>
+                    
+                    <TextBlock Text="{Binding SongName}" 
+                               FontSize="14"
+                               FontWeight="Normal"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Left"
+                               Margin="90,20,0,0">
+                        
+                    </TextBlock>
+                    
+                   
+                    
+                    <!--
                     <Viewbox Name="CTRL_ViewBoxCover" 
                              VerticalAlignment="Stretch" 
                              HorizontalAlignment="Left"
-                             Margin="10,10,0,10"/>
+                             Margin="10,10,0,10">
+                        
+                    </Viewbox>-->
                 </Grid>
             </Grid>
             

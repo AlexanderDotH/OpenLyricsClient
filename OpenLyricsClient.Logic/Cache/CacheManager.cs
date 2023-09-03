@@ -265,6 +265,12 @@ namespace OpenLyricsClient.Logic.Cache
             if (!DataValidator.ValidateData(data.Artwork))
                 return null;
 
+            if (!DataValidator.ValidateData(data.Artwork.FilePath))
+                return null;
+
+            if (data.Artwork.FilePath.IsNullOrEmpty())
+                return null;
+            
             return data.Artwork;
         }
 

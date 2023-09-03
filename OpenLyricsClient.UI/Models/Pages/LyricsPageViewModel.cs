@@ -16,6 +16,7 @@ using OpenLyricsClient.Logic.Events.EventArgs;
 using OpenLyricsClient.Logic.Handler.Services.Services.Spotify;
 using OpenLyricsClient.Logic.Handler.Song.SongProvider;
 using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
+using OpenLyricsClient.Shared.Structure.Artwork;
 using OpenLyricsClient.Shared.Structure.Enum;
 using OpenLyricsClient.Shared.Structure.Palette;
 using OpenLyricsClient.Shared.Structure.Song;
@@ -37,6 +38,7 @@ public class LyricsPageViewModel : ModelBase
     public ReactiveCommand<Unit, Unit> SwitchToSettingsCommand { get; }
 
     private ColorPalette _colorPalette;
+    private Artwork _currentArtwork;
     
     public LyricsPageViewModel()
     {
@@ -46,13 +48,25 @@ public class LyricsPageViewModel : ModelBase
 
         SwitchToSettingsCommand = ReactiveCommand.Create(SwitchToSettings);
 
+        this._currentArtwork = new Artwork();
+        
         Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
         Core.INSTANCE.SettingsHandler.SettingsChanged += SettingManagerOnSettingsChanged;
         Core.INSTANCE.ArtworkHandler.ArtworkAppliedHandler += ArtworkHandlerOnArtworkAppliedHandler;
+        Core.INSTANCE.ArtworkHandler.ArtworkFoundHandler += ArtworkHandlerOnArtworkFoundHandler;
         Core.INSTANCE.LyricHandler.LyricsFound += LyricHandlerOnLyricsFound;
         Core.INSTANCE.SongHandler.SongUpdated += SongHandlerOnSongUpdated;
         
         App.INSTANCE.ColorHandler.ColorResourceUpdated += ColorHandlerOnColorResourceUpdated;
+    }
+
+    private void ArtworkHandlerOnArtworkFoundHandler(object sender, ArtworkFoundEventArgs args)
+    {
+        this._currentArtwork = args.Artwork;
+        /*Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            OnPropertyChanged("Artwork");
+        });*/
     }
 
     private void ColorHandlerOnColorResourceUpdated(object sender)
@@ -60,14 +74,17 @@ public class LyricsPageViewModel : ModelBase
         OnPropertyChanged("UiFontForeground");
         OnPropertyChanged("AiBadgeStartColor");
         OnPropertyChanged("AiBadgeEndColor");
+        OnPropertyChanged("Album");
     }
 
     private void SongHandlerOnSongUpdated(object sender)
     {
         Dispatcher.UIThread.Invoke(() =>
         {
+            OnPropertyChanged("Artwork");
             OnPropertyChanged("SongName");
             OnPropertyChanged("Artists");
+            OnPropertyChanged("Album");
             /*OnPropertyChanged("Album");*/
             OnPropertyChanged("IsSongPlaying");
             OnPropertyChanged("CurrentTime");
@@ -132,9 +149,12 @@ public class LyricsPageViewModel : ModelBase
 
     private void ArtworkHandlerOnArtworkAppliedHandler(object sender, ArtworkAppliedEventArgs args)
     {
+        this._currentArtwork = args.Artwork;
+        
         Dispatcher.UIThread.InvokeAsync(() =>
         {
             OnPropertyChanged("Artwork");
+            
             OnPropertyChanged("UiBackground");
             OnPropertyChanged("UiLightBackground");
             OnPropertyChanged("UiForeground");
@@ -277,7 +297,7 @@ public class LyricsPageViewModel : ModelBase
     
     public string Artwork
     {
-        get => Core.INSTANCE?.SongHandler?.CurrentSong?.Artwork?.FilePath!;
+        get => this._currentArtwork.FilePath;
     }
     
     public SolidColorBrush SelectedColor

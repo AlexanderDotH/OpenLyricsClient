@@ -30,18 +30,19 @@ public class ColorHandler
         
         this._defaultColor = new Avalonia.Media.Color(255, 220, 20, 60);
 
-        Core.INSTANCE.ArtworkHandler.ArtworkFoundHandler += ArtworkHandlerOnArtworkFoundHandler;
+        //Core.INSTANCE.ArtworkHandler.ArtworkFoundHandler += ArtworkHandlerOnArtworkFoundHandler;
+        Core.INSTANCE.ArtworkHandler.ArtworkAppliedHandler += ArtworkHandlerOnArtworkAppliedHandler;
     }
 
-    private void ArtworkHandlerOnArtworkFoundHandler(object sender, ArtworkFoundEventArgs args)
+    private void ArtworkHandlerOnArtworkAppliedHandler(object sender, ArtworkAppliedEventArgs args)
     {
         Task.Factory.StartNew(async () =>
         {
-            await UpdateColorAndApply(args.Artwork, args.SongRequestObject);
+            await UpdateColorAndApply(args.Artwork);
         });
     }
 
-    private async Task UpdateColorAndApply(Artwork artwork, SongRequestObject requestObject)
+    private async Task UpdateColorAndApply(Artwork artwork)
     {
         if (artwork.ArtworkCalculated)
         {
