@@ -220,14 +220,30 @@
             
                     <Grid>
                
-                        <blur:BlurArea Sigma="5" CornerRadius="5"/>
+                        <Image Source="{Binding Artwork}" 
+                               ClipToBounds="True" 
+                               Width="65" 
+                               Height="65" 
+                               VerticalAlignment="Bottom" 
+                               HorizontalAlignment="Left" 
+                               Margin="5,5,0,5"/>
+                    
+                        <!-- <blur:BlurArea Height="80"  -->
+                        <!--                Width="80" -->
+                        <!--                Sigma="20" -->
+                        <!--                CornerRadius="5" -->
+                        <!--                VerticalAlignment="Bottom" -->
+                        <!--                HorizontalAlignment="Left"/> -->
+                        
+                        <blur:BlurArea Sigma="10" Height="80" CornerRadius="8"/>
                 
                         <Border Name="CTRL_PercentagePanel" 
                                 Opacity="0.1"
-                                CornerRadius="5"
+                                CornerRadius="8"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Stretch" 
                                 Background="White">
+                            
                             <Border.Transitions>
                                 <Transitions>
                                     <DoubleTransition Property="Width" Easing="QuinticEaseInOut" Duration="0:0:1.0"/>
@@ -244,24 +260,53 @@
                       Margin="10,0,10,10" 
                       Height="80">
                     
-                    <Border CornerRadius="8" 
-                            Width="60" 
-                            Height="60" 
+                    <Border CornerRadius="8"
+                            Width="60"
+                            Height="60"
                             VerticalAlignment="Bottom"
-                            HorizontalAlignment="Left" 
+                            HorizontalAlignment="Left"
                             Margin="10,10,0,10">
                         <Image Source="{Binding Artwork}" ClipToBounds="True"/>
                     </Border>
                     
-                    <TextBlock Text="{Binding SongName}" 
-                               FontSize="14"
-                               FontWeight="Normal"
-                               VerticalAlignment="Top"
-                               HorizontalAlignment="Left"
-                               Margin="90,20,0,0">
+                    <Panel Height="80"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Bottom">
                         
-                    </TextBlock>
+                        <TextBlock Text="{Binding SongName}" 
+                                   Foreground="{Binding UiReversedForeground}"
+                                   FontSize="15"
+                                   FontWeight="Bold"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"
+                                   Margin="100,0,0,20">
+                            <TextBlock.Transitions>
+                                <Transitions>
+                                    <BrushTransition Property="Foreground"
+                                                     Easing="CircularEaseOut"
+                                                     Duration="0:0:0.500"/>
+                                </Transitions>
+                            </TextBlock.Transitions>
+                        </TextBlock>
                     
+                        <TextBlock Text="{Binding Artists}" 
+                                   Foreground="{Binding UiReversedForeground}"
+                                   FontSize="14"
+                                   FontWeight="Normal"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"
+                                   Margin="100,25,0,0">
+                            <TextBlock.Transitions>
+                                <Transitions>
+                                    <BrushTransition Property="Foreground"
+                                                     Easing="CircularEaseOut"
+                                                     Duration="0:0:0.500"/>
+                                </Transitions>
+                            </TextBlock.Transitions>
+                        </TextBlock>
+                    </Panel>
+                    
+                  
                    
                     
                     <!--

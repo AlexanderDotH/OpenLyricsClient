@@ -57,6 +57,17 @@ public class LyricsPageViewModel : ModelBase
         Core.INSTANCE.SongHandler.SongUpdated += SongHandlerOnSongUpdated;
         
         App.INSTANCE.ColorHandler.ColorResourceUpdated += ColorHandlerOnColorResourceUpdated;
+        Core.INSTANCE.ColorHandler.ColorPaletteChangedEvent += ColorHandlerOnColorPaletteChangedEvent;
+    }
+
+    private void ColorHandlerOnColorPaletteChangedEvent(object sender, ColorPaletteChangedEventArgs args)
+    {
+        this._colorPalette = args.ColorPalette;
+
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            OnPropertyChanged("UiReversedForeground");
+        });
     }
 
     private void ArtworkHandlerOnArtworkFoundHandler(object sender, ArtworkFoundEventArgs args)
@@ -76,6 +87,7 @@ public class LyricsPageViewModel : ModelBase
     private void ColorHandlerOnColorResourceUpdated(object sender)
     {
         OnPropertyChanged("UiFontForeground");
+        OnPropertyChanged("UiReversedForeground");
         OnPropertyChanged("AiBadgeStartColor");
         OnPropertyChanged("AiBadgeEndColor");
         OnPropertyChanged("Album");
@@ -169,7 +181,7 @@ public class LyricsPageViewModel : ModelBase
         OnPropertyChanged("UiForeground");
         OnPropertyChanged("SelectedColor");
         OnPropertyChanged("UnSelectedColor");
-        
+        OnPropertyChanged("UiReversedForeground");
         OnPropertyChanged("IsAnyServiceConnected");
         OnPropertyChanged("IsSongNotPlayingAndAnyServiceConnected");
         OnPropertyChanged("IsSongAvailable");
@@ -346,6 +358,27 @@ public class LyricsPageViewModel : ModelBase
             return (App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush);
         }
     }
+    
+    public SolidColorBrush UiReversedForeground
+    {
+        get
+        {
+            if (this._colorPalette == null)
+                return App.Current.FindResource("PrimaryFontColorBrush") as SolidColorBrush;
+            
+            if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
+            {
+                return App.Current.FindResource("PrimaryFontColorBrush") as SolidColorBrush;
+            }
+            
+            double br = this._colorPalette.PrimaryColor.Dark.BrightnessPercentage();
+                
+            if (br < 40)
+                return new SolidColorBrush(this._colorPalette.PrimaryForegroundColor.Dark);
+
+            return new SolidColorBrush(this._colorPalette.PrimaryForegroundColor.Light); 
+        }
+    }
 
     public Color AiBadgeStartColor
     {
@@ -365,7 +398,7 @@ public class LyricsPageViewModel : ModelBase
             if (Core.INSTANCE.SettingsHandler.Settings<LyricsSection>()!.GetValue<bool>("Artwork Background"))
                 return (App.Current.FindResource("PrimaryBackgroundBrush") as SolidColorBrush).Color;
             
-            return (App.Current.FindResource("PrimaryThemeColorBrush") as SolidColorBrush).AdjustBrightness(150).Color;
+            return (App.Current.FindResource("SecondaryThemeColorBrush") as SolidColorBrush).AdjustBrightness(150).Color;
         }
     }
     
