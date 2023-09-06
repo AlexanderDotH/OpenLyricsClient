@@ -7,7 +7,7 @@ namespace OpenLyricsClient.Logic.Collector.Artwork.Providers.Plugin
     {
         public string CollectorName()
         {
-            return "Plugin"; 
+            return "Plugin";  
         }
 
         async public Task<Shared.Structure.Artwork.Artwork> GetArtwork(SongResponseObject songResponseObject)
