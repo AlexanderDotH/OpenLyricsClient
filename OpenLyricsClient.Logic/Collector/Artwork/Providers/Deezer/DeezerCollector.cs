@@ -41,25 +41,25 @@ public class DeezerCollector : IArtworkCollector
     
     private string GetArtworkUrl(JsonDeezerSearchDataResponse track)
     {
-        if (!track.album.cover_xl.IsNullOrEmpty())
+        if (!track.album.cover_small.IsNullOrEmpty())
         {
-            return track.album.cover_xl;
+            return track.album.cover_small;
         } 
-        else if (!track.album.cover_big.IsNullOrEmpty())
-        {
-            return track.album.cover_big;
-        }
-        else if (!track.album.cover.IsNullOrEmpty())
-        {
-            return track.album.cover;
-        }
         else if (!track.album.cover_medium.IsNullOrEmpty())
         {
             return track.album.cover_medium;
         }
-        else if (!track.album.cover_small.IsNullOrEmpty())
+        else if (!track.album.cover.IsNullOrEmpty())
         {
-            return track.album.cover_small;
+            return track.album.cover;        
+        }
+        else if (!track.album.cover_big.IsNullOrEmpty())
+        {
+            return track.album.cover_big;
+        }
+        else if (!track.album.cover_xl.IsNullOrEmpty())
+        {
+            return track.album.cover_xl;
         }
 
         return string.Empty;

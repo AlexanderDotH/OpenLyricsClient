@@ -1,8 +1,10 @@
 using System.Net;
+using System.Net.Mime;
 using OpenLyricsClient.Shared.Structure.Artwork;
 using OpenLyricsClient.Shared.Structure.Song;
 using OpenLyricsClient.Shared.Utils;
 using SpotifyAPI.Web;
+using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.Logic.Collector.Artwork.Providers.Spotify;
 
@@ -31,24 +33,13 @@ public class SpotifyCollector : IArtworkCollector
 
         FullTrack track = (FullTrack)songResponseObject.Track;
 
-        Image maxImage = new Image();
-        maxImage.Height = 0;
-        maxImage.Width = 0;
+        if (track.Album.Images.IsNullOrEmpty())
+            return new Shared.Structure.Artwork.Artwork();
+
+        track.Album.Images.Reverse();
+        Image smallest = track.Album.Images.Find(p => p.Height > 0);
         
-        for (int i = 0; i < track.Album.Images.Count; i++)
-        {
-            Image image = track.Album.Images[i];
-
-            int size = image.Height * image.Width;
-            int imageSize = maxImage.Height * maxImage.Width;
-
-            if (size > imageSize)
-            {
-                maxImage = image;
-            }
-        }
-
-        return await GetArtwork(maxImage.Url, songResponseObject.SongRequestObject);
+        return await GetArtwork(smallest.Url, songResponseObject.SongRequestObject);
     }
 
     private async Task<Shared.Structure.Artwork.Artwork> GetArtwork(string url, SongRequestObject songRequestObject)

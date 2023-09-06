@@ -38,7 +38,8 @@ public class LyricsPageViewModel : ModelBase
     public ReactiveCommand<Unit, Unit> SwitchToSettingsCommand { get; }
 
     private ColorPalette _colorPalette;
-    private Artwork _currentArtwork;
+
+    private IImage _artwork;
     
     public LyricsPageViewModel()
     {
@@ -48,8 +49,6 @@ public class LyricsPageViewModel : ModelBase
 
         SwitchToSettingsCommand = ReactiveCommand.Create(SwitchToSettings);
 
-        this._currentArtwork = new Artwork();
-        
         Core.INSTANCE.SongHandler.SongChanged += SongHandlerOnSongChanged;
         Core.INSTANCE.SettingsHandler.SettingsChanged += SettingManagerOnSettingsChanged;
         Core.INSTANCE.ArtworkHandler.ArtworkAppliedHandler += ArtworkHandlerOnArtworkAppliedHandler;
@@ -62,7 +61,12 @@ public class LyricsPageViewModel : ModelBase
 
     private void ArtworkHandlerOnArtworkFoundHandler(object sender, ArtworkFoundEventArgs args)
     {
-        this._currentArtwork = args.Artwork;
+        this._artwork = args.Artwork.ArtworkAsImage;
+
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            OnPropertyChanged("Artwork");
+        });
         /*Dispatcher.UIThread.InvokeAsync(() =>
         {
             OnPropertyChanged("Artwork");
@@ -81,11 +85,10 @@ public class LyricsPageViewModel : ModelBase
     {
         Dispatcher.UIThread.Invoke(() =>
         {
-            OnPropertyChanged("Artwork");
+           // OnPropertyChanged("Artwork");
             OnPropertyChanged("SongName");
             OnPropertyChanged("Artists");
             OnPropertyChanged("Album");
-            /*OnPropertyChanged("Album");*/
             OnPropertyChanged("IsSongPlaying");
             OnPropertyChanged("CurrentTime");
             OnPropertyChanged("Percentage");
@@ -149,8 +152,6 @@ public class LyricsPageViewModel : ModelBase
 
     private void ArtworkHandlerOnArtworkAppliedHandler(object sender, ArtworkAppliedEventArgs args)
     {
-        this._currentArtwork = args.Artwork;
-        
         Dispatcher.UIThread.InvokeAsync(() =>
         {
             OnPropertyChanged("Artwork");
@@ -295,9 +296,9 @@ public class LyricsPageViewModel : ModelBase
         get => Core.INSTANCE.SongHandler?.CurrentSong?.MaxProgressString!;
     }
     
-    public string Artwork
+    public IImage Artwork
     {
-        get => this._currentArtwork.FilePath;
+        get => this._artwork;
     }
     
     public SolidColorBrush SelectedColor

@@ -55,21 +55,21 @@ namespace OpenLyricsClient.Logic.Collector.Artwork.Providers.Musixmatch
 
         private string GetArtworkUrl(Track track)
         {
-            if (!track.AlbumCoverart800x800.IsNullOrEmpty())
+            if (!track.AlbumCoverart100x100.IsNullOrEmpty())
             {
-                return track.AlbumCoverart800x800;
+                return track.AlbumCoverart100x100;
             } 
-            else if (!track.AlbumCoverart500x500.IsNullOrEmpty())
-            {
-                return track.AlbumCoverart500x500;
-            }
             else if (!track.AlbumCoverart350x350.IsNullOrEmpty())
             {
                 return track.AlbumCoverart350x350;
             }
-            else if (!track.AlbumCoverart100x100.IsNullOrEmpty())
+            else if (!track.AlbumCoverart500x500.IsNullOrEmpty())
             {
-                return track.AlbumCoverart100x100;
+                return track.AlbumCoverart500x500;
+            }
+            else if (!track.AlbumCoverart800x800.IsNullOrEmpty())
+            {
+                return track.AlbumCoverart800x800;
             }
 
             return string.Empty;

@@ -250,7 +250,7 @@
                             VerticalAlignment="Bottom"
                             HorizontalAlignment="Left" 
                             Margin="10,10,0,10">
-                        <Image asyncImageLoader:ImageLoader.Source="{Binding Artwork}" ClipToBounds="True"/>
+                        <Image Source="{Binding Artwork}" ClipToBounds="True"/>
                     </Border>
                     
                     <TextBlock Text="{Binding SongName}" 
