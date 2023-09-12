@@ -1,0 +1,56 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:elements="clr-namespace:OpenLyricsClient.UI.Models.Elements"
+        xmlns:blur="clr-namespace:OpenLyricsClient.UI.Models.Elements.Blur"
+        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <elements:AvalonGlassButton></elements:AvalonGlassButton>
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+
+    <!-- Add Styles Here -->
+    <Style Selector="elements|AvalonGlassButton">
+
+        <Setter Property="MinWidth" Value="40"/>
+        <Setter Property="MinHeight" Value="40"/>
+        
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="Background" Value="Transparent"/>
+
+        <Setter Property="Template">
+            <ControlTemplate>
+                
+                
+                <Panel Background="Transparent">
+
+
+                    <blur:BlurArea CornerRadius="{TemplateBinding CornerRadius}"
+                                   Sigma="10"/>
+                    
+                    <Border CornerRadius="{TemplateBinding CornerRadius}"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            Opacity="0.2"
+                            Background="Black"/>
+                    
+                    <Button Background="Transparent"
+                            Command="{TemplateBinding Command}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            assists:ShadowAssist.ShadowDepth="Depth0"
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}">
+                        
+                        <avalonia:MaterialIcon Kind="{TemplateBinding IconKind}" />
+                    </Button>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

@@ -34,11 +34,11 @@ namespace OpenLyricsClient.UI.Scaling;
         /// <param name="avaloniaObject">The <see cref="AvaloniaObject"/> to be mapped to this new instance of <see cref="ScalableObject"/>.</param>
         public ScalableObject(AvaloniaObject avaloniaObject)
         {
-            if (avaloniaObject is TextBlock textBlock)
-            {
-                Register(avaloniaObject, TextBlock.FontSizeProperty, textBlock.FontSize);
-                Register(avaloniaObject, TextBlock.MarginProperty, textBlock.Margin);
-            }
+            // if (avaloniaObject is TextBlock textBlock)
+            // {
+            //     Register(avaloniaObject, TextBlock.FontSizeProperty, textBlock.FontSize);
+            //     Register(avaloniaObject, TextBlock.MarginProperty, textBlock.Margin);
+            // }
 
             if (avaloniaObject is TemplatedControl templatedControl)
             {

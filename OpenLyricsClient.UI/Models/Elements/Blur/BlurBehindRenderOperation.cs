@@ -76,28 +76,41 @@ class BlurBehindRenderOperation : ICustomDrawOperation
             return;
 
         using SKImage backgroundSnapshot = skia.SkSurface.Snapshot();
+        
         using var backdropShader = SKShader.CreateImage(backgroundSnapshot, SKShaderTileMode.Clamp,
             SKShaderTileMode.Clamp, currentInvertedTransform);
 
         if (!DataValidator.ValidateData(skia.GrContext))
             return;
         
-        using SKSurface blurred = SKSurface.Create(skia?.GrContext, false, new SKImageInfo(
-            (int)Math.Ceiling(this._bounds.Width),
-            (int)Math.Ceiling(this._bounds.Height), SKImageInfo.PlatformColorType, SKAlphaType.Premul));
+        using SKSurface blurred = SKSurface.Create(
+            skia?.GrContext, 
+            true, 
+            new SKImageInfo(
+                (int)Math.Ceiling(this._bounds.Width), 
+                (int)Math.Ceiling(this._bounds.Height), 
+                SKImageInfo.PlatformColorType, 
+                SKAlphaType.Premul));
         
         if (blurred == null)
             return;
-        
+
+        SKRect rect = new SKRect(
+            (float)_bounds.Left, 
+            (float)_bounds.Top, 
+            (float)_bounds.Right,
+            (float)_bounds.Bottom);
+
         using (SKImageFilter filter = SKImageFilter.CreateBlur(this._sigmaX, this._sigmaY, SKShaderTileMode.Clamp))
             
         using (SKPaint blurPaint = new SKPaint
                {
                    Shader = backdropShader,
-                   ImageFilter = filter
+                   ImageFilter = filter,
+                   FilterQuality = SKFilterQuality.Low
                })
-
-        blurred.Canvas.DrawRoundRect(new SKRect(0, 0, (float)_bounds.Width, (float)_bounds.Height), this._cornerRadius, this._cornerRadius, blurPaint);
+            
+        blurred.Canvas.DrawRect(rect, blurPaint);
 
         using (SKImage blurSnap = blurred.Snapshot())
 
@@ -105,13 +118,14 @@ class BlurBehindRenderOperation : ICustomDrawOperation
 
         using (SKPaint blurSnapPaint = new SKPaint
                {
-                   Shader = blurSnapShader,
-                   IsAntialias = true
+                   Shader = blurSnapShader
                })
             
-        skia.SkCanvas.DrawRoundRect(new SKRect(0, 0, (float)this._bounds.Width, (float)this._bounds.Height), this._cornerRadius, this._cornerRadius, blurSnapPaint);
+        skia.SkCanvas.DrawRoundRect(rect, this._cornerRadius, this._cornerRadius, blurSnapPaint);
 
-            //return;
+        if (!UseNoise)
+            return;
+        
         using SKPaint acrylliPaint = new SKPaint();
 
         acrylliPaint.IsAntialias = true;
@@ -148,7 +162,7 @@ class BlurBehindRenderOperation : ICustomDrawOperation
         {
             acrylliPaint.Shader = compose;
             acrylliPaint.IsAntialias = true;
-            skia.SkCanvas.DrawRoundRect(new SKRect(0, 0, (float)this._bounds.Width, (float)this._bounds.Height), this._cornerRadius, 10, acrylliPaint);
+            skia.SkCanvas.DrawRoundRect(rect, this._cornerRadius, this._cornerRadius, acrylliPaint);
         }
     }
 

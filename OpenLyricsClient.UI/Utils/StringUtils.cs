@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Media;
 using DevBase.Generics;
@@ -10,7 +11,7 @@ namespace OpenLyricsClient.UI.Utils;
 
 public class StringUtils
 {
-    public static AList<LyricOverlayElement> SplitTextToLines(string text, double width, double height, Typeface typeface, TextAlignment alignment, double fontSize)
+    public static async Task<AList<LyricOverlayElement>> SplitTextToLines(string text, double width, double height, Typeface typeface, TextAlignment alignment, double fontSize, Logic.Romanization.Romanization romanization = null)
     {
         string[] words = text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         
@@ -40,8 +41,13 @@ public class StringUtils
                 if (currentLine.Length > 0 && char.IsWhiteSpace(currentLine[currentLine.Length - 1]))
                     currentLine.Length--;
 
-                lines.Add(new LyricOverlayElement(currentLine.ToString(), 
-                    MeasureSingleString(currentLine.ToString(),typeface, fontSize)));
+                string line = currentLine.ToString();
+                
+                if (romanization != null)
+                    line = await romanization.Romanize(line);
+                
+                lines.Add(new LyricOverlayElement(line, 
+                    MeasureSingleString(line, typeface, fontSize)));
                 currentLine.Clear();
                 currentLine.Append(word);
             }
@@ -49,8 +55,13 @@ public class StringUtils
 
         if (currentLine.Length > 0)
         {
-            lines.Add(new LyricOverlayElement(currentLine.ToString(), 
-                MeasureSingleString(currentLine.ToString(), typeface, fontSize)));
+            string line = currentLine.ToString();
+                
+            if (romanization != null)
+                line = await romanization.Romanize(line);
+            
+            lines.Add(new LyricOverlayElement(line, 
+                MeasureSingleString(line, typeface, fontSize)));
         }
 
         return lines;

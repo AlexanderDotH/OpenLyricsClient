@@ -55,6 +55,8 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
     private Thickness _lyricMargin;
     private Thickness _lyricsMargin;
+
+    private Rect _viewPort;
     
     private ObservableCollection<LyricOverlayElement> _lines;
     private Typeface _typeface;
@@ -70,7 +72,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
     private bool _selectedElement;
     private double _percentage;
-    
+
     public TextOverlay()
     {
         AvaloniaXamlLoader.Load(this);
@@ -85,6 +87,8 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
         this._selectedElement = false;
 
         this._percentage = 0;
+
+        this._viewPort = new Rect(0, 0, 900, 900);
         
         AffectsMeasure<TextOverlay>(LyricLinesProperty, LyricPartProperty, LyricsMarginProperty);
         
@@ -111,6 +115,11 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
     private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
     {
+        if (settingschangedeventargs.Field.Equals("Selections"))
+        {
+            UpdateView(this._viewPort.Height);
+        }
+        
         if (settingschangedeventargs.Field.Equals("Selection Mode"))
         {
             OnPropertyChanged("IsFade");
@@ -138,13 +147,14 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
         {
             ObservableCollection<LyricOverlayElement> sizedLines = new ObservableCollection<LyricOverlayElement>();
             
-            AList<LyricOverlayElement> lines = StringUtils.SplitTextToLines(
+            AList<LyricOverlayElement> lines = await StringUtils.SplitTextToLines(
                 await this._romanization.Romanize(text),
                 width,
                 height,
                 this._typeface,
                 this.LyricsAlignment,
-                this.LyricsSize);
+                this.LyricsSize, 
+                this._romanization);
 
             sizedLines.AddRange(lines.GetAsList());
             
@@ -240,6 +250,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
     private void InstanceOnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
     {
+        this._viewPort = e.EffectiveViewport;
         UpdateView(e.EffectiveViewport.Height);
     }
     

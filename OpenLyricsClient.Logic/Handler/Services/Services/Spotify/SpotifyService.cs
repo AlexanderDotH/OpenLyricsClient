@@ -11,6 +11,7 @@ using OpenLyricsClient.Shared.Structure.Access;
 using OpenLyricsClient.Shared.Structure.Enum;
 using OpenLyricsClient.Shared.Structure.Other;
 using OpenLyricsClient.Shared.Utils;
+using Org.BouncyCastle.Crypto.Parameters;
 using SpotifyAPI.Web;
 using SimpleArtist = OpenLyricsClient.Shared.Structure.Other.SimpleArtist;
 using SimpleTrack = OpenLyricsClient.Shared.Structure.Other.SimpleTrack;
@@ -138,7 +139,20 @@ namespace OpenLyricsClient.Logic.Handler.Services.Services.Spotify
             {
                 case EnumPlayback.PREVOUS_TRACK:
                 {
-                    await spotifyClient.Player.SkipPrevious();
+                    Shared.Structure.Song.Song s = Core.INSTANCE.SongHandler.CurrentSong;
+
+                    if (!DataValidator.ValidateData(s))
+                        break;
+
+                    if (s.GetPercentage() > 10)
+                    {
+                        this.Seek(0);
+                    }
+                    else
+                    {
+                        await spotifyClient.Player.SkipPrevious();
+                    }
+                    
                     break;
                 }
                 case EnumPlayback.NEXT_TRACK:

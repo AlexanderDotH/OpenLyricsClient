@@ -88,7 +88,6 @@ public class BlurArea : Control
 
         if (!DataValidator.ValidateData(this._behindRenderOperation))
             return;
-
         this._behindRenderOperation.Bounds = this.Bounds;
         
         context?.Custom(this._behindRenderOperation);

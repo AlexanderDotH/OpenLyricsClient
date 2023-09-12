@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -278,6 +279,13 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
         }
 
         this._elementType = type;
+    }
+
+    protected override void OnDetachedFromLogicalTree(LogicalTreeAttachmentEventArgs e)
+    {
+        this._overlay = null;
+        this._lyricPart = null;
+        base.OnDetachedFromLogicalTree(e);
     }
 
     public EnumElementType ElementType

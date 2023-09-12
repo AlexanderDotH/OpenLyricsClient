@@ -9,10 +9,6 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="OpenLyricsClient.UI.View.Custom.Tile.Overlays.TextOverlay">
     
-    <UserControl.Resources>
-        <romanization:RomanizationConverter x:Key="RomanizationConverter" />
-    </UserControl.Resources>
-    
     <ItemsControl Name="PART_Items"
                   ItemsSource="{Binding LyricLines, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}">
         
@@ -44,7 +40,7 @@
                         </Border.Transitions>
                     </Border>
                     
-                    <TextBlock Text="{Binding Line, Converter={StaticResource RomanizationConverter}}"
+                    <TextBlock Text="{Binding Line}"
                                FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
                                FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
                                Margin="5,0,5,0"
@@ -71,7 +67,7 @@
                                 </Transitions>
                             </Viewbox.Transitions>
                             
-                            <TextBlock Text="{Binding Line, Converter={StaticResource RomanizationConverter}}"
+                            <TextBlock Text="{Binding Line}"
                                        FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
                                        FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
                                        Margin="5,0,5,0"
@@ -90,7 +86,7 @@
                     
                     <Panel IsVisible="{Binding IsFade, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}">
                         
-                        <TextBlock Text="{Binding Line, Converter={StaticResource RomanizationConverter}}"
+                        <TextBlock Text="{Binding Line}"
                                    FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
                                    FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
                                    Margin="5,0,5,0"
@@ -108,7 +104,7 @@
                     
                     <Panel IsVisible="{Binding IsSolid, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}">
                         
-                        <TextBlock Text="{Binding Line, Converter={StaticResource RomanizationConverter}}"
+                        <TextBlock Text="{Binding Line}"
                                    FontSize="{Binding LyricsSize, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
                                    FontWeight="{Binding LyricsWeight, RelativeSource={RelativeSource AncestorType=overlays1:TextOverlay}}"
                                    Margin="5,0,5,0"

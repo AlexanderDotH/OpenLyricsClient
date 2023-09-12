@@ -20,12 +20,7 @@ public class RomanizationConverter : IValueConverter
         if (value is string sourceText && 
             targetType.IsAssignableTo(typeof(string)))
         {
-            var t = Task.Factory.StartNew(async () =>
-            {
-                return await _romanization.Romanize(sourceText);
-            }).Result;
-            
-            return t.Result;
+            return _romanization.Romanize(sourceText);
         }
         
         return new BindingNotification(new InvalidCastException(), BindingErrorType.Error);
