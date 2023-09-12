@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,11 +12,11 @@ namespace OpenLyricsClient.UI.Utils;
 
 public class StringUtils
 {
-    public static async Task<AList<LyricOverlayElement>> SplitTextToLines(string text, double width, double height, Typeface typeface, TextAlignment alignment, double fontSize, Logic.Romanization.Romanization romanization = null)
+    public static async Task<ObservableCollection<LyricOverlayElement>> SplitTextToLines(string text, double width, Typeface typeface, double fontSize)
     {
         string[] words = text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         
-        AList<LyricOverlayElement> lines = new AList<LyricOverlayElement>();
+        ObservableCollection<LyricOverlayElement> lines = new ObservableCollection<LyricOverlayElement>();
         StringBuilder currentLine = new StringBuilder();
 
         for (int i = 0; i < words.Length; i++)
@@ -33,7 +34,7 @@ public class StringUtils
                 FlowDirection.LeftToRight, 
                 typeface, 
                 fontSize, 
-                new SolidColorBrush(new Color(255,255,255,255)));
+                null);
             
             if (formattedCandidateLine.Width > width)
             {
@@ -43,11 +44,9 @@ public class StringUtils
 
                 string line = currentLine.ToString();
                 
-                if (romanization != null)
-                    line = await romanization.Romanize(line);
-                
                 lines.Add(new LyricOverlayElement(line, 
                     MeasureSingleString(line, typeface, fontSize)));
+                
                 currentLine.Clear();
                 currentLine.Append(word);
             }
@@ -57,9 +56,6 @@ public class StringUtils
         {
             string line = currentLine.ToString();
                 
-            if (romanization != null)
-                line = await romanization.Romanize(line);
-            
             lines.Add(new LyricOverlayElement(line, 
                 MeasureSingleString(line, typeface, fontSize)));
         }
@@ -75,7 +71,7 @@ public class StringUtils
             FlowDirection.LeftToRight, 
             typeface, 
             fontSize, 
-            new SolidColorBrush(new Color(255,255,255,255)));
+            null);
 
         return new Size(t.Width, t.Height);
     }

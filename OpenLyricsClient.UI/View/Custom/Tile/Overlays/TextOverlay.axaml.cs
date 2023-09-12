@@ -56,8 +56,6 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
     private Thickness _lyricMargin;
     private Thickness _lyricsMargin;
 
-    private Rect _viewPort;
-    
     private ObservableCollection<LyricOverlayElement> _lines;
     private Typeface _typeface;
 
@@ -88,8 +86,6 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
         this._percentage = 0;
 
-        this._viewPort = new Rect(0, 0, 900, 900);
-        
         AffectsMeasure<TextOverlay>(LyricLinesProperty, LyricPartProperty, LyricsMarginProperty);
         
         this._lines = new ObservableCollection<LyricOverlayElement>();
@@ -117,7 +113,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
     {
         if (settingschangedeventargs.Field.Equals("Selections"))
         {
-            UpdateView(this._viewPort.Height);
+            UpdateView();
         }
         
         if (settingschangedeventargs.Field.Equals("Selection Mode"))
@@ -133,31 +129,24 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
         this._selectedElement = lyricchangedeventargs.LyricPart.Equals(this._lyricPart);
     }
 
-    private void UpdateView(double height)
+    private void UpdateView()
     {
         if (this.SuppressActivity)
             return;
         
-        UpdateTextWrappingLines(this._lyricPart.Part, LyricsScroller.Instance.Bounds.Width - LEFT_SPACE, height);
+        UpdateTextWrappingLines(this._lyricPart.Part, LyricsScroller.Instance.Bounds.Width - LEFT_SPACE);
     }
     
-    private void UpdateTextWrappingLines(string text, double width, double height)
+    private void UpdateTextWrappingLines(string text, double width)
     {
         Dispatcher.UIThread.InvokeAsync(async() =>
         {
-            ObservableCollection<LyricOverlayElement> sizedLines = new ObservableCollection<LyricOverlayElement>();
-            
-            AList<LyricOverlayElement> lines = await StringUtils.SplitTextToLines(
+            ObservableCollection<LyricOverlayElement> sizedLines = await StringUtils.SplitTextToLines(
                 await this._romanization.Romanize(text),
                 width,
-                height,
                 this._typeface,
-                this.LyricsAlignment,
-                this.LyricsSize, 
-                this._romanization);
+                this.LyricsSize);
 
-            sizedLines.AddRange(lines.GetAsList());
-            
             SetAndRaise(LyricLinesProperty, ref _lines, sizedLines);
         });
     }
@@ -250,8 +239,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
     private void InstanceOnEffectiveViewportChanged(object? sender, EffectiveViewportChangedEventArgs e)
     {
-        this._viewPort = e.EffectiveViewport;
-        UpdateView(e.EffectiveViewport.Height);
+        UpdateView();
     }
     
     private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -357,8 +345,7 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
             if (this.SuppressActivity)
                 return;
             
-            UpdateTextWrappingLines(this._lyricPart.Part, LyricsScroller.Instance.Bounds.Width - LEFT_SPACE,
-                double.PositiveInfinity);
+            UpdateTextWrappingLines(this._lyricPart.Part, LyricsScroller.Instance.Bounds.Width - LEFT_SPACE);
             
             this._initialized = true;
         }
