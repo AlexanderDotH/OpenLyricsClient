@@ -195,6 +195,8 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
             ApplyTransitionSpeed(CalculateSpeedToTimeSpan(args.LyricData.LyricSpeed, TimeSpan.FromSeconds(1.5)));
             
             this.FillVisualElements();
+            
+            ReSync();
         });
     }
 
