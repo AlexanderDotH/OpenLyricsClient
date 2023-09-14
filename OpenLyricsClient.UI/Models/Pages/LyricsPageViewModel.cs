@@ -90,7 +90,7 @@ public class LyricsPageViewModel : ModelBase
         OnPropertyChanged("UiReversedForeground");
         OnPropertyChanged("AiBadgeStartColor");
         OnPropertyChanged("AiBadgeEndColor");
-        OnPropertyChanged("Album");
+        //OnPropertyChanged("Album");
     }
 
     private void SongHandlerOnSongUpdated(object sender)
@@ -102,23 +102,18 @@ public class LyricsPageViewModel : ModelBase
             OnPropertyChanged("Artists");
             OnPropertyChanged("Album");
             OnPropertyChanged("IsSongPlaying");
-            OnPropertyChanged("CurrentTime");
+            //OnPropertyChanged("CurrentTime");
             OnPropertyChanged("Percentage");
-            OnPropertyChanged("CurrentTime");
-            OnPropertyChanged("CurrentMaxTime");
+            //OnPropertyChanged("CurrentTime");
+            //OnPropertyChanged("CurrentMaxTime");
             OnPropertyChanged("IsPlayerAvailable");
             OnPropertyChanged("IsSongAvailable");
             OnPropertyChanged("IsEmpty");
         
-            OnPropertyChanged("UiFontForeground");
-            OnPropertyChanged("AiBadgeStartColor");
-            OnPropertyChanged("AiBadgeEndColor");
+            //OnPropertyChanged("UiFontForeground");
+            //OnPropertyChanged("AiBadgeStartColor");
+            //OnPropertyChanged("AiBadgeEndColor");
         });
-    }
-
-    public void SwitchToSettings()
-    {
-        MainWindow.Instance.SelectPage(2);
     }
     
     public async Task UpdatePlayback()
@@ -168,10 +163,10 @@ public class LyricsPageViewModel : ModelBase
         {
             OnPropertyChanged("Artwork");
             
-            OnPropertyChanged("UiBackground");
-            OnPropertyChanged("UiLightBackground");
-            OnPropertyChanged("UiForeground");
-            OnPropertyChanged("UiFontForeground");
+            // OnPropertyChanged("UiBackground");
+            // OnPropertyChanged("UiLightBackground");
+            // OnPropertyChanged("UiForeground");
+            // OnPropertyChanged("UiFontForeground");
         });
     }
 
@@ -198,6 +193,11 @@ public class LyricsPageViewModel : ModelBase
         //OnPropertyChanged("Album");
     }
 
+    public void SwitchToSettings()
+    {
+        MainWindow.Instance.SelectPage(2);
+    }
+    
     public string? SongName
     {
         get => Core.INSTANCE?.SongHandler?.CurrentSong?.SongMetadata?.Name!;

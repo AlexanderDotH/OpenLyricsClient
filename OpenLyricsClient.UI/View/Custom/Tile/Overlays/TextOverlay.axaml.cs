@@ -10,6 +10,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -33,7 +34,7 @@ using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.UI.View.Custom.Tile.Overlays;
 
-public partial class TextOverlay : UserControl, INotifyPropertyChanged
+public partial class TextOverlay : UserControl, INotifyPropertyChanged, IDisposable
 {
     public static readonly DirectProperty<TextOverlay, LyricPart> LyricPartProperty = 
         AvaloniaProperty.RegisterDirect<TextOverlay, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
@@ -111,11 +112,6 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
 
     private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
     {
-        if (settingschangedeventargs.Field.Equals("Selections"))
-        {
-            UpdateView();
-        }
-        
         if (settingschangedeventargs.Field.Equals("Selection Mode"))
         {
             OnPropertyChanged("IsFade");
@@ -467,4 +463,14 @@ public partial class TextOverlay : UserControl, INotifyPropertyChanged
     }    
 
     #endregion
+
+    public void Dispose()
+    {
+        this._lines?.Clear();
+        this._itemsControl?.Items?.Clear();
+
+        this.GetLogicalChildren().OfType<TextBlock>().ForEach(t => t = null);
+        
+        GC.Collect();
+    }
 }

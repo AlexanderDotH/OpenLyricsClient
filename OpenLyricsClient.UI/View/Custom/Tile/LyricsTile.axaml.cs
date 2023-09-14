@@ -24,7 +24,7 @@ using Squalr.Engine.Utils.Extensions;
 
 namespace OpenLyricsClient.UI.View.Custom.Tile;
 
-public partial class LyricsTile : UserControl, INotifyPropertyChanged
+public partial class LyricsTile : UserControl, INotifyPropertyChanged, IDisposable
 {
     public static readonly DirectProperty<LyricsTile, LyricPart> LyricPartProperty = 
         AvaloniaProperty.RegisterDirect<LyricsTile, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
@@ -291,5 +291,17 @@ public partial class LyricsTile : UserControl, INotifyPropertyChanged
     public EnumElementType ElementType
     {
         get => _elementType;
+    }
+
+    public void Dispose()
+    {
+        if (this._overlay == null)
+            return;
+        
+        if (this._overlay is NoteOverlay overlay)
+            overlay.Dispose();
+            
+        if (this._overlay is TextOverlay text)
+            text.Dispose();
     }
 }

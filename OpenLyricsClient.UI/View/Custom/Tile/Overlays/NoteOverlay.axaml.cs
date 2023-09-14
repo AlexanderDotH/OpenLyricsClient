@@ -29,7 +29,7 @@ using OpenLyricsClient.UI.View.Windows;
 
 namespace OpenLyricsClient.UI.View.Custom.Tile.Overlays;
 
-public partial class NoteOverlay : UserControl, INotifyPropertyChanged
+public partial class NoteOverlay : UserControl, INotifyPropertyChanged, IDisposable
 {
     public static readonly DirectProperty<NoteOverlay, LyricPart> LyricPartProperty = 
         AvaloniaProperty.RegisterDirect<NoteOverlay, LyricPart>(nameof(LyricPart), o => o.LyricPart, (o, v) => o.LyricPart = v);
@@ -315,6 +315,9 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         {
             (string, Avalonia.Animation.Animation) element = this._animatale.Get(i);
         
+            if (!DataValidator.ValidateData(element, element.Item1, element.Item2))
+                continue;
+            
             if (element.Item1.SequenceEqual($"{classes}{position + 1}"))
             {
                 element.Item2.Delay = TimeSpan.FromMilliseconds(position * factor);
@@ -329,6 +332,9 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
         {
             this._animatale.ForEach(a =>
             {
+                if (!DataValidator.ValidateData(a, a.Item1, a.Item2))
+                    return;
+                
                 if (a.Item1.Contains(classes))
                     a.Item2.Duration = span;
             });
@@ -549,4 +555,11 @@ public partial class NoteOverlay : UserControl, INotifyPropertyChanged
     }
 
     #endregion
+
+    public void Dispose()
+    {
+        this._lyricPart = null;
+        
+        GC.Collect();
+    }
 }

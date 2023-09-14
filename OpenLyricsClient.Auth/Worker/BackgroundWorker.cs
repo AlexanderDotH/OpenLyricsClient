@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Org.BouncyCastle.Bcpg.Sig;
 
 namespace OpenLyricsClient.Auth.Worker;
 
 public class BackgroundWorker
 {
+    private long _expirationDate;
+    
     public BackgroundWorker()
     {
-       Task.Factory.StartNew(DoWork, TaskCreationOptions.LongRunning);
+        this._expirationDate = DateTimeOffset.Now.AddMinutes(5).ToUnixTimeMilliseconds();
+        
+        Task.Factory.StartNew(DoWork, TaskCreationOptions.LongRunning);
     }
 
-    // TODO: Doesnt work idk why want to fix it later
     private async Task DoWork()
     {
-        while (true)
+        while (DateTimeOffset.Now.ToUnixTimeMilliseconds() < this._expirationDate)
         {
             await Task.Delay(1000);
             
@@ -26,5 +30,7 @@ public class BackgroundWorker
             if (p.HasExited)
                 Environment.Exit(0);
         }
+        
+        Environment.Exit(0);
     }
 }

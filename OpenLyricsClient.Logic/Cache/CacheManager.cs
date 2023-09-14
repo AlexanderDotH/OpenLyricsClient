@@ -73,7 +73,11 @@ namespace OpenLyricsClient.Logic.Cache
             FileUtils.WriteFileString(filePath, JsonConvert.SerializeObject(ConvertToJsonCacheData(cacheData, id), Formatting.Indented));
 
             if (addToCache && this._cache.Length + 1 < this._maxCapacity)
+            {
+                RemoveOldestEntry();
+                
                 this._cache.Add(new CacheEntry(id, cacheData, CalculateExpirationDate()));
+            }
             
             RefreshExpirationEntries();
         }
@@ -119,8 +123,34 @@ namespace OpenLyricsClient.Logic.Cache
 
         public void AddToCache(SongRequestObject songRequestObject, CacheData cacheData)
         {
+            if (this._cache.Length + 1 > this._maxCapacity)
+            {
+                RemoveOldestEntry();
+            }
+            
             string id = CalculateID(songRequestObject);
             this._cache.Add(new CacheEntry(id, cacheData, CalculateExpirationDate()));
+        }
+
+        private void RemoveOldestEntry()
+        {
+            CacheEntry oldestElement = null;
+
+            for (int i = 0; i < this._cache.Length; i++)
+            {
+                CacheEntry entry = this._cache.Get(i);
+
+                if (oldestElement == null)
+                {
+                    oldestElement = entry;
+                    continue;
+                }
+
+                if (entry.ExpirationDate < oldestElement.ExpirationDate)
+                    oldestElement = entry;
+            }
+            
+            this._cache.SafeRemove(oldestElement);
         }
         
         //maybe add recover by SongRequestObject

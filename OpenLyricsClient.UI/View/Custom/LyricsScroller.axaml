@@ -27,11 +27,11 @@
                      </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="lyrics:LyricPart">
-                        <tile1:LyricsTile LyricPart="{Binding}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                <!-- <ItemsControl.ItemTemplate> -->
+                <!--     <DataTemplate DataType="lyrics:LyricPart"> -->
+                <!--         <tile1:LyricsTile LyricPart="{Binding}"/> -->
+                <!--     </DataTemplate> -->
+                <!-- </ItemsControl.ItemTemplate> -->
             </ItemsControl>
             
             <!--<ScrollViewer.Transitions>

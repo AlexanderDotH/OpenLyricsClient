@@ -26,6 +26,7 @@ using OpenLyricsClient.Logic.Debugger;
 using OpenLyricsClient.Logic.Events;
 using OpenLyricsClient.Logic.Events.EventArgs;
 using OpenLyricsClient.Logic.Settings.Sections.Lyrics;
+using OpenLyricsClient.Logic.Settings.Sections.Romanization;
 using OpenLyricsClient.Shared.Structure.Enum;
 using OpenLyricsClient.Shared.Structure.Lyrics;
 using OpenLyricsClient.Shared.Structure.Visual;
@@ -42,7 +43,7 @@ using ScrollChangedEventArgs = Avalonia.Controls.ScrollChangedEventArgs;
 
 namespace OpenLyricsClient.UI.View.Custom;
 
-public partial class LyricsScroller : UserControl, INotifyPropertyChanged
+public partial class LyricsScroller : UserControl, INotifyPropertyChanged, IDisposable
 {
     // Styled Properties
     public static readonly StyledProperty<bool> IsSyncedProperty =
@@ -83,6 +84,8 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
     
     private Debugger<LyricsScroller> _debugger;
 
+    private List<IDisposable> _disposables; 
+
     public event PropertyChangedEventHandler? PropertyChanged;
     
     public LyricsScroller()
@@ -98,6 +101,8 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 
         this._noteElementSize = new Size(-1, -1);
         this._missingVisualElementsList = new List<ScrollerElement>();
+
+        this._disposables = new List<IDisposable>();
         
         this._itemMargin = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<Margin>("Lyrics Margin");
         
@@ -143,6 +148,13 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
 
     private void SettingsHandlerOnSettingsChanged(object sender, SettingsChangedEventArgs settingschangedeventargs)
     {
+        if (settingschangedeventargs.Field.Equals("Selections") && 
+            settingschangedeventargs.Section.Equals(typeof(RomanizationSection)))
+        {
+            this.Dispose();
+            this.FillVisualElements();            
+        }
+        
         if (settingschangedeventargs.Field.SequenceEqual("Lyrics Margin"))
         {
             Margin t = Core.INSTANCE.SettingsHandler.Settings<LyricsSection>().GetValue<Margin>("Lyrics Margin");
@@ -190,6 +202,8 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
     {
         Dispatcher.UIThread.InvokeAsync(() =>
         {
+            this.Dispose();
+
             this._scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
             
             ApplyTransitionSpeed(CalculateSpeedToTimeSpan(args.LyricData.LyricSpeed, TimeSpan.FromSeconds(1.5)));
@@ -319,19 +333,21 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
             if (dummyTile.ElementType == EnumElementType.NOTE &&
                 !this._missingVisualElementsList.IsNullOrEmpty())
             {
-                this._missingVisualElementsList.Add(new ScrollerElement() {Index = i});
+                this._missingVisualElementsList.Add(new ScrollerElement() { Index = i });
                 continue;
             }
             
             if (dummyTile.ElementType == EnumElementType.NOTE)
-                this._missingVisualElementsList.Add(new ScrollerElement() {Index = i});
+                this._missingVisualElementsList.Add(new ScrollerElement() { Index = i });
             
             dummyTile.LayoutUpdated += TileOnLayoutUpdated;
-                
+            
+            this._disposables.Add(dummyTile);
+            
             this._visualElementsGrid.Children.Add(dummyTile);
         }
         
-        this._itemsControl.UpdateLayout();
+        //this._itemsControl.UpdateLayout();
     }
 
     private void TileOnLayoutUpdated(object? sender, EventArgs e)
@@ -380,6 +396,7 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
             };
                 
             this._itemsControl.Items.Add(realTile);
+            this._disposables.Add(realTile);
         }
     }
 
@@ -428,10 +445,7 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
     private void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
     {
         if (e.Delta.Y != 0)
-        {
             UnSync();
-            this._debugger.Write("Detached Scroll-Wheel", DebugType.INFO);
-        }
 
         if (e.Delta.Y > 0)
         {
@@ -461,6 +475,20 @@ public partial class LyricsScroller : UserControl, INotifyPropertyChanged
         field = value;
         OnPropertyChanged(propertyName);
         return true;
+    }
+    
+    public void Dispose()
+    {
+        this._itemsControl.Items.Clear();
+        
+        this._disposables.ForEach(d =>
+        {
+            if (d != null)
+            {
+                d.Dispose();
+            }
+        });
+        this._disposables.Clear();
     }
     
     public void UnSync()

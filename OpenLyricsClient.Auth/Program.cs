@@ -35,8 +35,6 @@ class Program
 
                 throw new Exception("Missing requirements");
             });
-
-        new BackgroundWorker();
         
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
@@ -48,6 +46,10 @@ class Program
             .With(new Win32PlatformOptions()
             {
                 //UseWindowsUIComposition = false
+            })
+            .AfterSetup((a) =>
+            {
+                new BackgroundWorker();
             })
             .LogToTrace()
             .UseReactiveUI();

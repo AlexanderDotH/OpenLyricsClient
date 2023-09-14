@@ -31,6 +31,8 @@ namespace OpenLyricsClient.Logic.Handler.Song
         private Debugger<SongHandler> _debugger;
 
         private SongCollector _songCollector;
+
+        private OpenLyricsClient.Shared.Structure.Song.Song _currentSong;
         
         public event SongChangedEventHandler SongChanged;
         public event SongUpdatedEventHandler SongUpdated;
@@ -40,10 +42,11 @@ namespace OpenLyricsClient.Logic.Handler.Song
             this._debugger = new Debugger<SongHandler>(this);
 
             this._songProviders = new ATupleList<ISongProvider, EnumSongProvider>();
-            this._songProviders.Add(new Tuple<ISongProvider, EnumSongProvider>(new SpotifySongProvider(), EnumSongProvider.SPOTIFY));
+            this._songProviders.Add(new SpotifySongProvider(), EnumSongProvider.SPOTIFY);
             //this._songProviders.Add(new Tuple<ISongProvider, EnumSongProvider>(new TidalSongProvider(), EnumSongProvider.TIDAL));
 
             this._songProviderChooser = new SongProviderChooser();
+            this._songProviderChooser.SongProviderChanged += SongProviderChooserOnSongProviderChanged;
             this._songStageChange = new SongStageChange();
 
             Core.INSTANCE.TaskRegister.Register(
@@ -54,6 +57,16 @@ namespace OpenLyricsClient.Logic.Handler.Song
             this.SongChanged += OnSongChanged;
             
             this._disposed = false;
+        }
+
+        private void SongProviderChooserOnSongProviderChanged(EnumSongProvider provider)
+        {
+            ISongProvider p = GetSongProvider(provider);
+            
+            if (!DataValidator.ValidateData(p))
+                return;
+
+            this._currentSong = p.GetCurrentSong();
         }
 
         private void OnSongChanged(object sender, SongChangedEventArgs songChangedEventArgs)
@@ -82,29 +95,28 @@ namespace OpenLyricsClient.Logic.Handler.Song
 
                 await Task.Delay(50);
 
-                if (DataValidator.ValidateData(this._songStageChange) && 
-                    DataValidator.ValidateData(this._songProviderChooser))
-                {
-                    Shared.Structure.Song.Song currentSong = GetCurrentSong();
+                if (!DataValidator.ValidateData(this._songStageChange, this._songProviderChooser))
+                    continue;
+                
+                Shared.Structure.Song.Song currentSong = GetCurrentSong();
                     
-                    //POST WIRD NICHT IMMER AUSGEFÜHRT
-                    if (this._songStageChange.HasSongChanged(currentSong))
-                    {
-                        SongChangedEvent(new SongChangedEventArgs(currentSong, EventType.PRE));
+                //POST WIRD NICHT IMMER AUSGEFÜHRT
+                if (this._songStageChange.HasSongChanged(currentSong))
+                {
+                    SongChangedEvent(new SongChangedEventArgs(currentSong, EventType.PRE));
 
-                        //
-                        ISongProvider songProvider = GetSongProvider(this._songProviderChooser.GetSongProvider());
-                        if (!DataValidator.ValidateData(songProvider))
-                            continue;
+                    //
+                    ISongProvider songProvider = GetSongProvider(this._songProviderChooser.GetSongProvider());
+                    if (!DataValidator.ValidateData(songProvider))
+                        continue;
 
-                        Shared.Structure.Song.Song song = await songProvider.UpdateCurrentPlaybackTrack();
-                        Core.INSTANCE.CacheManager.WriteToCache(SongRequestObject.FromSong(song));
-                        //
+                    Shared.Structure.Song.Song song = await songProvider.UpdateCurrentPlaybackTrack();
+                    Core.INSTANCE.CacheManager.WriteToCache(SongRequestObject.FromSong(song));
+                    //
 
-                        SongChangedEvent(new SongChangedEventArgs(song, EventType.POST));
-                        
-                        MemoryHelper.ForceGC();
-                    }
+                    SongChangedEvent(new SongChangedEventArgs(song, EventType.POST));
+
+                    this._currentSong = song;
                 }
             }
         }
@@ -119,6 +131,7 @@ namespace OpenLyricsClient.Logic.Handler.Song
             get => this._songProviderChooser.GetSongProvider();
         }
 
+        [Obsolete]
         private Shared.Structure.Song.Song GetCurrentSong()
         {
             if (DataValidator.ValidateData(this._songProviderChooser))
@@ -156,7 +169,7 @@ namespace OpenLyricsClient.Logic.Handler.Song
         
         public Shared.Structure.Song.Song CurrentSong
         {
-            get => GetCurrentSong();
+            get => this._currentSong;
         }
 
         public void Dispose()

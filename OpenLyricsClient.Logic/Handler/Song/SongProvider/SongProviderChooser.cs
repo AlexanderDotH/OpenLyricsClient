@@ -2,6 +2,7 @@
 using DevBase.Generics;
 using DevBase.Typography;
 using OpenLyricsClient.Logic.Debugger;
+using OpenLyricsClient.Logic.Events.EventHandler;
 using OpenLyricsClient.Logic.Handler.Services.Services;
 using OpenLyricsClient.Shared.Structure.Enum;
 using OpenLyricsClient.Shared.Utils;
@@ -33,6 +34,8 @@ namespace OpenLyricsClient.Logic.Handler.Song.SongProvider
             EnumRegisterTypes.TIDALPROGRESSLISTENER_FINDADDRESS
         };
 
+        public event SongProviderChangedEventHandler SongProviderChanged;
+        
         public SongProviderChooser()
         {
             this._debugger = new Debugger<SongProviderChooser>(this);
@@ -74,11 +77,13 @@ namespace OpenLyricsClient.Logic.Handler.Song.SongProvider
                 {
                     ResumeProvider(EnumSongProvider.SPOTIFY);
                     SuspendProvider(EnumSongProvider.TIDAL);
+                    SongProviderChanged?.Invoke(EnumSongProvider.SPOTIFY);
                 }
                 else if (songProvider == EnumSongProvider.TIDAL)
                 {
                     ResumeProvider(EnumSongProvider.TIDAL);
                     SuspendProvider(EnumSongProvider.SPOTIFY);
+                    SongProviderChanged?.Invoke(EnumSongProvider.SPOTIFY);
                 }
             }
         }

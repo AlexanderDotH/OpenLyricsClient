@@ -7,7 +7,7 @@ namespace OpenLyricsClient.Logic.Settings.Sections.Account;
 
 public class AccountSection : ISettingSection
 {
-    private FileInfo _file;
+    private readonly FileInfo _file;
     private JObject _data;
 
     public AccountSection(string filePath)
