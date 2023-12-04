@@ -1,7 +1,7 @@
 # OpenLyricsClient
 <img src="https://badgen.net/badge/released/stable/green?icon=github" />
 
-<img align="left" src="https://alexh.space/images/openlyricsclient/logo.png" alt="drawing" width="200"/> 
+<img align="left" src="https://media.openlyricsclient.com/img/logo.png" alt="drawing" width="200"/> 
 <br>
 <br>
 Introducing OpenLyricsClient - the ultimate lyrics tool for singing enthusiasts. <br>
@@ -29,18 +29,18 @@ Simple and intuitive to use, OpenLyricsClient offers a user-friendly interface t
  
 Some previews:
 <p float="center">
-  <img src="https://alexh.space/images/openlyricsclient/new/colorfull1-preview.png" width="49%" /> 
-  <img src="https://alexh.space/images/openlyricsclient/new/dark2-preview.png" width="49%" />
-  <img src="https://alexh.space/images/openlyricsclient/new/colorfull2-preview.png" width="49%" />
-  <img src="https://alexh.space/images/openlyricsclient/new/dark2-preview2.png" width="49%" />
+  <img src="https://media.openlyricsclient.com/img/colorfull1-preview.png" width="49%" /> 
+  <img src="https://media.openlyricsclient.com/img/dark2-preview.png" width="49%" />
+  <img src="https://media.openlyricsclient.com/img/colorfull2-preview.png" width="49%" />
+  <img src="https://media.openlyricsclient.com/img/dark2-preview2.png" width="49%" />
 </p>
 
 ---
 
 You want to blur some things up? Just enable it! Its 2 clicks away!
 <p float="center">
-  <img src="https://alexh.space/images/openlyricsclient/new/settings_blur.png" width="49%" />
-  <img src="https://alexh.space/images/openlyricsclient/new/blur_preview.png" width="49%" />
+  <img src="https://media.openlyricsclient.com/img/settings_blur.png" width="49%" />
+  <img src="https://media.openlyricsclient.com/img/blur_preview.png" width="49%" />
 </p>
 
 ---
@@ -53,15 +53,15 @@ Currently Supported languages:
 * Russian
 
 <p float="center">
-  <img src="https://alexh.space/images/openlyricsclient/new/romanization_preview.png" width="70%" />
+  <img src="https://media.openlyricsclient.com/img/romanization_preview.png" width="70%" />
 </p>
 
 ---
 
 Did you know that the OpenLyricsClient is the first lyrics client with AI synchronization? I didn't know that either ;). However, the AI sync is only available for OpenLyricsClient Plus and Master members. But feel free to contact me on Discord! I'll give it out if you ask nicely. :D
 <p float="center">
-  <img src="https://alexh.space/images/openlyricsclient/new/ai_sync_preview1.png" width="49%" />
-  <img src="https://alexh.space/images/openlyricsclient/new/ai_sync_preview2.png" width="49%" />
+  <img src="https://media.openlyricsclient.com/img/ai_sync_preview1.png" width="49%" />
+  <img src="https://media.openlyricsclient.com/img/ai_sync_preview2.png" width="49%" />
 </p>
 
 ---
@@ -69,7 +69,7 @@ Did you know that the OpenLyricsClient is the first lyrics client with AI synchr
 Lets get started by linking you spotify account:
 
 <p float="center">
-  <img src="https://alexh.space/images/openlyricsclient/new/spotify_preview.png" width="70%" />
+  <img src="https://media.openlyricsclient.com/img/spotify_preview.png" width="70%" />
 </p>
 
 <br>
