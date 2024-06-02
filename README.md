@@ -1,6 +1,8 @@
 # OpenLyricsClient
 <img src="https://badgen.net/badge/released/stable/green?icon=github" />
 
+# The OpenLyricsClient is currently offline and can't be used due to server maintanance
+
 <img align="left" src="https://media.openlyricsclient.com/img/logo.png" alt="drawing" width="200"/> 
 <br>
 <br>
