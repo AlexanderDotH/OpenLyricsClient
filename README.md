@@ -79,4 +79,4 @@ Feel free to share your feedback with me on Discord! You can find me under the t
 If you want to use it right now, simply clone the tool and build it using the scripts inside the scrips directory
 <br>
 <br>
-❤️ A special thanks to my girlfriend who provided me with the inspiration and energy for this project. She is the reason why I completed it, as it was literally a Valentine's present. ❤️
+
